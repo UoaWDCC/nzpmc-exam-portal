@@ -1,0 +1,4 @@
+type Query {
+    numberSix: Int!
+    numberSeven: Int!
+}
