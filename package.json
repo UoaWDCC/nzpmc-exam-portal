@@ -1,20 +1,21 @@
 {
-  "name": "nodejs-cloud-run-hello-world",
+  "name": "nzpmc-backend",
   "version": "0.0.1",
   "description": "Hello World application for Cloud Run",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon -r esm index.js",
     "lint": "eslint **.js",
     "fix": "eslint --fix *.js",
     "test": "mocha test/*.test.js --check-leaks --timeout 5000"
   },
-  "author": "Google LLC",
+  "author": "NZPMC",
   "license": "0BSD",
   "engines": {
-    "node": ">=11.14"
+    "node": ">=14.00"
   },
   "dependencies": {
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "handlebars": "^4.7.4"
   },
