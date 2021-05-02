@@ -2,25 +2,23 @@
     "name": "nzpmc_frontend",
     "version": "0.1.0",
     "private": true,
+    "author": "NZPMC",
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "eslint --ext .js .",
         "lint:fix": "eslint --fix --ext .js ."
     },
-    "author": "NZPMC",
-    "license": "0BSD",
-    "engines": {
-        "node": ">=14.0.0"
-    },
     "dependencies": {
         "core-js": "^3.6.5",
         "vue": "^2.6.11",
+        "vue-router": "^3.2.0",
         "vuetify": "^2.4.0"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "~4.5.0",
         "@vue/cli-plugin-eslint": "~4.5.0",
+        "@vue/cli-plugin-router": "^4.5.12",
         "@vue/cli-service": "~4.5.0",
         "babel-eslint": "^10.1.0",
         "eslint": "^6.8.0",
@@ -38,5 +36,9 @@
         "> 1%",
         "last 2 versions",
         "not dead"
-    ]
+    ],
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "license": "0BSD"
 }

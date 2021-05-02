@@ -1,56 +1,30 @@
 <template>
-    <v-app>
-        <v-app-bar app color="primary" dark>
-            <div class="d-flex align-center">
-                <v-img
-                    alt="Vuetify Logo"
-                    class="shrink mr-2"
-                    contain
-                    src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-                    transition="scale-transition"
-                    width="40"
-                />
-
-                <v-img
-                    alt="Vuetify Name"
-                    class="shrink mt-1 hidden-sm-and-down"
-                    contain
-                    min-width="100"
-                    src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-                    width="100"
-                />
-            </div>
-
-            <v-spacer></v-spacer>
-
-            <v-btn
-                href="https://github.com/vuetifyjs/vuetify/releases/latest"
-                target="_blank"
-                text
-            >
-                <span class="mr-2">Latest Release</span>
-                <v-icon>mdi-open-in-new</v-icon>
-            </v-btn>
-        </v-app-bar>
-
-        <v-main>
-            <HelloWorld />
-        </v-main>
-    </v-app>
+    <div id="app">
+        <router-link to="/">Login</router-link> |
+        <router-link to="/welcome">Welcome</router-link> |
+        <router-link to="/exam">Exam</router-link> |
+        <router-link to="/finished">Finished</router-link>
+        <router-view />
+    </div>
 </template>
 
-<script>
-import HelloWorld from './views/HelloWorld'
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-export default {
-    name: 'App',
-
-    components: {
-        HelloWorld,
-    },
-
-    data: () => ({
-        //
-    }),
+body {
+    /* The image used */
+    background-image: url('/assets/background-colour.png');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: repeat;
+    background-size: auto;
 }
-</script>
+
+#app {
+    font-family: 'Nunito Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+}
+</style>
