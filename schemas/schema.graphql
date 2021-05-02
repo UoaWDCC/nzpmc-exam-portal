@@ -1,4 +1,12 @@
+scalar DateTime
+
 type Query {
-    numberSix: Int!
-    numberSeven: Int!
+    me: User
+    user(userID: ID!): User 
+    users: [User]
+    question(questionID: ID!): Question
+    questions: [Question]
+    quizzes: [Quiz]
+    userQuiz: UserQuiz
+    userQuizAnswers(quizID: ID!): [UserQuizAnswer]
 }

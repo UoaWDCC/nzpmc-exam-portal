@@ -1,0 +1,34 @@
+type User {
+    id: ID!
+    displayName: String
+    email: String
+    emailVerified: String
+    photoURL: String
+    firstName: String
+    lastName: String
+    yearLevel: String
+    role: String 
+    created: DateTime 
+    modified: DateTime 
+}
+
+type Question {
+    id: ID!
+}
+
+type Quiz {
+    id: ID!
+}
+
+type UserQuiz {
+    id: ID!
+}
+
+type UserAnswer {
+    id: ID!
+}
+
+type UserQuizAnswer {
+    id: ID!
+}
+
