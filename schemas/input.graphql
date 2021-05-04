@@ -1,0 +1,3 @@
+input CreateQuestionInput {
+    id: ID!
+}
