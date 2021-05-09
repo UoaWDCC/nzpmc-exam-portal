@@ -7,6 +7,6 @@ type Query {
     question(questionID: ID!): Question
     questions: [Question]
     quizzes: [Quiz]
-    userQuiz: UserQuiz
-    userQuizAnswers(quizID: ID!): [UserQuizAnswer]
+    userQuizzes: [UserQuiz]
+    userQuiz(quizID: ID!): UserQuiz
 }
