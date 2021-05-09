@@ -14,14 +14,44 @@ type User {
 
 type Question {
     id: ID!
+    question: String
+    noAnswers: Int
+    topics: String # should be enum
+    correct: Options
+    created: DateTime 
+    modified: DateTime 
+}
+
+type Options {
+    id: ID!
+    option: String
+    created: DateTime 
+    modified: DateTime 
 }
 
 type Quiz {
     id: ID!
+    name: String
+    description: String 
+    duration: Int 
+    noQuestions: Int
+    questions: [Question]
+    startTime: DateTime 
+    endTime: DateTime 
+    created: DateTime 
+    modified: DateTime 
 }
 
 type UserQuiz {
     id: ID!
+    user: User
+    quiz: Quiz
+    answers: UserQuizAnswer
+    score: Float 
+    startTime: DateTime 
+    endTime: DateTime 
+    created: DateTime 
+    modified: DateTime 
 }
 
 type UserAnswer {
@@ -30,5 +60,11 @@ type UserAnswer {
 
 type UserQuizAnswer {
     id: ID!
+    question: Question
+    answer: Options
+    firstViewed: DateTime
+    lastAnswered: DateTime
+    created: DateTime
+    modified: DateTime
 }
 
