@@ -17,12 +17,12 @@ type Question {
     question: String
     noAnswers: Int
     topics: String # should be enum
-    correct: Options
+    options: [Option]
     created: DateTime 
     modified: DateTime 
 }
 
-type Options {
+type Option {
     id: ID!
     option: String
     created: DateTime 
@@ -46,7 +46,8 @@ type UserQuiz {
     id: ID!
     user: User
     quiz: Quiz
-    answers: UserQuizAnswer
+    answer(index: Int!): UserQuizAnswer
+    answers: [UserQuizAnswer]
     score: Float 
     startTime: DateTime 
     endTime: DateTime 
@@ -54,14 +55,10 @@ type UserQuiz {
     modified: DateTime 
 }
 
-type UserAnswer {
-    id: ID!
-}
-
 type UserQuizAnswer {
     id: ID!
     question: Question
-    answer: Options
+    answer: Option
     firstViewed: DateTime
     lastAnswered: DateTime
     created: DateTime
