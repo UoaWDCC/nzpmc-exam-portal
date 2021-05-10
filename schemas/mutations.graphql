@@ -1,0 +1,3 @@
+type Mutation {
+    createQuestion(form: CreateQuestionInput) : Question
+}
