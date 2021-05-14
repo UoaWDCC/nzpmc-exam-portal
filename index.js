@@ -1,5 +1,7 @@
 import { ApolloServer } from 'apollo-server'
 import { readdirSync, readFileSync } from 'fs'
+import express from 'express'
+import cors from 'cors'
 import resolvers from './resolvers'
 
 const schemaFiles = readdirSync('./schemas/').filter((file) =>
@@ -9,6 +11,10 @@ const typeDefs = schemaFiles.map((path) => {
     return readFileSync('./schemas/' + path).toString('utf-8')
 })
 
+const app = express()
+
+app.use(cors())
+
 const server = new ApolloServer({
     resolvers,
     typeDefs,
@@ -17,6 +23,14 @@ const server = new ApolloServer({
     debug: true,
 })
 
-server.listen().then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`)
+server.applyMiddleware({
+    app,
+})
+
+const port = process.env.PORT | 4000
+app.listen(port, () => {
+    console.log(`Server is ready at http://localhost:${port}`)
+    console.log(
+        `GraphQL Server is ready at http://localhost:${port}${server.graphqlPath}`,
+    )
 })
