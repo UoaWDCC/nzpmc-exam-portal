@@ -22,7 +22,7 @@ const resolvers = {
         },
         users(parents, args, ctx) {
             return [studUser, studUser, studUser, studUser]
-        } 
+        },
     },
 }
 
