@@ -6,7 +6,7 @@
     "extends": [
         "plugin:vue/essential",
         "eslint:recommended",
-        "plugin:prettier-vue/recommended",
+        "plugin:prettier-vue-scorpionknifes/recommended",
         "prettier"
     ],
     "parserOptions": {

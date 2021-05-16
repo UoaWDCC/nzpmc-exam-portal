@@ -10,24 +10,25 @@
         "lint:fix": "eslint --fix --ext .js ."
     },
     "dependencies": {
-        "core-js": "^3.6.5",
+        "core-js": "^3.12.1",
         "vue": "^2.6.11",
         "vue-router": "^3.5.1",
         "vuetify": "^2.4.0"
     },
     "devDependencies": {
-        "@vue/cli-plugin-babel": "~4.5.0",
-        "@vue/cli-plugin-eslint": "~4.5.0",
-        "@vue/cli-plugin-router": "^4.5.12",
-        "@vue/cli-service": "~4.5.0",
+        "@vue/cli-plugin-babel": "^4.5.13",
+        "@vue/cli-plugin-eslint": "^4.5.13",
+        "@vue/cli-plugin-router": "^4.5.13",
+        "@vue/cli-service": "^4.5.13",
         "babel-eslint": "^10.1.0",
-        "eslint": "^6.8.0",
+        "eslint": "^7.26.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier-vue": "^3.0.0",
+        "eslint-plugin-prettier-vue-scorpionknifes": "^3.0.0",
         "eslint-plugin-vue": "^6.2.2",
-        "prettier": "^2.2.1",
+        "prettier": "^2.3.0",
         "sass": "^1.32.0",
-        "sass-loader": "^10.0.0",
+        "sass-loader": "^10.2.0",
         "vue-cli-plugin-vuetify": "~2.4.0",
         "vue-template-compiler": "^2.6.11",
         "vuetify-loader": "^1.7.0"
