@@ -3,7 +3,7 @@ scalar DateTime
 type Query {
     me: User
     user(userID: ID!): User 
-    users: [User]
+    users: [User]!
     question(questionID: ID!): Question
     questions: [Question]
     quizzes: [Quiz]
