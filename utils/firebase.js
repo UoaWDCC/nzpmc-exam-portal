@@ -1,10 +1,7 @@
 import * as firebaseAdmin from 'firebase-admin'
-
 const admin = firebaseAdmin.initializeApp({
     credential: admin.credential.applicationDefault(),
 })
-
-const db = admin.firestore()
 
 const verifyUserSessionToken = async (token) => {
     const user = await admin.auth().verifySessionCookie(token, true)
@@ -25,8 +22,10 @@ const getUser = (uid) => admin.auth().getUser(uid)
 
 const verifyIdToken = (idToken) => admin.auth().verifyIdToken(idToken)
 
+const firestore = admin.firestore()
+
 export {
-    db,
+    firestore,
     admin,
     verifyUserSessionToken,
     setUserClaims,

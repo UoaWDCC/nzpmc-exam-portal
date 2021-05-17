@@ -20,6 +20,7 @@
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "firebase-admin": "^9.8.0",
+    "fireo": "^1.0.3",
     "graphql": "^15.5.0",
     "handlebars": "^4.7.4",
     "lodash": "^4.17.21"
