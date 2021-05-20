@@ -15,7 +15,7 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "apollo-server": "^2.23.0",
+    "apollo-server-express": "^2.23.0",
     "cors": "^2.8.5",
     "esm": "^3.2.25",
     "express": "^4.17.1",

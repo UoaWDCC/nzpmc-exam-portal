@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer } from 'apollo-server-express'
 import { readdirSync, readFileSync } from 'fs'
 import express from 'express'
 import cors from 'cors'
