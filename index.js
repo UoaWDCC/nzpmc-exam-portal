@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from 'fs'
 import express from 'express'
 import cors from 'cors'
 import resolvers from './resolvers'
+import { auth } from './utils/firebase'
 
 const schemaFiles = readdirSync('./schemas/').filter((file) =>
     file.endsWith('.graphql'),
@@ -21,6 +22,7 @@ const server = new ApolloServer({
     introspection: true,
     playground: true,
     debug: true,
+    context: auth(),
 })
 
 server.applyMiddleware({

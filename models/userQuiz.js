@@ -2,14 +2,14 @@ import { Model, Field } from 'fireo'
 
 class userQuiz extends Model {
     super() {
-        this.user = Field.Reference()
-        this.quiz = Field.Reference()
-        this.answers = Field.Array()
-        this.score = Field.Number()
-        this.startTime = Field.Timestamp()
-        this.endTime = Field.Timestamp()
-        this.createdAt = Field.Timestamp()
-        this.modifiedAt = Field.Timestamp()
+        this.user = Field.Reference({ required: true })
+        this.quiz = Field.Reference({ required: true })
+        this.answers = Field.Array({ required: true })
+        this.score = Field.Number({ required: true })
+        this.startTime = Field.Timestamp({ required: true })
+        this.endTime = Field.Timestamp({ required: true })
+        this.createdAt = Field.Timestamp({ required: true })
+        this.modifiedAt = Field.Timestamp({ required: true })
         this.deleted = Field.Timestamp()
     }
 }

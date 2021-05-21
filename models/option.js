@@ -2,9 +2,9 @@ import { Model, Field } from 'fireo'
 
 class Option extends Model {
     super() {
-        this.option = Field.Text()
-        this.createdAt = Field.Timestamp()
-        this.modifiedAt = Field.Timestamp()
+        this.option = Field.Text({ required: true })
+        this.createdAt = Field.Timestamp({ required: true })
+        this.modifiedAt = Field.Timestamp({ required: true })
         this.deleted = Field.Timestamp()
     }
 }

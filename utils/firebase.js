@@ -3,32 +3,22 @@ const admin = firebaseAdmin.initializeApp({
     credential: admin.credential.applicationDefault(),
 })
 
-const verifyUserSessionToken = async (token) => {
-    const user = await admin.auth().verifySessionCookie(token, true)
+const auth = () => async ({ req }) => {
+    const token = req.headers.authorization
+        ? req.headers.authorization.replace('Bearer ', '')
+        : null
 
-    if (user.id) {
-        return user
-    } else if (user.uid) {
-        const { claims } = await getUser(user.uid)
-        return claims
-    } else {
-        throw new Error('User Session Token Verification Error')
+    if (!token) return
+
+    try {
+        return {
+            user: await admin.auth().verifyIdToken(token),
+        }
+    } catch (e) {
+        // Invalid token
     }
 }
 
-const setUserClaims = (uid, data) => admin.auth().setCustomUserClaims(uid, data)
-
-const getUser = (uid) => admin.auth().getUser(uid)
-
-const verifyIdToken = (idToken) => admin.auth().verifyIdToken(idToken)
-
 const firestore = admin.firestore()
 
-export {
-    firestore,
-    admin,
-    verifyUserSessionToken,
-    setUserClaims,
-    getUser,
-    verifyIdToken,
-}
+export { firestore, admin, auth }
