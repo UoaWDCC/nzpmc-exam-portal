@@ -1,7 +1,7 @@
 const studQuestion = {
     id: '123',
     question: 'What is the question?',
-    noAnswers: 42,
+    numOfAnswers: 42,
     topics: 'Physics, Existentialism',
     options: [
         {

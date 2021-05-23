@@ -1,22 +1,11 @@
 const studQuiz = {
     id: '123',
-    question: 'What is the question?',
-    noAnswers: 42,
-    topics: 'Physics, Existentialism',
-    options: [
-        {
-            id: '123',
-            option: 'Option1',
-            created: new Date(),
-            modified: new Date(),
-        },
-        {
-            id: '124',
-            option: 'Option2',
-            created: new Date(),
-            modified: new Date(),
-        },
-    ],
+    name: 'Example Quiz',
+    description: 42,
+    duration: '86400',
+    numOfQuestions: 40,
+    startTime: new Date(),
+    endTime: new Date(),
     created: new Date(),
     modified: new Date(),
 }
@@ -38,7 +27,7 @@ const studUser = {
 const studQuestion = {
     id: '123',
     question: 'What is the question?',
-    noAnswers: 42,
+    numOfAnswers: 42,
     topics: 'Physics, Existentialism',
     options: [
         {

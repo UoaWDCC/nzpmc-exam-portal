@@ -1,5 +1,6 @@
-import * as firebaseAdmin from 'firebase-admin'
-const admin = firebaseAdmin.initializeApp({
+import admin from 'firebase-admin'
+
+admin.initializeApp({
     credential: admin.credential.applicationDefault(),
 })
 
