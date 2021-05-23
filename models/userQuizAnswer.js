@@ -1,15 +1,14 @@
 import { Model, Field } from 'fireo'
 
-class userQuizAnswer extends Model {
-    super() {
-        this.question = Field.Reference({ required: true })
-        this.answer = Field.Reference({ required: true })
-        this.firstViewed = Field.Timestamp({ required: true })
-        this.lastAnswered = Field.Timestamp({ required: true })
-        this.createdAt = Field.Timestamp({ required: true })
-        this.modifiedAt = Field.Timestamp({ required: true })
-        this.deleted = Field.Timestamp()
-    }
+class UserQuizAnswer extends Model {
+    id = Field.ID()
+    question = Field.Reference({ required: true })
+    answer = Field.Reference({ required: true })
+    firstViewed = Field.DateTime({ required: true })
+    lastAnswered = Field.DateTime({ required: true })
+    created = Field.DateTime({ required: true, auto: true })
+    modified = Field.DateTime({ required: true, auto: true })
+    deleted = Field.DateTime()
 }
 
-export default userQuizAnswer
+export default UserQuizAnswer

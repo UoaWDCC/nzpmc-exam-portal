@@ -38,9 +38,9 @@ const updateUser = async ({ id, firstName, lastName, yearLevel }) => {
     return await Fireo.runTransaction(async (t) => {
         const user = getUser(id)
 
-        user.firstName = firstName
-        user.lastName = lastName
-        user.yearLevel = yearLevel
+        user.firstName = firstName ? firstName : user.firstName
+        user.lastName = lastName ? lastName : user.lastName
+        user.yearLevel = yearLevel ? yearLevel : user.yearLevel
         user.modified = new Date()
 
         await user.update()

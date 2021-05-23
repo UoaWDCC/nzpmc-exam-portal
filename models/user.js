@@ -1,15 +1,14 @@
 import { Model, Field } from 'fireo'
 
 class User extends Model {
-    super() {
-        this.firstName = Field.Text({ required: true })
-        this.lastName = Field.Text({ required: true })
-        this.yearLevel = Field.Number({ required: true })
-        this.role = Field.Text({ required: true })
-        this.created = Field.Timestamp({ required: true })
-        this.modified = Field.Timestamp({ required: true })
-        this.deleted = Field.Timestamp()
-    }
+    id = Field.ID({ required: true })
+    firstName = Field.Text({ required: true })
+    lastName = Field.Text({ required: true })
+    yearLevel = Field.Number({ required: true })
+    role = Field.Text({ required: true })
+    created = Field.DateTime({ required: true })
+    modified = Field.DateTime({ required: true })
+    deleted = Field.DateTime()
 }
 
 export default User

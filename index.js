@@ -1,9 +1,12 @@
 import { ApolloServer } from 'apollo-server-express'
 import { readdirSync, readFileSync } from 'fs'
+import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
 import resolvers from './resolvers'
 import { auth } from './utils/firebase'
+
+dotenv.config()
 
 const schemaFiles = readdirSync('./schemas/').filter((file) =>
     file.endsWith('.graphql'),

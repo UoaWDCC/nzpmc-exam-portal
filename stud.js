@@ -5,14 +5,15 @@ import {
     User,
     UserQuiz,
     UserQuizAnswer,
-} from '../models/'
+} from './models/'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const createOption = async (data) => {
     let option = Option.init()
     option.id = data.id
     option.option = data.option
-    option.created = new Date()
-    option.modified = new Date()
     await option.save()
 }
 
@@ -38,17 +39,21 @@ const createUser = async (data) => {
     user.lastName = data.lastName
     user.yearLevel = data.yearLevel
     user.role = data.role
-    user.created = Date.now()
-    user.modified = Date.now()
+    user.created = new Date()
+    user.modified = new Date()
     await user.save()
 }
 
 const createQuiz = async (data) => {
     let quiz = Quiz.init()
     quiz.id = data.id
-    quiz.question = data.question
-    quiz.numOfAnswers = data.numOfAnswers
-    quiz.topics = data.topics
+    quiz.name = data.name
+    quiz.description = data.description
+    quiz.duration = data.duration
+    quiz.numOfQuestions = data.numOfQuestions
+    quiz.questions = data.questions
+    quiz.startTime = data.startTime
+    quiz.endTime = data.endTime
     quiz.created = new Date()
     quiz.modified = new Date()
     await quiz.save()
@@ -57,9 +62,11 @@ const createQuiz = async (data) => {
 const createUserQuiz = async (data) => {
     let userQuiz = UserQuiz.init()
     userQuiz.id = data.id
-    userQuiz.question = data.question
-    userQuiz.numOfAnswers = data.numOfAnswers
-    userQuiz.topics = data.topics
+    userQuiz.user = data.user
+    userQuiz.quiz = data.quiz
+    userQuiz.score = data.score
+    userQuiz.startTime = data.startTime
+    userQuiz.endTime = data.endTime
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
     await userQuiz.save()
@@ -69,15 +76,16 @@ const createUserQuizAnswer = async (data) => {
     let userQuizAnswer = UserQuizAnswer.init()
     userQuizAnswer.id = data.id
     userQuizAnswer.question = data.question
-    userQuizAnswer.numOfAnswers = data.numOfAnswers
-    userQuizAnswer.topics = data.topics
+    userQuizAnswer.answer = data.answer
+    userQuizAnswer.firstViewed = data.firstViewed
+    userQuizAnswer.lastAnswered = data.lastAnswered
     userQuizAnswer.created = new Date()
     userQuizAnswer.modified = new Date()
     await userQuizAnswer.save()
 }
 
-const loadStud = () => {
-    createUser({
+const loadStud = async () => {
+    await createUser({
         id: '1',
         displayName: 'user',
         email: 'user@email.com',
@@ -88,12 +96,39 @@ const loadStud = () => {
         yearLevel: 9,
         role: 'student',
     })
-    createQuiz({
+    await createQuiz({
+        id: '1',
+        name: 'Example Quiz',
+        description: 'Example description',
+        duration: 86400,
+        numOfQuestions: 2,
+        questions: ['Question/1', 'Question/2'],
+        startTime: new Date(),
+        endTime: new Date(),
+    })
+    await createOption({
+        id: '1',
+        option: 'Option1',
+    })
+    await createOption({
+        id: '2',
+        option: 'Option2',
+    })
+    await createQuestion({
         id: '1',
         question: 'What is the question?',
         numOfAnswers: 42,
         topics: 'Physics, Existentialism',
     })
+    await createUserQuizAnswer({
+        id: '1',
+        question: 'Question/1',
+        answer: 'Option/1',
+        startTime: new Date(),
+        endTime: new Date(),
+    })
 }
 
 export { loadStud }
+
+loadStud()

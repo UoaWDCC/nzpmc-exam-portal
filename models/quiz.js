@@ -1,18 +1,17 @@
 import { Model, Field } from 'fireo'
 
 class Quiz extends Model {
-    super() {
-        this.name = Field.Text({ required: true })
-        this.description = Field.Text({ required: true })
-        this.duration = Field.Number({ required: true })
-        this.numOfQuestions = Field.Number({ required: true })
-        this.questions = Field.Array({ required: true })
-        this.startTime = Field.Timestamp({ required: true })
-        this.endTime = Field.Timestamp({ required: true })
-        this.createdAt = Field.Timestamp({ required: true })
-        this.modifiedAt = Field.Timestamp({ required: true })
-        this.deleted = Field.Timestamp()
-    }
+    id = Field.ID()
+    name = Field.Text({ required: true })
+    description = Field.Text({ required: true })
+    duration = Field.Number({ required: true })
+    numOfQuestions = Field.Number({ required: true })
+    questions = Field.List({ required: true })
+    startTime = Field.DateTime({ required: true })
+    endTime = Field.DateTime({ required: true })
+    createdAt = Field.DateTime({ required: true, auto: true })
+    modifiedAt = Field.DateTime({ required: true, auto: true })
+    deleted = Field.DateTime()
 }
 
 export default Quiz
