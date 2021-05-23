@@ -21,10 +21,24 @@
                 allowfullscreen
             ></iframe>
             <v-container class="d-flex justify-center mb-6" max-width="10%">
-                <v-btn x-large color="#03a9f4" style="max-width: 100%"
+                <v-btn
+                    @click="redirectToExam()"
+                    x-large
+                    color="#03a9f4"
+                    style="max-width: 100%"
                     >I'm ready!</v-btn
                 >
             </v-container>
         </v-container>
     </div>
 </template>
+
+<script>
+export default {
+    methods: {
+        redirectToExam() {
+            this.$router.push({ path: '/exam' })
+        },
+    },
+}
+</script>

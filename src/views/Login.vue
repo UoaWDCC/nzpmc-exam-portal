@@ -32,7 +32,11 @@
             </v-row>
             <v-row align="center" justify="center">
                 <v-col sm="12" align="end" justify="center">
-                    <v-btn x-large color="#03a9f4" style="max-width: 100%"
+                    <v-btn
+                        @click="redirectToWelcome()"
+                        x-large
+                        color="#03a9f4"
+                        style="max-width: 100%"
                         >Login</v-btn
                     >
                 </v-col>
@@ -40,6 +44,16 @@
         </v-container>
     </div>
 </template>
+
+<script>
+export default {
+    methods: {
+        redirectToWelcome() {
+            this.$router.push({ path: '/welcome' })
+        },
+    },
+}
+</script>
 
 <style scoped>
 .login {
