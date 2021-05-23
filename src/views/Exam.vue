@@ -1,6 +1,51 @@
 <template>
     <div class="exam">
-        <AnswerList :optionsList="answers" />
+        <v-app>
+            <v-navigation-drawer app>
+                <!-- to be changed to Sidebar component-->
+                <v-sheet
+                    class="d-flex align-center justify-center"
+                    height="100vh"
+                    elevation="3"
+                    >Sidebar Component</v-sheet
+                >
+            </v-navigation-drawer>
+
+            <v-app-bar app>
+                <!-- to be changed to Topbar component-->
+            </v-app-bar>
+
+            <!-- Sizes your content based upon application components -->
+            <v-main>
+                <!-- Provides the application the proper gutter -->
+                <v-container fluid>
+                    <v-row>
+                        <v-col cols="8">
+                            <!-- to be changed to single question component -->
+                            <v-sheet
+                                class="d-flex align-center justify-center"
+                                height="90vh"
+                                elevation="3"
+                                >Single Question Component</v-sheet
+                            >
+                        </v-col>
+                        <v-col>
+                            <v-card
+                                class="d-flex align-center justify-center"
+                                height="90vh"
+                                elevation="3"
+                            >
+                                <AnswerList :optionsList="answers" />
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-main>
+
+            <v-footer app>
+                <!-- -->
+            </v-footer>
+        </v-app>
     </div>
 </template>
 
