@@ -4,7 +4,13 @@ const datetimeScalar = new GraphQLScalarType({
     name: 'DateTime',
     description: 'DateTime custom scalar type',
     serialize(value) {
-        return value.getTime() // Convert outgoing Date to integer for JSON
+        if (value instanceof Date) {
+            return value.toISOString()
+        } else {
+            // Assume it's a Timestamp
+            // See: https://firebase.google.com/docs/reference/js/firebase.firestore.Timestamp
+            return value.toDate().toISOString()
+        }
     },
     parseValue(value) {
         return new Date(value) // Convert incoming integer to Date

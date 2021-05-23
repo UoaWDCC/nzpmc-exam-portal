@@ -21,6 +21,10 @@
             "error",
             { "ignores": ["modules"] }
         ],
+        "node/no-extraneous-import": [
+            "error",
+            { "devDependencies": ["**/*.test.js"] }
+        ],
         "comma-dangle": ["error", "always-multiline"],
         "block-scoped-var": "error",
         "indent": ["error", 4],

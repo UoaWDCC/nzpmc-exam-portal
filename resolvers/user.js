@@ -1,3 +1,5 @@
+import { getUser } from '../controllers/user'
+
 const studUser = {
     id: '123',
     displayName: 'user',
@@ -17,8 +19,9 @@ const resolvers = {
         user(parents, args, ctx) {
             return studUser
         },
-        me(parents, args, ctx) {
-            return studUser
+        me: async (parents, args, ctx) => {
+            if (!ctx.user) return
+            return await getUser(ctx.user.uid)
         },
         users(parents, args, ctx) {
             return [studUser, studUser, studUser, studUser]
