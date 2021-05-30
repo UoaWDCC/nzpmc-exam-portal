@@ -17,16 +17,25 @@ const routes = [
         path: '/welcome',
         name: 'Welcome',
         component: Welcome,
+        meta: {
+            authRequired: true,
+        },
     },
     {
         path: '/exam',
         name: 'Exam',
         component: Exam,
+        meta: {
+            authRequired: true,
+        },
     },
     {
         path: '/submission',
         name: 'Submission',
         component: Submission,
+        meta: {
+            authRequired: true,
+        },
     },
 ]
 
