@@ -58,4 +58,4 @@ const updateUser = async ({ id, firstName, lastName, yearLevel }) => {
     })
 }
 
-export { getUser, getAllUsers, createUser, updateUser, packUser }
+export {getUser, getAllUsers, createUser, updateUser}
