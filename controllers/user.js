@@ -18,14 +18,13 @@ const packUsers = (users) => users.map(packUser)
 
 const getUser = async (id) => {
     const user = await User.collection.get({ id })
-    return user
+    return packUser(user)
 }
 
 const getAllUsers = async () => {
     const users = (
         await User.collection.fetch()
     ).list
-    console.log(users);
     return packUsers(users);
 }
 
