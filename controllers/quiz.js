@@ -30,9 +30,9 @@ const packUserQuiz = (userquiz) => {
     }
 }
 
-const packQuizzes= (quizzes) => quizzes.map(packQuiz)
+const packQuizzes = (quizzes) => quizzes.map(packQuiz)
 
-const packUserQuizzes= (quizzes) => quizzes.map(packUserQuiz)
+const packUserQuizzes = (quizzes) => quizzes.map(packUserQuiz)
 
 
 const getUserQuiz = async (id) => {

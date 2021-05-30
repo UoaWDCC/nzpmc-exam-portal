@@ -1,33 +1,12 @@
-const studQuestion = {
-    id: '123',
-    question: 'What is the question?',
-    numOfAnswers: 42,
-    topics: 'Physics, Existentialism',
-    options: [
-        {
-            id: '123',
-            option: 'Option1',
-            created: new Date(),
-            modified: new Date(),
-        },
-        {
-            id: '124',
-            option: 'Option2',
-            created: new Date(),
-            modified: new Date(),
-        },
-    ],
-    created: new Date(),
-    modified: new Date(),
-}
+import { getQuestion, getAllQuestions } from '../controllers/question'
 
 const resolvers = {
     Query: {
-        question(parents, args, ctx) {
-            return studQuestion
+        question: async (parents, args, ctx) => {
+            return await getQuestion(args.questionID) 
         },
-        questions(parents, args, ctx) {
-            return [studQuestion, studQuestion, studQuestion]
+        questions: async (parents, args, ctx) => {
+            return await getAllQuestions() 
         },
     },
 }
