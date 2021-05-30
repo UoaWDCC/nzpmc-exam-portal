@@ -1,4 +1,4 @@
-import { getUser } from '../controllers/user'
+import { getUser, getAllUsers } from '../controllers/user'
 
 const studUser = {
     id: '123',
@@ -16,15 +16,15 @@ const studUser = {
 
 const resolvers = {
     Query: {
-        user(parents, args, ctx) {
-            return studUser
+        user: async (parents, args, ctx) => {
+            return await getUser(args.userID); 
         },
         me: async (parents, args, ctx) => {
             if (!ctx.user) return
             return await getUser(ctx.user.uid)
         },
-        users(parents, args, ctx) {
-            return [studUser, studUser, studUser, studUser]
+        users: async (parents, args, ctx) => {
+            return await getAllUsers()
         },
     },
 }

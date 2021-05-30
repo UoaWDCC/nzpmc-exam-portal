@@ -14,9 +14,19 @@ const packUser = (user) => {
     }
 }
 
+const packUsers = (users) => users.map(packUser)
+
 const getUser = async (id) => {
     const user = await User.collection.get({ id })
     return user
+}
+
+const getAllUsers = async () => {
+    const users = (
+        await User.collection.fetch()
+    ).list
+    console.log(users);
+    return packUsers(users);
 }
 
 const createUser = async ({ firstName, lastName, yearLevel, role }) => {
@@ -49,4 +59,4 @@ const updateUser = async ({ id, firstName, lastName, yearLevel }) => {
     })
 }
 
-export { getUser, createUser, updateUser, packUser }
+export { getUser, getAllUsers, createUser, updateUser, packUser }
