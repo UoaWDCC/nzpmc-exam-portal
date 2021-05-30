@@ -18,8 +18,9 @@
                                 class="d-flex align-center justify-center"
                                 height="90vh"
                                 elevation="3"
-                                >Single Question Component</v-sheet
                             >
+                                <SingleQuestion :question="question.text" />
+                            </v-sheet>
                         </v-col>
                         <v-col>
                             <v-card
@@ -43,16 +44,21 @@
 
 <script>
 import AnswerList from './../components/AnswerList.vue'
+import SingleQuestion from './../components/SingleQuestion.vue'
 import Sidebar from '../components/Sidebar'
 
 export default {
     setup() {},
     components: {
         AnswerList,
+        SingleQuestion,
         Sidebar,
     },
     data() {
         return {
+            question: {
+                text: '$$\\frac{a}{b}$$',
+            },
             answers: [
                 { text: 'First Answer', id: 1 },
                 { text: 'Second Answer', id: 2 },
