@@ -27,13 +27,22 @@ const getAllQuizzes = async () => {
     return packQuizzes(quizzes)
 }
 
-const addQuiz = async ({ firstName, lastName, yearLevel, role }) => {
+const addQuiz = async (
+    name,
+    description,
+    duration,
+    numOfQuestions,
+    startTime,
+    endTime,
+) => {
     const quiz = Quiz.init()
 
-    quiz.firstName = firstName
-    quiz.lastName = lastName
-    quiz.yearLevel = yearLevel
-    quiz.role = role
+    quiz.name = name
+    quiz.description = description
+    quiz.duration = duration
+    quiz.numOfQuestions = numOfQuestions
+    quiz.startTime = startTime
+    quiz.endTime = endTime
     quiz.created = new Date()
     quiz.modified = new Date()
 
@@ -42,13 +51,25 @@ const addQuiz = async ({ firstName, lastName, yearLevel, role }) => {
     return await getQuiz(quiz.id)
 }
 
-const editQuiz = async ({ id, firstName, lastName, yearLevel }) => {
+const editQuiz = async (
+    name,
+    description,
+    duration,
+    numOfQuestions,
+    startTime,
+    endTime,
+) => {
     return await Fireo.runTransaction(async (t) => {
-        const quiz = getQuiz(id)
+        const quiz = await getQuiz(id)
 
-        quiz.firstName = firstName ? firstName : quiz.firstName
-        quiz.lastName = lastName ? lastName : quiz.lastName
-        quiz.yearLevel = yearLevel ? yearLevel : quiz.yearLevel
+        quiz.name = name ? name : quiz.name
+        quiz.description = description ? description : quiz.description
+        quiz.duration = duration ? duration : quiz.duration
+        quiz.numOfQuestions = numOfQuestions
+            ? numOfQuestions
+            : quiz.numOfQuestions
+        quiz.startTime = startTime ? startTime : quiz.startTime
+        quiz.endTime = endTime ? endTime : quiz.endTime
         quiz.modified = new Date()
 
         await quiz.update()
@@ -57,4 +78,4 @@ const editQuiz = async ({ id, firstName, lastName, yearLevel }) => {
     })
 }
 
-export { getAllQuizzes }
+export { getAllQuizzes, addQuiz, editQuiz }

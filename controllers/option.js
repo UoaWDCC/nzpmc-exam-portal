@@ -13,8 +13,8 @@ const packOption = (option) => {
 
 const packOptions = (option) => option.map(packOption)
 
-const getQuestionOptions = async (parent) => {
-    const option = (await Option.collection.parent(id).fetch()).list
+const getQuestionOptions = async (question) => {
+    const option = (await Option.collection.parent(question.key).fetch()).list
     return packOptions(option)
 }
 
@@ -23,4 +23,16 @@ const getOptionKey = async (optionKey) => {
     return packOption(option)
 }
 
-export { getQuestionOptions, getOptionKey, packOptions }
+const getUserQuizQuestionOptionID = async (userQuiz, optionID) => {
+    const option = await Option.collection
+        .parent(userQuiz.key)
+        .get({ id: optionID })
+    return packOption(option)
+}
+
+export {
+    getQuestionOptions,
+    getOptionKey,
+    packOptions,
+    getUserQuizQuestionOptionID,
+}

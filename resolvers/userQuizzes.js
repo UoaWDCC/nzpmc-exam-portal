@@ -3,7 +3,11 @@ import {
     getUserQuizQuestions,
     getUserQuizQuestion,
     getUserQuizQuestionOptions,
+    getUser,
+    getUserQuizQuestionOptionID,
+    editUserQuizQuestion,
 } from '../controllers'
+import { addUserQuiz } from '../controllers/userQuiz'
 
 const resolvers = {
     UserQuiz: {
@@ -16,6 +20,8 @@ const resolvers = {
     },
     UserQuizQuestion: {
         userAnswer: async (parents, args, ctx) => {
+            if (!parents.answer) return null
+
             return await parents.answer.get()
         },
         options: async (parents, args, ctx) => {
@@ -32,7 +38,16 @@ const resolvers = {
     },
     Mutation: {
         addUserQuiz: async (parents, args, ctx) => {
-            await addUserQuiz
+            const user = getUser(args.userID)
+            const quiz = getQUiz(args.quizID)
+
+            return await addUserQuiz(user, quiz, args.startTime, args.endTime)
+        },
+        editUserQuizQuestion: async (parents, args, ctx) => {
+            const userQuiz = getUserQuiz(args.userQuizID)
+            const answer = getUserQuizQuestionOptionID(userQuiz, args.answer)
+
+            return await editUserQuizQuestion(userQuiz, id, answer)
         },
     },
 }

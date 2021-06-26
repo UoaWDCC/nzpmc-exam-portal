@@ -3,6 +3,7 @@ import {
     getAllQuizzes,
     getAllUserQuizzes,
     getQuizQuestions,
+    addQuiz,
 } from '../controllers'
 import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
 
@@ -20,8 +21,30 @@ const resolvers = {
         },
     },
     Mutation: {
-        addQuiz: async (parent, { input }, context) => {},
-        editQuiz: async (parent, { input }, context) => {},
+        addQuiz: async (parent, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+
+            const { name, descirption, duration, startTime, endTime } = input
+            return await addQuiz(
+                name,
+                descirption,
+                duration,
+                startTime,
+                endTime,
+            )
+        },
+        editQuiz: async (parent, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+
+            const { name, descirption, duration, startTime, endTime } = input
+            return await addQuiz(
+                name,
+                descirption,
+                duration,
+                startTime,
+                endTime,
+            )
+        },
     },
 }
 
