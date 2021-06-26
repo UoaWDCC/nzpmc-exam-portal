@@ -54,7 +54,9 @@ const editQuestion = async (quiz, id, q, numOfAnswers, topics) => {
     question.modified = new Date()
     question.created = question.created.toDate()
 
-    question.answer = question.answer.ref ? null : question.answer.ref
+    question.answer = question.answer.ref
+        ? undefined
+        : (await question.answer.get()).key
 
     await question.update()
 

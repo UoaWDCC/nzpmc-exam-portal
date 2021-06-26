@@ -21,6 +21,7 @@ import {
     addUserQuizQuestion,
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
+    getUserQuizQuestionOptionsByQuestion,
 } from './userQuizQuestion'
 
 export {
@@ -45,6 +46,7 @@ export {
     getOptionKey,
     getUserQuizQuestionOptionID,
     getUserQuizQuestionOptions,
+    getUserQuizQuestionOptionsByQuestion,
     addQuiz,
     editQuiz,
     addQuestionOption,

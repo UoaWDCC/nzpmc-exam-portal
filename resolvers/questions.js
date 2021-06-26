@@ -12,7 +12,7 @@ const resolvers = {
             return await getQuestionOptions(parents)
         },
         answer: async (parents, args, context) => {
-            if (!parents.answerObj.ref) return null
+            if (!parents.answerObj) return null
 
             return await parents.answerObj.get()
         },

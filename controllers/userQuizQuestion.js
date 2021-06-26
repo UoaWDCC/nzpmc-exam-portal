@@ -1,36 +1,63 @@
-import { Quiz, UserQuizQuestion } from '../models'
+import { Option, Question, Quiz, UserQuizQuestion } from '../models'
+import { packOptions } from './option'
 
-const packUserQuizQuestion = (answer) => {
-    const question = answer.question.get()
+const getUserQuizQuestion = async (userQuiz, id) => {
+    const quiz = await userQuiz.quizObj.get()
+
+    const quizQuestion = await Question.collection.parent(quiz.key).get({ id })
+
+    const userQuizQuestion = await UserQuizQuestion.collection
+        .parent(userQuiz.key)
+        .get({ id })
 
     return {
-        key: answer.key,
-        id: answer.id,
-        question: question.question,
-        questionKey: question.key,
-        userAnswerKey: answer.userAnswer.key,
+        id: quizQuestion.id,
+        question: quizQuestion.question,
+        questionKey: quizQuestion.key,
+        questionObj: quizQuestion,
+        userAnswerKey: userQuizQuestion ? userQuizQuestion.key : null,
+        userAnswerObj: userQuizQuestion,
     }
 }
 
-const packUserQuizQuestions = (answers) => answers.map(packUserQuizQuestion)
-
-const getUserQuizQuestion = async (userQuiz, id) => {
-    const userQuizQuestion = await UserQuizQuestion.collection
-        .parent(userQuiz.key)
-        .get({ id: id })
-    return packUserQuizQuestion(userQuizQuestion)
-}
-
 const getUserQuizQuestions = async (userQuiz) => {
+    const quiz = await userQuiz.quizObj.get()
+    const quizQuestions = (await Question.collection.parent(quiz.key).fetch())
+        .list
+
     const userQuizQuestions = (
         await UserQuizQuestion.collection.parent(userQuiz.key).fetch()
     ).list
-    return packUserQuizQuestions(userQuizQuestions)
+
+    const userQuizQuestionsMap = userQuizQuestions.reduce((map, question) => {
+        map[question.id] = question
+    }, {})
+
+    return quizQuestions.map((quizQuestion) => {
+        let userQuizQuestion = userQuizQuestionsMap[quizQuestion.id]
+        if (!userQuizQuestion) {
+            return {
+                id: quizQuestion.id,
+                question: quizQuestion.question,
+                questionKey: quizQuestion.key,
+                questionObj: quizQuestion,
+            }
+        }
+        return {
+            id: quizQuestion.id,
+            question: quizQuestion.question,
+            questionKey: quizQuestion.key,
+            questionObj: quizQuestion,
+            userAnswerKey: userQuizQuestion.key,
+            userAnswerObj: userQuizQuestion,
+        }
+    })
 }
 
 const addUserQuizQuestion = async (userQuiz, question) => {
     const userQuizQuestion = UserQuizQuestion.init({ parent: userQuiz.key })
 
+    userQuizQuestion.id = question.id
     userQuizQuestion.question = question.key
     userQuizQuestion.answer = null
     userQuizQuestion.firstViewed = null
@@ -67,11 +94,16 @@ const getUserQuizQuestionOptions = async (quizQuestion) => {
 
     const question = await userQuizQuestion.question.get()
 
-    const correct = await question.correct.get()
+    return await getUserQuizQuestionOptionsByQuestion(question)
+}
+
+const getUserQuizQuestionOptionsByQuestion = async (question) => {
+    if (!question.answer.ref) return []
+    const answer = await question.answer.get()
 
     const options = (await Option.collection.parent(question.key).fetch()).list
 
-    answers = [correct, ...options]
+    let answers = [answer, ...options]
 
     let count = answers.length,
         randomnumber,
@@ -92,4 +124,5 @@ export {
     addUserQuizQuestion,
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
+    getUserQuizQuestionOptionsByQuestion,
 }

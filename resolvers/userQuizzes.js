@@ -2,17 +2,13 @@ import {
     getUserQuiz,
     getUserQuizQuestions,
     getUserQuizQuestion,
-    getUserQuizQuestionOptions,
+    getUserQuizQuestionOptionsByQuestion,
     getUser,
     getUserQuizQuestionOptionID,
     editUserQuizQuestion,
     getQuiz,
 } from '../controllers'
-import {
-    addUserQuiz,
-    getAllUserQuizzes,
-    getUserQuizzes,
-} from '../controllers/userQuiz'
+import { addUserQuiz, getUserQuizzes } from '../controllers/userQuiz'
 
 const resolvers = {
     UserQuiz: {
@@ -29,20 +25,32 @@ const resolvers = {
     },
     UserQuizQuestion: {
         userAnswer: async (parents, args, context) => {
-            if (!parents.answer) return null
+            if (!parents.userAnswerObj) return null
 
-            return await parents.answer.get()
+            return await parents.userAnswerObj.get()
         },
         options: async (parents, args, context) => {
-            return await getUserQuizQuestionOptions(parents)
+            if (!parents.questionObj) return null
+
+            return await getUserQuizQuestionOptionsByQuestion(
+                parents.questionObj,
+            )
         },
     },
     Query: {
         userQuizzes: async (parents, args, context) => {
-            return await getUserQuizzes(args.userID)
+            if (!context.user) throw new AuthenticationError()
+
+            return await getUserQuizzes(context.user.uid)
         },
         userQuiz: async (parents, args, context) => {
-            return await getUserQuiz(args.userID)
+            if (!context.user) throw new AuthenticationError()
+
+            const userQuiz = await getUserQuiz(args.quizID)
+            const user = await userQuiz.userObj.get()
+
+            if (user.id !== context.user.uid) throw new AuthenticationError()
+            return userQuiz
         },
     },
     Mutation: {
