@@ -17,6 +17,7 @@ const auth = () => async ({ req }) => {
         }
     } catch (e) {
         // Invalid token
+        console.log(e)
     }
 }
 

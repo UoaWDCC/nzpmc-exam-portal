@@ -5,7 +5,7 @@ type Mutation {
     addUser(input: AddUserInput): User
     editUser(input: EditUserInput): User
 
-    addQuiz(input: AddQuizInput): Question
+    addQuiz(input: AddQuizInput): Quiz
     editQuiz(input: EditQuizInput): Quiz
 
     addQuestion(input: AddQuestionInput): Question
