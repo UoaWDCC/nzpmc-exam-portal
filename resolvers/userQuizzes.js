@@ -4,9 +4,10 @@ import {
     getUserQuizQuestion,
     getUserQuizQuestionOptionsByQuestion,
     getUser,
-    getUserQuizQuestionOptionID,
+    getOptionByQuestionID,
     editUserQuizQuestion,
     getQuiz,
+    getQuestion,
 } from '../controllers'
 import { addUserQuiz, getUserQuizzes } from '../controllers/userQuiz'
 
@@ -68,8 +69,13 @@ const resolvers = {
             )
         },
         editUserQuizQuestion: async (parents, { input }, context) => {
-            const userQuiz = getUserQuiz(input.userQuizID)
-            const answer = getUserQuizQuestionOptionID(userQuiz, input.answer)
+            const { id, userQuizID, questionID, answerID } = input
+
+            const userQuiz = await getUserQuiz(userQuizID)
+            const quiz = await userQuiz.quizObj.get()
+
+            const question = await getQuestion(quiz, questionID)
+            const answer = await getOptionByQuestionID(question, answerID)
 
             return await editUserQuizQuestion(userQuiz, id, answer)
         },

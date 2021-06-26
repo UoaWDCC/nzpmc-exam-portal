@@ -7,7 +7,7 @@ import {
 import {
     getQuestionOptions,
     getOptionKey,
-    getUserQuizQuestionOptionID,
+    getOptionByQuestionID,
     addQuestionOption,
     editQuestionOption,
     upsertQuestionAnswer,
@@ -44,7 +44,7 @@ export {
     addUserQuizQuestion,
     editUserQuizQuestion,
     getOptionKey,
-    getUserQuizQuestionOptionID,
+    getOptionByQuestionID,
     getUserQuizQuestionOptions,
     getUserQuizQuestionOptionsByQuestion,
     addQuiz,

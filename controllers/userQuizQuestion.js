@@ -69,22 +69,21 @@ const addUserQuizQuestion = async (userQuiz, question) => {
 }
 
 const editUserQuizQuestion = async (userQuiz, id, answer) => {
-    return await Fireo.runTransaction(async (t) => {
-        const userQuizQuestion = await UserQuizQuestion.collection
-            .parent(userQuiz.key)
-            .get({
-                id: id,
-                transaction: t,
-            })
-        userQuizQuestion.answer = answer.key
-        userQuizQuestion.firstViewed = userQuizQuestion.firstViewed
-            ? userQuizQuestion.firstViewed
-            : new Date()
-        userQuizQuestion.lastAnswered = answer
-            ? new Date()
-            : userQuizQuestion.lastAnswered
-        await city.update({ transaction: t })
-    })
+    const userQuizQuestion = UserQuizQuestion.init({ parent: userQuiz.key })
+
+    userQuizQuestion.id = id
+    userQuizQuestion.answer = answer.key
+    userQuizQuestion.firstViewed = userQuizQuestion.firstViewed
+        ? userQuizQuestion.firstViewed
+        : new Date()
+    userQuizQuestion.lastAnswered = answer
+        ? new Date()
+        : userQuizQuestion.lastAnswered
+    userQuizQuestion.modified = new Date()
+
+    await userQuizQuestion.upsert()
+
+    return answer
 }
 
 const getUserQuizQuestionOptions = async (quizQuestion) => {

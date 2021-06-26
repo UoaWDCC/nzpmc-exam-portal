@@ -23,9 +23,9 @@ const getOptionKey = async (optionKey) => {
     return packOption(option)
 }
 
-const getUserQuizQuestionOptionID = async (userQuiz, optionID) => {
+const getOptionByQuestionID = async (question, optionID) => {
     const option = await Option.collection
-        .parent(userQuiz.key)
+        .parent(question.key)
         .get({ id: optionID })
     return packOption(option)
 }
@@ -76,7 +76,7 @@ export {
     getQuestionOptions,
     getOptionKey,
     packOptions,
-    getUserQuizQuestionOptionID,
+    getOptionByQuestionID,
     addQuestionOption,
     editQuestionOption,
     upsertQuestionAnswer,

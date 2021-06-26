@@ -91,5 +91,6 @@ input AddUserQuiz {
 input EditUserQuizQuestion {
     id: ID!
     userQuizID: ID!
-    answer: ID!
+    questionID: ID!
+    answerID: ID!
 }
