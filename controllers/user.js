@@ -26,10 +26,6 @@ const getAllUsers = async () => {
         await User.collection.fetch()
     ).list
     return packUsers(users);
-
-const getUser = async (id) => {
-    const user = await User.collection.get({ id })
-    return packUser(user);
 }
 
 const createUser = async ({ firstName, lastName, yearLevel, role }) => {
