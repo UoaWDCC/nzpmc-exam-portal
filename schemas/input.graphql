@@ -1,3 +1,65 @@
-input CreateQuestionInput {
+input AddUserInput {
     id: ID!
+    displayName: String!
+    email: String!
+    photoURL: String!
+    firstName: String!
+    lastName: String!
+    yearLevel: String!
+    role: String!
+}
+
+input EditUserInput {
+    displayName: String
+    email: String
+    photoURL: String
+    firstName: String
+    lastName: String
+    yearLevel: String
+}
+
+input AddQuizInput {
+    name: String!
+    description: String!
+    duration: Int!
+    numOfQuestions: Int!
+    startTime: DateTime!
+    endTime: DateTime!
+}
+
+input EditQuizInput {
+    id: ID!
+    name: String
+    description: String
+    duration: Int
+    numOfQuestions: Int
+    startTime: DateTime
+    endTime: DateTime
+}
+
+input AddQuestionInput {
+    quizID: ID!
+    question: String!
+    numOfAnswers: Int!
+    topics: String!
+}
+
+input EditQuestionInput {
+    id: ID!
+    question: String
+    numOfAnswers: Int
+    topics: String
+}
+
+input AddOptionInput {
+    quizID: ID!
+    questionID: ID!
+    option: String!
+}
+
+input EditOptionInput {
+    id: ID!
+    quizID: ID!
+    questionID: ID!
+    option: String
 }

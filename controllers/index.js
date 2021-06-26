@@ -1,15 +1,16 @@
-import {getQuestion, getAllQuestions} from './question'
-import {getUserQuiz, getAllQuizzes, getAllUserQuizzes} from './quiz'
-import {getUser, getAllUsers, createUser, updateUser} from './user'
+import { getQuizQuestions } from './question'
+import { getQuestionOptions } from './option'
+import { getUserQuiz, getAllQuizzes, getAllUserQuizzes } from './quiz'
+import { getUser, getAllUsers, addUser, editUser } from './user'
 
-export default {
-    getQuestion,
-    getAllQuestions,
+export {
+    getQuizQuestions,
+    getQuestionOptions,
     getUserQuiz,
     getAllQuizzes,
     getAllUserQuizzes,
     getUser,
     getAllUsers,
-    createUser,
-    updateUser
+    addUser,
+    editUser,
 }

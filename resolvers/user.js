@@ -1,9 +1,9 @@
-import { getUser, getAllUsers } from '../controllers/user'
+import { getUser, getAllUsers } from '../controllers'
 
 const resolvers = {
     Query: {
         user: async (parents, args, ctx) => {
-            return await getUser(args.userID); 
+            return await getUser(args.userID)
         },
         me: async (parents, args, ctx) => {
             if (!ctx.user) return
@@ -12,6 +12,10 @@ const resolvers = {
         users: async (parents, args, ctx) => {
             return await getAllUsers()
         },
+    },
+    Mutation: {
+        addUser: async (parent, { input }, context) => {},
+        editUser: async (parent, { input }, context) => {},
     },
 }
 

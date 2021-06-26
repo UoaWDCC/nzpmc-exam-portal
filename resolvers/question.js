@@ -1,13 +1,15 @@
-import { getQuestion, getAllQuestions } from '../controllers/question'
+import { getQuestionOptions } from '../controllers'
 
 const resolvers = {
-    Query: {
-        question: async (parents, args, ctx) => {
-            return await getQuestion(args.questionID) 
+    Question: {
+        options: async (parents, args, ctx) => {
+            return await getQuestionOptions(parents.id)
         },
-        questions: async (parents, args, ctx) => {
-            return await getAllQuestions() 
-        },
+    },
+    Query: {},
+    Mutation: {
+        addQuestion: async (parent, { input }, context) => {},
+        editQuestion: async (parent, { input }, context) => {},
     },
 }
 

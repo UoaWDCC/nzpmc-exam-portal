@@ -22,13 +22,11 @@ const getUser = async (id) => {
 }
 
 const getAllUsers = async () => {
-    const users = (
-        await User.collection.fetch()
-    ).list
-    return packUsers(users);
+    const users = (await User.collection.fetch()).list
+    return packUsers(users)
 }
 
-const createUser = async ({ firstName, lastName, yearLevel, role }) => {
+const addUser = async ({ firstName, lastName, yearLevel, role }) => {
     const user = User.init()
 
     user.firstName = firstName
@@ -43,7 +41,7 @@ const createUser = async ({ firstName, lastName, yearLevel, role }) => {
     return await getUser(user.id)
 }
 
-const updateUser = async ({ id, firstName, lastName, yearLevel }) => {
+const editUser = async ({ id, firstName, lastName, yearLevel }) => {
     return await Fireo.runTransaction(async (t) => {
         const user = getUser(id)
 
@@ -58,4 +56,4 @@ const updateUser = async ({ id, firstName, lastName, yearLevel }) => {
     })
 }
 
-export {getUser, getAllUsers, createUser, updateUser}
+export { getUser, getAllUsers, addUser, editUser }

@@ -1,11 +1,9 @@
-import { Fireo } from 'fireo'
 import { Question } from '../models'
 
 const packQuestion = (question) => {
     return {
         key: question.key,
         id: question.id,
-        question: question.question,
         numOfAnswer: question.numOfAnswer,
         topics: question.topics,
         correct: question.correct,
@@ -18,16 +16,9 @@ const packQuestion = (question) => {
 
 const packQuestions = (questions) => questions.map(packQuestion)
 
-const getQuestion = async (id) => {
-    const question = await Question.collection.get({ id })
-    return packQuestion(Question)
+const getQuizQuestions = async (id) => {
+    const question = (await Question.collection.parent(id).fetch()).list
+    return packQuestions(question)
 }
 
-const getAllQuestions = async (id) => {
-    const questions = (
-        await Question.collection.fetch()
-    ).list
-    return packQuestions(questions)
-}
-
-export {getQuestion, getAllQuestions}
+export { getQuizQuestions }
