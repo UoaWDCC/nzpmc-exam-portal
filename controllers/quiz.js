@@ -1,5 +1,4 @@
-import { Fireo } from 'fireo'
-import { UserQuiz, Quiz } from '../models'
+import { Quiz } from '../models'
 
 const packQuiz = (quiz) => {
     return {
@@ -53,6 +52,7 @@ const addQuiz = async (
 }
 
 const editQuiz = async (
+    id,
     name,
     description,
     duration,
@@ -60,23 +60,19 @@ const editQuiz = async (
     startTime,
     endTime,
 ) => {
-    return await Fireo.runTransaction(async (t) => {
-        const quiz = await getQuiz(id)
+    const quiz = await Quiz.collection.get({ id })
 
-        quiz.name = name ? name : quiz.name
-        quiz.description = description ? description : quiz.description
-        quiz.duration = duration ? duration : quiz.duration
-        quiz.numOfQuestions = numOfQuestions
-            ? numOfQuestions
-            : quiz.numOfQuestions
-        quiz.startTime = startTime ? startTime : quiz.startTime
-        quiz.endTime = endTime ? endTime : quiz.endTime
-        quiz.modified = new Date()
+    quiz.name = name ? name : quiz.name
+    quiz.description = description ? description : quiz.description
+    quiz.duration = duration ? duration : quiz.duration
+    quiz.numOfQuestions = numOfQuestions ? numOfQuestions : quiz.numOfQuestions
+    quiz.startTime = startTime ? new Date(startTime) : quiz.startTime.toDate()
+    quiz.endTime = endTime ? new Date(endTime) : quiz.endTime.toDate()
+    quiz.modified = new Date()
 
-        await quiz.update()
+    await quiz.update()
 
-        return quiz
-    })
+    return packQuiz(quiz)
 }
 
-export { getAllQuizzes, addQuiz, editQuiz }
+export { getAllQuizzes, getQuiz, addQuiz, editQuiz }
