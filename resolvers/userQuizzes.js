@@ -39,7 +39,7 @@ const resolvers = {
     Mutation: {
         addUserQuiz: async (parents, args, ctx) => {
             const user = getUser(args.userID)
-            const quiz = getQUiz(args.quizID)
+            const quiz = getQuiz(args.quizID)
 
             return await addUserQuiz(user, quiz, args.startTime, args.endTime)
         },

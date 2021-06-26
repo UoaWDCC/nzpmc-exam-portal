@@ -5,6 +5,7 @@ const packQuiz = (quiz) => {
     return {
         key: quiz.key,
         id: quiz.id,
+        name: quiz.name,
         description: quiz.description,
         duration: quiz.duration,
         numOfQuestions: quiz.numOfQuestions,
