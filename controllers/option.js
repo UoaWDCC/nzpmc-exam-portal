@@ -13,9 +13,14 @@ const packOption = (option) => {
 
 const packOptions = (option) => option.map(packOption)
 
-const getQuestionOptions = async (id) => {
+const getQuestionOptions = async (parent) => {
     const option = (await Option.collection.parent(id).fetch()).list
     return packOptions(option)
 }
 
-export { getQuestionOptions }
+const getOptionKey = async (optionKey) => {
+    const option = await Option.collection.get({ key: optionKey })
+    return packOption(option)
+}
+
+export { getQuestionOptions, getOptionKey, packOptions }

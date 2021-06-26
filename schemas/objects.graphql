@@ -17,6 +17,7 @@ type Question {
     question: String
     numOfAnswers: Int
     topics: String # should be enum
+    answer: Option
     options: [Option]
     created: DateTime
     modified: DateTime
@@ -45,9 +46,11 @@ type Quiz {
 type UserQuiz {
     id: ID!
     user: User
-    quiz: Quiz
-    answer(index: Int!): UserQuizAnswer
-    answers: [UserQuizAnswer]
+    name: String
+    description: String
+    duration: Int
+    question(id: ID!): UserQuizQuestion
+    questions: [UserQuizQuestion]
     score: Float
     startTime: DateTime
     endTime: DateTime
@@ -55,10 +58,11 @@ type UserQuiz {
     modified: DateTime
 }
 
-type UserQuizAnswer {
+type UserQuizQuestion {
     id: ID!
-    question: Question
-    answer: Option
+    question: String!
+    options: [Option!]!
+    userAnswer: Option
     firstViewed: DateTime
     lastAnswered: DateTime
     created: DateTime

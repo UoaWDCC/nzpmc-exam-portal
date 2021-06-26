@@ -72,7 +72,7 @@ input AddUserQuiz {
     endTime: DateTime!
 }
 
-input EditUserQuizAnswer {
+input EditUserQuizQuestion {
     id: ID!
     userQuizID: ID!
     answer: ID!

@@ -5,7 +5,7 @@ class Question extends Model {
     question = Field.Text({ required: true })
     numOfAnswer = Field.Number({ required: true })
     topics = Field.Text({ required: true })
-    correct = Field.Reference({ required: true })
+    answer = Field.Reference({ required: true })
     created = Field.DateTime({ required: true })
     modified = Field.DateTime({ required: true })
     deleted = Field.DateTime()

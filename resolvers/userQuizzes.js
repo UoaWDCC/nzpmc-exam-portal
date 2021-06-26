@@ -1,17 +1,39 @@
-import { getUserQuiz, getAllUserQuizzes } from '../controllers'
+import {
+    getUserQuiz,
+    getUserQuizQuestions,
+    getUserQuizQuestion,
+    getUserQuizQuestionOptions,
+} from '../controllers'
 
 const resolvers = {
+    UserQuiz: {
+        question: async (parents, args, ctx) => {
+            return await getUserQuizQuestion(parents, args.id)
+        },
+        questions: async (parents, args, ctx) => {
+            return await getUserQuizQuestions(parents)
+        },
+    },
+    UserQuizQuestion: {
+        userAnswer: async (parents, args, ctx) => {
+            return await parents.answer.get()
+        },
+        options: async (parents, args, ctx) => {
+            return await getUserQuizQuestionOptions(parents)
+        },
+    },
     Query: {
         userQuizzes: async (parents, args, ctx) => {
-            return await getAllUserQuizzes(args.userID)
+            return await parents.question.get()
         },
         userQuiz: async (parents, args, ctx) => {
             return await getUserQuiz(args.userID)
         },
     },
     Mutation: {
-        addUser: async (parent, { input }, context) => {},
-        editUser: async (parent, { input }, context) => {},
+        addUserQuiz: async (parents, args, ctx) => {
+            await addUserQuiz
+        },
     },
 }
 

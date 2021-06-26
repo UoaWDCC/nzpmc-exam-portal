@@ -4,7 +4,7 @@ import {
     Quiz,
     User,
     UserQuiz,
-    UserQuizAnswer,
+    UserQuizQuestion,
 } from './models/'
 import dotenv from 'dotenv'
 
@@ -72,16 +72,16 @@ const createUserQuiz = async (data) => {
     await userQuiz.save()
 }
 
-const createUserQuizAnswer = async (data) => {
-    let userQuizAnswer = UserQuizAnswer.init()
-    userQuizAnswer.id = data.id
-    userQuizAnswer.question = data.question
-    userQuizAnswer.answer = data.answer
-    userQuizAnswer.firstViewed = data.firstViewed
-    userQuizAnswer.lastAnswered = data.lastAnswered
-    userQuizAnswer.created = new Date()
-    userQuizAnswer.modified = new Date()
-    await userQuizAnswer.save()
+const createUserQuizQuestion = async (data) => {
+    let UserQuizQuestion = UserQuizQuestion.init()
+    UserQuizQuestion.id = data.id
+    UserQuizQuestion.question = data.question
+    UserQuizQuestion.answer = data.answer
+    UserQuizQuestion.firstViewed = data.firstViewed
+    UserQuizQuestion.lastAnswered = data.lastAnswered
+    UserQuizQuestion.created = new Date()
+    UserQuizQuestion.modified = new Date()
+    await UserQuizQuestion.save()
 }
 
 const loadStud = async () => {
@@ -120,7 +120,7 @@ const loadStud = async () => {
         numOfAnswers: 42,
         topics: 'Physics, Existentialism',
     })
-    await createUserQuizAnswer({
+    await createUserQuizQuestion({
         id: '1',
         question: 'Question/1',
         answer: 'Option/1',

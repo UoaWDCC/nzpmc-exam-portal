@@ -1,11 +1,14 @@
-import { UserQuiz } from '../models'
+import { Quiz, UserQuiz } from '../models'
 
-const packUserQuiz = (userquiz) => {
+const packUserQuiz = async (userquiz) => {
+    const quiz = await Quiz.collection.get({ id: userquiz.quiz.id })
     return {
         key: userquiz.key,
         id: userquiz.id,
-        quiz: userquiz.quiz,
-        answers: userquiz.quiz,
+        userID: userquiz.user.id,
+        name: quiz.name,
+        description: quiz.description,
+        duration: quiz.duration,
         score: userquiz.quiz,
         startTime: userquiz.startTime,
         endTime: userquiz.endTime,
@@ -40,7 +43,7 @@ const addUserQuiz = async (user, quiz, startTime, endTime) => {
 
     await userQuiz.save()
 
-    return await getUser(userQuiz.id)
+    return await getUserQuiz(userQuiz.id)
 }
 
 export { addUserQuiz, getUserQuiz, getAllUserQuizzes }

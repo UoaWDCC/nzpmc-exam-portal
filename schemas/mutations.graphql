@@ -19,5 +19,5 @@ type Mutation {
     """
     User
     """
-    editUserQuizAnswer(input: EditUserQuizAnswer): Option
+    editUserQuizQuestion(input: EditUserQuizQuestion): Option
 }
