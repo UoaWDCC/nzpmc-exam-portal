@@ -1,15 +1,17 @@
-import { Quiz, UserQuiz } from '../models'
+import { UserQuiz } from '../models'
+import { getUser } from './user'
 
 const packUserQuiz = async (userquiz) => {
-    const quiz = await Quiz.collection.get({ id: userquiz.quiz.id })
+    const quiz = await userquiz.quiz.get()
     return {
         key: userquiz.key,
         id: userquiz.id,
-        userID: userquiz.user.id,
+        userObj: userquiz.user,
+        quizObj: userquiz.quiz,
         name: quiz.name,
         description: quiz.description,
         duration: quiz.duration,
-        score: userquiz.quiz,
+        score: userquiz.score,
         startTime: userquiz.startTime,
         endTime: userquiz.endTime,
         created: userquiz.created,
@@ -21,7 +23,18 @@ const packUserQuizzes = (quizzes) => quizzes.map(packUserQuiz)
 
 const getUserQuiz = async (id) => {
     const quiz = await UserQuiz.collection.get({ id })
+
     return packUserQuiz(quiz)
+}
+
+const getUserQuizzes = async (id) => {
+    const user = await getUser(id)
+
+    const userQuizzes = (
+        await UserQuiz.collection.where('user', '==', user.key).fetch()
+    ).list
+
+    return packUserQuizzes(userQuizzes)
 }
 
 const getAllUserQuizzes = async () => {
@@ -34,8 +47,6 @@ const addUserQuiz = async (user, quiz, startTime, endTime) => {
 
     userQuiz.user = user.key
     userQuiz.quiz = quiz.key
-    userQuiz.yearLevel = yearLevel
-    userQuiz.score = 0.0
     userQuiz.startTime = startTime
     userQuiz.endTime = endTime
     userQuiz.created = new Date()
@@ -46,4 +57,4 @@ const addUserQuiz = async (user, quiz, startTime, endTime) => {
     return await getUserQuiz(userQuiz.id)
 }
 
-export { addUserQuiz, getUserQuiz, getAllUserQuizzes }
+export { addUserQuiz, getUserQuiz, getUserQuizzes, getAllUserQuizzes }

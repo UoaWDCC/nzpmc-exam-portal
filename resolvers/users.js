@@ -1,4 +1,4 @@
-import { getUser, getAllUsers } from '../controllers'
+import { getUser, getAllUsers, addUser, editUser } from '../controllers'
 
 const resolvers = {
     Query: {
@@ -14,8 +14,72 @@ const resolvers = {
         },
     },
     Mutation: {
-        addUser: async (parent, { input }, context) => {},
-        editUser: async (parent, { input }, context) => {},
+        addUser: async (parent, { input }, context) => {
+            const {
+                id,
+                displayName,
+                email,
+                photoURL,
+                firstName,
+                lastName,
+                yearLevel,
+                role,
+            } = input
+
+            return await addUser(
+                id,
+                displayName,
+                email,
+                photoURL,
+                firstName,
+                lastName,
+                yearLevel,
+                role,
+            )
+        },
+        editUser: async (parent, { input }, context) => {
+            const {
+                id,
+                displayName,
+                email,
+                photoURL,
+                firstName,
+                lastName,
+                yearLevel,
+            } = input
+
+            return await editUser(
+                id,
+                displayName,
+                email,
+                photoURL,
+                firstName,
+                lastName,
+                yearLevel,
+            )
+        },
+        editSelf: async (parent, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+
+            const {
+                displayName,
+                email,
+                photoURL,
+                firstName,
+                lastName,
+                yearLevel,
+            } = input
+
+            return await editUser(
+                uid,
+                displayName,
+                email,
+                photoURL,
+                firstName,
+                lastName,
+                yearLevel,
+            )
+        },
     },
 }
 

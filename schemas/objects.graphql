@@ -51,7 +51,7 @@ type UserQuiz {
     duration: Int
     question(id: ID!): UserQuizQuestion
     questions: [UserQuizQuestion]
-    score: Float
+    score: Int
     startTime: DateTime
     endTime: DateTime
     created: DateTime

@@ -9,7 +9,17 @@ input AddUserInput {
     role: String!
 }
 
+input EditSelfInput {
+    displayName: String
+    email: String
+    photoURL: String
+    firstName: String
+    lastName: String
+    yearLevel: String
+}
+
 input EditUserInput {
+    id: ID!
     displayName: String
     email: String
     photoURL: String
@@ -72,7 +82,6 @@ input EditAnswerInput {
 }
 
 input AddUserQuiz {
-    id: ID!
     userID: ID!
     quizID: ID!
     startTime: DateTime!
