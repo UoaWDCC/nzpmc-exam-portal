@@ -10,8 +10,7 @@ import {
     getUserQuizQuestionOptionID,
     addQuestionOption,
     editQuestionOption,
-    addQuestionAnswer,
-    editQuestionAnswer,
+    upsertQuestionAnswer,
 } from './option'
 import { getAllQuizzes, getQuiz, addQuiz, editQuiz } from './quiz'
 import { getUser, getAllUsers, addUser, editUser } from './user'
@@ -49,6 +48,5 @@ export {
     editQuiz,
     addQuestionOption,
     editQuestionOption,
-    addQuestionAnswer,
-    editQuestionAnswer,
+    upsertQuestionAnswer,
 }

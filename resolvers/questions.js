@@ -1,6 +1,7 @@
 import {
     addQuestion,
     editQuestion,
+    getOptionKey,
     getQuestionOptions,
     getQuiz,
 } from '../controllers'
@@ -8,7 +9,12 @@ import {
 const resolvers = {
     Question: {
         options: async (parents, args, context) => {
-            return await getQuestionOptions(parents.id)
+            return await getQuestionOptions(parents)
+        },
+        answer: async (parents, args, context) => {
+            if (!parents.answerObj.ref) return null
+
+            return await parents.answerObj.get()
         },
     },
     Query: {},

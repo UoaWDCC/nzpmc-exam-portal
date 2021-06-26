@@ -3,8 +3,7 @@ import {
     getQuiz,
     addQuestionOption,
     editQuestionOption,
-    addQuestionAnswer,
-    editQuestionAnswer,
+    upsertQuestionAnswer,
 } from '../controllers'
 
 const resolvers = {
@@ -28,15 +27,6 @@ const resolvers = {
 
             return await editQuestionOption(question, id, option)
         },
-        addAnswer: async (parent, { input }, context) => {
-            const { quizID, questionID, option } = input
-
-            const quiz = await getQuiz(quizID)
-
-            const question = await getQuestion(quiz, questionID)
-
-            return await addQuestionAnswer(question, option)
-        },
         editAnswer: async (parent, { input }, context) => {
             const { quizID, questionID, option } = input
 
@@ -44,7 +34,7 @@ const resolvers = {
 
             const question = await getQuestion(quiz, questionID)
 
-            return await editQuestionAnswer(question, option)
+            return await upsertQuestionAnswer(question, option)
         },
     },
 }

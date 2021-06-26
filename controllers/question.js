@@ -6,6 +6,7 @@ const packQuestion = (question) => {
         id: question.id,
         question: question.question,
         numOfAnswer: question.numOfAnswer,
+        answerObj: question.answer,
         topics: question.topics,
         correct: question.correct,
         option: question.option,

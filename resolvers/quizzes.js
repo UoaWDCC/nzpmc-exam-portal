@@ -12,7 +12,7 @@ const resolvers = {
     Quiz: {
         questions: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
-            return await getQuestions(parents.id)
+            return await getQuestions(parents)
         },
     },
     Query: {

@@ -65,12 +65,6 @@ input EditOptionInput {
     option: String!
 }
 
-input AddAnswerInput {
-    quizID: ID!
-    questionID: ID!
-    option: String!
-}
-
 input EditAnswerInput {
     quizID: ID!
     questionID: ID!
