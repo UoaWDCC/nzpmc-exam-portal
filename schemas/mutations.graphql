@@ -13,4 +13,11 @@ type Mutation {
 
     addOption(input: AddOptionInput): Option
     editOption(input: EditOptionInput): Option
+
+    addUserQuiz(input: AddUserQuiz): Quiz
+
+    """
+    User
+    """
+    editUserQuizAnswer(input: EditUserQuizAnswer): Option
 }

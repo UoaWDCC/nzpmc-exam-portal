@@ -63,3 +63,17 @@ input EditOptionInput {
     questionID: ID!
     option: String
 }
+
+input AddUserQuiz {
+    id: ID!
+    userID: ID!
+    quizID: ID!
+    startTime: DateTime!
+    endTime: DateTime!
+}
+
+input EditUserQuizAnswer {
+    id: ID!
+    userQuizID: ID!
+    answer: ID!
+}

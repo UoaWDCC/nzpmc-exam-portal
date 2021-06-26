@@ -26,13 +26,13 @@ const getAllUserQuizzes = async () => {
     return packUserQuizzes(userQuizzes)
 }
 
-const addUserQuiz = async ({ firstName, lastName, startTime, endTime }) => {
+const addUserQuiz = async (user, quiz, startTime, endTime) => {
     const userQuiz = UserQuiz.init()
 
-    userQuiz.user = firstName
-    userQuiz.quiz = lastName
+    userQuiz.user = user.key
+    userQuiz.quiz = quiz.key
     userQuiz.yearLevel = yearLevel
-    userQuiz.score = role
+    userQuiz.score = 0.0
     userQuiz.startTime = startTime
     userQuiz.endTime = endTime
     userQuiz.created = new Date()
@@ -42,3 +42,5 @@ const addUserQuiz = async ({ firstName, lastName, startTime, endTime }) => {
 
     return await getUser(userQuiz.id)
 }
+
+export { addUserQuiz, getUserQuiz, getAllUserQuizzes }

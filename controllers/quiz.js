@@ -57,30 +57,4 @@ const editQuiz = async ({ id, firstName, lastName, yearLevel }) => {
     })
 }
 
-const packUserQuiz = (userquiz) => {
-    return {
-        key: userquiz.key,
-        id: userquiz.id,
-        quiz: userquiz.quiz,
-        answers: userquiz.quiz,
-        score: userquiz.quiz,
-        startTime: userquiz.startTime,
-        endTime: userquiz.endTime,
-        created: userquiz.created,
-        modified: userquiz.modified,
-    }
-}
-
-const packUserQuizzes = (quizzes) => quizzes.map(packUserQuiz)
-
-const getUserQuiz = async (id) => {
-    const quiz = await UserQuiz.collection.get({ id })
-    return packUserQuiz(quiz)
-}
-
-const getAllUserQuizzes = async () => {
-    const userQuizzes = (await UserQuiz.collection.fetch()).list
-    return packUserQuizzes(userQuizzes)
-}
-
-export { getUserQuiz, getAllQuizzes, getAllUserQuizzes }
+export { getAllQuizzes }

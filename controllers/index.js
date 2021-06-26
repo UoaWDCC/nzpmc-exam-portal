@@ -1,7 +1,8 @@
 import { getQuizQuestions } from './question'
 import { getQuestionOptions } from './option'
-import { getUserQuiz, getAllQuizzes, getAllUserQuizzes } from './quiz'
+import { getAllQuizzes } from './quiz'
 import { getUser, getAllUsers, addUser, editUser } from './user'
+import { getUserQuiz, getAllUserQuizzes } from './userQuiz'
 
 export {
     getQuizQuestions,
