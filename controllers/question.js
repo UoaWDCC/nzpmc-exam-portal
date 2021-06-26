@@ -22,13 +22,15 @@ const getQuestions = async (quiz) => {
     return packQuestions(question)
 }
 
-const getQuestion = async (quiz) => {
-    const question = await Question.collection.parent(quiz.key).get()
+const getQuestion = async (quiz, questionID) => {
+    const question = await Question.collection
+        .parent(quiz.key)
+        .get({ id: questionID })
+
     return packQuestion(question)
 }
 
 const addQuestion = async (quiz, q, numOfAnswers, topics) => {
-    console.log(quiz)
     const question = Question.init({ parent: quiz.key })
 
     question.question = q
@@ -39,7 +41,7 @@ const addQuestion = async (quiz, q, numOfAnswers, topics) => {
 
     await question.save()
 
-    return await getQuestion(question.id)
+    return await getQuestion(quiz, question.id)
 }
 
 const editQuestion = async (quiz, id, q, numOfAnswers, topics) => {
@@ -49,10 +51,13 @@ const editQuestion = async (quiz, id, q, numOfAnswers, topics) => {
     question.numOfAnswers = numOfAnswers ? numOfAnswers : question.numOfAnswers
     question.topics = topics ? topics : question.topics
     question.modified = new Date()
+    question.created = question.created.toDate()
+
+    question.answer = question.answer.ref ? null : question.answer.ref
 
     await question.update()
 
-    return packQuiz(question)
+    return packQuestion(question)
 }
 
-export { getQuestions, addQuestion, editQuestion }
+export { getQuestions, getQuestion, addQuestion, editQuestion }

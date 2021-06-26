@@ -1,8 +1,17 @@
-import { getQuestions, addQuestion, editQuestion } from './question'
+import {
+    getQuestions,
+    getQuestion,
+    addQuestion,
+    editQuestion,
+} from './question'
 import {
     getQuestionOptions,
     getOptionKey,
     getUserQuizQuestionOptionID,
+    addQuestionOption,
+    editQuestionOption,
+    addQuestionAnswer,
+    editQuestionAnswer,
 } from './option'
 import { getAllQuizzes, getQuiz, addQuiz, editQuiz } from './quiz'
 import { getUser, getAllUsers, addUser, editUser } from './user'
@@ -17,6 +26,7 @@ import {
 
 export {
     getQuestions,
+    getQuestion,
     addQuestion,
     editQuestion,
     getQuestionOptions,
@@ -37,4 +47,8 @@ export {
     getUserQuizQuestionOptions,
     addQuiz,
     editQuiz,
+    addQuestionOption,
+    editQuestionOption,
+    addQuestionAnswer,
+    editQuestionAnswer,
 }

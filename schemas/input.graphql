@@ -46,6 +46,7 @@ input AddQuestionInput {
 
 input EditQuestionInput {
     id: ID!
+    quizID: ID!
     question: String
     numOfAnswers: Int
     topics: String
@@ -61,7 +62,19 @@ input EditOptionInput {
     id: ID!
     quizID: ID!
     questionID: ID!
-    option: String
+    option: String!
+}
+
+input AddAnswerInput {
+    quizID: ID!
+    questionID: ID!
+    option: String!
+}
+
+input EditAnswerInput {
+    quizID: ID!
+    questionID: ID!
+    option: String!
 }
 
 input AddUserQuiz {
