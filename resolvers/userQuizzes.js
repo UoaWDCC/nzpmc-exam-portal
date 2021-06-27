@@ -28,7 +28,9 @@ const resolvers = {
         userAnswer: async (parents, args, context) => {
             if (!parents.userAnswerObj) return null
 
-            return await parents.userAnswerObj.get()
+            if (!parents.userAnswerObj.answer) return null
+
+            return parents.userAnswerObj.answer.get()
         },
         options: async (parents, args, context) => {
             if (!parents.questionObj) return null

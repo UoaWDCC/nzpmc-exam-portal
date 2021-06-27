@@ -28,9 +28,12 @@ const getUserQuizQuestions = async (userQuiz) => {
     const userQuizQuestions = (
         await UserQuizQuestion.collection.parent(userQuiz.key).fetch()
     ).list
+    console.log(userQuizQuestions)
 
     const userQuizQuestionsMap = userQuizQuestions.reduce((map, question) => {
         map[question.id] = question
+
+        return map
     }, {})
 
     return quizQuestions.map((quizQuestion) => {
