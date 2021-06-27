@@ -14,7 +14,7 @@ import { addUserQuiz, getUserQuizzes } from '../controllers/userQuiz'
 const resolvers = {
     UserQuiz: {
         user: async (parents, args, context) => {
-            if (!parents.userObj) return null
+            if (!parents.userObj || !parents.userObj.ref) return null
             return await parents.userObj.get()
         },
         question: async (parents, args, context) => {
@@ -26,9 +26,12 @@ const resolvers = {
     },
     UserQuizQuestion: {
         userAnswer: async (parents, args, context) => {
-            if (!parents.userAnswerObj) return null
-
-            if (!parents.userAnswerObj.answer) return null
+            if (
+                !parents.userAnswerObj ||
+                !parents.userAnswerObj.answer ||
+                !parents.userAnswerObj.answer.ref
+            )
+                return null
 
             return parents.userAnswerObj.answer.get()
         },
