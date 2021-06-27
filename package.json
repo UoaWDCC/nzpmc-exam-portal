@@ -11,9 +11,10 @@
     },
     "dependencies": {
         "core-js": "^3.12.1",
-        "latex2vue": "^2.2.2",
         "firebase": "^8.6.1",
+        "latex2vue": "^2.2.2",
         "vue": "^2.6.11",
+        "vue-apollo": "^3.0.0-beta.11",
         "vue-router": "^3.5.1",
         "vuetify": "^2.4.0"
     },
@@ -28,9 +29,11 @@
         "eslint-plugin-prettier-vue": "^3.0.0",
         "eslint-plugin-prettier-vue-scorpionknifes": "^3.0.0",
         "eslint-plugin-vue": "^6.2.2",
+        "graphql-tag": "^2.9.0",
         "prettier": "^2.3.0",
         "sass": "^1.32.0",
         "sass-loader": "^10.2.0",
+        "vue-cli-plugin-apollo": "~0.22.2",
         "vue-cli-plugin-vuetify": "~2.4.0",
         "vue-template-compiler": "^2.6.11",
         "vuetify-loader": "^1.7.0"

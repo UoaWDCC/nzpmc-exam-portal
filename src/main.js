@@ -5,6 +5,7 @@ import router from './router'
 import VueLaTeX2JS from './plugins/latex'
 import firebase from 'firebase'
 import firebaseConfig from './firebaseConfig.json'
+import { createProvider } from './vue-apollo'
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
@@ -32,5 +33,6 @@ new Vue({
     vuetify,
     router,
     VueLaTeX2JS,
+    apolloProvider: createProvider(),
     render: (h) => h(App),
 }).$mount('#app')
