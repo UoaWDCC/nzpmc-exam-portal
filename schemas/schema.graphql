@@ -9,4 +9,5 @@ type Query {
     quizzes: [Quiz]
     userQuizzes: [UserQuiz]
     userQuiz(quizID: ID!): UserQuiz
+    currentTime: DateTime
 }
