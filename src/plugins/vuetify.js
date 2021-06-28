@@ -16,5 +16,6 @@ export default new Vuetify({
                 success: '#4caf50',
             },
         },
+        options: { customProperties: true },
     },
 })

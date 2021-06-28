@@ -1,62 +1,109 @@
 <template>
-    <div class="login">
-        <v-container style="background-color: #ecf0f1; max-width: 500px">
-            <v-row align="center">
-                <v-col sm="12" align="center" justify="center">
-                    <img
-                        style="max-width: 100%"
-                        alt="NZPMC Logo"
-                        src="/assets/logo.png"
-                    />
-                </v-col>
-            </v-row>
-            <form @submit.prevent="login">
-                <v-row dense>
-                    <v-col>
-                        <v-text-field
-                            placeholder="Username"
-                            prepend-icon="mdi-account-circle"
-                            color="#03a9f4"
-                            v-model="email"
-                        />
-                    </v-col>
-                </v-row>
-                <v-row dense>
-                    <v-col>
-                        <v-text-field
-                            type="Password"
-                            placeholder="Password"
-                            prepend-icon="mdi-lock"
-                            append-icon="mdi-eye-off"
-                            color="#03a9f4"
-                            v-model="password"
-                        />
-                    </v-col>
-                </v-row>
-                <v-row v-if="this.loginError">
-                    <v-col sm="12">
-                        <v-alert type="error">{{ this.loginError }}</v-alert>
-                    </v-col>
-                </v-row>
-                <v-row align="center" justify="center">
-                    <v-col sm="12" align="end" justify="center">
-                        <v-btn
-                            x-large
-                            color="#03a9f4"
-                            style="max-width: 100%"
-                            type="submit"
-                            >Login</v-btn
-                        >
-                    </v-col>
-                </v-row>
-            </form>
-        </v-container>
-    </div>
+    <v-container>
+        <v-row class="justify-center">
+            <v-col class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <v-card class="pa-4" elevation="2">
+                    <v-row>
+                        <v-col class="col-12">
+                            <img
+                                style="width: 100%; max-width: 300px"
+                                class="d-block mx-auto"
+                                alt="NZPMC Logo"
+                                src="../assets/logo.png"
+                            />
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row class="justify-center">
+            <v-col class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <v-card class="pa-4" elevation="2">
+                    <v-row>
+                        <v-col class="text-start">
+                            <h1>Login</h1>
+                        </v-col>
+                    </v-row>
+                    <form @submit.prevent="login">
+                        <v-row>
+                            <v-col>
+                                <v-text-field
+                                    v-model="email"
+                                    :rules="[rules.required, rules.email]"
+                                    label="Email"
+                                    color="#03a9f4"
+                                    autocomplete="username"
+                                >
+                                    <v-icon
+                                        slot="prepend"
+                                        class="material-icons"
+                                    >
+                                        account_circle
+                                    </v-icon>
+                                </v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-text-field
+                                    v-model="password"
+                                    :rules="[rules.required]"
+                                    :type="showPassword ? 'text' : 'password'"
+                                    label="Password"
+                                    color="#03a9f4"
+                                    autocomplete="current-password"
+                                >
+                                    <v-icon
+                                        slot="prepend"
+                                        class="material-icons"
+                                    >
+                                        lock
+                                    </v-icon>
+                                    <v-icon
+                                        slot="append"
+                                        class="material-icons"
+                                        @click="showPassword = !showPassword"
+                                    >
+                                        {{
+                                            showPassword
+                                                ? 'visibility'
+                                                : 'visibility_off'
+                                        }}
+                                    </v-icon>
+                                </v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row v-if="this.loginError">
+                            <v-col>
+                                <v-alert type="error" icon="">
+                                    <v-icon
+                                        slot="prepend"
+                                        class="material-icons mr-4"
+                                        >warning</v-icon
+                                    >{{ this.loginError }}</v-alert
+                                >
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col class="text-right">
+                                <v-btn large color="primary" type="submit">
+                                    <v-icon left class="material-icons">
+                                        login
+                                    </v-icon>
+                                    Login
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </form>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
-<style scoped>
-.login {
-    margin-top: 5rem;
+<style>
+.v-input__prepend-outer {
+    margin-right: 0.5rem;
 }
 </style>
 
@@ -70,6 +117,17 @@ export default {
             email: '',
             password: '',
             loginError: null,
+            showPassword: false,
+            rules: {
+                required: (value) => !!value || 'Required.',
+                email: (value) => {
+                    const pattern =
+                        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    return pattern.test(value) || 'Invalid e-mail.'
+                },
+                emailMatch: () =>
+                    'The email and password you entered do not match',
+            },
         }
     },
     methods: {
@@ -82,7 +140,6 @@ export default {
                 })
             const res = await firebase.auth().currentUser.getIdToken(true)
             onLogin(this.$apollo.provider.defaultClient, res)
-            this.$router.push('/welcome')
         },
     },
 }
