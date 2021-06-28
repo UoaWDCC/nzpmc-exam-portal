@@ -102,12 +102,15 @@ const getUserQuizQuestionOptions = async (quizQuestion) => {
 }
 
 const getUserQuizQuestionOptionsByQuestion = async (question) => {
-    if (!question.answer.ref) return []
-    const answer = await question.answer.get()
-
     const options = (await Option.collection.parent(question.key).fetch()).list
 
-    let answers = [answer, ...options]
+    let answers
+    if (!question.answer || !question.answer.ref) {
+        answers = options
+    } else {
+        const answer = await question.answer.get()
+        answers = [answer, ...options]
+    }
 
     let count = answers.length,
         randomnumber,

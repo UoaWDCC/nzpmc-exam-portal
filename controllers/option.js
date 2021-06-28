@@ -55,10 +55,18 @@ const editQuestionOption = async (question, id, o) => {
 }
 
 const upsertQuestionAnswer = async (question, o) => {
-    const option = await Option.collection.get({ id: question.id })
+    let option, created
+    if (!question.answer || !question.answer.ref) {
+        option = Option.init()
+        created = new Date()
+        option.id = question.id
+    } else {
+        option = await Option.collection.get({ id: question.id })
+        created = option.created.toDate()
+    }
 
     option.option = o
-    option.created = option.created.toDate()
+    option.created = created
     option.modified = new Date()
 
     await option.upsert()
