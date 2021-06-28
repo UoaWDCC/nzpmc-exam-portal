@@ -19,18 +19,38 @@ const resolvers = {
     Query: {},
     Mutation: {
         addQuestion: async (parent, { input }, context) => {
-            const { quizID, question, numOfAnswers, topics } = input
+            const { quizID, question, imageURI, numOfAnswers, topics } = input
 
             const quiz = await getQuiz(quizID)
 
-            return await addQuestion(quiz, question, numOfAnswers, topics)
+            return await addQuestion(
+                quiz,
+                question,
+                imageURI,
+                numOfAnswers,
+                topics,
+            )
         },
         editQuestion: async (parent, { input }, context) => {
-            const { quizID, id, question, numOfAnswers, topics } = input
+            const {
+                quizID,
+                id,
+                question,
+                imageURI,
+                numOfAnswers,
+                topics,
+            } = input
 
             const quiz = await getQuiz(quizID)
 
-            return await editQuestion(quiz, id, question, numOfAnswers, topics)
+            return await editQuestion(
+                quiz,
+                id,
+                question,
+                imageURI,
+                numOfAnswers,
+                topics,
+            )
         },
     },
 }

@@ -52,6 +52,7 @@ input AddQuestionInput {
     question: String!
     numOfAnswers: Int!
     topics: String!
+    imageURI: String
 }
 
 input EditQuestionInput {
@@ -60,6 +61,7 @@ input EditQuestionInput {
     question: String
     numOfAnswers: Int
     topics: String
+    imageURI: String
 }
 
 input AddOptionInput {

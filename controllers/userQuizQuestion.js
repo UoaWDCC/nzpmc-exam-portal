@@ -13,6 +13,7 @@ const getUserQuizQuestion = async (userQuiz, id) => {
     return {
         id: quizQuestion.id,
         question: quizQuestion.question,
+        imageURI: quizQuestion.imageURI,
         questionKey: quizQuestion.key,
         questionObj: quizQuestion,
         userAnswerKey: userQuizQuestion ? userQuizQuestion.key : null,
@@ -28,7 +29,6 @@ const getUserQuizQuestions = async (userQuiz) => {
     const userQuizQuestions = (
         await UserQuizQuestion.collection.parent(userQuiz.key).fetch()
     ).list
-    console.log(userQuizQuestions)
 
     const userQuizQuestionsMap = userQuizQuestions.reduce((map, question) => {
         map[question.id] = question
@@ -42,6 +42,7 @@ const getUserQuizQuestions = async (userQuiz) => {
             return {
                 id: quizQuestion.id,
                 question: quizQuestion.question,
+                imageURI: quizQuestion.imageURI,
                 questionKey: quizQuestion.key,
                 questionObj: quizQuestion,
             }
@@ -49,6 +50,7 @@ const getUserQuizQuestions = async (userQuiz) => {
         return {
             id: quizQuestion.id,
             question: quizQuestion.question,
+            imageURI: quizQuestion.imageURI,
             questionKey: quizQuestion.key,
             questionObj: quizQuestion,
             userAnswerKey: userQuizQuestion.key,

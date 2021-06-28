@@ -5,6 +5,7 @@ const packQuestion = (question) => {
         key: question.key,
         id: question.id,
         question: question.question,
+        imageURI: question.imageURI,
         numOfAnswer: question.numOfAnswer,
         answerObj: question.answer,
         topics: question.topics,
@@ -31,10 +32,11 @@ const getQuestion = async (quiz, questionID) => {
     return packQuestion(question)
 }
 
-const addQuestion = async (quiz, q, numOfAnswers, topics) => {
+const addQuestion = async (quiz, q, imageURI, numOfAnswers, topics) => {
     const question = Question.init({ parent: quiz.key })
 
     question.question = q
+    question.imageURI = imageURI
     question.numOfAnswer = numOfAnswers
     question.topics = topics
     question.created = new Date()
@@ -42,13 +44,14 @@ const addQuestion = async (quiz, q, numOfAnswers, topics) => {
 
     await question.save()
 
-    return await getQuestion(quiz, question.id)
+    return packQuestion(question)
 }
 
-const editQuestion = async (quiz, id, q, numOfAnswers, topics) => {
+const editQuestion = async (quiz, id, q, imageURI, numOfAnswers, topics) => {
     const question = await Question.collection.parent(quiz.key).get({ id })
 
     question.question = q ? q : question.question
+    question.imageURI = imageURI ? imageURI : question.imageURI
     question.numOfAnswers = numOfAnswers ? numOfAnswers : question.numOfAnswers
     question.topics = topics ? topics : question.topics
     question.modified = new Date()
