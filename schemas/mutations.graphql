@@ -1,3 +1,27 @@
 type Mutation {
-    createQuestion(form: CreateQuestionInput) : Question
+    """
+    Admin
+    """
+    addUser(input: AddUserInput!): User
+    editUser(input: EditUserInput!): User
+
+    addQuiz(input: AddQuizInput!): Quiz
+    editQuiz(input: EditQuizInput!): Quiz
+
+    addQuestion(input: AddQuestionInput!): Question
+    editQuestion(input: EditQuestionInput!): Question
+
+    addOption(input: AddOptionInput!): Option
+    editOption(input: EditOptionInput!): Option
+
+    editAnswer(input: EditAnswerInput!): Option
+
+    addUserQuiz(input: AddUserQuiz!): UserQuiz
+
+    """
+    User
+    """
+    editSelf(input: EditSelfInput!): User
+
+    editUserQuizQuestion(input: EditUserQuizQuestion!): Option
 }

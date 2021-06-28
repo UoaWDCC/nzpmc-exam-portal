@@ -1,88 +1,70 @@
-const studQuiz = {
-    id: '123',
-    name: 'Example Quiz',
-    description: 42,
-    duration: '86400',
-    numOfQuestions: 40,
-    startTime: new Date(),
-    endTime: new Date(),
-    created: new Date(),
-    modified: new Date(),
-}
-
-const studUser = {
-    id: '123',
-    displayName: 'user',
-    email: 'user@email.com',
-    emailVerified: 'user@email.com',
-    photoURL: 'https://i.imgur.com/G4cy8en.jpg',
-    firstName: 'Joe',
-    lastName: 'Smith',
-    yearLevel: 9,
-    role: 'student',
-    created: Date.now(),
-    modified: Date.now(),
-}
-
-const studQuestion = {
-    id: '123',
-    question: 'What is the question?',
-    numOfAnswers: 42,
-    topics: 'Physics, Existentialism',
-    options: [
-        {
-            id: '123',
-            option: 'Option1',
-            created: new Date(),
-            modified: new Date(),
-        },
-        {
-            id: '124',
-            option: 'Option2',
-            created: new Date(),
-            modified: new Date(),
-        },
-    ],
-    created: new Date(),
-    modified: new Date(),
-}
-const studUserQuizAnswer = {
-    id: '123',
-    question: studQuestion,
-    answer: {
-        id: '123',
-        option: 'Option1',
-        created: new Date(),
-        modified: new Date(),
-    },
-    startTime: new Date(),
-    endTime: new Date(),
-    created: new Date(),
-    modified: new Date(),
-}
-
-const studUserQuiz = {
-    id: '123',
-    user: studUser,
-    answer: studUserQuizAnswer,
-    answers: [studUserQuizAnswer, studUserQuizAnswer],
-    score: 6.9,
-    startTime: new Date(),
-    endTime: new Date(),
-    created: new Date(),
-    modified: new Date(),
-}
+import {
+    getUserQuiz,
+    getAllQuizzes,
+    getAllUserQuizzes,
+    getQuestions,
+    addQuiz,
+    editQuiz,
+} from '../controllers'
+import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
 
 const resolvers = {
+    Quiz: {
+        questions: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+            return await getQuestions(parents)
+        },
+    },
     Query: {
-        quizzes(parents, args, ctx) {
-            return [studQuiz, studQuiz]
+        quizzes: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+            return await getAllQuizzes()
         },
-        userQuizzes(parents, args, ctx) {
-            return [studUserQuiz, studUserQuiz]
+    },
+    Mutation: {
+        addQuiz: async (parent, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+
+            const {
+                name,
+                description,
+                duration,
+                numOfQuestions,
+                startTime,
+                endTime,
+            } = input
+
+            return await addQuiz(
+                name,
+                description,
+                duration,
+                numOfQuestions,
+                startTime,
+                endTime,
+            )
         },
-        userQuiz(parents, args, ctx) {
-            return studUserQuiz
+        editQuiz: async (parent, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+
+            const {
+                id,
+                name,
+                description,
+                duration,
+                numOfQuestions,
+                startTime,
+                endTime,
+            } = input
+
+            return await editQuiz(
+                id,
+                name,
+                description,
+                duration,
+                numOfQuestions,
+                startTime,
+                endTime,
+            )
         },
     },
 }

@@ -1,3 +1,98 @@
-input CreateQuestionInput {
+input AddUserInput {
     id: ID!
+    displayName: String!
+    email: String!
+    photoURL: String!
+    firstName: String!
+    lastName: String!
+    yearLevel: String!
+    role: String!
+}
+
+input EditSelfInput {
+    displayName: String
+    email: String
+    photoURL: String
+    firstName: String
+    lastName: String
+    yearLevel: String
+}
+
+input EditUserInput {
+    id: ID!
+    displayName: String
+    email: String
+    photoURL: String
+    firstName: String
+    lastName: String
+    yearLevel: String
+}
+
+input AddQuizInput {
+    name: String!
+    description: String!
+    duration: Int!
+    numOfQuestions: Int!
+    startTime: DateTime!
+    endTime: DateTime!
+}
+
+input EditQuizInput {
+    id: ID!
+    name: String
+    description: String
+    duration: Int
+    numOfQuestions: Int
+    startTime: DateTime
+    endTime: DateTime
+}
+
+input AddQuestionInput {
+    quizID: ID!
+    question: String!
+    numOfAnswers: Int!
+    topics: String!
+    imageURI: String
+}
+
+input EditQuestionInput {
+    id: ID!
+    quizID: ID!
+    question: String
+    numOfAnswers: Int
+    topics: String
+    imageURI: String
+}
+
+input AddOptionInput {
+    quizID: ID!
+    questionID: ID!
+    option: String!
+}
+
+input EditOptionInput {
+    id: ID!
+    quizID: ID!
+    questionID: ID!
+    option: String!
+}
+
+input EditAnswerInput {
+    quizID: ID!
+    questionID: ID!
+    option: String!
+}
+
+input AddUserQuiz {
+    userID: ID!
+    quizID: ID!
+    startTime: DateTime!
+    endTime: DateTime!
+}
+
+input EditUserQuizQuestion {
+    id: ID!
+    userQuizID: ID!
+    questionID: ID!
+    answerID: ID!
 }

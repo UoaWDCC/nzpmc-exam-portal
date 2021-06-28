@@ -6,7 +6,6 @@ class Quiz extends Model {
     description = Field.Text({ required: true })
     duration = Field.Number({ required: true })
     numOfQuestions = Field.Number({ required: true })
-    questions = Field.List({ required: true })
     startTime = Field.DateTime({ required: true })
     endTime = Field.DateTime({ required: true })
     createdAt = Field.DateTime({ required: true, auto: true })

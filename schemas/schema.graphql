@@ -1,12 +1,22 @@
 scalar DateTime
 
 type Query {
+    """
+    General
+    """
     me: User
-    user(userID: ID!): User 
+
+    """
+    Admin
+    """
+    user(userID: ID!): User
     users: [User]!
-    question(questionID: ID!): Question
-    questions: [Question]
+
     quizzes: [Quiz]
+
+    """
+    User
+    """
     userQuizzes: [UserQuiz]
     userQuiz(quizID: ID!): UserQuiz
 }

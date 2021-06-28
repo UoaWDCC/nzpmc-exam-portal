@@ -5,6 +5,9 @@ const packUser = (user) => {
     return {
         key: user.key,
         id: user.id,
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
         firstName: user.firstName,
         lastName: user.lastName,
         yearLevel: user.yearLevel,
@@ -14,14 +17,34 @@ const packUser = (user) => {
     }
 }
 
+const packUsers = (users) => users.map(packUser)
+
 const getUser = async (id) => {
     const user = await User.collection.get({ id })
-    return user
+    return packUser(user)
 }
 
-const createUser = async ({ firstName, lastName, yearLevel, role }) => {
+const getAllUsers = async () => {
+    const users = (await User.collection.fetch()).list
+    return packUsers(users)
+}
+
+const addUser = async (
+    id,
+    displayName,
+    email,
+    photoURL,
+    firstName,
+    lastName,
+    yearLevel,
+    role,
+) => {
     const user = User.init()
 
+    user.id = id
+    user.displayName = displayName
+    user.email = email
+    user.photoURL = photoURL
     user.firstName = firstName
     user.lastName = lastName
     user.yearLevel = yearLevel
@@ -34,13 +57,25 @@ const createUser = async ({ firstName, lastName, yearLevel, role }) => {
     return await getUser(user.id)
 }
 
-const updateUser = async ({ id, firstName, lastName, yearLevel }) => {
+const editUser = async (
+    id,
+    displayName,
+    email,
+    photoURL,
+    firstName,
+    lastName,
+    yearLevel,
+) => {
     return await Fireo.runTransaction(async (t) => {
-        const user = getUser(id)
+        const user = await User.collection.get({ id })
 
+        user.displayName = displayName ? displayName : user.displayName
+        user.email = email ? email : user.email
+        user.photoURL = photoURL ? photoURL : user.photoURL
         user.firstName = firstName ? firstName : user.firstName
         user.lastName = lastName ? lastName : user.lastName
         user.yearLevel = yearLevel ? yearLevel : user.yearLevel
+        user.created = user.created.toDate()
         user.modified = new Date()
 
         await user.update()
@@ -49,4 +84,4 @@ const updateUser = async ({ id, firstName, lastName, yearLevel }) => {
     })
 }
 
-export { getUser, createUser, updateUser, packUser }
+export { getUser, getAllUsers, addUser, editUser }

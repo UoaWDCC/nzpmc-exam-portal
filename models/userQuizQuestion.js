@@ -1,6 +1,6 @@
 import { Model, Field } from 'fireo'
 
-class UserQuizAnswer extends Model {
+class UserQuizQuestion extends Model {
     id = Field.ID()
     question = Field.Reference({ required: true })
     answer = Field.Reference({ required: true })
@@ -11,4 +11,4 @@ class UserQuizAnswer extends Model {
     deleted = Field.DateTime()
 }
 
-export default UserQuizAnswer
+export default UserQuizQuestion

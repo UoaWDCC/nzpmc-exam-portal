@@ -3,10 +3,10 @@ import { Model, Field } from 'fireo'
 class Question extends Model {
     id = Field.ID()
     question = Field.Text({ required: true })
-    numOfAnswer = Field.Number({ required: true })
+    imageURI = Field.Text()
+    numOfAnswers = Field.Number({ required: true })
     topics = Field.Text({ required: true })
-    correct = Field.Reference({ required: true })
-    option = Field.List({ required: true })
+    answer = Field.Reference()
     created = Field.DateTime({ required: true })
     modified = Field.DateTime({ required: true })
     deleted = Field.DateTime()

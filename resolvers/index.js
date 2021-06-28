@@ -1,8 +1,22 @@
 import { merge } from 'lodash'
-import userResolver from './user'
-import questionResolver from './question'
+import userResolver from './users'
+import userQuizResolver from './userQuizzes'
 import quizResolver from './quizzes'
+import questionResolver from './questions'
+import optionResolver from './options'
+import datetimeScalar from '../scalars/datetime'
 
 const rootResolver = {}
 
-export default merge(rootResolver, userResolver, questionResolver, quizResolver)
+const customScalars = {
+    DateTime: datetimeScalar,
+}
+export default merge(
+    customScalars,
+    rootResolver,
+    userResolver,
+    questionResolver,
+    quizResolver,
+    userQuizResolver,
+    optionResolver,
+)

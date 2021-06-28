@@ -3,6 +3,6 @@ import Question from './question'
 import Quiz from './quiz'
 import User from './user'
 import UserQuiz from './userQuiz'
-import UserQuizAnswer from './userQuizAnswer'
+import UserQuizQuestion from './userQuizQuestion'
 
-export { Option, Question, Quiz, User, UserQuiz, UserQuizAnswer }
+export { Option, Question, Quiz, User, UserQuiz, UserQuizQuestion }
