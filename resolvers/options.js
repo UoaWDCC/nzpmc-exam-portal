@@ -33,6 +33,7 @@ const resolvers = {
             const quiz = await getQuiz(quizID)
 
             const question = await getQuestion(quiz, questionID)
+            // console.log(question, questionID)
 
             return await upsertQuestionAnswer(question, option)
         },

@@ -25,9 +25,7 @@ const getQuestions = async (quiz) => {
 }
 
 const getQuestion = async (quiz, questionID) => {
-    const question = await Question.collection
-        .parent(quiz.key)
-        .get({ id: questionID })
+    const question = await Question.collection.get({key: quiz.key+"/Question/"+questionID})
 
     return packQuestion(question)
 }
@@ -48,7 +46,7 @@ const addQuestion = async (quiz, q, imageURI, numOfAnswers, topics) => {
 }
 
 const editQuestion = async (quiz, id, q, imageURI, numOfAnswers, topics) => {
-    const question = await Question.collection.parent(quiz.key).get({ id })
+    const question = await Question.collection.get({key: quiz.key+"/Question/"+id})
 
     question.question = q ? q : question.question
     question.imageURI = imageURI ? imageURI : question.imageURI
