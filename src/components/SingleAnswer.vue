@@ -5,8 +5,10 @@
         :color="selectedID === optionID ? '#03a9f5' : '#385F73'"
     >
         <div class="d-flex">
-            <div class="font-weight-bold flex-grow-1 pa-4">{{ text }}</div>
-            <span class="material-icons ma-4"> check_circle </span>
+            <latex class="font-weight-bold flex-grow-1 pa-4" :content="text" />
+            <span v-if="selectedID === optionID" class="material-icons ma-4">
+                check_circle
+            </span>
         </div>
     </v-card>
 </template>
@@ -15,8 +17,8 @@
 export default {
     props: {
         text: String,
-        selectedID: Number,
-        optionID: Number,
+        selectedID: String,
+        optionID: String,
     },
     methods: {
         selectanswer() {

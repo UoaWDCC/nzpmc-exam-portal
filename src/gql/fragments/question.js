@@ -1,11 +1,10 @@
 import gql from 'graphql-tag'
 
 export const QuestionFragment = gql`
-    fragment QuestionFragment on Question {
+    fragment QuestionFragment on UserQuizQuestion {
         id
         question
-        topics
-        numOfAnswer
+        imageURI
         created
         modified
     }

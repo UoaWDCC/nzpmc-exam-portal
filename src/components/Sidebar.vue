@@ -18,19 +18,25 @@
         <v-divider></v-divider>
         <v-list dense nav>
             <v-list-item-group
-                v-model="selectedQuestion"
+                v-if="userQuiz !== null"
+                v-model="selectedQuestionID"
                 color="primary"
                 mandatory
             >
                 <v-list-item
-                    v-for="question in questions"
+                    v-for="(question, index) in userQuiz.questions"
                     :key="question.id"
                     link
                 >
-                    <v-list-item-content>
-                        <v-list-item-title>{{
-                            question.text
-                        }}</v-list-item-title>
+                    <v-list-item-content
+                        @click="selectQuestion(question.id)"
+                        color="#00008B"
+                        class="px-2"
+                        link
+                    >
+                        <v-list-item-title>
+                            Question {{ index + 1 }}
+                        </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
@@ -38,19 +44,21 @@
     </v-navigation-drawer>
 </template>
 <script>
+import { QuestionsQuery } from '../gql/queries/question'
 export default {
+    props: {
+        sidebarOpen: Boolean,
+        quizID: String,
+    },
+
     data() {
         return {
-            selectedQuestion: 2,
+            userQuiz: null,
             drawer: null,
-            questions: [
-                { text: 'Question 1', id: '1' },
-                { text: 'Question 2', id: '2' },
-                { text: 'Question 3', id: '3' },
-                { text: 'Question 4', id: '4' },
-            ],
+            selectedQuestionID: null,
         }
     },
+
     watch: {
         sidebarOpen(val) {
             this.drawer = val
@@ -63,7 +71,23 @@ export default {
             }
         },
     },
-    props: ['sidebarOpen'],
+    methods: {
+        selectQuestion(id) {
+            this.selectedQuestionID = id
+            this.$emit('selectQuestion', this.selectedQuestionID)
+        },
+    },
+    apollo: {
+        userQuiz: {
+            query: QuestionsQuery,
+            variables() {
+                return {
+                    quizID: this.quizID,
+                }
+            },
+        },
+        // update: (data) => data.QuestionsQuery,
+    },
 }
 </script>
 <style></style>
