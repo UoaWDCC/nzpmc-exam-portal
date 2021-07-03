@@ -4,7 +4,7 @@ import { packOptions } from './option'
 const getUserQuizQuestion = async (userQuiz, id) => {
     const quiz = await userQuiz.quizObj.get()
 
-    const quizQuestion = await Question.collection.parent(quiz.key).get({ id })
+    const quizQuestion = await Question.collection.get({key: quiz.key+"/Question/"+id})
 
     const userQuizQuestion = await UserQuizQuestion.collection
         .parent(userQuiz.key)

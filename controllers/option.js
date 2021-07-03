@@ -43,7 +43,7 @@ const addQuestionOption = async (question, o) => {
 }
 
 const editQuestionOption = async (question, id, o) => {
-    const option = await Option.collection.parent(question.key).get({ id })
+    const option = await Option.collection.get({key: question.key+"/Option/"+id})
 
     option.option = o
     option.created = option.created.toDate()
