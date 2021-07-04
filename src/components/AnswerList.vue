@@ -30,6 +30,7 @@
 <script>
 import SingleAnswer from './SingleAnswer.vue'
 import { OptionsQuery } from '../gql/queries/option'
+import { UpdateUserAnswerQuery } from '../gql/mutations/option'
 
 export default {
     components: {
@@ -38,6 +39,24 @@ export default {
     methods: {
         selectOneAnswer(number) {
             this.currentOptionID = number
+
+            this.$apollo
+                .mutate({
+                    // Query
+                    mutation: UpdateUserAnswerQuery,
+                    // Parameters
+                    variables: {
+                        input: {
+                            id: this.questionID,
+                            userQuizID: this.quizID,
+                            questionID: this.questionID,
+                            answerID: number,
+                        },
+                    },
+                })
+                .then((data) => {
+                    console.log(data)
+                })
         },
     },
     props: {
@@ -48,6 +67,7 @@ export default {
         return {
             userQuiz: null,
             currentOptionID: null,
+            selectedAnswer: null,
         }
     },
     apollo: {
@@ -60,6 +80,18 @@ export default {
                 }
             },
         },
+        // selectedAnswer: {
+        //     mutation: UpdateUserAnswerQuery,
+        //     variables() {
+        //         return {
+        //             input: {
+        //                 userQuizID: this.quizID,
+        //                 questionID: this.questionID,
+        //                 answerID: this.currentOptionID,
+        //             },
+        //         }
+        //     },
+        // },
     },
 }
 </script>
