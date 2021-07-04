@@ -4,6 +4,7 @@ import userQuizResolver from './userQuizzes'
 import quizResolver from './quizzes'
 import questionResolver from './questions'
 import optionResolver from './options'
+import timeResolver from './time'
 import datetimeScalar from '../scalars/datetime'
 
 const rootResolver = {}
@@ -19,4 +20,5 @@ export default merge(
     quizResolver,
     userQuizResolver,
     optionResolver,
+    timeResolver
 )

@@ -5,6 +5,7 @@ type Query {
     General
     """
     me: User
+    currentTime: DateTime
 
     """
     Admin
