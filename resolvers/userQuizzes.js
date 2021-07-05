@@ -100,7 +100,7 @@ const resolvers = {
             const correctAnswers = (await getQuestions(quiz)).map((question) => question.id)
 
             // update UserQuiz
-            return await submitUserQuizQuestions(userQuiz, userAnswers, correctAnswers)
+            return await submitUserQuizQuestions(userQuizID, userAnswers, correctAnswers)
         },
     },
 }

@@ -14,7 +14,7 @@ import {
 } from './option'
 import { getAllQuizzes, getQuiz, addQuiz, editQuiz } from './quiz'
 import { getUser, getAllUsers, addUser, editUser } from './user'
-import { getUserQuiz, getUserQuizzes, getAllUserQuizzes, addUserQuiz } from './userQuiz'
+import { getUserQuiz, getUserQuizzes, getAllUserQuizzes, addUserQuiz, setUserQuizScore } from './userQuiz'
 import {
     getUserQuizQuestion,
     getUserQuizQuestions,
@@ -57,4 +57,5 @@ export {
     editQuestionOption,
     upsertQuestionAnswer,
     submitUserQuizQuestions,
+    setUserQuizScore
 }
