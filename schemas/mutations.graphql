@@ -25,5 +25,5 @@ type Mutation {
 
     editUserQuizQuestion(input: EditUserQuizQuestion!): Option
 
-    submitQuizQuestions(input: SubmissionInput): UserQuiz
+    submitUserQuizQuestions(input: SubmissionInput): UserQuiz
 }

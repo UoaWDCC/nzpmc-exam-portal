@@ -97,8 +97,6 @@ input EditUserQuizQuestion {
     answerID: ID!
 }
 
-input SubmitInput {
+input SubmissionInput {
     userQuizID: ID!
-    questionIDs: [ID!]!
-    answerIDs: [ID!]!
 }

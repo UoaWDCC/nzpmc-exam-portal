@@ -4,12 +4,18 @@ import {
     getUserQuizQuestion,
     getUserQuizQuestionOptionsByQuestion,
     getUser,
+    addUserQuiz,
+    getUserQuizzes,
     getOptionByQuestionID,
     editUserQuizQuestion,
     getQuiz,
     getQuestion,
+    getQuestions,
+    getUserAnswerIDs,
+    submitUserQuizQuestions,
 } from '../controllers'
-import { addUserQuiz, getUserQuizzes } from '../controllers/userQuiz'
+
+import { AuthenticationError } from 'apollo-server-core'
 
 const resolvers = {
     UserQuiz: {
@@ -45,17 +51,17 @@ const resolvers = {
     },
     Query: {
         userQuizzes: async (parents, args, context) => {
-            if (!context.user) throw new AuthenticationError()
+            // if (!context.user) throw new AuthenticationError()
 
             return await getUserQuizzes(context.user.uid)
         },
         userQuiz: async (parents, args, context) => {
-            if (!context.user) throw new AuthenticationError()
+            // if (!context.user) throw new AuthenticationError()
 
             const userQuiz = await getUserQuiz(args.quizID)
             const user = await userQuiz.userObj.get()
 
-            if (user.id !== context.user.uid) throw new AuthenticationError()
+            // if (user.id !== context.user.uid) throw new AuthenticationError()
             return userQuiz
         },
     },
@@ -83,6 +89,18 @@ const resolvers = {
             const answer = await getOptionByQuestionID(question, answerID)
 
             return await editUserQuizQuestion(userQuiz, id, answer)
+        },
+        submitUserQuizQuestions: async (parents, { input }, context) => {
+            const { userQuizID } = input
+
+            // get necessary objects
+            const userQuiz = await getUserQuiz(userQuizID)
+            const quiz = await userQuiz.quizObj.get()
+            const userAnswers = await getUserAnswerIDs(userQuiz)
+            const correctAnswers = (await getQuestions(quiz)).map((question) => question.id)
+
+            // update UserQuiz
+            return await submitUserQuizQuestions(userQuiz, userAnswers, correctAnswers)
         },
     },
 }

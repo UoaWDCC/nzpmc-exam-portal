@@ -125,6 +125,43 @@ const getUserQuizQuestionOptionsByQuestion = async (question) => {
     return packOptions(answers)
 }
 
+const getUserAnswerIDs = async (userQuiz) => {
+    const userAnswers = await getUserQuizQuestions(userQuiz)
+
+    const userAnswerIDsRequest = userAnswers.map(async (userAnswer) => {
+        let userAnswerObj = userAnswer.userAnswerObj
+        return await userAnswerObj.answer.get()
+    });
+
+    let userAnswerIDs = []
+    
+    Promise.all(userAnswerIDsRequest).then((answerIDObjs) => {
+        answerIDObjs.forEach((obj) => {
+            userAnswerIDs.push(obj.id)
+        })
+    })
+
+    return userAnswerIDs
+}
+
+const submitUserQuizQuestions = async (userQuiz, userAnswers, correctAnswers) => {
+    console.log(userAnswers)
+    console.log(correctAnswers)
+
+    // calculate score
+    let score = 0
+    userAnswers.forEach((answer, index) => {
+        if (answer === correctAnswers[index]) {
+            score += 1
+        }
+    });
+
+    // update userQuiz 
+    console.log(score)
+
+    return null 
+}
+
 export {
     getUserQuizQuestion,
     getUserQuizQuestions,
@@ -132,4 +169,6 @@ export {
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
     getUserQuizQuestionOptionsByQuestion,
+    submitUserQuizQuestions,
+    getUserAnswerIDs,
 }
