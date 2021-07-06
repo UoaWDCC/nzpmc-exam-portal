@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-progress-circular v-if="userQuizzes === null" />
+        <v-progress-circular v-if="userQuiz === null" />
         <v-container
             v-else
             v-resize="onResize"
@@ -24,8 +24,8 @@
                     <v-col class="col-12">
                         <Topbar
                             @toggleSidebar="sidebarOpen = !sidebarOpen"
-                            :startTimestamp="userQuizzes[0].startTime"
-                            :duration="userQuizzes[0].duration"
+                            :startTimestamp="userQuiz.startTime"
+                            :duration="userQuiz.duration"
                         />
                     </v-col>
                 </v-row>
@@ -36,7 +36,7 @@
                     >
                         <v-card class="sidebarMobileCard" elevation="2">
                             <Sidebar
-                                :quizID="userQuizzes[0].id"
+                                :quizID="userQuiz.id"
                                 @selectQuestion="selectOneQuestion"
                                 @sidebarLoaded="sidebarLoaded = true"
                             />
@@ -44,15 +44,23 @@
                     </v-col>
                     <v-col class="col-12">
                         <SingleQuestion
-                            :questionID="selectedQuestionID"
+                            :questionID="
+                                selectedQuestionID
+                                    ? selectedQuestionID
+                                    : userQuiz.questions[0].id
+                            "
                             :questionIndex="selectedQuestionIndex"
-                            :quizID="userQuizzes[0].id"
+                            :quizID="userQuiz.id"
                         />
                     </v-col>
                     <v-col class="col-12">
                         <AnswerList
-                            :questionID="selectedQuestionID"
-                            :quizID="userQuizzes[0].id"
+                            :questionID="
+                                selectedQuestionID
+                                    ? selectedQuestionID
+                                    : userQuiz.questions[0].id
+                            "
+                            :quizID="userQuiz.id"
                         />
                     </v-col>
                 </v-row>
@@ -76,15 +84,20 @@ export default {
     },
     data() {
         return {
-            userQuizzes: null,
+            userQuiz: null,
+            selectedQuestionID: null,
             selectedQuestionIndex: 0,
-            selectedQuestionID: 'UwHA8QfIu52054cqIQ3J',
             sidebarOpen: false,
             sidebarLoaded: false,
         }
     },
     apollo: {
-        userQuizzes: UserQuizzesQuery,
+        userQuiz: {
+            query: UserQuizzesQuery,
+            update: (data) => {
+                return data.userQuizzes[0]
+            },
+        },
     },
     mounted() {
         this.onResize()
