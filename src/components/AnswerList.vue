@@ -1,17 +1,17 @@
 <template>
     <v-card class="pa-4" elevation="2">
-        <v-row v-if="userQuiz !== null">
+        <v-row v-if="question !== null">
             <v-col
                 class="col-12 col-sm-6 col-md-12 col-lg-6"
-                v-for="option in userQuiz.question.options"
+                v-for="option in question.options"
                 :key="option.id"
             >
                 <SingleAnswer
                     :text="option.option"
                     :optionID="option.id"
                     :selectedID="
-                        userQuiz.question.userAnswer !== null
-                            ? userQuiz.question.userAnswer.id
+                        question.userAnswer !== null
+                            ? question.userAnswer.id
                             : null
                     "
                     @selectanswer="selectOneAnswer"
@@ -40,6 +40,29 @@ export default {
     components: {
         SingleAnswer,
     },
+    props: {
+        questionID: String,
+        quizID: String,
+    },
+    data() {
+        return {
+            question: null,
+        }
+    },
+    apollo: {
+        question: {
+            query: OptionsQuery,
+            variables() {
+                return {
+                    quizID: this.quizID,
+                    questionID: this.questionID,
+                }
+            },
+            update: (data) => {
+                return data.userQuiz.question
+            },
+        },
+    },
     methods: {
         selectOneAnswer(ID) {
             this.userQuiz.question.userAnswer.id = ID
@@ -58,26 +81,6 @@ export default {
                     console.log(data)
                 })
         },
-    },
-    props: {
-        questionID: String,
-        quizID: String,
-    },
-    apollo: {
-        userQuiz: {
-            query: OptionsQuery,
-            variables() {
-                return {
-                    quizID: this.quizID,
-                    questionID: this.questionID,
-                }
-            },
-        },
-    },
-    data() {
-        return {
-            userQuiz: null,
-        }
     },
 }
 </script>
