@@ -6,9 +6,7 @@ const getUserQuizQuestion = async (userQuiz, id) => {
 
     const quizQuestion = await Question.collection.get({key: quiz.key+"/Question/"+id})
 
-    const userQuizQuestion = await UserQuizQuestion.collection
-        .parent(userQuiz.key)
-        .get({ id })
+    const userQuizQuestion = await UserQuizQuestion.collection.get({key: userQuiz.key+"/UserQuizQuestion/"+id})
 
     return {
         id: quizQuestion.id,

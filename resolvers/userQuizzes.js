@@ -74,7 +74,7 @@ const resolvers = {
             )
         },
         editUserQuizQuestion: async (parents, { input }, context) => {
-            const { id, userQuizID, questionID, answerID } = input
+            const { userQuizID, questionID, answerID } = input
 
             const userQuiz = await getUserQuiz(userQuizID)
             const quiz = await userQuiz.quizObj.get()
@@ -82,7 +82,7 @@ const resolvers = {
             const question = await getQuestion(quiz, questionID)
             const answer = await getOptionByQuestionID(question, answerID)
 
-            return await editUserQuizQuestion(userQuiz, id, answer)
+            return await editUserQuizQuestion(userQuiz, questionID, answer)
         },
     },
 }
