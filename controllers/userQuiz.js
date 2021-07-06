@@ -60,7 +60,6 @@ const addUserQuiz = async (user, quiz, startTime, endTime) => {
 const setUserQuizScore = async (userQuizID, score) => {
     let obj = await getUserQuiz(userQuizID)
     obj.score = score
-    console.log(obj.startTime)
     obj.startTime = new Date(obj.startTime._seconds*1000)
     obj.endTime = new Date(obj.endTime._seconds*1000)
     obj.created = new Date(obj.created._seconds*1000)
@@ -68,7 +67,6 @@ const setUserQuizScore = async (userQuizID, score) => {
     obj.user = obj.userObj.ref._path.segments.join('/')
     obj.quiz = obj.quizObj.ref._path.segments.join('/')
 
-    console.log(obj)
     let userQuiz = UserQuiz.fromObject(obj)
     await userQuiz.save()
 

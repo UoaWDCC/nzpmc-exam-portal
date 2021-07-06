@@ -146,9 +146,6 @@ const getUserAnswerIDs = async (userQuiz) => {
 }
 
 const submitUserQuizQuestions = async (userQuizID, userAnswers, correctAnswers) => {
-    console.log(userAnswers)
-    console.log(correctAnswers)
-
     // calculate score
     let score = 0
     userAnswers.forEach((answer, index) => {
