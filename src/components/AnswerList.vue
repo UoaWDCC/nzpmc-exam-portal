@@ -41,9 +41,6 @@ export default {
         SingleAnswer,
     },
     methods: {
-        // setUserQuiz(newQuiz) {
-        //     this.userQuiz = newQuiz
-        // },
         selectOneAnswer(ID) {
             this.userQuiz.question.userAnswer.id = ID
             this.$apollo
@@ -51,7 +48,6 @@ export default {
                     mutation: UpdateUserAnswerQuery,
                     variables: {
                         input: {
-                            id: this.questionID,
                             userQuizID: this.quizID,
                             questionID: this.questionID,
                             answerID: ID,
@@ -61,18 +57,6 @@ export default {
                 .then((data) => {
                     console.log(data)
                 })
-            // this.$apollo
-            //     .query({
-            //         query: OptionsQuery,
-            //         variables: {
-            //             quizID: this.quizID,
-            //             questionID: this.questionID,
-            //         },
-            //     })
-            //     .then((newUserQuiz) => {
-            //         this.setUserQuiz(newUserQuiz)
-            //         console.log(this.userQuiz)
-            //     })
         },
     },
     props: {
