@@ -23,12 +23,6 @@ export default {
         SignOutMenu,
     },
     data: () => ({
-        items: [
-            { title: 'Click Me' },
-            { title: 'Click Me' },
-            { title: 'Click Me' },
-            { title: 'Click Me 2' },
-        ],
         timeRemaining: null,
         timeWarning: 600,
         timeDanger: 300,
@@ -41,13 +35,23 @@ export default {
             return startTime + this.duration * 1000
         },
         formattedTimeRemaining() {
-            const minutes = Math.floor(this.timeRemaining / 60)
+            let hours = Math.floor(this.timeRemaining / 3600)
+            let minutes = Math.floor((this.timeRemaining % 3600) / 60)
             let seconds = this.timeRemaining % 60
 
+            if (hours < 10) {
+                hours = `0${hours}`
+            }
+            if (minutes < 10) {
+                minutes = `0${minutes}`
+            }
             if (seconds < 10) {
                 seconds = `0${seconds}`
             }
-            return `${minutes}:${seconds}`
+
+            return this.timeRemaining === null
+                ? '...'
+                : `${hours}:${minutes}:${seconds}`
         },
     },
     watch: {
@@ -59,7 +63,7 @@ export default {
 
             // Change timer colour if neccessary
             const timerEl = this.$el.querySelector('.timer')
-            console.log(val)
+
             if (0 <= val && val <= this.timeDanger) {
                 timerEl.classList.add('error--text')
                 timerEl.classList.remove('warning--text', 'text--darken-2')

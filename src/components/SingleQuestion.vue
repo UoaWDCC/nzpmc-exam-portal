@@ -1,12 +1,13 @@
 <template>
     <v-card v-if="userQuiz !== null" class="pa-4 fill-height" elevation="2">
         <v-card-title>Question {{ questionIndex + 1 }}</v-card-title>
-        <v-card-text>
+        <v-card-text style="font-size: 1rem; color: rgba(0, 0, 0, 0.75)">
             <latex :content="userQuiz.question.question" />
         </v-card-text>
         <img
             v-if="userQuiz.question.imageURI !== ''"
-            style="width: 100%; max-width: 300px"
+            class="d-block mx-auto"
+            style="max-width: 100%; max-height: 25rem"
             alt="question image"
             v-bind:src="userQuiz.question.imageURI"
         />

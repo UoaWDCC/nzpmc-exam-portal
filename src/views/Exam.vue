@@ -5,53 +5,58 @@
             v-else
             v-resize="onResize"
             class="d-flex"
-            style="min-height: 100vh"
+            style="min-height: 100vh; column-gap: 1rem"
         >
-            <v-row class="align-self-center" style="height: 100%">
-                <v-col
-                    class="col-12 col-md-4 col-lg-3 col-xl-2 d-none d-md-block"
+            <div class="d-none d-md-block" style="width: 18rem">
+                <v-card
+                    class="sidebarCard"
+                    elevation="2"
+                    style="
+                        height: calc(100vh - 24px);
+                        position: fixed;
+                        width: inherit;
+                    "
                 >
-                    <v-card
-                        class="questionCard"
-                        elevation="2"
-                        style="height: 100%"
+                </v-card>
+            </div>
+            <div style="flex: 1 1 0">
+                <v-row>
+                    <v-col class="col-12">
+                        <Topbar
+                            @toggleSidebar="sidebarOpen = !sidebarOpen"
+                            :startTimestamp="userQuizzes[0].startTime"
+                            :duration="userQuizzes[0].duration"
+                        />
+                    </v-col>
+                </v-row>
+                <v-row class="justify-center">
+                    <v-col
+                        class="col-12 d-md-none"
+                        v-bind:class="{ 'd-none': !sidebarOpen }"
                     >
-                    </v-card>
-                </v-col>
-                <v-col class="col-12 col-md-8 col-lg-9 col-xl-10">
-                    <v-row>
-                        <v-col class="col-12">
-                            <Topbar
-                                @toggleSidebar="sidebarOpen = !sidebarOpen"
-                                :startTimestamp="startTimestamp"
-                                :duration="duration"
-                            />
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col class="col-12 col-xl-8">
-                            <SingleQuestion
-                                :questionID="selectedQuestionID"
-                                :questionIndex="selectedQuestionIndex"
+                        <v-card class="sidebarMobileCard" elevation="2">
+                            <Sidebar
                                 :quizID="userQuizzes[0].id"
+                                @selectQuestion="selectOneQuestion"
+                                @sidebarLoaded="sidebarLoaded = true"
                             />
-                        </v-col>
-                        <v-col class="col-12 col-xl-4">
-                            <AnswerList
-                                :questionID="selectedQuestionID"
-                                :quizID="userQuizzes[0].id"
-                            />
-                        </v-col>
-                    </v-row>
-                </v-col>
-            </v-row>
-            <Sidebar
-                :quizID="userQuizzes[0].id"
-                @selectQuestion="selectOneQuestion"
-                :sidebarOpen="sidebarOpen"
-                @drawerOpen="sidebarOpen = true"
-                @drawerClosed="sidebarOpen = false"
-            />
+                        </v-card>
+                    </v-col>
+                    <v-col class="col-12">
+                        <SingleQuestion
+                            :questionID="selectedQuestionID"
+                            :questionIndex="selectedQuestionIndex"
+                            :quizID="userQuizzes[0].id"
+                        />
+                    </v-col>
+                    <v-col class="col-12">
+                        <AnswerList
+                            :questionID="selectedQuestionID"
+                            :quizID="userQuizzes[0].id"
+                        />
+                    </v-col>
+                </v-row>
+            </div>
         </v-container>
     </div>
 </template>
@@ -75,9 +80,7 @@ export default {
             selectedQuestionIndex: 0,
             selectedQuestionID: 'UwHA8QfIu52054cqIQ3J',
             sidebarOpen: false,
-            startTimestamp:
-                'Sun Jun 27 2021 23:45:52 GMT+1200 (New Zealand Standard Time)',
-            duration: 5550,
+            sidebarLoaded: false,
         }
     },
     apollo: {
@@ -87,38 +90,29 @@ export default {
         this.onResize()
     },
     methods: {
-        selectOneQuestion(id) {
+        selectOneQuestion(index, id) {
+            this.selectedQuestionIndex = index
             this.selectedQuestionID = id
         },
         onResize() {
-            // Moves the location of the sidebar component based on the
-            const sidebar = this.$el.querySelector('.questionDrawer')
-            const sidebarInCard =
-                sidebar.parentElement.classList.contains('questionCard')
-            const screenIsMobile = window.innerWidth < 960
+            if (this.sidebarLoaded) {
+                // Moves the location of the sidebar component based on the
+                const sidebar = this.$el.querySelector('.questionDrawer')
+                const sidebarInCard =
+                    sidebar.parentElement.classList.contains('sidebarCard')
+                const screenIsMobile = window.innerWidth < 960
 
-            if (sidebarInCard && screenIsMobile) {
-                // Sidebar must be moved to the root element
-                sidebar.remove()
-                this.$el.append(sidebar)
+                if (sidebarInCard && screenIsMobile) {
+                    // Sidebar must be moved to the mobile card
+                    sidebar.remove()
 
-                // Hide sidebar, modify styles
-                this.sidebarOpen = false
-                sidebar.style.width = '256px'
-                sidebar.querySelector(
-                    '.v-navigation-drawer__border',
-                ).style.display = 'block'
-            } else if (!sidebarInCard && !screenIsMobile) {
-                // Sidebar must be moved to the card
-                sidebar.remove()
-                this.$el.querySelector('.questionCard').append(sidebar)
-
-                // Show sidebar, modify styles
-                this.sidebarOpen = true
-                sidebar.style.width = '100%'
-                sidebar.querySelector(
-                    '.v-navigation-drawer__border',
-                ).style.display = 'none'
+                    this.$el.querySelector('.sidebarMobileCard').append(sidebar)
+                    this.sidebarOpen = false
+                } else if (!sidebarInCard && !screenIsMobile) {
+                    // Sidebar must be moved to the normal card
+                    sidebar.remove()
+                    this.$el.querySelector('.sidebarCard').append(sidebar)
+                }
             }
         },
     },
