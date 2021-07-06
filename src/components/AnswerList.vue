@@ -65,21 +65,17 @@ export default {
     },
     methods: {
         selectOneAnswer(ID) {
-            this.userQuiz.question.userAnswer.id = ID
-            this.$apollo
-                .mutate({
-                    mutation: UpdateUserAnswerQuery,
-                    variables: {
-                        input: {
-                            userQuizID: this.quizID,
-                            questionID: this.questionID,
-                            answerID: ID,
-                        },
+            this.question.userAnswer.id = ID
+            this.$apollo.mutate({
+                mutation: UpdateUserAnswerQuery,
+                variables: {
+                    input: {
+                        userQuizID: this.quizID,
+                        questionID: this.questionID,
+                        answerID: ID,
                     },
-                })
-                .then((data) => {
-                    console.log(data)
-                })
+                },
+            })
         },
     },
 }
