@@ -41,10 +41,11 @@ export default {
         SingleAnswer,
     },
     methods: {
-        setUserQuiz(newQuiz) {
-            this.userQuiz = newQuiz
-        },
+        // setUserQuiz(newQuiz) {
+        //     this.userQuiz = newQuiz
+        // },
         selectOneAnswer(ID) {
+            this.userQuiz.question.userAnswer.id = ID
             this.$apollo
                 .mutate({
                     mutation: UpdateUserAnswerQuery,
@@ -60,18 +61,18 @@ export default {
                 .then((data) => {
                     console.log(data)
                 })
-            this.$apollo
-                .query({
-                    query: OptionsQuery,
-                    variables: {
-                        quizID: this.quizID,
-                        questionID: this.questionID,
-                    },
-                })
-                .then((newUserQuiz) => {
-                    this.setUserQuiz(newUserQuiz)
-                    console.log(this.userQuiz)
-                })
+            // this.$apollo
+            //     .query({
+            //         query: OptionsQuery,
+            //         variables: {
+            //             quizID: this.quizID,
+            //             questionID: this.questionID,
+            //         },
+            //     })
+            //     .then((newUserQuiz) => {
+            //         this.setUserQuiz(newUserQuiz)
+            //         console.log(this.userQuiz)
+            //     })
         },
     },
     props: {
