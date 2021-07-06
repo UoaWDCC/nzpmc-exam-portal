@@ -9,7 +9,11 @@
                 <SingleAnswer
                     :text="option.option"
                     :optionID="option.id"
-                    :selectedID="currentOptionID"
+                    :selectedID="
+                        userQuiz.question.userAnswer !== null
+                            ? userQuiz.question.userAnswer.id
+                            : null
+                    "
                     @selectanswer="selectOneAnswer"
                 />
             </v-col>
@@ -37,38 +41,42 @@ export default {
         SingleAnswer,
     },
     methods: {
-        selectOneAnswer(number) {
-            this.currentOptionID = number
-
+        setUserQuiz(newQuiz) {
+            this.userQuiz = newQuiz
+        },
+        selectOneAnswer(ID) {
             this.$apollo
                 .mutate({
-                    // Query
                     mutation: UpdateUserAnswerQuery,
-                    // Parameters
                     variables: {
                         input: {
                             id: this.questionID,
                             userQuizID: this.quizID,
                             questionID: this.questionID,
-                            answerID: number,
+                            answerID: ID,
                         },
                     },
                 })
                 .then((data) => {
                     console.log(data)
                 })
+            this.$apollo
+                .query({
+                    query: OptionsQuery,
+                    variables: {
+                        quizID: this.quizID,
+                        questionID: this.questionID,
+                    },
+                })
+                .then((newUserQuiz) => {
+                    this.setUserQuiz(newUserQuiz)
+                    console.log(this.userQuiz)
+                })
         },
     },
     props: {
         questionID: String,
         quizID: String,
-    },
-    data() {
-        return {
-            userQuiz: null,
-            currentOptionID: null,
-            selectedAnswer: null,
-        }
     },
     apollo: {
         userQuiz: {
@@ -80,18 +88,11 @@ export default {
                 }
             },
         },
-        // selectedAnswer: {
-        //     mutation: UpdateUserAnswerQuery,
-        //     variables() {
-        //         return {
-        //             input: {
-        //                 userQuizID: this.quizID,
-        //                 questionID: this.questionID,
-        //                 answerID: this.currentOptionID,
-        //             },
-        //         }
-        //     },
-        // },
+    },
+    data() {
+        return {
+            userQuiz: null,
+        }
     },
 }
 </script>

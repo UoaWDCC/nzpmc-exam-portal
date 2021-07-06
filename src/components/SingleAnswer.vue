@@ -2,11 +2,14 @@
     <v-card
         dark
         @click="selectanswer"
-        :color="selectedID === optionID ? '#03a9f5' : '#385F73'"
+        :color="this.selectedID === this.optionID ? '#03a9f5' : '#385F73'"
     >
         <div class="d-flex">
             <latex class="font-weight-bold flex-grow-1 pa-4" :content="text" />
-            <span v-if="selectedID === optionID" class="material-icons ma-4">
+            <span
+                v-if="this.selectedID === this.optionID"
+                class="material-icons ma-4"
+            >
                 check_circle
             </span>
         </div>
