@@ -138,16 +138,13 @@ const getUserAnswerIDs = async (userQuiz) => {
 }
 
 const submitUserQuizQuestions = async (userQuizID, userAnswers, correctAnswers) => {
-    // calculate score
-    let score = 0
-    userAnswers.forEach((answer, index) => {
-        if (answer === correctAnswers[index]) {
-            score += 1
-        }
-    });
+    // calculate score starting at index 0
+    const calculatedScore = userAnswers.reduce((score, userAnswer, index) => {
+        return (userAnswer === correctAnswers[index] ? score + 1 : score)
+    }, 0)
 
     // update userQuiz 
-    await setUserQuizScore(userQuizID, score)
+    await setUserQuizScore(userQuizID, calculatedScore)
 
     return getUserQuiz(userQuizID) 
 }
