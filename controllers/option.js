@@ -24,9 +24,18 @@ const getOptionKey = async (optionKey) => {
 }
 
 const getOptionByQuestionID = async (question, optionID) => {
-    const option = await Option.collection
-        .parent(question.key)
-        .get({ id: optionID })
+    let option
+    if (!question.answerObj || !question.answerObj.ref) {
+        option = await Option.collection.get({ key: question.key + "/Option/" + optionID })
+    } else {
+        const answer = await question.answerObj.get()
+        if (answer.id == optionID) {
+            option = answer
+        } else {
+            option = await Option.collection.get({ key: question.key + "/Option/" + optionID })
+        }
+    }
+
     return packOption(option)
 }
 
