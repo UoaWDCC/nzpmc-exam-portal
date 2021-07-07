@@ -1,15 +1,19 @@
 <template>
     <v-card class="pa-4" elevation="2">
-        <v-row v-if="userQuiz !== null">
+        <v-row v-if="question !== null">
             <v-col
                 class="col-12 col-sm-6 col-md-12 col-lg-6"
-                v-for="option in userQuiz.question.options"
+                v-for="option in question.options"
                 :key="option.id"
             >
                 <SingleAnswer
                     :text="option.option"
                     :optionID="option.id"
-                    :selectedID="currentOptionID"
+                    :selectedID="
+                        question.userAnswer !== null
+                            ? question.userAnswer.id
+                            : null
+                    "
                     @selectanswer="selectOneAnswer"
                 />
             </v-col>
@@ -30,15 +34,11 @@
 <script>
 import SingleAnswer from './SingleAnswer.vue'
 import { OptionsQuery } from '../gql/queries/option'
+import { UpdateUserAnswerQuery } from '../gql/mutations/option'
 
 export default {
     components: {
         SingleAnswer,
-    },
-    methods: {
-        selectOneAnswer(number) {
-            this.currentOptionID = number
-        },
     },
     props: {
         questionID: String,
@@ -46,12 +46,11 @@ export default {
     },
     data() {
         return {
-            userQuiz: null,
-            currentOptionID: null,
+            question: null,
         }
     },
     apollo: {
-        userQuiz: {
+        question: {
             query: OptionsQuery,
             variables() {
                 return {
@@ -59,6 +58,24 @@ export default {
                     questionID: this.questionID,
                 }
             },
+            update: (data) => {
+                return data.userQuiz.question
+            },
+        },
+    },
+    methods: {
+        selectOneAnswer(ID) {
+            this.question.userAnswer.id = ID
+            this.$apollo.mutate({
+                mutation: UpdateUserAnswerQuery,
+                variables: {
+                    input: {
+                        userQuizID: this.quizID,
+                        questionID: this.questionID,
+                        answerID: ID,
+                    },
+                },
+            })
         },
     },
 }

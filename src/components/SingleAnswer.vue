@@ -2,7 +2,7 @@
     <v-card
         dark
         @click="selectanswer"
-        :color="selectedID === optionID ? '#03a9f5' : '#385F73'"
+        :color="this.selectedID === this.optionID ? '#03a9f5' : '#385F73'"
         style="height: 100%"
     >
         <div class="d-flex" style="height: 100%; align-items: center">
