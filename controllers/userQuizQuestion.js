@@ -129,18 +129,10 @@ const getUserQuizQuestionOptionsByQuestion = async (question) => {
 const getUserAnswerIDs = async (userQuiz) => {
     const userAnswers = await getUserQuizQuestions(userQuiz)
 
-    const userAnswerIDsRequest = userAnswers.map(async (userAnswer) => {
-        let userAnswerObj = userAnswer.userAnswerObj
-        return await userAnswerObj.answer.get()
-    });
-
-    let userAnswerIDs = []
-    
-    Promise.all(userAnswerIDsRequest).then((answerIDObjs) => {
-        answerIDObjs.forEach((obj) => {
-            userAnswerIDs.push(obj.id)
-        })
-    })
+    const userAnswerIDs = await Promise.all(userAnswers.map(async (userAnswer) => {
+        const answer = await userAnswer.userAnswerObj.answer.get() 
+        return answer.id
+    }))
 
     return userAnswerIDs
 }
