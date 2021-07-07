@@ -51,17 +51,17 @@ const resolvers = {
     },
     Query: {
         userQuizzes: async (parents, args, context) => {
-            // if (!context.user) throw new AuthenticationError()
+            if (!context.user) throw new AuthenticationError()
 
             return await getUserQuizzes(context.user.uid)
         },
         userQuiz: async (parents, args, context) => {
-            // if (!context.user) throw new AuthenticationError()
+            if (!context.user) throw new AuthenticationError()
 
             const userQuiz = await getUserQuiz(args.quizID)
             const user = await userQuiz.userObj.get()
 
-            // if (user.id !== context.user.uid) throw new AuthenticationError()
+            if (user.id !== context.user.uid) throw new AuthenticationError()
             return userQuiz
         },
     },
