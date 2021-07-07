@@ -4,12 +4,18 @@ import {
     getUserQuizQuestion,
     getUserQuizQuestionOptionsByQuestion,
     getUser,
+    addUserQuiz,
+    getUserQuizzes,
     getOptionByQuestionID,
     editUserQuizQuestion,
     getQuiz,
     getQuestion,
+    getQuestions,
+    getUserAnswerIDs,
+    submitUserQuizQuestions,
 } from '../controllers'
-import { addUserQuiz, getUserQuizzes } from '../controllers/userQuiz'
+
+import { AuthenticationError } from 'apollo-server-core'
 
 const resolvers = {
     UserQuiz: {
@@ -83,6 +89,18 @@ const resolvers = {
             const answer = await getOptionByQuestionID(question, answerID)
 
             return await editUserQuizQuestion(userQuiz, questionID, answer)
+        },
+        submitUserQuizQuestions: async (parents, { input }, context) => {
+            const { userQuizID } = input
+
+            // get necessary objects
+            const userQuiz = await getUserQuiz(userQuizID)
+            const quiz = await userQuiz.quizObj.get()
+            const userAnswers = await getUserAnswerIDs(userQuiz)
+            const correctAnswers = (await getQuestions(quiz)).map((question) => question.id)
+
+            // update UserQuiz
+            return await submitUserQuizQuestions(userQuizID, userAnswers, correctAnswers)
         },
     },
 }

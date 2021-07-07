@@ -95,3 +95,7 @@ input EditUserQuizQuestion {
     questionID: ID!
     answerID: ID!
 }
+
+input SubmissionInput {
+    userQuizID: ID!
+}

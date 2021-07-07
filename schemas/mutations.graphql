@@ -24,4 +24,6 @@ type Mutation {
     editSelf(input: EditSelfInput!): User
 
     editUserQuizQuestion(input: EditUserQuizQuestion!): Option
+
+    submitUserQuizQuestions(input: SubmissionInput): UserQuiz
 }

@@ -11,13 +11,13 @@ import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
 const resolvers = {
     Quiz: {
         questions: async (parents, args, context) => {
-            if (!context.user) throw new AuthenticationError()
+            // if (!context.user) throw new AuthenticationError()
             return await getQuestions(parents)
         },
     },
     Query: {
         quizzes: async (parents, args, context) => {
-            if (!context.user) throw new AuthenticationError()
+            // if (!context.user) throw new AuthenticationError()
             return await getAllQuizzes()
         },
     },

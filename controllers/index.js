@@ -14,7 +14,7 @@ import {
 } from './option'
 import { getAllQuizzes, getQuiz, addQuiz, editQuiz } from './quiz'
 import { getUser, getAllUsers, addUser, editUser } from './user'
-import { getUserQuiz, getUserQuizzes, getAllUserQuizzes } from './userQuiz'
+import { getUserQuiz, getUserQuizzes, getAllUserQuizzes, addUserQuiz, setUserQuizScore } from './userQuiz'
 import {
     getUserQuizQuestion,
     getUserQuizQuestions,
@@ -22,6 +22,8 @@ import {
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
     getUserQuizQuestionOptionsByQuestion,
+    getUserAnswerIDs,
+    submitUserQuizQuestions,
 } from './userQuizQuestion'
 
 export {
@@ -48,8 +50,12 @@ export {
     getUserQuizQuestionOptions,
     getUserQuizQuestionOptionsByQuestion,
     addQuiz,
+    getUserAnswerIDs,
+    addUserQuiz,
     editQuiz,
     addQuestionOption,
     editQuestionOption,
     upsertQuestionAnswer,
+    submitUserQuizQuestions,
+    setUserQuizScore
 }

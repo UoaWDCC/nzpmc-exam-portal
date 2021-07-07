@@ -7,3 +7,5 @@ class AdminAuthenticationError extends AuthenticationError {
         super('Requires admin privileges')
     }
 }
+
+export { AdminAuthenticationError }

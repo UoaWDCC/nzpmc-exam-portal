@@ -1,5 +1,6 @@
 import { Option, Question, Quiz, UserQuizQuestion } from '../models'
 import { packOptions } from './option'
+import { getUserQuiz, setUserQuizScore } from './userQuiz'
 
 const getUserQuizQuestion = async (userQuiz, id) => {
     const quiz = await userQuiz.quizObj.get()
@@ -123,6 +124,29 @@ const getUserQuizQuestionOptionsByQuestion = async (question) => {
     return packOptions(answers)
 }
 
+const getUserAnswerIDs = async (userQuiz) => {
+    const userAnswers = await getUserQuizQuestions(userQuiz)
+
+    const userAnswerIDs = await Promise.all(userAnswers.map(async (userAnswer) => {
+        const answer = await userAnswer.userAnswerObj.answer.get() 
+        return answer.id
+    }))
+
+    return userAnswerIDs
+}
+
+const submitUserQuizQuestions = async (userQuizID, userAnswers, correctAnswers) => {
+    // calculate score starting at index 0
+    const calculatedScore = userAnswers.reduce((score, userAnswer, index) => {
+        return (userAnswer === correctAnswers[index] ? score + 1 : score)
+    }, 0)
+
+    // update userQuiz 
+    await setUserQuizScore(userQuizID, calculatedScore)
+
+    return getUserQuiz(userQuizID) 
+}
+
 export {
     getUserQuizQuestion,
     getUserQuizQuestions,
@@ -130,4 +154,6 @@ export {
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
     getUserQuizQuestionOptionsByQuestion,
+    submitUserQuizQuestions,
+    getUserAnswerIDs,
 }
