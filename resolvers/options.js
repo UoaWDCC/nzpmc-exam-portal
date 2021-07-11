@@ -3,7 +3,7 @@ import {
     getQuiz,
     addQuestionOption,
     editQuestionOption,
-    upsertQuestionAnswer,
+    insertQuestionAnswer,
 } from '../controllers'
 
 const resolvers = {
@@ -34,7 +34,7 @@ const resolvers = {
 
             const question = await getQuestion(quiz, questionID)
 
-            return await upsertQuestionAnswer(question, option)
+            return await insertQuestionAnswer(question, option)
         },
     },
 }

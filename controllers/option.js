@@ -63,14 +63,13 @@ const editQuestionOption = async (question, id, o) => {
     return packOption(option)
 }
 
-const upsertQuestionAnswer = async (question, o) => {
+const insertQuestionAnswer = async (question, o) => {
     let option, created
     if (!question.answer || !question.answer.ref) {
         option = Option.init()
         created = new Date()
-        option.id = question.id
     } else {
-        option = await Option.collection.get({ id: question.id })
+        option = await Option.collection.get({ id: question.answer.id })
         created = option.created.toDate()
     }
 
@@ -78,8 +77,9 @@ const upsertQuestionAnswer = async (question, o) => {
     option.created = created
     option.modified = new Date()
 
-    await option.upsert()
+    await option.save()
 
+    // update question with answer
     const q = await Question.collection.get({ key: question.key })
     q.answer = option.key
     q.created = q.created.toDate()
@@ -96,5 +96,5 @@ export {
     getOptionByQuestionID,
     addQuestionOption,
     editQuestionOption,
-    upsertQuestionAnswer,
+    insertQuestionAnswer,
 }
