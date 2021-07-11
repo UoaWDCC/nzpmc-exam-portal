@@ -18,10 +18,12 @@
 
 <script>
 import firebase from 'firebase'
+import { onLogout } from '../vue-apollo'
 export default {
     methods: {
         signOut() {
             firebase.auth().signOut()
+            onLogout(this.$apollo.provider.defaultClient)
         },
     },
 }

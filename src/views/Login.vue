@@ -138,8 +138,7 @@ export default {
                 .catch((error) => {
                     this.loginError = error.message
                 })
-            const res = await firebase.auth().currentUser.getIdToken(true)
-            onLogin(this.$apollo.provider.defaultClient, res)
+            onLogin(this.$apollo.provider.defaultClient)
         },
     },
 }

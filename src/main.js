@@ -12,8 +12,21 @@ import { createProvider } from './vue-apollo'
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
 
+// Name of the localStorage item
+const AUTH_TOKEN = 'apollo-token'
+
 let firebaseLoaded = false
-firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(async function (user) {
+    // Update token to be used for backend authentication
+    if (user && typeof localStorage !== 'undefined') {
+        localStorage.setItem(
+            AUTH_TOKEN,
+            await firebase.auth().currentUser.getIdToken(true),
+        )
+    } else if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(AUTH_TOKEN)
+    }
+
     if (firebaseLoaded && user) {
         // New user, show welcome page
         router.push('/welcome')

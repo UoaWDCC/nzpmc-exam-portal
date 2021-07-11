@@ -1,11 +1,11 @@
 <template>
     <v-card elevation="2">
         <v-toolbar>
-            <v-btn icon @click="toggleSidebar()" class="d-md-none">
+            <v-btn icon @click="toggleSidebar()" class="d-md-none me-4">
                 <span class="material-icons">menu</span>
             </v-btn>
 
-            <v-toolbar-title class="timer"
+            <v-toolbar-title class="timer ps-0"
                 ><span class="d-none d-sm-inline-block">Time remaining:</span>
                 {{ formattedTimeRemaining }}</v-toolbar-title
             >

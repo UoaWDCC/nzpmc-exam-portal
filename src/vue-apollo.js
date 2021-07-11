@@ -87,10 +87,7 @@ export function createProvider(options = {}) {
 }
 
 // Manually call this when user log in
-export async function onLogin(apolloClient, token) {
-    if (typeof localStorage !== 'undefined' && token) {
-        localStorage.setItem(AUTH_TOKEN, token)
-    }
+export async function onLogin(apolloClient) {
     if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
     try {
         await apolloClient.resetStore()
@@ -106,9 +103,6 @@ export async function onLogin(apolloClient, token) {
 
 // Manually call this when user log out
 export async function onLogout(apolloClient) {
-    if (typeof localStorage !== 'undefined') {
-        localStorage.removeItem(AUTH_TOKEN)
-    }
     if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
     try {
         await apolloClient.resetStore()
