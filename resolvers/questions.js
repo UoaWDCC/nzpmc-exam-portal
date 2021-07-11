@@ -1,17 +1,24 @@
 import {
     addQuestion,
     editQuestion,
-    getOptionKey,
     getQuestionOptions,
     getQuiz,
 } from '../controllers'
+import { AuthenticationError } from 'apollo-server-express'
+import { AdminAuthenticationError } from '../utils/errors'
 
 const resolvers = {
     Question: {
         options: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
             return await getQuestionOptions(parents)
         },
         answer: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
             if (!parents.answerObj || !parents.answerObj.ref) return null
             return await parents.answerObj.get()
         },
@@ -19,6 +26,9 @@ const resolvers = {
     Query: {},
     Mutation: {
         addQuestion: async (parent, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
             const { quizID, question, imageURI, numOfAnswers, topics } = input
 
             const quiz = await getQuiz(quizID)
@@ -32,6 +42,9 @@ const resolvers = {
             )
         },
         editQuestion: async (parent, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
             const {
                 quizID,
                 id,
