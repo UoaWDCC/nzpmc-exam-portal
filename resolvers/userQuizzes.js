@@ -14,24 +14,32 @@ import {
     getUserAnswerIDs,
     submitUserQuizQuestions,
 } from '../controllers'
-
-import { AuthenticationError } from 'apollo-server-core'
+import { AuthenticationError } from 'apollo-server-express'
+import { AdminAuthenticationError } from '../utils/errors'
 
 const resolvers = {
     UserQuiz: {
         user: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+
             if (!parents.userObj || !parents.userObj.ref) return null
             return await parents.userObj.get()
         },
         question: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+
             return await getUserQuizQuestion(parents, args.id)
         },
         questions: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+
             return await getUserQuizQuestions(parents)
         },
     },
     UserQuizQuestion: {
         userAnswer: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+
             if (
                 !parents.userAnswerObj ||
                 !parents.userAnswerObj.answer ||
@@ -42,6 +50,8 @@ const resolvers = {
             return parents.userAnswerObj.answer.get()
         },
         options: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+
             if (!parents.questionObj) return null
 
             return await getUserQuizQuestionOptionsByQuestion(
@@ -67,6 +77,9 @@ const resolvers = {
     },
     Mutation: {
         addUserQuiz: async (parents, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
             const { userID, quizID, startTime, endTime } = input
 
             const user = await getUser(userID)
@@ -80,6 +93,9 @@ const resolvers = {
             )
         },
         editUserQuizQuestion: async (parents, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
             const { userQuizID, questionID, answerID } = input
 
             const userQuiz = await getUserQuiz(userQuizID)
@@ -97,10 +113,16 @@ const resolvers = {
             const userQuiz = await getUserQuiz(userQuizID)
             const quiz = await userQuiz.quizObj.get()
             const userAnswers = await getUserAnswerIDs(userQuiz)
-            const correctAnswers = (await getQuestions(quiz)).map((question) => question.id)
+            const correctAnswers = (await getQuestions(quiz)).map(
+                (question) => question.id,
+            )
 
             // update UserQuiz
-            return await submitUserQuizQuestions(userQuizID, userAnswers, correctAnswers)
+            return await submitUserQuizQuestions(
+                userQuizID,
+                userAnswers,
+                correctAnswers,
+            )
         },
     },
 }
