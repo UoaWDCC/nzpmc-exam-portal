@@ -113,9 +113,9 @@ const resolvers = {
             const userQuiz = await getUserQuiz(userQuizID)
             const quiz = await userQuiz.quizObj.get()
             const userAnswers = await getUserAnswerIDs(userQuiz)
-            const correctAnswers = (await getQuestions(quiz)).map(
-                (question) => question.id,
-            )
+            const correctAnswers = await Promise.all((await getQuestions(quiz)).map(async (question) => {
+                return (await question.answerObj.get()).id
+            }))
 
             // update UserQuiz
             return await submitUserQuizQuestions(

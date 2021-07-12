@@ -1,4 +1,4 @@
-import { Question } from '../models'
+import { Question, Option } from '../models'
 
 const packQuestion = (question) => {
     return {
@@ -40,12 +40,16 @@ const addQuestion = async (quiz, q, imageURI, numOfAnswers, topics) => {
     question.created = new Date()
     question.modified = new Date()
 
+    const answer = Answer.init()
+    answer.option = ""
+    question.answer = answer.key
+
     await question.save()
 
     return packQuestion(question)
 }
 
-const editQuestion = async (quiz, id, q, imageURI, numOfAnswers, topics) => {
+const editQuestion = async (quiz, id, q, imageURI, numOfAnswers, answer, topics) => {
     const question = await Question.collection.get({key: quiz.key+"/Question/"+id})
 
     question.question = q ? q : question.question
@@ -54,10 +58,7 @@ const editQuestion = async (quiz, id, q, imageURI, numOfAnswers, topics) => {
     question.topics = topics ? topics : question.topics
     question.modified = new Date()
     question.created = question.created.toDate()
-
-    question.answer = question.answer.ref
-        ? undefined
-        : (await question.answer.get()).key
+    question.answer = answer ? answer : (await question.answer.get()).key
 
     await question.update()
 

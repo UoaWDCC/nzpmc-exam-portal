@@ -3,7 +3,7 @@ import {
     getQuiz,
     addQuestionOption,
     editQuestionOption,
-    upsertQuestionAnswer,
+    insertQuestionAnswer,
 } from '../controllers'
 import { AuthenticationError } from 'apollo-server-express'
 import { AdminAuthenticationError } from '../utils/errors'
@@ -45,7 +45,7 @@ const resolvers = {
 
             const question = await getQuestion(quiz, questionID)
 
-            return await upsertQuestionAnswer(question, option)
+            return await insertQuestionAnswer(question, option)
         },
     },
 }
