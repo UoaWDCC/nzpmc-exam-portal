@@ -8,24 +8,23 @@
                     alt="NZPMC Logo"
                     src="../assets/logo.png"
                 />
+                <v-btn large color="primary">Submit</v-btn>
             </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
         <v-list dense nav>
             <v-list-item-group
-                v-if="userQuiz !== null"
-                v-model="selectedQuestionID"
+                v-if="questions !== null"
+                v-model="selectedQuestionIndex"
                 color="primary"
                 mandatory
             >
                 <v-list-item
-                    v-for="(question, index) in userQuiz.questions"
+                    v-for="(question, index) in questions"
                     :key="question.id"
-                    link
                 >
                     <v-list-item-content
                         @click="selectQuestion(index)"
-                        color="#00008B"
                         class="px-2"
                         link
                     >
@@ -44,33 +43,41 @@ export default {
     props: {
         quizID: String,
         sidebarLoaded: Function,
+        questionIndex: Number,
     },
 
     data() {
         return {
-            userQuiz: null,
-            selectedQuestionID: null,
+            questions: null,
+            selectedQuestionIndex: null,
         }
     },
     methods: {
         selectQuestion(index) {
-            this.selectedQuestionID = this.userQuiz.questions[index].id
-            this.$emit('selectQuestion', index, this.selectedQuestionID)
+            this.selectedQuestionIndex = this.questions[index].id
+            this.$emit('selectQuestion', index, this.selectedQuestionIndex)
         },
     },
     created() {
         this.$emit('sidebarLoaded')
     },
     apollo: {
-        userQuiz: {
+        questions: {
             query: QuestionsQuery,
             variables() {
                 return {
                     quizID: this.quizID,
                 }
             },
+            update: (data) => {
+                return data.userQuiz.questions
+            },
         },
-        // update: (data) => data.QuestionsQuery,
+    },
+    watch: {
+        questionIndex() {
+            this.selectedQuestionIndex = this.questionIndex
+        },
     },
 }
 </script>

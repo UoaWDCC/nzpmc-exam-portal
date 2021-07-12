@@ -18,9 +18,25 @@
                 />
             </v-col>
         </v-row>
-        <v-row>
-            <v-col class="col-12 text-end">
-                <v-btn color="primary" large>
+        <v-row v-if="questions !== null" align="center" justify="space-between">
+            <v-col class="col-3">
+                <v-btn
+                    v-if="this.questionIndex > 0"
+                    color="primary"
+                    large
+                    @click="selectPreQuestion"
+                >
+                    <v-icon left class="material-icons"> chevron_left </v-icon>
+                    Previous
+                </v-btn>
+            </v-col>
+            <v-col class="col-3 text-end">
+                <v-btn
+                    v-if="this.questionIndex < this.questions.length - 1"
+                    color="primary"
+                    large
+                    @click="selectNextQuestion"
+                >
                     Next
                     <v-icon right class="material-icons">
                         navigate_next
@@ -35,6 +51,7 @@
 import SingleAnswer from './SingleAnswer.vue'
 import { OptionsQuery } from '../gql/queries/option'
 import { UpdateUserAnswerQuery } from '../gql/mutations/option'
+import { QuestionsQuery } from '../gql/queries/question'
 
 export default {
     components: {
@@ -42,12 +59,47 @@ export default {
     },
     props: {
         questionID: String,
+        questionIndex: Number,
         quizID: String,
     },
     data() {
         return {
             question: null,
+            questions: null,
         }
+    },
+    methods: {
+        selectNextQuestion() {
+            if (this.questionIndex < this.questions.length - 1) {
+                this.$emit(
+                    'selectQuestion',
+                    this.questionIndex + 1,
+                    this.questions[this.questionIndex + 1].id,
+                )
+            }
+        },
+        selectPreQuestion() {
+            if (this.questionIndex > 0) {
+                this.$emit(
+                    'selectQuestion',
+                    this.questionIndex - 1,
+                    this.questions[this.questionIndex - 1].id,
+                )
+            }
+        },
+        selectOneAnswer(ID) {
+            this.question.userAnswer.id = ID
+            this.$apollo.mutate({
+                mutation: UpdateUserAnswerQuery,
+                variables: {
+                    input: {
+                        userQuizID: this.quizID,
+                        questionID: this.questionID,
+                        answerID: ID,
+                    },
+                },
+            })
+        },
     },
     apollo: {
         question: {
@@ -62,20 +114,16 @@ export default {
                 return data.userQuiz.question
             },
         },
-    },
-    methods: {
-        selectOneAnswer(ID) {
-            this.question.userAnswer.id = ID
-            this.$apollo.mutate({
-                mutation: UpdateUserAnswerQuery,
-                variables: {
-                    input: {
-                        userQuizID: this.quizID,
-                        questionID: this.questionID,
-                        answerID: ID,
-                    },
-                },
-            })
+        questions: {
+            query: QuestionsQuery,
+            variables() {
+                return {
+                    quizID: this.quizID,
+                }
+            },
+            update: (data) => {
+                return data.userQuiz.questions
+            },
         },
     },
 }

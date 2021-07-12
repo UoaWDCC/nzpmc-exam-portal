@@ -37,6 +37,7 @@
                         <v-card class="sidebarMobileCard" elevation="2">
                             <Sidebar
                                 :quizID="userQuiz.id"
+                                :questionIndex="selectedQuestionIndex"
                                 @selectQuestion="selectOneQuestion"
                                 @sidebarLoaded="sidebarLoaded = true"
                             />
@@ -55,11 +56,13 @@
                     </v-col>
                     <v-col class="col-12">
                         <AnswerList
+                            @selectQuestion="selectOneQuestion"
                             :questionID="
                                 selectedQuestionID
                                     ? selectedQuestionID
                                     : userQuiz.questions[0].id
                             "
+                            :questionIndex="selectedQuestionIndex"
                             :quizID="userQuiz.id"
                         />
                     </v-col>

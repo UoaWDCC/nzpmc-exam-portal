@@ -11,6 +11,7 @@
     },
     "dependencies": {
         "core-js": "^3.12.1",
+        "eslint-plugin-graphql": "^4.0.0",
         "firebase": "^8.6.1",
         "latex2vue": "^2.2.2",
         "material-icons": "^0.7.4",
