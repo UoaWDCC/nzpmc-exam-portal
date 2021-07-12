@@ -21,6 +21,11 @@ const auth = () => async ({ req }) => {
     }
 }
 
+// Only applies after refreshing the token
+const addAdminClaim = async (uid) => {
+    admin.auth().setCustomUserClaims(uid, { admin: true })
+}
+
 const firestore = admin.firestore()
 
-export { firestore, admin, auth }
+export { firestore, admin, auth, addAdminClaim }

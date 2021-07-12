@@ -1,8 +1,12 @@
+import { AuthenticationError } from 'apollo-server-express'
+
 const resolvers = {
     Query: {
-        currentTime: (parents,arg,ctx) => {
-            return new Date();
-        }
+        currentTime: (parents, arg, ctx) => {
+            if (!context.user) throw new AuthenticationError()
+
+            return new Date()
+        },
     },
 }
 

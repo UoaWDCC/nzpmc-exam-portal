@@ -6,24 +6,30 @@ import {
     addQuiz,
     editQuiz,
 } from '../controllers'
-import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
+import { AuthenticationError } from 'apollo-server-express'
+import { AdminAuthenticationError } from '../utils/errors'
 
 const resolvers = {
     Quiz: {
         questions: async (parents, args, context) => {
-            // if (!context.user) throw new AuthenticationError()
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
             return await getQuestions(parents)
         },
     },
     Query: {
         quizzes: async (parents, args, context) => {
-            // if (!context.user) throw new AuthenticationError()
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
             return await getAllQuizzes()
         },
     },
     Mutation: {
         addQuiz: async (parent, { input }, context) => {
             if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
 
             const {
                 name,
@@ -45,6 +51,7 @@ const resolvers = {
         },
         editQuiz: async (parent, { input }, context) => {
             if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
 
             const {
                 id,
