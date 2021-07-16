@@ -1,17 +1,22 @@
 <template>
-    <v-card v-if="question !== null" class="fill-height" elevation="2">
-        <v-card-title>Question {{ questionIndex + 1 }}</v-card-title>
-        <v-card-text style="font-size: 1rem; color: rgba(0, 0, 0, 0.75)">
-            <latex :content="question.question" />
-        </v-card-text>
-        <img
-            v-if="question.imageURI !== ''"
-            class="d-block mx-auto pa-4"
-            style="max-width: 100%; max-height: 25rem"
-            alt="question image"
-            v-bind:src="question.imageURI"
-        />
-    </v-card>
+    <div align="center">
+        <v-overlay :value="true" v-if="$apollo.loading">
+            <v-progress-circular indeterminate size="80" align="center" />
+        </v-overlay>
+        <v-card v-if="question !== null" class="pa-4 fill-height" elevation="2">
+            <v-card-title>Question {{ questionIndex + 1 }}</v-card-title>
+            <v-card-text style="font-size: 1rem; color: rgba(0, 0, 0, 0.75)">
+                <latex :content="question.question" />
+            </v-card-text>
+            <img
+                v-if="question.imageURI !== ''"
+                class="d-block mx-auto"
+                style="max-width: 100%; max-height: 25rem"
+                alt="question image"
+                v-bind:src="question.imageURI"
+            />
+        </v-card>
+    </div>
 </template>
 <script>
 import { QuestionQuery } from '../gql/queries/question'

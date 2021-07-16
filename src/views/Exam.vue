@@ -1,6 +1,16 @@
 <template>
-    <div>
-        <v-progress-circular v-if="userQuiz === null" />
+    <div align="center">
+        <v-overlay :value="true" v-if="userQuiz === null">
+            <v-progress-circular indeterminate size="80" align="center" />
+            <h2 align="center" justify="space-around" style="margin-top: 20px">
+                Loading...
+            </h2>
+            <p style="margin-top: 10px">
+                If your browser does not load, please check your internet
+                connection and try again.
+            </p>
+        </v-overlay>
+
         <v-container
             v-else
             v-resize="onResize"

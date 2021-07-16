@@ -1,5 +1,8 @@
 <template>
     <div align="center" class="pa-5">
+        <v-overlay :value="true" v-if="submitting">
+            <v-progress-circular indeterminate size="80" align="center" />
+        </v-overlay>
         <v-dialog align="center" v-model="dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn color="primary" dark v-bind="attrs" v-on="on">
@@ -51,19 +54,23 @@ export default {
     data() {
         return {
             dialog: false,
+            submitting: false,
         }
     },
     methods: {
         submitQuiz() {
-            this.$apollo.mutate({
-                mutation: SubmitUserQuizMutation,
-                variables: {
-                    input: {
-                        userQuizID: this.quizID,
+            this.submitting = true
+            this.$apollo
+                .mutate({
+                    mutation: SubmitUserQuizMutation,
+                    variables: {
+                        input: {
+                            userQuizID: this.quizID,
+                        },
                     },
-                },
-            })
-            this.$router.push('/submission')
+                })
+                .then((this.submitting = false))
+                .then(this.$router.push('/submission'))
         },
     },
 }

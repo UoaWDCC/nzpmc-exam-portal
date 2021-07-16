@@ -1,5 +1,15 @@
 <template>
     <v-container>
+        <v-overlay :value="true" v-if="loading">
+            <v-progress-circular indeterminate size="80" align="center" />
+            <h2 align="center" justify="space-around" style="margin-top: 20px">
+                Loading...
+            </h2>
+            <p style="margin-top: 10px">
+                If your browser does not load, please check your internet
+                connection and try again.
+            </p>
+        </v-overlay>
         <v-row class="justify-center">
             <v-col class="col-12 col-sm-6 col-lg-4 col-xl-3">
                 <v-card class="pa-4" elevation="2">
@@ -128,17 +138,21 @@ export default {
                 emailMatch: () =>
                     'The email and password you entered do not match',
             },
+            loading: false,
         }
     },
     methods: {
         async login() {
-            await firebase
-                .auth()
-                .signInWithEmailAndPassword(this.email, this.password)
-                .catch((error) => {
-                    this.loginError = error.message
-                })
-            onLogin(this.$apollo.provider.defaultClient)
+            this.loading = true
+            if (this.loading === true) {
+                await firebase
+                    .auth()
+                    .signInWithEmailAndPassword(this.email, this.password)
+                    .catch((error) => {
+                        this.loginError = error.message
+                    })
+                onLogin(this.$apollo.provider.defaultClient)
+            }
         },
     },
 }

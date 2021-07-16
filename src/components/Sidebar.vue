@@ -8,7 +8,6 @@
                     alt="NZPMC Logo"
                     src="../assets/logo.png"
                 />
-                <v-btn large color="primary">Submit</v-btn>
             </v-list-item-content>
         </v-list-item>
         <SubmissionConfirmation :quizID="this.quizID" />
