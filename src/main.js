@@ -5,11 +5,10 @@ import router from './router'
 import VueLaTeX2JS from './plugins/latex'
 import 'material-icons/iconfont/material-icons.css'
 import firebase from 'firebase'
-import firebaseConfig from './firebaseConfig.json'
 import { createProvider } from './vue-apollo'
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG))
 firebase.analytics()
 
 // Name of the localStorage item
