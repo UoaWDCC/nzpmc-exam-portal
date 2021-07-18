@@ -109,9 +109,15 @@ const resolvers = {
         submitUserQuizQuestions: async (parents, { input }, context) => {
             const { userQuizID } = input
 
-            // get necessary objects
             const userQuiz = await getUserQuiz(userQuizID)
             const quiz = await userQuiz.quizObj.get()
+
+            // ensure quiz cannot be submitted if currenttime is after the quiz endtime
+            // with 60s leeway
+            if ((Date.now()/1000) > quiz.endTime._seconds + 60) {
+                throw new AuthenticationError()
+            }
+
             const userAnswers = await getUserAnswerIDs(userQuiz)
             const correctAnswers = await Promise.all((await getQuestions(quiz)).map(async (question) => {
                 return (await question.answerObj.get()).id
