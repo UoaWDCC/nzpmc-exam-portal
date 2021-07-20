@@ -17,7 +17,7 @@ const AUTH_TOKEN = 'apollo-token'
 let firebaseLoaded = false
 firebase.auth().onAuthStateChanged(async function (user) {
     // Update token to be used for backend authentication
-    if (user && typeof localStorage !== 'undefined') {
+    if (user) {
         localStorage.setItem(
             AUTH_TOKEN,
             await firebase.auth().currentUser.getIdToken(true),

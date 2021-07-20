@@ -1,5 +1,5 @@
 <template>
-    <div align="center">
+    <div>
         <v-overlay :value="true" v-if="$apollo.loading">
             <v-progress-circular indeterminate size="80" align="center" />
         </v-overlay>

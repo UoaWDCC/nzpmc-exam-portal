@@ -1,13 +1,17 @@
 <template>
-    <div align="center" class="pa-5">
+    <div align="center">
         <v-overlay :value="true" v-if="submitting">
             <v-progress-circular indeterminate size="80" align="center" />
         </v-overlay>
         <v-dialog align="center" v-model="dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                    Submit
-                </v-btn>
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                            Submit
+                        </v-btn>
+                    </v-list-item-content>
+                </v-list-item>
             </template>
             <v-container style="background-color: #ecf0f1; max-width: 500px">
                 <v-container
