@@ -18,11 +18,13 @@ let firebaseLoaded = false
 firebase.auth().onAuthStateChanged(async function (user) {
     // Update token to be used for backend authentication
     if (user) {
+        // User has logged in, add token to storage
         localStorage.setItem(
             AUTH_TOKEN,
             await firebase.auth().currentUser.getIdToken(true),
         )
     } else if (typeof localStorage !== 'undefined') {
+        // User has logged out, remove token from storage
         localStorage.removeItem(AUTH_TOKEN)
     }
 

@@ -4,6 +4,7 @@ import {
     createApolloClient,
     restartWebsockets,
 } from 'vue-cli-plugin-apollo/graphql-client'
+import firebase from 'firebase'
 
 // Install the vue plugin
 Vue.use(VueApollo)
@@ -47,7 +48,27 @@ const defaultOptions = {
     // cache: myCache
 
     // Override the way the Authorization header is set
-    // getAuth: (tokenName) => ...
+    getAuth: async (tokenName) => {
+        // Check if auth token in local storage is nearing expiration
+        const jwt = localStorage[tokenName]
+        const payload = jwt.split('.')[1]
+        const exp = JSON.parse(atob(payload)).exp
+        const now = new Date().valueOf() / 1000
+
+        console.log(now - exp, now, exp)
+
+        if (now + 10 >= exp) {
+            // Expired, load the new token into local storage
+            // Allows up to 10 second difference between server and client time
+            localStorage.setItem(
+                tokenName,
+                await firebase.auth().currentUser.getIdToken(true),
+            )
+        }
+
+        // Return token from local storage
+        return localStorage[tokenName]
+    },
 
     // Additional ApolloClient options
     // apollo: { ... }
