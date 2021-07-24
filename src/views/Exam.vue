@@ -28,29 +28,29 @@
                 </v-card>
             </div>
             <div style="flex: 1 1 0">
-                <v-row>
-                    <v-col class="col-12">
+                <v-row id="header">
+                    <v-col class="col-12 pa-0 pa-md-3">
                         <Topbar
                             @toggleSidebar="sidebarOpen = !sidebarOpen"
                             :startTimestamp="userQuiz.startTime"
                             :duration="userQuiz.duration"
+                            :sidebarOpen="sidebarOpen"
                         />
                     </v-col>
-                </v-row>
-                <v-row class="justify-center">
-                    <v-col
-                        class="col-12 d-md-none"
-                        v-bind:class="{ 'd-none': !sidebarOpen }"
+                    <v-card
+                        id="sidebarMobileCard"
+                        elevation="2"
+                        v-bind:class="{ hide: !sidebarOpen }"
                     >
-                        <v-card class="sidebarMobileCard" elevation="2">
-                            <Sidebar
-                                :quizID="userQuiz.id"
-                                :questionIndex="selectedQuestionIndex"
-                                @selectQuestion="selectOneQuestion"
-                                @sidebarLoaded="sidebarLoaded = true"
-                            />
-                        </v-card>
-                    </v-col>
+                        <Sidebar
+                            :quizID="userQuiz.id"
+                            :questionIndex="selectedQuestionIndex"
+                            @selectQuestion="selectOneQuestion"
+                            @sidebarLoaded="sidebarLoaded = true"
+                        />
+                    </v-card>
+                </v-row>
+                <v-row class="justify-center" id="content">
                     <v-col class="col-12">
                         <SingleQuestion
                             :questionID="
@@ -79,6 +79,40 @@
         </v-container>
     </div>
 </template>
+<style>
+/* Sidebar opening transition */
+@media only screen and (max-width: 959px) {
+    #header {
+        width: 100%;
+        position: fixed;
+        display: block;
+        z-index: 1;
+    }
+    #sidebarMobileCard {
+        border-radius: 0 !important;
+        width: 100%;
+        height: calc(100vh - 56px);
+        overflow: hidden;
+        transition: height 0.5s ease-in-out;
+    }
+    #sidebarMobileCard.hide {
+        height: 0px;
+    }
+    #sidebarMobileCard .questionDrawer {
+        min-height: calc(100vh - 56px);
+    }
+    .v-navigation-drawer__border {
+        display: none;
+    }
+    #topbar {
+        border-radius: 0 !important;
+        z-index: 1;
+    }
+    #content {
+        margin-top: 56px;
+    }
+}
+</style>
 <script>
 import Sidebar from '../components/Sidebar.vue'
 import Topbar from '../components/Topbar.vue'
@@ -117,6 +151,7 @@ export default {
         selectOneQuestion(index, id) {
             this.selectedQuestionIndex = index
             this.selectedQuestionID = id
+            this.sidebarOpen = false
         },
         onResize() {
             if (this.sidebarLoaded) {
@@ -130,12 +165,13 @@ export default {
                     // Sidebar must be moved to the mobile card
                     sidebar.remove()
 
-                    this.$el.querySelector('.sidebarMobileCard').append(sidebar)
-                    this.sidebarOpen = false
+                    this.$el.querySelector('#sidebarMobileCard').append(sidebar)
                 } else if (!sidebarInCard && !screenIsMobile) {
                     // Sidebar must be moved to the normal card
                     sidebar.remove()
                     this.$el.querySelector('.sidebarCard').append(sidebar)
+
+                    this.sidebarOpen = false
                 }
             }
         },
