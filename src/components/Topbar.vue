@@ -1,8 +1,10 @@
 <template>
     <v-card elevation="2">
-        <v-toolbar>
+        <v-toolbar id="topbar" style="transition: height 0.5s">
             <v-btn icon @click="toggleSidebar()" class="d-md-none me-4">
-                <span class="material-icons">menu</span>
+                <span class="material-icons">
+                    {{ sidebarOpen ? 'close' : 'menu' }}
+                </span>
             </v-btn>
 
             <v-toolbar-title class="timer ps-0"
@@ -27,7 +29,7 @@ export default {
         timeWarning: 600,
         timeDanger: 300,
     }),
-    props: ['startTimestamp', 'duration'],
+    props: ['startTimestamp', 'duration', 'sidebarOpen'],
     computed: {
         endTime() {
             // Calculates the UNIX timestamp when the time will be up

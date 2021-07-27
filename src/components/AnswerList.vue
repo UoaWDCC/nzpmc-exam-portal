@@ -18,19 +18,20 @@
                 />
             </v-col>
         </v-row>
-        <v-row v-if="questions !== null" align="center" justify="space-between">
-            <v-col class="col-3">
+        <v-row v-if="questions !== null">
+            <v-col class="col-12 d-flex justify-space-between">
                 <v-btn
                     v-if="this.questionIndex > 0"
                     color="primary"
                     large
                     @click="selectPreQuestion"
                 >
-                    <v-icon left class="material-icons"> chevron_left </v-icon>
+                    <v-icon left class="material-icons">
+                        navigate_before
+                    </v-icon>
                     Previous
                 </v-btn>
-            </v-col>
-            <v-col class="col-3 text-end">
+                <v-spacer />
                 <v-btn
                     v-if="this.questionIndex < this.questions.length - 1"
                     color="primary"

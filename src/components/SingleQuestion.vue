@@ -1,11 +1,11 @@
 <template>
-    <div align="center">
+    <div>
         <v-overlay :value="true" v-if="$apollo.loading">
             <v-progress-circular indeterminate size="80" align="center" />
         </v-overlay>
         <v-card v-if="question !== null" class="pa-4 fill-height" elevation="2">
             <v-card-title>Question {{ questionIndex + 1 }}</v-card-title>
-            <v-card-text style="font-size: 1rem; color: rgba(0, 0, 0, 0.75)">
+            <v-card-text class="body-1 text--primary">
                 <latex :content="question.question" />
             </v-card-text>
             <img
