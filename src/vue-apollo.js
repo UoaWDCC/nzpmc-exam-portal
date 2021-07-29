@@ -55,8 +55,6 @@ const defaultOptions = {
         const exp = JSON.parse(atob(payload)).exp
         const now = new Date().valueOf() / 1000
 
-        console.log(now - exp, now, exp)
-
         if (now + 10 >= exp) {
             // Expired, load the new token into local storage
             // Allows up to 10 second difference between server and client time

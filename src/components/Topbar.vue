@@ -11,6 +11,7 @@
                 ><span class="d-none d-sm-inline-block">Time remaining:</span>
                 {{ formattedTimeRemaining }}</v-toolbar-title
             >
+
             <v-spacer />
 
             <SignOutMenu />
