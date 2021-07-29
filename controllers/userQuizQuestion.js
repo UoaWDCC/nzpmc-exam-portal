@@ -5,14 +5,23 @@ import { getUserQuiz, setUserQuizScore } from './userQuiz'
 const getUserQuizQuestion = async (userQuiz, id) => {
     const quiz = await userQuiz.quizObj.get()
 
-    const quizQuestion = await Question.collection.get({key: quiz.key+"/Question/"+id})
+    const quizQuestion = await Question.collection.get({
+        key: quiz.key + '/Question/' + id,
+    })
 
-    const userQuizQuestion = await UserQuizQuestion.collection.get({key: userQuiz.key+"/UserQuizQuestion/"+id})
+    if (!quizQuestion.flag) {
+        quizQuestion.flag = false
+    }
+
+    const userQuizQuestion = await UserQuizQuestion.collection.get({
+        key: userQuiz.key + '/UserQuizQuestion/' + id,
+    })
 
     return {
         id: quizQuestion.id,
         question: quizQuestion.question,
         imageURI: quizQuestion.imageURI,
+        flag: !!quizQuestion.flag,
         questionKey: quizQuestion.key,
         questionObj: quizQuestion,
         userAnswerKey: userQuizQuestion ? userQuizQuestion.key : null,
@@ -76,7 +85,16 @@ const editUserQuizQuestion = async (userQuiz, id, answer) => {
     const userQuizQuestion = UserQuizQuestion.init({ parent: userQuiz.key })
 
     userQuizQuestion.id = id
-    userQuizQuestion.answer = answer.key
+
+    if (answerKey == '' && !userQuizQuestion.answer) {
+        userQuizQuestion.answer = null
+    } else if (!answerKey && userQuizQuestion.answer) {
+        userQuizQuestion.answer = userQuizQuestion.answer
+    } else {
+        userQuizQuestion.answer = answerKey
+    }
+
+    userQuizQuestion.flag = flag ? flag : !!userQuizQuestion.flag
     userQuizQuestion.firstViewed = userQuizQuestion.firstViewed
         ? userQuizQuestion.firstViewed
         : new Date()
