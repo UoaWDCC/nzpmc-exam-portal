@@ -5,7 +5,11 @@ import Login from '../views/Login'
 import Welcome from '../views/Welcome'
 import Exam from '../views/Exam'
 import Submission from '../views/Submission'
+import Admin from '../views/Admin'
 import QuizAdmin from '../views/QuizAdmin'
+import QuizAdminDetails from '../views/QuizAdminDetails'
+import QuizAdminUsers from '../views/QuizAdminUsers'
+import QuizAdminQuestion from '../views/QuizAdminQuestion'
 import UserAdmin from '../views/UserAdmin'
 
 Vue.use(VueRouter)
@@ -48,27 +52,91 @@ const routes = [
     },
     {
         path: '/admin',
-        redirect: '/admin/quiz',
-    },
-    {
-        path: '/admin/quiz',
-        name: 'QuizAdmin',
-        component: QuizAdmin,
-        meta: {
-            title: 'Quiz Admin - NZPMC',
-            authRequired: true,
-            adminRequired: true,
-        },
-    },
-    {
-        path: '/admin/user',
-        name: 'UserAdmin',
-        component: UserAdmin,
-        meta: {
-            title: 'User Admin - NZPMC',
-            authRequired: true,
-            adminRequired: true,
-        },
+        component: Admin,
+        redirect: { name: 'QuizAdmin' },
+        children: [
+            {
+                path: 'quiz',
+                name: 'QuizAdmin',
+                component: QuizAdmin,
+                meta: {
+                    title: 'Quiz Admin - NZPMC',
+                    authRequired: true,
+                    adminRequired: true,
+                },
+                children: [
+                    {
+                        path: 'create',
+                        name: 'QuizAdminCreateQuiz',
+                        component: QuizAdminDetails,
+                        meta: {
+                            title: 'Quiz Admin - NZPMC',
+                            authRequired: true,
+                            adminRequired: true,
+                        },
+                    },
+                    {
+                        path: ':quizId',
+                        component: QuizAdmin,
+                        redirect: { name: 'QuizAdminDetails' },
+                    },
+                    {
+                        path: ':quizId/details',
+                        name: 'QuizAdminDetails',
+                        component: QuizAdminDetails,
+                        meta: {
+                            title: 'Quiz Admin - NZPMC',
+                            authRequired: true,
+                            adminRequired: true,
+                        },
+                    },
+                    {
+                        path: ':quizId/users',
+                        name: 'QuizAdminUsers',
+                        component: QuizAdminUsers,
+                        meta: {
+                            title: 'Quiz Admin - NZPMC',
+                            authRequired: true,
+                            adminRequired: true,
+                        },
+                    },
+                    {
+                        path: ':quizId/question',
+                        redirect: { name: 'QuizAdminDetails' },
+                    },
+                    {
+                        path: ':quizId/question/create',
+                        name: 'QuizAdminCreateQuestion',
+                        component: QuizAdminQuestion,
+                        meta: {
+                            title: 'Quiz Admin - NZPMC',
+                            authRequired: true,
+                            adminRequired: true,
+                        },
+                    },
+                    {
+                        path: ':quizId/question/:questionId',
+                        name: 'QuizAdminQuestion',
+                        component: QuizAdminQuestion,
+                        meta: {
+                            title: 'Quiz Admin - NZPMC',
+                            authRequired: true,
+                            adminRequired: true,
+                        },
+                    },
+                ],
+            },
+            {
+                path: 'user',
+                name: 'UserAdmin',
+                component: UserAdmin,
+                meta: {
+                    title: 'User Admin - NZPMC',
+                    authRequired: true,
+                    adminRequired: true,
+                },
+            },
+        ],
     },
 ]
 
