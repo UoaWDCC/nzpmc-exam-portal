@@ -18,8 +18,8 @@
                     <h2 class="text-h6 mb-4">Question text</h2>
                     <Editor
                         v-model="content"
-                        label="Questions text"
-                        value="Yeet"
+                        label="Question text"
+                        defaultValue="Yeet"
                         @input="updateText"
                         :rules="[rules.required]"
                     />
@@ -35,16 +35,16 @@
                         class="mt-0 pt-0"
                     >
                         <div v-for="answer in answers" :key="answer.answerId">
-                            <AdminSingleAnswer
+                            <QuizAdminSingleAnswer
                                 :answer="answer"
                                 :correctAnswerId="correctAnswer"
                                 @deleteAnswer="deleteAnswer"
                             />
                         </div>
-                        <v-card
+                        <v-btn
+                            color="white"
                             elevation="2"
-                            class="text--secondary pa-3 ml-8"
-                            style="height: 3rem"
+                            class="pa-6 ml-10"
                             @click="
                                 newAnswers.push({
                                     answerId: Math.random(),
@@ -52,11 +52,8 @@
                                 })
                             "
                         >
-                            <v-icon class="text--secondary">add</v-icon>
-                            <span style="vertical-align: middle">
-                                Add answer
-                            </span>
-                        </v-card>
+                            <v-icon left> add</v-icon> Add answer
+                        </v-btn>
                     </v-radio-group>
                 </v-col>
             </v-row>
@@ -91,11 +88,11 @@ input {
 
 <script>
 import Editor from '../components/Editor'
-import AdminSingleAnswer from '../components/AdminSingleAnswer'
+import QuizAdminSingleAnswer from '../components/QuizAdminSingleAnswer'
 export default {
     components: {
         Editor,
-        AdminSingleAnswer,
+        QuizAdminSingleAnswer,
     },
     data() {
         return {

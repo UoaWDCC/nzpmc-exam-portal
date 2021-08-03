@@ -14,9 +14,9 @@
                     correctAnswerId === answer.answerId ? 'primary' : 'white'
                 "
                 :class="
-                    correctAnswerId === answer.answerId
+                    (correctAnswerId === answer.answerId
                         ? 'white--text'
-                        : 'black--text'
+                        : 'black--text') + ' ml-2'
                 "
                 ref="input"
                 @click.stop
@@ -34,9 +34,9 @@
                                 <v-icon>functions</v-icon>
                             </v-btn>
                             <LatexDialog
-                                :showDialog="answer.showDialog"
-                                @cancel="answer.showDialog = false"
+                                :showDialog="showDialog"
                                 :defaultValue="currentSelected"
+                                @cancel="showDialog = false"
                                 @insertLatex="insertLatex"
                             />
                         </template>
@@ -85,7 +85,7 @@ export default {
             )
 
             // Open the latex dialog
-            this.answer.showDialog = true
+            this.showDialog = true
         },
         insertLatex(value) {
             // Calculate the new value of the question input
@@ -100,7 +100,7 @@ export default {
                 this.answer.text.slice(input.selectionEnd)
 
             // Hide the latex dialog
-            this.answer.showDialog = false
+            this.showDialog = false
         },
         deleteAnswer() {
             this.$emit('delete', this.answer.answerId)

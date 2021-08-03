@@ -51,6 +51,7 @@ export default {
     methods: {
         insertLatex() {
             this.$emit('insertLatex', this.$refs.latexEl.value)
+            this.$refs.latexEl.value = ''
         },
         cancel() {
             this.$emit('cancel')

@@ -149,8 +149,8 @@
                     <span>LaTeX Equations (CTRL+M)</span>
                     <LatexDialog
                         :showDialog="latexDialog"
-                        @cancel="latexDialog = false"
                         :defaultValue="currentSelected"
+                        @cancel="latexDialog = false"
                         @insertLatex="insertLatex"
                     />
                 </v-tooltip>
@@ -208,7 +208,6 @@
         <v-textarea
             ref="txt"
             :label="label"
-            :value="value"
             :spellcheck="!value || value.indexOf('```') === -1"
             :counter="counter"
             multi-line
@@ -216,6 +215,7 @@
             :rows="rows || 6"
             :disabled="disabled"
             :rules="rules"
+            :value="value"
             :error-messages="errorMessages"
             @input="(v) => $emit('input', v)"
             solo
@@ -257,6 +257,7 @@ export default {
     props: [
         'label',
         'value',
+        'defaultValue',
         'counter',
         'rows',
         'rules',
@@ -639,6 +640,10 @@ export default {
         },
     },
     mounted() {
+        // Set initial value
+        this.$emit('input', this.defaultValue)
+
+        // Setup required vars
         ;(this.history = []), (this.redo = [])
         const $txt = this.$refs.txt.$refs.input
 
