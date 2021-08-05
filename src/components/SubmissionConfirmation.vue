@@ -3,7 +3,7 @@
         <v-overlay :value="true" v-if="submitting">
             <v-progress-circular indeterminate size="80" align="center" />
         </v-overlay>
-        <v-dialog align="center" v-model="dialog" width="500" persistent>
+        <v-dialog align="center" v-model="dialog" max-width="500" persistent>
             <template v-slot:activator="{ on, attrs }">
                 <v-list-item>
                     <v-list-item-content>

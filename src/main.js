@@ -4,6 +4,7 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import VueLaTeX2JS from './plugins/latex'
 import 'material-icons/iconfont/material-icons.css'
+import 'material-icons/css/material-icons.min.css'
 import firebase from 'firebase'
 import { createProvider } from './vue-apollo'
 
