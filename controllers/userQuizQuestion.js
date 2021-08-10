@@ -84,13 +84,7 @@ const addUserQuizQuestion = async (userQuiz, question) => {
     return await getUserQuizQuestion(UserQuizQuestion.id)
 }
 
-const editUserQuizQuestion = async (
-    userQuiz,
-    id,
-    answerKey,
-    question,
-    flag,
-) => {
+const editUserQuizQuestion = async (userQuiz, id, answerKey, flag) => {
     const userQuizQuestion = UserQuizQuestion.init({ parent: userQuiz.key })
 
     userQuizQuestion.id = id
@@ -114,7 +108,7 @@ const editUserQuizQuestion = async (
 
     await userQuizQuestion.upsert()
 
-    return { ...userQuizQuestion, question }
+    return userQuizQuestion
 }
 
 const getUserQuizQuestionOptions = async (quizQuestion) => {

@@ -109,13 +109,17 @@ const resolvers = {
                     .key
             }
 
-            return await editUserQuizQuestion(
-                userQuiz,
-                questionID,
-                answerKey,
-                question.question,
-                flag,
-            )
+            return {
+                ...(await editUserQuizQuestion(
+                    userQuiz,
+                    questionID,
+                    answerKey,
+                    flag,
+                )),
+                imageURI: question.imageURI,
+                question: question.question,
+                questionObj: question,
+            }
         },
         submitUserQuizQuestions: async (parents, { input }, context) => {
             const { userQuizID } = input
