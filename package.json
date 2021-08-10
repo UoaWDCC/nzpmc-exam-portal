@@ -15,7 +15,7 @@
         "node": ">=14.0.0"
     },
     "dependencies": {
-        "apollo-server-errors": "^2.5.0",
+        "apollo-server-errors": "^3.0.1",
         "apollo-server-express": "^2.23.0",
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
