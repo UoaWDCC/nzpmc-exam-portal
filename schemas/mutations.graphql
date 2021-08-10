@@ -23,7 +23,7 @@ type Mutation {
     """
     editSelf(input: EditSelfInput!): User
 
-    editUserQuizQuestion(input: EditUserQuizQuestion!): Option
+    editUserQuizQuestion(input: EditUserQuizQuestion!): UserQuizQuestion
 
     submitUserQuizQuestions(input: SubmissionInput): UserQuiz
 }

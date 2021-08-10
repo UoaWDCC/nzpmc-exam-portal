@@ -65,6 +65,7 @@ type UserQuizQuestion {
     imageURI: String
     options: [Option!]!
     userAnswer: Option
+    flag: Boolean!
     firstViewed: DateTime
     lastAnswered: DateTime
     created: DateTime

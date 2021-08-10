@@ -96,15 +96,25 @@ const resolvers = {
             if (!context.user) throw new AuthenticationError()
             if (!context.user.admin) throw new AdminAuthenticationError()
 
-            const { userQuizID, questionID, answerID } = input
+            const { userQuizID, questionID, answerID, flag } = input
 
             const userQuiz = await getUserQuiz(userQuizID)
             const quiz = await userQuiz.quizObj.get()
 
             const question = await getQuestion(quiz, questionID)
-            const answer = await getOptionByQuestionID(question, answerID)
 
-            return await editUserQuizQuestion(userQuiz, questionID, answer)
+            let answerKey
+            if (answerID) {
+                answerKey = (await getOptionByQuestionID(question, answerID))
+                    .key
+            }
+
+            return await editUserQuizQuestion(
+                userQuiz,
+                questionID,
+                answerKey,
+                flag,
+            )
         },
         submitUserQuizQuestions: async (parents, { input }, context) => {
             const { userQuizID } = input
@@ -113,14 +123,16 @@ const resolvers = {
             const quiz = await userQuiz.quizObj.get()
 
             // ensure quiz cannot be submitted if currenttime is after the quiz endtime with 60s leeway
-            if ((Date.now()/1000) > quiz.endTime._seconds + 60) {
+            if (Date.now() / 1000 > quiz.endTime._seconds + 60) {
                 throw new AuthenticationError()
             }
 
             const userAnswers = await getUserAnswerIDs(userQuiz)
-            const correctAnswers = await Promise.all((await getQuestions(quiz)).map(async (question) => {
-                return (await question.answerObj.get()).id
-            }))
+            const correctAnswers = await Promise.all(
+                (await getQuestions(quiz)).map(async (question) => {
+                    return (await question.answerObj.get()).id
+                }),
+            )
 
             // update UserQuiz
             return await submitUserQuizQuestions(
