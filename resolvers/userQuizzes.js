@@ -116,6 +116,7 @@ const resolvers = {
                     answerKey,
                     flag,
                 )),
+                imageURI: question.imageURI,
                 question: question.question,
                 questionObj: question,
             }
