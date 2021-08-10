@@ -13,27 +13,37 @@ const typeDefs = schemaFiles.map((path) => {
     return readFileSync('./schemas/' + path).toString('utf-8')
 })
 
-const app = express()
+const port = process.env.PORT | 8080
 
-app.use(cors())
+const startApolloServer = async () => {
+    const server = new ApolloServer({
+        resolvers,
+        typeDefs,
+        introspection: true,
+        playground: true,
+        debug: true,
+        context: auth(),
+    })
 
-const server = new ApolloServer({
-    resolvers,
-    typeDefs,
-    introspection: true,
-    playground: true,
-    debug: true,
-    context: auth(),
-})
+    await server.start()
 
-server.applyMiddleware({
-    app,
-})
+    const app = express()
 
-const port = process.env.PORT || 8080
-app.listen(port, () => {
-    console.log(`Server is ready at http://localhost:${port}`)
-    console.log(
-        `GraphQL Server is ready at http://localhost:${port}${server.graphqlPath}`,
-    )
-})
+    app.use(cors())
+
+    // Mount Apollo middleware here.
+    server.applyMiddleware({
+        app,
+    })
+
+    app.listen(port, () => {
+        console.log(`Server is ready at http://localhost:${port}`)
+        console.log(
+            `GraphQL Server is ready at http://localhost:${port}${server.graphqlPath}`,
+        )
+    })
+
+    return { server, app }
+}
+
+startApolloServer()
