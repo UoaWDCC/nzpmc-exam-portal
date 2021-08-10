@@ -113,6 +113,7 @@ const resolvers = {
                 userQuiz,
                 questionID,
                 answerKey,
+                question.question,
                 flag,
             )
         },
@@ -129,7 +130,9 @@ const resolvers = {
 
             const userAnswers = await getUserAnswerIDs(userQuiz)
             const correctAnswers = await Promise.all(
-                (await getQuestions(quiz)).map(async (question) => {
+                (
+                    await getQuestions(quiz)
+                ).map(async (question) => {
                     return (await question.answerObj.get()).id
                 }),
             )
