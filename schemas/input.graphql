@@ -93,7 +93,8 @@ input AddUserQuiz {
 input EditUserQuizQuestion {
     userQuizID: ID!
     questionID: ID!
-    answerID: ID!
+    answerID: ID
+    flag: Boolean
 }
 
 input SubmissionInput {

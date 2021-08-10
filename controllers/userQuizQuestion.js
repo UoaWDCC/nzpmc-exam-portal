@@ -5,14 +5,23 @@ import { getUserQuiz, setUserQuizScore } from './userQuiz'
 const getUserQuizQuestion = async (userQuiz, id) => {
     const quiz = await userQuiz.quizObj.get()
 
-    const quizQuestion = await Question.collection.get({key: quiz.key+"/Question/"+id})
+    const quizQuestion = await Question.collection.get({
+        key: quiz.key + '/Question/' + id,
+    })
 
-    const userQuizQuestion = await UserQuizQuestion.collection.get({key: userQuiz.key+"/UserQuizQuestion/"+id})
+    if (!quizQuestion.flag) {
+        quizQuestion.flag = false
+    }
+
+    const userQuizQuestion = await UserQuizQuestion.collection.get({
+        key: userQuiz.key + '/UserQuizQuestion/' + id,
+    })
 
     return {
         id: quizQuestion.id,
         question: quizQuestion.question,
         imageURI: quizQuestion.imageURI,
+        flag: !!quizQuestion.flag,
         questionKey: quizQuestion.key,
         questionObj: quizQuestion,
         userAnswerKey: userQuizQuestion ? userQuizQuestion.key : null,
@@ -42,6 +51,7 @@ const getUserQuizQuestions = async (userQuiz) => {
                 id: quizQuestion.id,
                 question: quizQuestion.question,
                 imageURI: quizQuestion.imageURI,
+                flag: false,
                 questionKey: quizQuestion.key,
                 questionObj: quizQuestion,
             }
@@ -50,6 +60,7 @@ const getUserQuizQuestions = async (userQuiz) => {
             id: quizQuestion.id,
             question: quizQuestion.question,
             imageURI: quizQuestion.imageURI,
+            flag: !!userQuizQuestion.flag,
             questionKey: quizQuestion.key,
             questionObj: quizQuestion,
             userAnswerKey: userQuizQuestion.key,
@@ -64,6 +75,7 @@ const addUserQuizQuestion = async (userQuiz, question) => {
     userQuizQuestion.id = question.id
     userQuizQuestion.question = question.key
     userQuizQuestion.answer = null
+    userQuizQuestion.flag = null
     userQuizQuestion.firstViewed = null
     userQuizQuestion.lastAnswered = null
 
@@ -72,22 +84,31 @@ const addUserQuizQuestion = async (userQuiz, question) => {
     return await getUserQuizQuestion(UserQuizQuestion.id)
 }
 
-const editUserQuizQuestion = async (userQuiz, id, answer) => {
+const editUserQuizQuestion = async (userQuiz, id, answerKey, flag) => {
     const userQuizQuestion = UserQuizQuestion.init({ parent: userQuiz.key })
 
     userQuizQuestion.id = id
-    userQuizQuestion.answer = answer.key
+
+    if (answerKey == '' && !userQuizQuestion.answer) {
+        userQuizQuestion.answer = null
+    } else if (!answerKey && userQuizQuestion.answer) {
+        userQuizQuestion.answer = userQuizQuestion.answer
+    } else {
+        userQuizQuestion.answer = answerKey
+    }
+
+    userQuizQuestion.flag = flag ? flag : !!userQuizQuestion.flag
     userQuizQuestion.firstViewed = userQuizQuestion.firstViewed
         ? userQuizQuestion.firstViewed
         : new Date()
-    userQuizQuestion.lastAnswered = answer
+    userQuizQuestion.lastAnswered = answerKey
         ? new Date()
         : userQuizQuestion.lastAnswered
     userQuizQuestion.modified = new Date()
 
     await userQuizQuestion.upsert()
 
-    return answer
+    return userQuizQuestion
 }
 
 const getUserQuizQuestionOptions = async (quizQuestion) => {
@@ -127,24 +148,30 @@ const getUserQuizQuestionOptionsByQuestion = async (question) => {
 const getUserAnswerIDs = async (userQuiz) => {
     const userAnswers = await getUserQuizQuestions(userQuiz)
 
-    const userAnswerIDs = await Promise.all(userAnswers.map(async (userAnswer) => {
-        const answer = await userAnswer.userAnswerObj.answer.get() 
-        return answer.id
-    }))
+    const userAnswerIDs = await Promise.all(
+        userAnswers.map(async (userAnswer) => {
+            const answer = await userAnswer.userAnswerObj.answer.get()
+            return answer.id
+        }),
+    )
 
     return userAnswerIDs
 }
 
-const submitUserQuizQuestions = async (userQuizID, userAnswers, correctAnswers) => {
+const submitUserQuizQuestions = async (
+    userQuizID,
+    userAnswers,
+    correctAnswers,
+) => {
     // calculate score starting at index 0
     const calculatedScore = userAnswers.reduce((score, userAnswer, index) => {
-        return (userAnswer === correctAnswers[index] ? score + 1 : score)
+        return userAnswer === correctAnswers[index] ? score + 1 : score
     }, 0)
 
-    // update userQuiz 
+    // update userQuiz
     await setUserQuizScore(userQuizID, calculatedScore)
 
-    return getUserQuiz(userQuizID) 
+    return getUserQuiz(userQuizID)
 }
 
 export {
