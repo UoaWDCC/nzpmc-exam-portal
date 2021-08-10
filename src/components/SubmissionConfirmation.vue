@@ -23,8 +23,11 @@
                 <v-toolbar color="primary" dark>
                     <h3>Are you sure you want to submit?</h3>
                 </v-toolbar>
-                <v-card-text class="body-1 pa-4 pb-2">
-                    You will not be able to redo any questions after you submit.
+                <v-card-text class="pa-4 pb-2">
+                    <h3 style="font-weight: normal">
+                        You will not be able to redo any questions after you
+                        submit.
+                    </h3>
                 </v-card-text>
                 <v-card-actions class="justify-end">
                     <v-btn large text @click="dialog = false"> Go back </v-btn>

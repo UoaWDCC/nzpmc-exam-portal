@@ -1,7 +1,7 @@
 <template>
     <v-card elevation="2" class="pa-4">
-        <h1 class="text-h5 mb-2">
-            {{ createQuizMode ? 'Create quiz' : 'Quiz details' }}
+        <h1 class="mb-2">
+            {{ createQuizMode ? 'Create Quiz' : 'Quiz Details' }}
         </h1>
         <v-form ref="detailsForm" v-model="formIsValid">
             <v-row dense>

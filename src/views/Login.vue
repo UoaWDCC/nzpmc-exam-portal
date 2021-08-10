@@ -1,11 +1,9 @@
 <template>
     <v-container>
-        <v-overlay :value="true" v-if="loading">
-            <v-progress-circular indeterminate size="80" align="center" />
-            <h2 align="center" justify="space-around" style="margin-top: 20px">
-                Loading...
-            </h2>
-            <p style="margin-top: 10px">
+        <v-overlay :value="true" v-if="loading" align="center">
+            <v-progress-circular indeterminate size="80" />
+            <h2 justify="space-around" style="margin-top: 20px">Loading...</h2>
+            <p class="mt-2">
                 If your browser does not load, please check your internet
                 connection and try again.
             </p>
