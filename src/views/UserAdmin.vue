@@ -1,11 +1,11 @@
-<template><CreateUser /></template>
+<template><UserSearchBar /></template>
 
 <script>
-import CreateUser from './../components/CreateUser.vue'
+import UserSearchBar from './../components/UserSearchBar.vue'
 
 export default {
     components: {
-        CreateUser,
+        UserSearchBar,
     },
 }
 </script>

@@ -2,8 +2,8 @@
     <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
             <div class="text-center">
-                <v-btn class="mx-2" fab light v-bind="attrs" v-on="on">
-                    <v-icon dark> mdi-plus </v-icon>
+                <v-btn color="primary" v-bind="attrs" v-on="on">
+                    <h1>+</h1>
                 </v-btn>
             </div>
         </template>
