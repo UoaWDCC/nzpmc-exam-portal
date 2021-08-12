@@ -147,6 +147,14 @@ export default {
     mounted() {
         this.onResize()
     },
+    watch: {
+        userQuiz(val) {
+            this.$router.push({
+                name: 'Exam',
+                params: { quizId: val.id },
+            })
+        },
+    },
     methods: {
         selectOneQuestion(index, id) {
             this.selectedQuestionIndex = index

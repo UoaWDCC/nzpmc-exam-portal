@@ -33,7 +33,7 @@ const routes = [
         },
     },
     {
-        path: '/exam',
+        path: '/exam/:quizId?',
         name: 'Exam',
         component: Exam,
         meta: {
