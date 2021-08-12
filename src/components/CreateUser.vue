@@ -2,8 +2,8 @@
     <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
             <div class="text-center">
-                <v-btn color="primary" v-bind="attrs" v-on="on">
-                    <h1>+</h1>
+                <v-btn color="primary" fab small v-bind="attrs" v-on="on">
+                    <v-icon class="material-icons">add</v-icon>
                 </v-btn>
             </div>
         </template>
