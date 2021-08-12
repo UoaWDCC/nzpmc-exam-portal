@@ -3,7 +3,7 @@
         <v-toolbar dark color="primary">
             <v-toolbar-title>Start typing to search...</v-toolbar-title>
             <v-autocomplete
-                v-model="select"
+                v-model="searchedUser"
                 :loading="loading"
                 :items="users"
                 :search-input.sync="search"
@@ -27,6 +27,7 @@ export default {
     data() {
         return {
             users: ['Daniel', 'Will', 'CZ', 'Ruby', 'Matthew', 'Alex', 'Lance'],
+            searchedUser: null,
         }
     },
     components: {
