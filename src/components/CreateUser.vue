@@ -68,13 +68,7 @@
                             Create
                         </v-btn>
 
-                        <v-btn
-                            type="submit"
-                            color="error"
-                            @click="nullVariables"
-                        >
-                            Cancel
-                        </v-btn>
+                        <v-btn color="error" @click="cancel"> Cancel </v-btn>
                     </v-col>
                 </v-row>
             </v-form>
@@ -92,6 +86,7 @@
 export default {
     data() {
         return {
+            dialog: false,
             quizzes: ['Foo', 'Bar', 'Fizz', 'Buzz'],
             userName: null,
             userPassword: null,
@@ -106,12 +101,13 @@ export default {
         }
     },
     methods: {
-        nullVariables() {
+        cancel() {
             this.userName = null
             this.userPassword = null
             this.userYearLevel = null
             this.userEmail = null
             this.associatedQuiz = null
+            this.dialog = false
         },
     },
 }
