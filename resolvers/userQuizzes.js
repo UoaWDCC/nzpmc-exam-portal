@@ -16,7 +16,7 @@ import {
     submitUserQuizQuestions,
 } from '../controllers'
 import { AuthenticationError } from 'apollo-server-express'
-import { AdminAuthenticationError, NotFoundError } from '../utils/errors'
+import { AdminAuthenticationError } from '../utils/errors'
 
 const resolvers = {
     UserQuiz: {
@@ -66,8 +66,6 @@ const resolvers = {
 
             const userQuizzes = await getUserQuizzes(context.user.uid)
 
-            if (!userQuizzes.startTime) throw new NotFoundError()
-
             return userQuizzes
         },
         userQuiz: async (parents, args, context) => {
@@ -80,6 +78,8 @@ const resolvers = {
                 throw new AuthenticationError()
 
             if (!context.user.admin) {
+                // If the quiz isn't started yet, throw error
+                if (!userQuiz.startTime) throw new AuthenticationError()
                 userQuiz.score = null
             }
 
