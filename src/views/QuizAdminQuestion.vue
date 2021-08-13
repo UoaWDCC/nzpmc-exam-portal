@@ -1,7 +1,7 @@
 <template>
     <v-card elevation="2" class="pa-4">
-        <h1 class="text-h5 mb-2">
-            {{ createQuestionMode ? 'Create question' : 'Question #' }}
+        <h1 class="mb-2">
+            {{ createQuestionMode ? 'Create Question' : 'Question #' }}
         </h1>
         <v-form ref="questionForm" v-model="formIsValid">
             <v-row>
@@ -15,7 +15,7 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <h2 class="text-h6 mb-4">Question text</h2>
+                    <h2 class="mb-4">Question Text</h2>
                     <Editor
                         v-model="content"
                         label="Question text"
