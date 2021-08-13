@@ -19,6 +19,7 @@ import {
     getUserQuizzes,
     getAllUserQuizzes,
     addUserQuiz,
+    editUserQuiz,
     setUserQuizScore,
 } from './userQuiz'
 import {
@@ -29,7 +30,6 @@ import {
     getUserQuizQuestionOptions,
     getUserQuizQuestionOptionsByQuestion,
     getUserAnswerIDs,
-    editUserQuiz,
     submitUserQuizQuestions,
 } from './userQuizQuestion'
 
