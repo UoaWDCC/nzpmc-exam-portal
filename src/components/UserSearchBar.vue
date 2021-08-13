@@ -13,7 +13,6 @@
                 hide-no-data
                 hide-details
                 label="User"
-                solo-inverted
             ></v-autocomplete>
             <CreateUser />
         </v-toolbar>
