@@ -83,12 +83,12 @@ input EditAnswerInput {
     option: String!
 }
 
-input AddUserQuiz {
+input AddUserQuizInput {
     userID: ID!
     quizID: ID!
 }
 
-input EditUserQuizQuestion {
+input EditUserQuizQuestionInput {
     userQuizID: ID!
     questionID: ID!
     answerID: ID
@@ -97,4 +97,11 @@ input EditUserQuizQuestion {
 
 input SubmissionInput {
     userQuizID: ID!
+}
+
+input EditUserQuizInput {
+    userQuizID: ID!
+    score: Int
+    startTime: DateTime
+    endTime: DateTime
 }

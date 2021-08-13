@@ -7,4 +7,10 @@ class AdminAuthenticationError extends ForbiddenError {
     }
 }
 
-export { AdminAuthenticationError }
+class NotFoundError extends ForbiddenError {
+    constructor() {
+        super('Not found')
+    }
+}
+
+export { AdminAuthenticationError, NotFoundError }

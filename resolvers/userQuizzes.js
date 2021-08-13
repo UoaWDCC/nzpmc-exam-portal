@@ -12,10 +12,11 @@ import {
     getQuestion,
     getQuestions,
     getUserAnswerIDs,
+    editUserQuiz,
     submitUserQuizQuestions,
 } from '../controllers'
 import { AuthenticationError } from 'apollo-server-express'
-import { AdminAuthenticationError } from '../utils/errors'
+import { AdminAuthenticationError, NotFoundError } from '../utils/errors'
 
 const resolvers = {
     UserQuiz: {
@@ -63,7 +64,11 @@ const resolvers = {
         userQuizzes: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
 
-            return await getUserQuizzes(context.user.uid)
+            const userQuizzes = await getUserQuizzes(context.user.uid)
+
+            if (!userQuizzes.startTime) throw new NotFoundError()
+
+            return userQuizzes
         },
         userQuiz: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
@@ -92,6 +97,27 @@ const resolvers = {
             const quiz = await getQuiz(quizID)
 
             return await addUserQuiz(user, quiz)
+        },
+        editUserQuiz: async (parents, { input }, context) => {
+            if (!context.user) throw new AuthenticationError()
+
+            if (!context.user.admin) {
+                // is not Admin
+                const { userID: id, startTime } = input
+
+                const userQuizObj = await getUserQuiz(userQuizID)
+                if (userQuizObj.startTime) {
+                    // if startTime is already set need to be admin to change
+                    throw new AdminAuthenticationError()
+                }
+
+                return await editUserQuiz(id, null, startTime, null)
+            }
+
+            // is Admin
+            const { userID: id, score, startTime, endTime } = input
+
+            return await editUserQuiz(id, score, startTime, endTime)
         },
         editUserQuizQuestion: async (parents, { input }, context) => {
             if (!context.user) throw new AuthenticationError()
