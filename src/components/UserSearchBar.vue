@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-toolbar dark color="primary">
+        <v-toolbar>
             <v-toolbar-title>Start typing to search...</v-toolbar-title>
             <v-autocomplete
                 v-model="searchedUser"
