@@ -71,7 +71,12 @@ const resolvers = {
             const userQuiz = await getUserQuiz(args.quizID)
             const user = await userQuiz.userObj.get()
 
-            if (user.id !== context.user.uid) throw new AuthenticationError()
+            if (user.id !== context.user.uid && !context.user.admin) throw new AuthenticationError()
+
+            if (!context.user.admin) {
+                userQuiz.score = null
+            }
+
             return userQuiz
         },
     },
