@@ -47,8 +47,10 @@ const addUserQuiz = async (user, quiz, startTime, endTime) => {
 
     userQuiz.user = user.key
     userQuiz.quiz = quiz.key
-    userQuiz.startTime = startTime
-    userQuiz.endTime = endTime
+    if (startTime && endTime) {
+        userQuiz.startTime = startTime
+        userQuiz.endTime = endTime
+    }
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
 
@@ -61,9 +63,9 @@ const setUserQuizScore = async (userQuizID, score) => {
     let userQuizObj = await getUserQuiz(userQuizID)
 
     userQuizObj.score = score
-    userQuizObj.startTime = new Date(userQuizObj.startTime._seconds*1000)
-    userQuizObj.endTime = new Date(userQuizObj.endTime._seconds*1000)
-    userQuizObj.created = new Date(userQuizObj.created._seconds*1000)
+    userQuizObj.startTime = new Date(userQuizObj.startTime._seconds * 1000)
+    userQuizObj.endTime = new Date(userQuizObj.endTime._seconds * 1000)
+    userQuizObj.created = new Date(userQuizObj.created._seconds * 1000)
     userQuizObj.modified = new Date()
     userQuizObj.user = userQuizObj.userObj.ref._path.segments.join('/')
     userQuizObj.quiz = userQuizObj.quizObj.ref._path.segments.join('/')
@@ -74,4 +76,10 @@ const setUserQuizScore = async (userQuizID, score) => {
     return await getUserQuiz(userQuizID)
 }
 
-export { addUserQuiz, getUserQuiz, getUserQuizzes, getAllUserQuizzes, setUserQuizScore }
+export {
+    addUserQuiz,
+    getUserQuiz,
+    getUserQuizzes,
+    getAllUserQuizzes,
+    setUserQuizScore,
+}

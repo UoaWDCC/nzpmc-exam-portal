@@ -71,7 +71,8 @@ const resolvers = {
             const userQuiz = await getUserQuiz(args.quizID)
             const user = await userQuiz.userObj.get()
 
-            if (user.id !== context.user.uid && !context.user.admin) throw new AuthenticationError()
+            if (user.id !== context.user.uid && !context.user.admin)
+                throw new AuthenticationError()
 
             if (!context.user.admin) {
                 userQuiz.score = null
@@ -85,17 +86,12 @@ const resolvers = {
             if (!context.user) throw new AuthenticationError()
             if (!context.user.admin) throw new AdminAuthenticationError()
 
-            const { userID, quizID, startTime, endTime } = input
+            const { userID, quizID } = input
 
             const user = await getUser(userID)
             const quiz = await getQuiz(quizID)
 
-            return await addUserQuiz(
-                user,
-                quiz,
-                new Date(startTime),
-                new Date(endTime),
-            )
+            return await addUserQuiz(user, quiz)
         },
         editUserQuizQuestion: async (parents, { input }, context) => {
             if (!context.user) throw new AuthenticationError()

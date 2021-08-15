@@ -1,6 +1,14 @@
-import { getUser, getAllUsers, addUser, editUser } from '../controllers'
+import {
+    getUser,
+    getAllUsers,
+    addUser,
+    editUser,
+    addUserQuiz,
+    getQuiz,
+} from '../controllers'
 import { AuthenticationError } from 'apollo-server-express'
 import { AdminAuthenticationError } from '../utils/errors'
+import { addFirebaseUser, resetUserPasswordEmail } from '../utils/firebase'
 
 const resolvers = {
     Query: {
@@ -29,7 +37,6 @@ const resolvers = {
             if (!context.user.admin) throw new AdminAuthenticationError()
 
             const {
-                id,
                 displayName,
                 email,
                 photoURL,
@@ -37,18 +44,42 @@ const resolvers = {
                 lastName,
                 yearLevel,
                 role,
+                quizID,
             } = input
 
-            return await addUser(
-                id,
+            const {
+                uid: userID,
+                displayName: firebaseDisplayName,
+                photoURL: firebasePhotoURL,
+            } = await addFirebaseUser(
                 displayName,
-                email,
+                firstName,
+                lastName,
                 photoURL,
+                email,
+            )
+
+            const user = await addUser(
+                userID,
+                firebaseDisplayName,
+                email,
+                firebasePhotoURL,
                 firstName,
                 lastName,
                 yearLevel,
                 role,
             )
+
+            // Add UserQuiz if quizID is defined
+            if (quizID) {
+                const quiz = await getQuiz(quizID)
+                await addUserQuiz(user, quiz)
+            }
+
+            // Send reset password email
+            await resetUserPasswordEmail(email)
+
+            return user
         },
         editUser: async (parent, { input }, context) => {
             if (!context.user) throw new AuthenticationError()
