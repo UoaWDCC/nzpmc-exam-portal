@@ -13,9 +13,11 @@ const getUserQuizQuestion = async (userQuiz, id) => {
         quizQuestion.flag = false
     }
 
-    const userQuizQuestion = await UserQuizQuestion.collection.get({
-        key: userQuiz.key + '/UserQuizQuestion/' + id,
-    })
+    const userQuizQuestion = await UserQuizQuestion.collection
+        .get({
+            key: userQuiz.key + '/UserQuizQuestion/' + id,
+        })
+        .catch(() => {})
 
     return {
         id: quizQuestion.id,

@@ -1,12 +1,12 @@
 input AddUserInput {
-    id: ID!
-    displayName: String!
+    displayName: String
     email: String!
-    photoURL: String!
+    photoURL: String
     firstName: String!
     lastName: String!
-    yearLevel: String!
-    role: String!
+    yearLevel: String
+    role: String
+    quizID: ID
 }
 
 input EditSelfInput {
@@ -86,8 +86,6 @@ input EditAnswerInput {
 input AddUserQuiz {
     userID: ID!
     quizID: ID!
-    startTime: DateTime!
-    endTime: DateTime!
 }
 
 input EditUserQuizQuestion {
