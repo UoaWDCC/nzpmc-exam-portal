@@ -13,7 +13,7 @@
         "parser": "babel-eslint"
     },
     "rules": {
-        "prettier-vue/prettier": [
+        "prettier-vue-scorpionknifes/prettier": [
             "error",
             {
                 "endOfLine": "auto"

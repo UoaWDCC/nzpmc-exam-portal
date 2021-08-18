@@ -89,7 +89,9 @@ export default {
             }
         },
         selectOneAnswer(ID) {
-            this.question.userAnswer.id = ID
+            this.question.userAnswer
+                ? (this.question.userAnswer.id = ID)
+                : (this.question.userAnswer = { id: ID })
             this.$apollo.mutate({
                 mutation: UpdateUserAnswerMutation,
                 variables: {

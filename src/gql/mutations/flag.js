@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 import { QuestionFragment } from '../fragments/question'
 
-export const UpdateUserAnswerMutation = gql`
-    mutation UpdateUserAnswerMutation($input: EditUserQuizQuestion!) {
+export const UpdateFlagMutation = gql`
+    mutation UpdateFlagMutation($input: EditUserQuizQuestion!) {
         editUserQuizQuestion(input: $input) {
             ...QuestionFragment
         }

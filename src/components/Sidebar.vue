@@ -25,12 +25,36 @@
                 >
                     <v-list-item-content
                         @click="selectQuestion(index)"
-                        class="px-2"
+                        class="pa-2"
                         link
                     >
-                        <v-list-item-title>
-                            Question {{ index + 1 }}
-                        </v-list-item-title>
+                        <v-row>
+                            <v-col class="d-flex justify-center">
+                                <v-icon
+                                    @click="
+                                        changeFlag(
+                                            index,
+                                            !!questions[index].flag,
+                                        )
+                                        cancelBubble(event)
+                                    "
+                                    :color="
+                                        questions[index].flag ? 'red' : 'black'
+                                    "
+                                >
+                                    emoji_flags
+                                </v-icon>
+                                <v-list-item-title class="mr-2">
+                                    Question {{ index + 1 }}
+                                </v-list-item-title>
+                                <v-icon
+                                    v-if="questions[index].userAnswer !== null"
+                                >
+                                    check_circle
+                                </v-icon>
+                                <v-icon v-else color="white">circle </v-icon>
+                            </v-col>
+                        </v-row>
                     </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
@@ -40,6 +64,7 @@
 <script>
 import { QuestionsQuery } from '../gql/queries/question'
 import SubmissionConfirmation from './SubmissionConfirmation.vue'
+import { UpdateFlagMutation } from '../gql/mutations/flag'
 export default {
     components: {
         SubmissionConfirmation,
@@ -48,18 +73,38 @@ export default {
         quizID: String,
         sidebarLoaded: Function,
         questionIndex: Number,
+        answeredID: Number,
     },
 
     data() {
         return {
             questions: null,
-            selectedQuestionIndex: null,
+            selectedQuestionIndex: 0,
+            event: '',
         }
     },
     methods: {
         selectQuestion(index) {
             this.selectedQuestionIndex = this.questions[index].id
             this.$emit('selectQuestion', index, this.selectedQuestionIndex)
+        },
+        changeFlag(index, flagStatus) {
+            this.$apollo.mutate({
+                mutation: UpdateFlagMutation,
+                variables: {
+                    input: {
+                        userQuizID: this.quizID,
+                        questionID: this.questions[index].id,
+                        answerID: null,
+                        flag: !flagStatus,
+                    },
+                },
+            })
+        },
+        cancelBubble(e) {
+            const evt = e ? e : window.event
+            if (evt.stopPropagation) evt.stopPropagation()
+            if (evt.cancelBubble !== null) evt.cancelBubble = true
         },
     },
     created() {

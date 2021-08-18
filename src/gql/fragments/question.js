@@ -5,6 +5,17 @@ export const QuestionFragment = gql`
         id
         question
         imageURI
+        flag
+        created
+        modified
+    }
+`
+
+export const QuestionWithoutFlagFragment = gql`
+    fragment QuestionWithoutFlagFragment on UserQuizQuestion {
+        id
+        question
+        imageURI
         created
         modified
     }
