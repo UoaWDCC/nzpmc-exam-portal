@@ -107,16 +107,13 @@
     display: none;
 }
 </style>
+
 <script>
+import { AdminQuizzesQuery } from '../gql/queries/adminQuiz'
+
 export default {
     data: () => ({
         selectedQuiz: undefined,
-        quizzes: [
-            { id: 'aaaa', name: 'Foo' },
-            { id: 'bbbb', name: 'Bar' },
-            { id: 'cccc', name: 'Fizz' },
-            { id: 'dddd', name: 'Buzz' },
-        ],
         selectedQuizPage: undefined,
         quizQuestions: ['eeee', 'ffff', 'gggg', 'hhhh'],
     }),
@@ -125,24 +122,11 @@ export default {
         this.selectedQuiz = this.$route.params.quizId
     },
     watch: {
-        selectedQuiz(val) {
-            if (
-                this.selectedQuiz !== undefined &&
-                !this.quizzes.find((quiz) => quiz.id === val)
-            ) {
-                // The selected quiz ID in the URL doesn't exist
-                this.selectedQuiz = undefined
-                console.log(1)
-                this.$router.push({
-                    name: 'QuizAdmin',
-                })
-            } else if (val !== this.$route.params.quizId) {
-                // Page needs to be changed to reflect quiz dropdown
-                this.$router.push({
-                    name: 'QuizAdminDetails',
-                    params: { quizId: val },
-                })
-            }
+        selectedQuiz() {
+            this.checkQuizId()
+        },
+        quizzes() {
+            this.checkQuizId()
         },
         $route() {
             // Set quiz dropdown based on URL
@@ -150,6 +134,29 @@ export default {
         },
     },
     methods: {
+        checkQuizId() {
+            // Checks that the URl provided for a quiz is correct)
+            if (
+                this.quizzes !== undefined &&
+                this.selectedQuiz !== undefined &&
+                !this.quizzes.find((quiz) => quiz.id === this.selectedQuiz)
+            ) {
+                // The selected quiz ID in the URL doesn't exist
+                this.selectedQuiz = undefined
+                this.$router.push({
+                    name: 'QuizAdmin',
+                })
+            } else if (
+                this.selectedQuiz !== undefined &&
+                this.selectedQuiz !== this.$route.params.quizId
+            ) {
+                // Page needs to be changed to reflect quiz dropdown
+                this.$router.push({
+                    name: 'QuizAdminDetails',
+                    params: { quizId: this.selectedQuiz },
+                })
+            }
+        },
         createQuiz() {
             this.$router.push({
                 name: 'QuizAdminCreateQuiz',
@@ -160,6 +167,14 @@ export default {
             this.$router.push({
                 name: 'QuizAdminCreateQuestion',
             })
+        },
+    },
+    apollo: {
+        quizzes: {
+            query: AdminQuizzesQuery,
+            update: (data) => {
+                return data.quizzes
+            },
         },
     },
 }
