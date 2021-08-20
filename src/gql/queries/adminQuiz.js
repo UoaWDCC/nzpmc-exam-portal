@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 import { AdminQuizFragment } from '../fragments/adminQuiz'
+import { AdminQuizDetailsFragment } from '../fragments/adminQuiz'
 
 export const AdminQuizzesQuery = gql`
     query AdminQuizzesQuery {
@@ -8,4 +9,13 @@ export const AdminQuizzesQuery = gql`
         }
     }
     ${AdminQuizFragment}
+`
+
+export const AdminQuizDetailsQuery = gql`
+    query AdminQuizDetailsQuery($quizID: ID!) {
+        quiz(quizID: $quizID) {
+            ...AdminQuizDetailsFragment
+        }
+    }
+    ${AdminQuizDetailsFragment}
 `

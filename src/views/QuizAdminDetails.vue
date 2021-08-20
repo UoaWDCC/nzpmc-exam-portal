@@ -5,30 +5,35 @@
         </h1>
         <v-form ref="detailsForm" v-model="formIsValid">
             <v-row dense>
-                <v-col class="col col-12 col-sm-3 col-lg-2 col-xl-1">
+                <v-col class="col col-12 col-sm-4 col-lg-3 col-xl-2">
                     <v-text-field
                         label="ID"
-                        value="aaaa"
+                        v-model="id"
                         disabled
                     ></v-text-field>
                 </v-col>
                 <v-col class="col">
                     <v-text-field
                         label="Name"
+                        v-model="name"
                         :rules="[rules.required]"
                     ></v-text-field>
                 </v-col>
             </v-row>
             <v-row dense>
                 <v-col>
-                    <v-text-field label="Description"></v-text-field>
+                    <v-text-field
+                        label="Description"
+                        v-model="description"
+                    ></v-text-field>
                 </v-col>
             </v-row>
             <v-row dense>
                 <v-col>
                     <v-text-field
                         type="number"
-                        label="Duration"
+                        label="Duration (seconds)"
+                        v-model="duration"
                         :rules="[rules.required]"
                     ></v-text-field>
                 </v-col>
@@ -156,6 +161,8 @@
 </style>
 
 <script>
+import { AdminQuizDetailsQuery } from '../gql/queries/adminQuiz'
+
 export default {
     data() {
         return {
@@ -164,6 +171,11 @@ export default {
             rules: {
                 required: (value) => !!value || 'Required.',
             },
+
+            id: null,
+            name: null,
+            description: null,
+            duration: null,
             startDate: null,
             startTime: null,
             endDate: null,
@@ -173,6 +185,37 @@ export default {
     computed: {
         createQuizMode() {
             return this.$route.name === 'QuizAdminCreateQuiz'
+        },
+    },
+    watch: {
+        quizDetails(val) {
+            // Show values
+            this.id = val.id
+            this.name = val.name
+            this.description = val.description
+            this.duration = val.duration
+
+            // Display formatted dates and times based on query data
+            const startDateTime = new Date(val.startTime).toISOString()
+            this.startDate = startDateTime.substr(0, 10)
+            this.startTime = startDateTime.substr(11, 5)
+
+            const endDateTime = new Date(val.endTime).toISOString()
+            this.endDate = endDateTime.substr(0, 10)
+            this.endTime = endDateTime.substr(11, 5)
+        },
+    },
+    apollo: {
+        quizDetails: {
+            query: AdminQuizDetailsQuery,
+            variables() {
+                return {
+                    quizID: this.$route.params.quizId,
+                }
+            },
+            update: (data) => {
+                return data.quiz
+            },
         },
     },
 }

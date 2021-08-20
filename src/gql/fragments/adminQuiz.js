@@ -6,3 +6,14 @@ export const AdminQuizFragment = gql`
         name
     }
 `
+
+export const AdminQuizDetailsFragment = gql`
+    fragment AdminQuizDetailsFragment on Quiz {
+        id
+        name
+        description
+        duration
+        startTime
+        endTime
+    }
+`
