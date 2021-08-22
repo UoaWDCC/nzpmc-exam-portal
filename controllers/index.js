@@ -14,7 +14,14 @@ import {
 } from './option'
 import { getAllQuizzes, getQuiz, addQuiz, editQuiz } from './quiz'
 import { getUser, getAllUsers, addUser, editUser } from './user'
-import { getUserQuiz, getUserQuizzes, getAllUserQuizzes, addUserQuiz, setUserQuizScore } from './userQuiz'
+import {
+    getUserQuiz,
+    getUserQuizzes,
+    getAllUserQuizzes,
+    addUserQuiz,
+    editUserQuiz,
+    setUserQuizScore,
+} from './userQuiz'
 import {
     getUserQuizQuestion,
     getUserQuizQuestions,
@@ -53,9 +60,10 @@ export {
     getUserAnswerIDs,
     addUserQuiz,
     editQuiz,
+    editUserQuiz,
     addQuestionOption,
     editQuestionOption,
     insertQuestionAnswer,
     submitUserQuizQuestions,
-    setUserQuizScore
+    setUserQuizScore,
 }

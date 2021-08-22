@@ -1,11 +1,4 @@
-import {
-    getUserQuiz,
-    getAllQuizzes,
-    getAllUserQuizzes,
-    getQuestions,
-    addQuiz,
-    editQuiz,
-} from '../controllers'
+import { getAllQuizzes, getQuestions, addQuiz, editQuiz } from '../controllers'
 import { AuthenticationError } from 'apollo-server-express'
 import { AdminAuthenticationError } from '../utils/errors'
 

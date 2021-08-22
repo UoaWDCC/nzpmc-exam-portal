@@ -59,6 +59,18 @@ const addUserQuiz = async (user, quiz, startTime, endTime) => {
     return await getUserQuiz(userQuiz.id)
 }
 
+const editUserQuiz = async (id, score, startTime, endTime) => {
+    let userQuizObj = await getUserQuiz(userQuizID)
+
+    userQuizObj.score = score ? score : userQuizObj.score
+    userQuizObj.startTime = startTime ? startTime : userQuizObj.startTime
+    userQuizObj.endTime = endTime ? endTime : userQuizObj.endTime
+
+    await userQuizObj.save()
+
+    return await getUserQuiz(id)
+}
+
 const setUserQuizScore = async (userQuizID, score) => {
     let userQuizObj = await getUserQuiz(userQuizID)
 
@@ -81,5 +93,6 @@ export {
     getUserQuiz,
     getUserQuizzes,
     getAllUserQuizzes,
+    editUserQuiz,
     setUserQuizScore,
 }

@@ -16,14 +16,16 @@ type Mutation {
 
     editAnswer(input: EditAnswerInput!): Option
 
-    addUserQuiz(input: AddUserQuiz!): UserQuiz
+    addUserQuiz(input: AddUserQuizInput!): UserQuiz
 
     """
     User
     """
     editSelf(input: EditSelfInput!): User
 
-    editUserQuizQuestion(input: EditUserQuizQuestion!): UserQuizQuestion
+    editUserQuizQuestion(input: EditUserQuizQuestionInput!): UserQuizQuestion
 
     submitUserQuizQuestions(input: SubmissionInput): UserQuiz
+
+    editUserQuiz(input: EditUserQuizInput!): UserQuiz
 }
