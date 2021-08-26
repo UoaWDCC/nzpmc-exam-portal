@@ -3,6 +3,7 @@ import {
     getAllQuizzes,
     getAllUserQuizzes,
     getQuiz,
+    getQuestion,
     getQuestions,
     addQuiz,
     editQuiz,
@@ -12,6 +13,12 @@ import { AdminAuthenticationError } from '../utils/errors'
 
 const resolvers = {
     Quiz: {
+        question: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
+            return await getQuestion(parents, args.id)
+        },
         questions: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
             if (!context.user.admin) throw new AdminAuthenticationError()
