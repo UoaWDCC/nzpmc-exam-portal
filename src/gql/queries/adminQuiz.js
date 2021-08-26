@@ -19,3 +19,14 @@ export const AdminQuizDetailsQuery = gql`
     }
     ${AdminQuizDetailsFragment}
 `
+
+export const AdminQuizQuestionsQuery = gql`
+    query AdminQuizQuestionsQuery($quizID: ID!) {
+        quiz(quizID: $quizID) {
+            id
+            questions {
+                id
+            }
+        }
+    }
+`

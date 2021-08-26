@@ -9,6 +9,7 @@
                 label="Quiz"
                 solo
                 class="mr-2"
+                :loading="quizzesLoading"
             >
                 <v-icon slot="append" class="material-icons">
                     arrow_drop_down
@@ -37,18 +38,22 @@
                     <v-list-item-icon class="me-4">
                         <v-icon class="material-icons"> settings </v-icon>
                     </v-list-item-icon>
+
                     <v-list-item-content link>
                         <v-list-item-title> Details </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
+
                 <v-list-item :to="'/admin/quiz/' + selectedQuiz + '/users'">
                     <v-list-item-icon class="me-4">
                         <v-icon class="material-icons"> account_circle </v-icon>
                     </v-list-item-icon>
+
                     <v-list-item-content link>
                         <v-list-item-title> Users </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
+
                 <v-list-group :value="true" no-action>
                     <template v-slot:activator>
                         <v-list-item-icon class="me-4">
@@ -56,9 +61,11 @@
                                 question_answer
                             </v-icon>
                         </v-list-item-icon>
+
                         <v-list-item-content>
                             <v-list-item-title>Questions</v-list-item-title>
                         </v-list-item-content>
+
                         <v-tooltip right>
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn
@@ -70,18 +77,34 @@
                                     <v-icon class="material-icons">add</v-icon>
                                 </v-btn>
                             </template>
+
                             <span>Create question</span>
                         </v-tooltip>
                     </template>
+
+                    <template v-if="questionsLoading">
+                        <v-skeleton-loader
+                            height="40"
+                            type="text"
+                            style="
+                                margin-top: 0;
+                                margin-bottom: 4px;
+                                padding: 12px 8px 12px 64px;
+                            "
+                            v-for="index in 10"
+                            :key="index"
+                        ></v-skeleton-loader>
+                    </template>
+
                     <v-list-item
-                        v-for="(questionId, index) in quizQuestions"
-                        :key="questionId"
+                        v-for="(question, index) in quiz.questions"
+                        :key="question.id"
                         link
                         :to="
                             '/admin/quiz/' +
                             selectedQuiz +
                             '/question/' +
-                            questionId
+                            question.id
                         "
                     >
                         <v-list-item-title>
@@ -110,12 +133,16 @@
 
 <script>
 import { AdminQuizzesQuery } from '../gql/queries/adminQuiz'
+import { AdminQuizQuestionsQuery } from '../gql/queries/adminQuiz'
 
 export default {
     data: () => ({
+        quizzesLoading: true,
+
+        questionsLoading: true,
+
         selectedQuiz: undefined,
         selectedQuizPage: undefined,
-        quizQuestions: ['eeee', 'ffff', 'gggg', 'hhhh'],
     }),
     mounted() {
         // Set quiz dropdown based on URL
@@ -127,6 +154,11 @@ export default {
         },
         quizzes() {
             this.checkQuizId()
+
+            this.quizzesLoading = false
+        },
+        quiz() {
+            this.questionsLoading = false
         },
         $route() {
             // Set quiz dropdown based on URL
@@ -174,6 +206,17 @@ export default {
             query: AdminQuizzesQuery,
             update: (data) => {
                 return data.quizzes
+            },
+        },
+        quiz: {
+            query: AdminQuizQuestionsQuery,
+            variables() {
+                return {
+                    quizID: this.selectedQuiz,
+                }
+            },
+            update: (data) => {
+                return data.quiz
             },
         },
     },

@@ -3,49 +3,80 @@
         <h1 class="mb-2">
             {{ createQuizMode ? 'Create Quiz' : 'Quiz Details' }}
         </h1>
+
         <v-form ref="detailsForm" v-model="formIsValid">
             <v-row dense>
                 <v-col class="col col-12 col-sm-4 col-lg-3 col-xl-2">
+                    <v-skeleton-loader
+                        height="50"
+                        type="text"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-text-field
                         label="ID"
                         v-model="id"
                         disabled
+                        v-if="!loading"
                     ></v-text-field>
                 </v-col>
                 <v-col class="col">
+                    <v-skeleton-loader
+                        height="50"
+                        type="text"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-text-field
                         label="Name"
                         v-model="name"
                         :rules="[rules.required]"
+                        v-if="!loading"
                     ></v-text-field>
                 </v-col>
             </v-row>
             <v-row dense>
                 <v-col>
+                    <v-skeleton-loader
+                        height="50"
+                        type="text"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-text-field
                         label="Description"
                         v-model="description"
+                        v-if="!loading"
                     ></v-text-field>
                 </v-col>
             </v-row>
             <v-row dense>
                 <v-col>
+                    <v-skeleton-loader
+                        height="50"
+                        type="text"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-text-field
                         type="number"
                         label="Duration (seconds)"
                         v-model="duration"
                         :rules="[rules.required]"
+                        v-if="!loading"
                     ></v-text-field>
                 </v-col>
             </v-row>
             <v-row dense>
                 <v-col class="col-6">
+                    <v-skeleton-loader
+                        height="50"
+                        type="text"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-menu
                         :close-on-content-click="false"
                         :nudge-bottom="8"
                         transition="scale-transition"
                         offset-y
                         min-width="auto"
+                        v-if="!loading"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-text-field
@@ -61,6 +92,11 @@
                     </v-menu>
                 </v-col>
                 <v-col class="col-6">
+                    <v-skeleton-loader
+                        height="50"
+                        type="text"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-menu
                         :close-on-content-click="false"
                         :nudge-bottom="8"
@@ -68,6 +104,7 @@
                         offset-y
                         max-width="290px"
                         min-width="290px"
+                        v-if="!loading"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-text-field
@@ -89,12 +126,18 @@
             </v-row>
             <v-row dense>
                 <v-col class="col-6">
+                    <v-skeleton-loader
+                        height="50"
+                        type="text"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-menu
                         :close-on-content-click="false"
                         :nudge-bottom="8"
                         transition="scale-transition"
                         offset-y
                         min-width="auto"
+                        v-if="!loading"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-text-field
@@ -110,6 +153,11 @@
                     </v-menu>
                 </v-col>
                 <v-col class="col-6">
+                    <v-skeleton-loader
+                        height="50"
+                        type="text"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-menu
                         :close-on-content-click="false"
                         :nudge-bottom="8"
@@ -117,6 +165,7 @@
                         offset-y
                         max-width="290px"
                         min-width="290px"
+                        v-if="!loading"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-text-field
@@ -138,10 +187,18 @@
             </v-row>
             <v-row>
                 <v-col class="col-12 d-flex justify-end">
+                    <v-skeleton-loader
+                        height="42"
+                        width="95"
+                        type="text"
+                        style="margin-top: 0; margin-bottom: -6px"
+                        v-if="loading"
+                    ></v-skeleton-loader>
                     <v-btn
                         type="submit"
                         color="primary"
                         :disabled="!formIsValid"
+                        v-if="!loading"
                     >
                         <v-icon left class="material-icons">
                             {{ createQuizMode ? 'add' : 'save' }}
@@ -158,6 +215,12 @@
 .v-time-picker-title {
     justify-content: center !important;
 }
+.v-skeleton-loader {
+    display: flex;
+    flex-direction: column;
+    margin-top: 4px;
+    margin-bottom: -6px;
+}
 </style>
 
 <script>
@@ -171,6 +234,8 @@ export default {
             rules: {
                 required: (value) => !!value || 'Required.',
             },
+
+            loading: true,
 
             id: null,
             name: null,
@@ -203,6 +268,9 @@ export default {
             const endDateTime = new Date(val.endTime).toISOString()
             this.endDate = endDateTime.substr(0, 10)
             this.endTime = endDateTime.substr(11, 5)
+
+            // Show inputs
+            this.loading = false
         },
     },
     apollo: {
