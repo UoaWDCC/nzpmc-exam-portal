@@ -12,19 +12,19 @@ import { addFirebaseUser, resetUserPasswordEmail } from '../utils/firebase'
 
 const resolvers = {
     Query: {
-        user: async (parents, args, ctx) => {
+        user: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
             if (!context.user.admin) throw new AdminAuthenticationError()
 
             return await getUser(args.userID)
         },
-        me: async (parents, args, ctx) => {
+        me: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
 
-            if (!ctx.user) return
-            return await getUser(ctx.user.uid)
+            if (!context.user) return
+            return await getUser(context.user.uid)
         },
-        users: async (parents, args, ctx) => {
+        users: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
             if (!context.user.admin) throw new AdminAuthenticationError()
 
