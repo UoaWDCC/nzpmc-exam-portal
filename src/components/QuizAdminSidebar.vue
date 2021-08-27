@@ -97,7 +97,7 @@
                     </template>
 
                     <v-list-item
-                        v-for="(question, index) in quiz.questions"
+                        v-for="(question, index) in questions"
                         :key="question.id"
                         link
                         :to="
@@ -140,6 +140,7 @@ export default {
         quizzesLoading: true,
 
         questionsLoading: true,
+        questions: null,
 
         selectedQuiz: undefined,
         selectedQuizPage: undefined,
@@ -158,6 +159,7 @@ export default {
             this.quizzesLoading = false
         },
         quiz() {
+            this.questions = this.quiz.questions
             this.questionsLoading = false
         },
         $route() {

@@ -1,6 +1,6 @@
 <template>
     <v-card elevation="2" class="pa-4">
-        <h1 class="mb-2">
+        <h1 class="text-h4 mb-2">
             {{ createQuizMode ? 'Create Quiz' : 'Quiz Details' }}
         </h1>
 
@@ -12,6 +12,7 @@
                         type="text"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-text-field
                         label="ID"
                         v-model="id"
@@ -19,12 +20,14 @@
                         v-if="!loading"
                     ></v-text-field>
                 </v-col>
+
                 <v-col class="col">
                     <v-skeleton-loader
                         height="50"
                         type="text"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-text-field
                         label="Name"
                         v-model="name"
@@ -33,6 +36,7 @@
                     ></v-text-field>
                 </v-col>
             </v-row>
+
             <v-row dense>
                 <v-col>
                     <v-skeleton-loader
@@ -40,6 +44,7 @@
                         type="text"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-text-field
                         label="Description"
                         v-model="description"
@@ -47,6 +52,7 @@
                     ></v-text-field>
                 </v-col>
             </v-row>
+
             <v-row dense>
                 <v-col>
                     <v-skeleton-loader
@@ -54,6 +60,7 @@
                         type="text"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-text-field
                         type="number"
                         label="Duration (seconds)"
@@ -63,6 +70,7 @@
                     ></v-text-field>
                 </v-col>
             </v-row>
+
             <v-row dense>
                 <v-col class="col-6">
                     <v-skeleton-loader
@@ -70,6 +78,7 @@
                         type="text"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-menu
                         :close-on-content-click="false"
                         :nudge-bottom="8"
@@ -88,15 +97,18 @@
                                 :rules="[rules.required]"
                             ></v-text-field>
                         </template>
+
                         <v-date-picker v-model="startDate"></v-date-picker>
                     </v-menu>
                 </v-col>
+
                 <v-col class="col-6">
                     <v-skeleton-loader
                         height="50"
                         type="text"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-menu
                         :close-on-content-click="false"
                         :nudge-bottom="8"
@@ -116,6 +128,7 @@
                                 :rules="[rules.required]"
                             ></v-text-field>
                         </template>
+
                         <v-time-picker
                             v-model="startTime"
                             full-width
@@ -124,6 +137,7 @@
                     </v-menu>
                 </v-col>
             </v-row>
+
             <v-row dense>
                 <v-col class="col-6">
                     <v-skeleton-loader
@@ -131,6 +145,7 @@
                         type="text"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-menu
                         :close-on-content-click="false"
                         :nudge-bottom="8"
@@ -149,15 +164,18 @@
                                 :rules="[rules.required]"
                             ></v-text-field>
                         </template>
+
                         <v-date-picker v-model="endDate"></v-date-picker>
                     </v-menu>
                 </v-col>
+
                 <v-col class="col-6">
                     <v-skeleton-loader
                         height="50"
                         type="text"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-menu
                         :close-on-content-click="false"
                         :nudge-bottom="8"
@@ -177,6 +195,7 @@
                                 :rules="[rules.required]"
                             ></v-text-field>
                         </template>
+
                         <v-time-picker
                             v-model="endTime"
                             full-width
@@ -185,6 +204,7 @@
                     </v-menu>
                 </v-col>
             </v-row>
+
             <v-row>
                 <v-col class="col-12 d-flex justify-end">
                     <v-skeleton-loader
@@ -194,6 +214,7 @@
                         style="margin-top: 0; margin-bottom: -6px"
                         v-if="loading"
                     ></v-skeleton-loader>
+
                     <v-btn
                         type="submit"
                         color="primary"
@@ -203,6 +224,7 @@
                         <v-icon left class="material-icons">
                             {{ createQuizMode ? 'add' : 'save' }}
                         </v-icon>
+
                         {{ createQuizMode ? 'Create quiz' : 'Save' }}
                     </v-btn>
                 </v-col>
@@ -229,12 +251,14 @@ import { AdminQuizDetailsQuery } from '../gql/queries/adminQuiz'
 export default {
     data() {
         return {
+            // Form
             detailsForm: null,
             formIsValid: null,
             rules: {
                 required: (value) => !!value || 'Required.',
             },
 
+            // Fetch data
             loading: true,
 
             id: null,
@@ -247,11 +271,13 @@ export default {
             endTime: null,
         }
     },
+
     computed: {
         createQuizMode() {
             return this.$route.name === 'QuizAdminCreateQuiz'
         },
     },
+
     watch: {
         quizDetails(val) {
             // Show values
@@ -273,6 +299,7 @@ export default {
             this.loading = false
         },
     },
+
     apollo: {
         quizDetails: {
             query: AdminQuizDetailsQuery,

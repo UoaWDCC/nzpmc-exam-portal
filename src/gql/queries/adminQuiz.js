@@ -30,3 +30,23 @@ export const AdminQuizQuestionsQuery = gql`
         }
     }
 `
+
+export const AdminQuizQuestionDetailsQuery = gql`
+    query AdminQuizQuestionDetailsQuery($quizId: ID!, $questionId: ID!) {
+        quiz(quizID: $quizId) {
+            id
+            question(id: $questionId) {
+                id
+                question
+                answer {
+                    id
+                    option
+                }
+                options {
+                    id
+                    option
+                }
+            }
+        }
+    }
+`
