@@ -130,11 +130,12 @@ const resolvers = {
             const { userQuizID, questionID, answerID, flag } = input
 
             const userQuiz = await getUserQuiz(userQuizID)
+
             const quiz = await userQuiz.quizObj.get()
 
             const question = await getQuestion(quiz, questionID)
 
-            let answerKey
+            let answerKey = answerID
             if (answerID) {
                 answerKey = (await getOptionByQuestionID(question, answerID))
                     .key
@@ -165,7 +166,9 @@ const resolvers = {
 
             const userAnswers = await getUserAnswerIDs(userQuiz)
             const correctAnswers = await Promise.all(
-                (await getQuestions(quiz)).map(async (question) => {
+                (
+                    await getQuestions(quiz)
+                ).map(async (question) => {
                     return (await question.answerObj.get()).id
                 }),
             )

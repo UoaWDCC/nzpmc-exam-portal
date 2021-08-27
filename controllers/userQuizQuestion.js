@@ -1,6 +1,7 @@
 import { Option, Question, Quiz, UserQuizQuestion } from '../models'
 import { packOptions } from './option'
 import { getUserQuiz, setUserQuizScore } from './userQuiz'
+import { firestore as db } from '../utils/firebase'
 
 const getUserQuizQuestion = async (userQuiz, id) => {
     const quiz = await userQuiz.quizObj.get()
@@ -88,27 +89,42 @@ const addUserQuizQuestion = async (userQuiz, question) => {
 
 const editUserQuizQuestion = async (userQuiz, id, answerKey, flag) => {
     const userQuizQuestion = UserQuizQuestion.init({ parent: userQuiz.key })
+    const oldUserQuizQuestion = await UserQuizQuestion.collection
+        .get({
+            key: userQuiz.key + '/UserQuizQuestion/' + id,
+        })
+        .catch(() => {})
 
     userQuizQuestion.id = id
 
-    if (answerKey == '' && !userQuizQuestion.answer) {
-        userQuizQuestion.answer = null
-    } else if (!answerKey && userQuizQuestion.answer) {
-        userQuizQuestion.answer = userQuizQuestion.answer
-    } else {
+    if (answerKey != null && answerKey !== '') {
         userQuizQuestion.answer = answerKey
     }
 
     userQuizQuestion.flag = flag ? flag : !!userQuizQuestion.flag
-    userQuizQuestion.firstViewed = userQuizQuestion.firstViewed
-        ? userQuizQuestion.firstViewed
-        : new Date()
-    userQuizQuestion.lastAnswered = answerKey
-        ? new Date()
-        : userQuizQuestion.lastAnswered
+    userQuizQuestion.firstViewed =
+        oldUserQuizQuestion && oldUserQuizQuestion.firstViewed
+            ? oldUserQuizQuestion.firstViewed.toDate()
+            : new Date()
+    userQuizQuestion.lastAnswered =
+        !answerKey && oldUserQuizQuestion && oldUserQuizQuestion.lastAnswered
+            ? oldUserQuizQuestion.lastAnswered.toDate()
+            : new Date()
     userQuizQuestion.modified = new Date()
 
     await userQuizQuestion.upsert()
+
+    //fireo doesn't support removing references, using firestore method to delete references instead
+    if (answerKey == '') {
+        await db
+            .collection('UserQuiz')
+            .doc(userQuiz.id)
+            .collection('UserQuizQuestion')
+            .doc(id)
+            .update({
+                answer: null,
+            })
+    }
 
     return userQuizQuestion
 }
