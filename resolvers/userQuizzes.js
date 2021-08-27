@@ -103,7 +103,11 @@ const resolvers = {
 
             if (!context.user.admin) {
                 // is not Admin
-                const { userID: id, startTime } = input
+                const { userQuizID, startTime } = input
+
+                if (startTime) {
+                    startTime = new Date().valueOf()
+                }
 
                 const userQuizObj = await getUserQuiz(userQuizID)
                 if (userQuizObj.startTime) {
@@ -111,13 +115,13 @@ const resolvers = {
                     throw new AdminAuthenticationError()
                 }
 
-                return await editUserQuiz(id, null, startTime, null)
+                return await editUserQuiz(userQuizID, null, startTime, null)
             }
 
             // is Admin
-            const { userID: id, score, startTime, endTime } = input
+            const { userQuizID, score, startTime, endTime } = input
 
-            return await editUserQuiz(id, score, startTime, endTime)
+            return await editUserQuiz(userQuizID, score, startTime, endTime)
         },
         editUserQuizQuestion: async (parents, { input }, context) => {
             if (!context.user) throw new AuthenticationError()
@@ -161,9 +165,7 @@ const resolvers = {
 
             const userAnswers = await getUserAnswerIDs(userQuiz)
             const correctAnswers = await Promise.all(
-                (
-                    await getQuestions(quiz)
-                ).map(async (question) => {
+                (await getQuestions(quiz)).map(async (question) => {
                     return (await question.answerObj.get()).id
                 }),
             )

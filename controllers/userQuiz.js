@@ -59,16 +59,31 @@ const addUserQuiz = async (user, quiz, startTime, endTime) => {
     return await getUserQuiz(userQuiz.id)
 }
 
-const editUserQuiz = async (id, score, startTime, endTime) => {
-    let userQuizObj = await getUserQuiz(userQuizID)
+const editUserQuiz = async (userQuizID, score, startTime, endTime) => {
+    const userQuizObj = await UserQuiz.collection.get({ id: userQuizID })
 
     userQuizObj.score = score ? score : userQuizObj.score
-    userQuizObj.startTime = startTime ? startTime : userQuizObj.startTime
-    userQuizObj.endTime = endTime ? endTime : userQuizObj.endTime
+    userQuizObj.startTime = startTime
+        ? startTime
+        : userQuizObj.startTime
+        ? userQuizObj.startTime.toDate()
+        : null
 
-    await userQuizObj.save()
+    userQuizObj.endTime = endTime
+        ? endTime
+        : userQuizObj.endTime
+        ? userQuizObj.endTime.toDate()
+        : null
 
-    return await getUserQuiz(id)
+    userQuizObj.created = userQuizObj.created.toDate()
+    userQuizObj.modified = userQuizObj.modified.toDate()
+
+    userQuizObj.user = (await userQuizObj.user.get()).key
+    userQuizObj.quiz = (await userQuizObj.quiz.get()).key
+
+    await userQuizObj.update()
+
+    return await getUserQuiz(userQuizID)
 }
 
 const setUserQuizScore = async (userQuizID, score) => {
