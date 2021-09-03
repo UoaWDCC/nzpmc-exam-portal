@@ -59,7 +59,7 @@
                                     userQuiz != null &&
                                     userQuiz.startTime == null
                                 "
-                                @click="startQuiz()"
+                                @click="overlay = !overlay"
                                 large
                                 color="primary"
                             >
@@ -80,7 +80,20 @@
                                     navigate_next
                                 </v-icon>
                             </v-btn>
-                            <v-overlay :value="overlay"> Hi </v-overlay>
+                            <v-overlay :value="overlay">
+                                <v-btn
+                                    v-for="(item, index) in userQuizzes"
+                                    :key="index"
+                                    @click="startQuiz(index)"
+                                    large
+                                    color="primary"
+                                >
+                                    Quiz {{ index + 1 }}
+                                    <v-icon right class="material-icons">
+                                        navigate_next
+                                    </v-icon>
+                                </v-btn>
+                            </v-overlay>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -119,23 +132,19 @@ export default {
         },
     },
     methods: {
-        async startQuiz() {
-            if (length(this.userQuizzes) > 1) {
-                // overlay = !overlay
-            }
-
+        async startQuiz(index) {
             await this.$apollo.mutate({
                 mutation: EditQuizMutation,
                 variables: {
                     input: {
-                        userQuizID: this.userQuiz.id,
+                        userQuizID: this.userQuizzes[index].id,
                         startTime: new Date().valueOf(),
                     },
                 },
             })
             this.$router.push({
                 name: 'Exam',
-                params: { quizId: this.userQuiz.id },
+                params: { quizId: this.userQuizzes[index].id },
             })
         },
     },
