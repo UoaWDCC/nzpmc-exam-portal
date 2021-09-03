@@ -54,12 +54,33 @@
                     </v-row>
                     <v-row>
                         <v-col class="col-12 text-center">
-                            <v-btn to="/exam" large color="primary">
-                                I'm ready!
+                            <v-btn
+                                v-if="
+                                    userQuiz != null &&
+                                    userQuiz.startTime == null
+                                "
+                                @click="startQuiz()"
+                                large
+                                color="primary"
+                            >
+                                Start
                                 <v-icon right class="material-icons">
                                     navigate_next
                                 </v-icon>
                             </v-btn>
+                            <v-btn
+                                v-else
+                                to="/exam"
+                                large
+                                color="primary"
+                                :disabled="!userQuiz"
+                            >
+                                Continue
+                                <v-icon right class="material-icons">
+                                    navigate_next
+                                </v-icon>
+                            </v-btn>
+                            <v-overlay :value="overlay"> Hi </v-overlay>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -68,11 +89,55 @@
     </v-container>
 </template>
 <script>
-import SignOutMenu from './../components/SignOutMenu.vue'
+import SignOutMenu from '../components/SignOutMenu.vue'
+import { EditQuizMutation } from '../gql/mutations/userQuiz.js'
+import { UserQuizzesQuery } from '../gql/queries/userQuiz'
 
 export default {
     components: {
         SignOutMenu,
+    },
+    data() {
+        return {
+            userQuiz: null,
+            userQuizzes: null,
+            overlay: false,
+        }
+    },
+    apollo: {
+        userQuiz: {
+            query: UserQuizzesQuery,
+            update: (data) => {
+                return data.userQuizzes[0]
+            },
+        },
+        userQuizzes: {
+            query: UserQuizzesQuery,
+            update: (data) => {
+                return data.userQuizzes
+            },
+        },
+    },
+    methods: {
+        async startQuiz() {
+            if (length(this.userQuizzes) > 1) {
+                // overlay = !overlay
+            }
+
+            await this.$apollo.mutate({
+                mutation: EditQuizMutation,
+                variables: {
+                    input: {
+                        userQuizID: this.userQuiz.id,
+                        startTime: new Date().valueOf(),
+                    },
+                },
+            })
+            this.$router.push({
+                name: 'Exam',
+                params: { quizId: this.userQuiz.id },
+            })
+        },
     },
 }
 </script>
