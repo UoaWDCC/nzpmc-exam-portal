@@ -27,8 +27,8 @@ const getUserQuizQuestion = async (userQuiz, id) => {
         flag: !!quizQuestion.flag,
         questionKey: quizQuestion.key,
         questionObj: quizQuestion,
-        userAnswerKey: userQuizQuestion ? userQuizQuestion.key : null,
-        userAnswerObj: userQuizQuestion,
+        userQuizQuestionKey: userQuizQuestion ? userQuizQuestion.key : null,
+        userQuizQuestionObj: userQuizQuestion,
     }
 }
 
@@ -66,8 +66,8 @@ const getUserQuizQuestions = async (userQuiz) => {
             flag: !!userQuizQuestion.flag,
             questionKey: quizQuestion.key,
             questionObj: quizQuestion,
-            userAnswerKey: userQuizQuestion.key,
-            userAnswerObj: userQuizQuestion,
+            userQuizQuestionKey: userQuizQuestion.key,
+            userQuizQuestionObj: userQuizQuestion,
         }
     })
 }
@@ -101,7 +101,7 @@ const editUserQuizQuestion = async (userQuiz, id, answerKey, flag) => {
         userQuizQuestion.answer = answerKey
     }
 
-    userQuizQuestion.flag = flag ? flag : !!userQuizQuestion.flag
+    userQuizQuestion.flag = flag == null ? !!oldUserQuizQuestion.flag : flag
     userQuizQuestion.firstViewed =
         oldUserQuizQuestion && oldUserQuizQuestion.firstViewed
             ? oldUserQuizQuestion.firstViewed.toDate()
@@ -125,6 +125,11 @@ const editUserQuizQuestion = async (userQuiz, id, answerKey, flag) => {
                 answer: null,
             })
     }
+    userQuizQuestion.userQuizQuestionObj = await UserQuizQuestion.collection
+        .get({
+            key: userQuiz.key + '/UserQuizQuestion/' + id,
+        })
+        .catch(() => {})
 
     return userQuizQuestion
 }
@@ -164,11 +169,12 @@ const getUserQuizQuestionOptionsByQuestion = async (question) => {
 }
 
 const getUserAnswerIDs = async (userQuiz) => {
-    const userAnswers = await getUserQuizQuestions(userQuiz)
+    const userQuizQuestions = await getUserQuizQuestions(userQuiz)
 
     const userAnswerIDs = await Promise.all(
-        userAnswers.map(async (userAnswer) => {
-            const answer = await userAnswer.userAnswerObj.answer.get()
+        userQuizQuestions.map(async (userQuizQuestion) => {
+            const answer =
+                await userQuizQuestion.userQuizQuestionObj.answer.get()
             return answer.id
         }),
     )

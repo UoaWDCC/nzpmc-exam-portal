@@ -42,13 +42,14 @@ const resolvers = {
             if (!context.user) throw new AuthenticationError()
 
             if (
-                !parents.userAnswerObj ||
-                !parents.userAnswerObj.answer ||
-                !parents.userAnswerObj.answer.ref
-            )
+                !parents.userQuizQuestionObj ||
+                !parents.userQuizQuestionObj.answer ||
+                !parents.userQuizQuestionObj.answer.ref
+            ) {
                 return null
+            }
 
-            return parents.userAnswerObj.answer.get()
+            return parents.userQuizQuestionObj.answer.get()
         },
         options: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
