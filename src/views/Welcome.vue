@@ -78,9 +78,6 @@
                                 </v-icon>
                             </v-btn>
                             <v-overlay :value="overlay" align="center">
-                                <!--  v-for="index in 10"
-                                    :key="index" -->
-
                                 <template v-for="(item, index) in userQuizzes">
                                     <v-row
                                         :key="index"
