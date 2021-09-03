@@ -171,13 +171,11 @@ export default {
             })
         },
         continueQuiz(index) {
-            console.log(typeof index)
             const quizIdTemp =
                 typeof index === 'number'
                     ? this.userQuizzes[index].id
                     : localStorage.getItem('currentQuizID')
 
-            console.log(quizIdTemp)
             this.$router.push({
                 name: 'Exam',
                 params: { quizId: quizIdTemp },

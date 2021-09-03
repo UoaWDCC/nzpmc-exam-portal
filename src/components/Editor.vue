@@ -238,7 +238,7 @@ math-field:focus-within {
 
 <script>
 // Code modified from https://github.com/ServiceStack/servicestack-editor
-import 'mathlive'
+import 'mathlive/dist/mathlive.min.js'
 import LatexDialog from '../components/LatexDialog'
 
 export default {
