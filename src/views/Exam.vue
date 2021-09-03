@@ -145,7 +145,6 @@ export default {
             update: (data) => {
                 return data.userQuiz
             },
-            fetchPolicy: 'no-cache',
         },
     },
     mounted() {

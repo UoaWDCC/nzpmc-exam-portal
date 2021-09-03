@@ -1,6 +1,5 @@
 import gql from 'graphql-tag'
 import { UserQuizFragment } from '../fragments/userQuiz'
-import { OptionFragment } from '../fragments/option'
 import { QuestionFragment } from '../fragments/question'
 
 export const UserQuizzesQuery = gql`
