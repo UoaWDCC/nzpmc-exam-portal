@@ -42,13 +42,14 @@ const resolvers = {
             if (!context.user) throw new AuthenticationError()
 
             if (
-                !parents.userAnswerObj ||
-                !parents.userAnswerObj.answer ||
-                !parents.userAnswerObj.answer.ref
-            )
+                !parents.userQuizQuestionObj ||
+                !parents.userQuizQuestionObj.answer ||
+                !parents.userQuizQuestionObj.answer.ref
+            ) {
                 return null
+            }
 
-            return parents.userAnswerObj.answer.get()
+            return parents.userQuizQuestionObj.answer.get()
         },
         options: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
@@ -130,11 +131,12 @@ const resolvers = {
             const { userQuizID, questionID, answerID, flag } = input
 
             const userQuiz = await getUserQuiz(userQuizID)
+
             const quiz = await userQuiz.quizObj.get()
 
             const question = await getQuestion(quiz, questionID)
 
-            let answerKey
+            let answerKey = answerID
             if (answerID) {
                 answerKey = (await getOptionByQuestionID(question, answerID))
                     .key
@@ -165,7 +167,9 @@ const resolvers = {
 
             const userAnswers = await getUserAnswerIDs(userQuiz)
             const correctAnswers = await Promise.all(
-                (await getQuestions(quiz)).map(async (question) => {
+                (
+                    await getQuestions(quiz)
+                ).map(async (question) => {
                     return (await question.answerObj.get()).id
                 }),
             )
