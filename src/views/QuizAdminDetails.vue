@@ -403,12 +403,18 @@ export default {
                     },
                     refetchQueries: [{ query: AdminQuizzesQuery }],
                 })
-                .then(() => {
+                .then((data) => {
                     // Result
                     this.detailsFormLoading = false
                     this.success = 'Quiz successfully created.'
 
                     this.$refs.detailsForm.reset()
+
+                    // Redirect to new quiz
+                    this.$router.push({
+                        name: 'QuizAdminDetails',
+                        params: { quizId: data.data.addQuiz.id },
+                    })
                 })
                 .catch((error) => {
                     // Error
