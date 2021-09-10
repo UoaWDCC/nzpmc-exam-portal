@@ -10,6 +10,7 @@
                 solo
                 class="mr-2"
                 :loading="quizzesLoading"
+                :menu-props="{ bottom: true, offsetY: true }"
             >
                 <v-icon slot="append" class="material-icons">
                     arrow_drop_down
@@ -145,28 +146,34 @@ export default {
         selectedQuiz: undefined,
         selectedQuizPage: undefined,
     }),
+
     mounted() {
         // Set quiz dropdown based on URL
         this.selectedQuiz = this.$route.params.quizId
     },
+
     watch: {
         selectedQuiz() {
             this.checkQuizId()
         },
+
         quizzes() {
             this.checkQuizId()
 
             this.quizzesLoading = false
         },
+
         quiz() {
             this.questions = this.quiz.questions
             this.questionsLoading = false
         },
+
         $route() {
             // Set quiz dropdown based on URL
             this.selectedQuiz = this.$route.params.quizId
         },
     },
+
     methods: {
         checkQuizId() {
             // Checks that the URl provided for a quiz is correct)
@@ -190,12 +197,16 @@ export default {
                     params: { quizId: this.selectedQuiz },
                 })
             }
+
+            this.$apollo.queries.quiz.skip = !this.selectedQuiz
         },
+
         createQuiz() {
             this.$router.push({
                 name: 'QuizAdminCreateQuiz',
             })
         },
+
         createQuestion(e) {
             e.stopPropagation()
             this.$router.push({
@@ -203,6 +214,7 @@ export default {
             })
         },
     },
+
     apollo: {
         quizzes: {
             query: AdminQuizzesQuery,
@@ -210,6 +222,7 @@ export default {
                 return data.quizzes
             },
         },
+
         quiz: {
             query: AdminQuizQuestionsQuery,
             variables() {
@@ -220,6 +233,8 @@ export default {
             update: (data) => {
                 return data.quiz
             },
+
+            skip: true,
         },
     },
 }

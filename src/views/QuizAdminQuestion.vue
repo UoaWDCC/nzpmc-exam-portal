@@ -72,7 +72,7 @@
                             <v-skeleton-loader
                                 height="56"
                                 type="text"
-                                class="my-0 ml-10"
+                                class="my-0 ml-10 mb-n2"
                             ></v-skeleton-loader>
                         </template>
 

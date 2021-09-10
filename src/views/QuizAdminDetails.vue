@@ -4,7 +4,11 @@
             {{ createQuizMode ? 'Create Quiz' : 'Quiz Details' }}
         </h1>
 
-        <v-form ref="detailsForm" v-model="formIsValid">
+        <v-form
+            @submit.prevent="createQuizMode ? createQuiz() : saveQuiz()"
+            ref="detailsForm"
+            v-model="formIsValid"
+        >
             <v-row dense>
                 <v-col class="col col-12 col-sm-4 col-lg-3 col-xl-2">
                     <v-skeleton-loader
@@ -205,6 +209,24 @@
                 </v-col>
             </v-row>
 
+            <v-alert
+                type="success"
+                v-if="showSuccess"
+                v-text="success"
+                class="my-3"
+                dismissible
+                close-text="Close Alert"
+            >
+            </v-alert>
+
+            <v-alert
+                type="error"
+                v-if="showError"
+                v-text="error"
+                class="my-3"
+                dismissible
+            ></v-alert>
+
             <v-row>
                 <v-col class="col-12 d-flex justify-end">
                     <v-skeleton-loader
@@ -218,7 +240,8 @@
                     <v-btn
                         type="submit"
                         color="primary"
-                        :disabled="!formIsValid"
+                        :disabled="!formIsValid || detailsFormLoading"
+                        :loading="detailsFormLoading"
                         v-if="!loading"
                     >
                         <v-icon left class="material-icons">
@@ -247,19 +270,28 @@
 
 <script>
 import { AdminQuizDetailsQuery } from '../gql/queries/adminQuiz'
+import { AddQuizMutation, EditQuizMutation } from '../gql/mutations/adminQuiz'
+import { AdminQuizzesQuery } from '../gql/queries/adminQuiz'
 
 export default {
     data() {
         return {
             // Form
             detailsForm: null,
+            detailsFormLoading: false,
             formIsValid: null,
             rules: {
                 required: (value) => !!value || 'Required.',
             },
 
+            success: null,
+            showSuccess: false,
+            error: null,
+            showError: false,
+
             // Fetch data
-            loading: true,
+            createQuizMode: this.$route.name === 'QuizAdminCreateQuiz',
+            loading: this.$route.name !== 'QuizAdminCreateQuiz',
 
             id: null,
             name: null,
@@ -270,12 +302,6 @@ export default {
             endDate: null,
             endTime: null,
         }
-    },
-
-    computed: {
-        createQuizMode() {
-            return this.$route.name === 'QuizAdminCreateQuiz'
-        },
     },
 
     watch: {
@@ -298,6 +324,14 @@ export default {
             // Show inputs
             this.loading = false
         },
+
+        success(val) {
+            this.showSuccess = !!val
+        },
+
+        error(val) {
+            this.showError = !!val
+        },
     },
 
     apollo: {
@@ -311,6 +345,104 @@ export default {
             update: (data) => {
                 return data.quiz
             },
+            skip() {
+                return this.createQuizMode
+            },
+        },
+    },
+
+    computed: {
+        addQuizValues() {
+            return {
+                name: this.name,
+                description: this.description,
+                duration: parseInt(this.duration),
+                numOfQuestions: 0,
+                startTime: this.convertToDate(this.startDate, this.startTime),
+                endTime: this.convertToDate(this.endDate, this.endTime),
+            }
+        },
+
+        editQuizValues() {
+            const details = this.addQuizValues
+            details.id = this.id
+
+            return details
+        },
+    },
+
+    methods: {
+        convertToDate(date, time) {
+            // Converts the seperate date and time inputs into one
+            const dateTime = new Date(0)
+
+            dateTime.setFullYear(date.substr(0, 4))
+            dateTime.setMonth(parseInt(date.substr(5, 2)) - 1)
+            dateTime.setDate(date.substr(8, 2))
+
+            dateTime.setHours(time.substr(0, 2))
+            dateTime.setMinutes(time.substr(3, 2))
+
+            return dateTime
+        },
+
+        createQuiz() {
+            // Creates a quiz
+            this.success = null
+            this.error = null
+            this.detailsFormLoading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: AddQuizMutation,
+                    variables: {
+                        input: this.addQuizValues,
+                    },
+                    update: (data) => {
+                        return data.quiz
+                    },
+                    refetchQueries: [{ query: AdminQuizzesQuery }],
+                })
+                .then(() => {
+                    // Result
+                    this.detailsFormLoading = false
+                    this.success = 'Quiz successfully created.'
+
+                    this.$refs.detailsForm.reset()
+                })
+                .catch((error) => {
+                    // Error
+                    this.detailsFormLoading = false
+                    this.error = error.message
+                })
+        },
+
+        saveQuiz() {
+            // Creates a quiz
+            this.success = null
+            this.error = null
+            this.detailsFormLoading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: EditQuizMutation,
+                    variables: {
+                        input: this.editQuizValues,
+                    },
+                    update: (data) => {
+                        return data.quiz
+                    },
+                })
+                .then(() => {
+                    // Result
+                    this.detailsFormLoading = false
+                    this.success = 'Quiz successfully saved.'
+                })
+                .catch((error) => {
+                    // Error
+                    this.detailsFormLoading = false
+                    this.error = error.message
+                })
         },
     },
 }
