@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-overlay :value="true" v-if="userQuiz === null" align="center">
+        <v-overlay :value="true" v-if="!userQuiz" align="center">
             <v-progress-circular indeterminate size="80" />
             <h2 justify="space-around" style="margin-top: 20px">Loading...</h2>
             <p class="mt-2">
@@ -118,7 +118,7 @@ import Sidebar from '../components/Sidebar.vue'
 import Topbar from '../components/Topbar.vue'
 import SingleQuestion from './../components/SingleQuestion.vue'
 import AnswerList from './../components/AnswerList.vue'
-import { UserQuizzesQuery } from '../gql/queries/userQuiz'
+import { UserQuizQuery } from '../gql/queries/userQuiz'
 
 export default {
     components: {
@@ -138,22 +138,17 @@ export default {
     },
     apollo: {
         userQuiz: {
-            query: UserQuizzesQuery,
+            query: UserQuizQuery,
+            variables() {
+                return { quizID: this.$route.params.quizId }
+            },
             update: (data) => {
-                return data.userQuizzes[0]
+                return data.userQuiz
             },
         },
     },
     mounted() {
         this.onResize()
-    },
-    watch: {
-        userQuiz(val) {
-            this.$router.push({
-                name: 'Exam',
-                params: { quizId: val.id },
-            })
-        },
     },
     methods: {
         selectOneQuestion(index, id) {

@@ -8,6 +8,7 @@ import {
 export const QuestionsQuery = gql`
     query QuestionsQuery($quizID: ID!) {
         userQuiz(quizID: $quizID) {
+            id
             questions {
                 ...QuestionFragment
                 options {
@@ -26,6 +27,7 @@ export const QuestionsQuery = gql`
 export const QuestionQuery = gql`
     query QuestionQuery($quizID: ID!, $questionID: ID!) {
         userQuiz(quizID: $quizID) {
+            id
             question(id: $questionID) {
                 ...QuestionWithoutFlagFragment
             }

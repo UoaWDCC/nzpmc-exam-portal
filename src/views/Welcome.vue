@@ -55,11 +55,8 @@
                     <v-row>
                         <v-col class="col-12 text-center">
                             <v-btn
-                                v-if="
-                                    userQuiz != null &&
-                                    userQuiz.startTime == null
-                                "
-                                @click="startQuiz()"
+                                class="mr-3"
+                                @click="overlay = !overlay"
                                 large
                                 color="primary"
                             >
@@ -69,17 +66,57 @@
                                 </v-icon>
                             </v-btn>
                             <v-btn
-                                v-else
-                                to="/exam"
+                                v-if="getLocalStorage('currentQuizID') != null"
+                                @click="continueQuiz()"
                                 large
-                                color="primary"
-                                :disabled="!userQuiz"
+                                color="secondary"
+                                :disabled="!userQuizzes"
                             >
                                 Continue
                                 <v-icon right class="material-icons">
                                     navigate_next
                                 </v-icon>
                             </v-btn>
+                            <v-overlay :value="overlay" align="center">
+                                <template v-for="(item, index) in userQuizzes">
+                                    <v-row
+                                        :key="index"
+                                        justify="center"
+                                        class="mr-3"
+                                    >
+                                        <v-btn
+                                            v-if="item.startTime != null"
+                                            @click="continueQuiz(index)"
+                                            large
+                                            color="secondary"
+                                            class="mb-3"
+                                        >
+                                            Continue Quiz {{ index + 1 }}
+                                            <v-icon
+                                                right
+                                                class="material-icons"
+                                            >
+                                                navigate_next
+                                            </v-icon>
+                                        </v-btn>
+                                        <v-btn
+                                            v-else
+                                            @click="startQuiz(index)"
+                                            large
+                                            color="primary"
+                                            class="mb-3"
+                                        >
+                                            Quiz {{ index + 1 }}
+                                            <v-icon
+                                                right
+                                                class="material-icons"
+                                            >
+                                                navigate_next
+                                            </v-icon>
+                                        </v-btn>
+                                    </v-row>
+                                </template>
+                            </v-overlay>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -98,31 +135,47 @@ export default {
     },
     data() {
         return {
-            userQuiz: null,
+            userQuizzes: null,
+            overlay: false,
         }
     },
     apollo: {
-        userQuiz: {
+        userQuizzes: {
             query: UserQuizzesQuery,
             update: (data) => {
-                return data.userQuizzes[0]
+                return data.userQuizzes
             },
         },
     },
     methods: {
-        async startQuiz() {
+        getLocalStorage(key) {
+            return localStorage.getItem(key)
+        },
+        async startQuiz(index) {
             await this.$apollo.mutate({
                 mutation: EditQuizMutation,
                 variables: {
                     input: {
-                        userQuizID: this.userQuiz.id,
+                        userQuizID: this.userQuizzes[index].id,
                         startTime: new Date().valueOf(),
                     },
                 },
             })
+            localStorage.setItem('currentQuizID', this.userQuizzes[index].id)
             this.$router.push({
                 name: 'Exam',
-                params: { quizId: this.userQuiz.id },
+                params: { quizId: this.userQuizzes[index].id },
+            })
+        },
+        continueQuiz(index) {
+            const quizIdTemp =
+                typeof index === 'number'
+                    ? this.userQuizzes[index].id
+                    : localStorage.getItem('currentQuizID')
+
+            this.$router.push({
+                name: 'Exam',
+                params: { quizId: quizIdTemp },
             })
         },
     },

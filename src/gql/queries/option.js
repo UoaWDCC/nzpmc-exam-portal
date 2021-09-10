@@ -4,6 +4,7 @@ import { OptionFragment } from '../fragments/option'
 export const OptionsQuery = gql`
     query OptionsQuery($quizID: ID!, $questionID: ID!) {
         userQuiz(quizID: $quizID) {
+            id
             question(id: $questionID) {
                 id
                 options {
