@@ -24,7 +24,7 @@
         "express": "^4.17.1",
         "firebase-admin": "^9.11.1",
         "fireo": "^1.0.3",
-        "graphql": "^15.5.3",
+        "graphql": "^15.6.0",
         "handlebars": "^4.7.7",
         "lodash": "^4.17.21"
     },
@@ -39,7 +39,7 @@
         "eslint-plugin-promise": "5.1.0",
         "gaxios": "4.3.1",
         "jest": "^27.1.1",
-        "nodemon": "^2.0.12",
+        "nodemon": "^2.0.13",
         "prettier": "2.4.0"
     }
 }
