@@ -12,7 +12,7 @@
     "author": "NZPMC",
     "license": "0BSD",
     "engines": {
-        "node": ">=14.0.0"
+        "node": ">=16.0.0"
     },
     "dependencies": {
         "apollo-server-errors": "^3.0.1",
