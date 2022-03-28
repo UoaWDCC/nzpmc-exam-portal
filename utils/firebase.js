@@ -3,6 +3,7 @@ import axios from 'axios'
 
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
+    storageBucket: process.env.BUCKET,
 })
 
 const auth =
@@ -110,9 +111,12 @@ const resetUserPasswordEmail = async (email) => {
 
 const firestore = admin.firestore()
 
+const bucket = admin.storage().bucket()
+
 export {
     firestore,
     admin,
+    bucket,
     auth,
     addAdminClaim,
     addFirebaseUser,
