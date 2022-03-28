@@ -71,3 +71,7 @@ type UserQuizQuestion {
     created: DateTime
     modified: DateTime
 }
+
+type Image {
+    imageURI: String!
+}

@@ -1,3 +1,5 @@
+scalar Upload
+
 input AddUserInput {
     displayName: String
     email: String!
@@ -104,4 +106,9 @@ input EditUserQuizInput {
     score: Int
     startTime: DateTime
     endTime: DateTime
+}
+
+input ImageUploadInput {
+    questionID: ID!
+    image: Upload!
 }
