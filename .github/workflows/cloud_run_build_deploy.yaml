@@ -16,6 +16,7 @@ on:
     push:
         branches:
             - nzpmc-deploy
+    workflow_dispatch:
 
 name: Cloud Run Build and Deploy
 env:
