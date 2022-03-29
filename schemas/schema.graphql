@@ -20,4 +20,9 @@ type Query {
     """
     userQuizzes: [UserQuiz]
     userQuiz(quizID: ID!): UserQuiz
+
+    """
+    Image
+    """
+    image(questionID: ID!): [Image]!
 }

@@ -1,10 +1,12 @@
 import './utils/dotenv'
 import { ApolloServer } from 'apollo-server-express'
 import { readdirSync, readFileSync } from 'fs'
+import { graphqlUploadExpress } from 'graphql-upload'
 import express from 'express'
 import cors from 'cors'
 import resolvers from './resolvers'
 import { auth } from './utils/firebase'
+import { imageController } from './utils/cloudstorage'
 
 const schemaFiles = readdirSync('./schemas/').filter((file) =>
     file.endsWith('.graphql'),
@@ -30,6 +32,10 @@ const startApolloServer = async () => {
     const app = express()
 
     app.use(cors())
+
+    app.use(graphqlUploadExpress())
+
+    app.get('/images/:questionID/:filename', imageController)
 
     // Mount Apollo middleware here.
     server.applyMiddleware({

@@ -28,4 +28,10 @@ type Mutation {
     submitUserQuizQuestions(input: SubmissionInput): UserQuiz
 
     editUserQuiz(input: EditUserQuizInput!): UserQuiz
+
+
+    """
+    Image
+    """
+    image(input: ImageUploadInput!): Image
 }
