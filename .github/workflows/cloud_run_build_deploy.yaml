@@ -16,6 +16,7 @@ on:
     push:
         branches:
             - nzpmc-deploy
+    workflow_dispatch:
 
 name: Cloud Run Build and Deploy
 env:
@@ -30,6 +31,25 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
 
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v1
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+
+            - name: Login to DockerHub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build and push image
+              uses: docker/build-push-action@v2
+              with:
+                  context: .
+                  push: true
+                  tags: wdccprojects/nzpmc-backend:${{github.sha}}
+
             - name: Setup Cloud SDK
               uses: google-github-actions/setup-gcloud@v0.2.0
               with:
@@ -37,20 +57,12 @@ jobs:
                   service_account_key: ${{ secrets.GCP_SA_KEY }}
                   export_default_credentials: true # Set to true to authenticate the Cloud Run action
 
-            - name: Authorize Docker push
-              run: gcloud auth configure-docker
-
-            - name: Build and Push Container
-              run: |-
-                  docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} .
-                  docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
-
             - name: Deploy to Cloud Run
               id: deploy
               uses: google-github-actions/deploy-cloudrun@v0.4.0
               with:
                   service: ${{ env.SERVICE }}
-                  image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
+                  image: docker.io/wdccprojects/nzpmc-backend:${{github.sha}}
                   region: ${{ env.REGION }}
 
             - name: Show Output
