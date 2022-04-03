@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 export const AddQuizMutation = gql`
     mutation AddQuizMutation($input: AddQuizInput!) {
         addQuiz(input: $input) {
+            id
             name
             description
             duration
