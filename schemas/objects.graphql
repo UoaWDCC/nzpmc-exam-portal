@@ -76,3 +76,8 @@ type UserQuizQuestion {
 type Image {
     imageURI: String!
 }
+
+type UserPage {
+    users: [User!]!
+    pages: Int!
+}

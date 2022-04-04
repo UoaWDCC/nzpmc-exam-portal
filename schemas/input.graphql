@@ -112,3 +112,16 @@ input ImageUploadInput {
     questionID: ID!
     image: Upload!
 }
+
+input UsersOrderByInput {
+    displayName: Sort
+    firstName: Sort
+    lastName: Sort
+    email: Sort
+    yearLevel: Sort
+}
+
+enum Sort {
+    ASC
+    DESC
+}
