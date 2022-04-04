@@ -1,9 +1,24 @@
-import { getAllQuizzes, getQuestions, addQuiz, editQuiz } from '../controllers'
+import {
+    getUserQuiz,
+    getAllQuizzes,
+    getAllUserQuizzes,
+    getQuiz,
+    getQuestion,
+    getQuestions,
+    addQuiz,
+    editQuiz,
+} from '../controllers'
 import { AuthenticationError } from 'apollo-server-express'
 import { AdminAuthenticationError } from '../utils/errors'
 
 const resolvers = {
     Quiz: {
+        question: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
+            return await getQuestion(parents, args.id)
+        },
         questions: async (parents, args, context) => {
             if (!context.user) throw new AuthenticationError()
             if (!context.user.admin) throw new AdminAuthenticationError()
@@ -17,6 +32,12 @@ const resolvers = {
             if (!context.user.admin) throw new AdminAuthenticationError()
 
             return await getAllQuizzes()
+        },
+        quiz: async (parents, args, context) => {
+            if (!context.user) throw new AuthenticationError()
+            if (!context.user.admin) throw new AdminAuthenticationError()
+
+            return await getQuiz(args.quizID)
         },
     },
     Mutation: {
