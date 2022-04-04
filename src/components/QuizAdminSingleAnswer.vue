@@ -1,20 +1,20 @@
 <template>
     <v-radio
-        :value="answer.answerId"
+        :value="answer.id"
         on-icon="check_circle"
         off-icon="radio_button_unchecked"
         class="mb-2"
     >
         <template v-slot:label>
             <v-text-field
-                v-model="answer.text"
+                v-model="answer.option"
                 label="..."
                 solo
                 :background-color="
-                    correctAnswerId === answer.answerId ? 'primary' : 'white'
+                    correctAnswerId === answer.id ? 'primary' : 'white'
                 "
                 :class="
-                    (correctAnswerId === answer.answerId
+                    (correctAnswerId === answer.id
                         ? 'white--text'
                         : 'black--text') + ' ml-2'
                 "
@@ -30,6 +30,11 @@
                                 @click="openLatex"
                                 v-bind="attrs"
                                 v-on="on"
+                                :color="
+                                    correctAnswerId === answer.id
+                                        ? 'white'
+                                        : null
+                                "
                             >
                                 <v-icon>functions</v-icon>
                             </v-btn>
@@ -50,6 +55,11 @@
                                 @click="deleteAnswer"
                                 v-bind="attrs"
                                 v-on="on"
+                                :color="
+                                    correctAnswerId === answer.id
+                                        ? 'white'
+                                        : null
+                                "
                             >
                                 <v-icon>delete</v-icon>
                             </v-btn>
@@ -103,7 +113,7 @@ export default {
             this.showDialog = false
         },
         deleteAnswer() {
-            this.$emit('delete', this.answer.answerId)
+            this.$emit('delete', this.answer.id)
         },
     },
 }
