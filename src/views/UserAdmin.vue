@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import UsersDataTable from './../components/UsersDataTable.vue'
+import UsersDataTable from '../components/UsersDataTable.vue'
 
 export default {
     components: {
