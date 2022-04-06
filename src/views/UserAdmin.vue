@@ -1,17 +1,17 @@
 <template>
     <v-row>
         <v-col class="col-12">
-            <UserSearchBar />
+            <UsersDataTable />
         </v-col>
     </v-row>
 </template>
 
 <script>
-import UserSearchBar from './../components/UserSearchBar.vue'
+import UsersDataTable from './../components/UsersDataTable.vue'
 
 export default {
     components: {
-        UserSearchBar,
+        UsersDataTable,
     },
 }
 </script>
