@@ -69,12 +69,22 @@
                 <v-row>
                     <v-col class="d-flex justify-space-around">
                         <v-btn
+                            v-if="user"
                             type="submit"
                             color="primary"
                             :disabled="!formIsValid"
                         >
                             <v-icon left class="material-icons"> save</v-icon>
                             Save
+                        </v-btn>
+                        <v-btn
+                            v-else
+                            type="submit"
+                            color="primary"
+                            :disabled="!formIsValid"
+                        >
+                            <v-icon left class="material-icons"> create</v-icon>
+                            Create
                         </v-btn>
 
                         <v-btn color="error" @click="cancel"> Cancel </v-btn>
