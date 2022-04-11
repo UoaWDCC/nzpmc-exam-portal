@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { SubmitUserQuizMutation } from '../gql/mutations/submission'
+import { SubmitUserQuizMutation } from '@/gql/mutations/submission'
 export default {
     props: {
         quizID: String,

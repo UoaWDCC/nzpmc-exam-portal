@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import firebase from 'firebase'
-import Login from '../views/Login'
-import Welcome from '../views/Welcome'
-import Exam from '../views/Exam'
-import Submission from '../views/Submission'
-import Admin from '../views/Admin'
-import QuizAdmin from '../views/QuizAdmin'
-import QuizAdminDetails from '../views/QuizAdminDetails'
-import QuizAdminUsers from '../views/QuizAdminUsers'
-import QuizAdminQuestion from '../views/QuizAdminQuestion'
-import UserAdmin from '../views/UserAdmin'
+import Login from '@/components/Login'
+import Welcome from '@/components/Welcome'
+import Quiz from '@/components/Quiz/Quiz'
+import Submission from '@/components/Submission'
+import Admin from '@/components/Admin/Admin'
+import QuizAdmin from '@/components/Admin/Quiz/QuizAdmin'
+import QuizAdminDetails from '@/components/Admin/Quiz/QuizAdminDetails'
+import QuizAdminUsers from '@/components/Admin/Quiz/QuizAdminUsers'
+import QuizAdminQuestion from '@/components/Admin/Quiz/QuizAdminQuestion'
+import UserAdmin from '@/components/Admin/User/UserAdmin'
 
 Vue.use(VueRouter)
 
@@ -35,7 +35,7 @@ const routes = [
     {
         path: '/exam/:quizId',
         name: 'Exam',
-        component: Exam,
+        component: Quiz,
         meta: {
             title: 'Exam - NZPMC',
             authRequired: true,

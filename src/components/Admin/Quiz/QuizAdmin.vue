@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import QuizAdminSidebar from '../components/QuizAdminSidebar.vue'
+import QuizAdminSidebar from './QuizAdminSidebar.vue'
 
 export default {
     components: {

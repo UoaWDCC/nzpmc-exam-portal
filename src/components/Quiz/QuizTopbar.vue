@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import SignOutMenu from './SignOutMenu.vue'
-import { CurrentTimeQuery } from '../gql/queries/time'
-import { SubmitUserQuizMutation } from '../gql/mutations/submission'
+import SignOutMenu from '../SignOutMenu.vue'
+import { CurrentTimeQuery } from '@/gql/queries/time'
+import { SubmitUserQuizMutation } from '@/gql/mutations/submission'
 export default {
     components: {
         SignOutMenu,

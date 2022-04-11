@@ -6,7 +6,7 @@
                     style="width: 100%; max-width: 50px; padding-right: 10px"
                     class="d-block mx-auto"
                     alt="NZPMC"
-                    src="../assets/logo_small.png"
+                    src="@/assets/logo_small.png"
                 />
             </a>
             <v-toolbar-title class="me-4">NZPMC Admin</v-toolbar-title>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import SignOutMenu from '../components/SignOutMenu.vue'
+import SignOutMenu from '../SignOutMenu.vue'
 
 export default {
     components: {
