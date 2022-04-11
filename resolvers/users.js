@@ -1,6 +1,6 @@
 import {
     getUser,
-    getAllUsers,
+    getUsersPagination,
     addUser,
     editUser,
     addUserQuiz,
@@ -24,11 +24,22 @@ const resolvers = {
             if (!context.user) return
             return await getUser(context.user.uid)
         },
-        users: async (parents, args, context) => {
+        users: async (parents, { page, limit, orderBy }, context) => {
             if (!context.user) throw new AuthenticationError()
             if (!context.user.admin) throw new AdminAuthenticationError()
 
-            return await getAllUsers()
+            if (!page) {
+                page = 1
+            }
+
+            if (!limit) {
+                limit = 10
+            }
+
+            if (!orderBy) {
+                orderBy = { displayName: 'ASC' }
+            }
+            return await getUsersPagination(page, limit, orderBy)
         },
     },
     Mutation: {
