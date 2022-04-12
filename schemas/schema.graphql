@@ -11,7 +11,7 @@ type Query {
     Admin
     """
     user(userID: ID!): User
-    users(page: Int, limit: Int, orderBy: UsersOrderByInput): [User]!
+    users(page: Int, limit: Int, orderBy: UsersOrderByInput): UserPage!
 
     quizzes: [Quiz]
     quiz(quizID: ID!): Quiz

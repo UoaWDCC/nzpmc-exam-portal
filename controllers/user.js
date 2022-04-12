@@ -29,6 +29,52 @@ const getAllUsers = async () => {
     return packUsers(users)
 }
 
+const getUsersPagination = async (page, limit, orderBy) => {
+    if (page < 0) {
+        throw new Error('Page cannot be 0 or negative')
+    }
+
+    const order = getUsersOrderByInput(orderBy)
+    const limits = page * limit
+    console.log(order, limits)
+    const users = (await User.collection.orderBy(order).limit(limits).fetch()).list
+
+    // find length of pages
+    const total = Math.ceil(users.length / limit)
+
+    console.log(users.length)
+
+    users.splice(0, (page - 1) * limit)
+
+    console.log(users.length)
+
+    return {
+        total: total,
+        users: packUsers(users),
+    }
+}
+
+const getUsersOrderByInput = (orderBy) => {
+    const direction = (value, name) => (value === 'ASC' ? name : `-${name}`)
+
+    if (orderBy.displayName) {
+        return direction(orderBy.displayName, 'displayName')
+    }
+    if (orderBy.email) {
+        return direction(orderBy.email, 'email')
+    }
+    if (orderBy.firstName) {
+        return direction(orderBy.firstName, 'firstName')
+    }
+    if (orderBy.lastName) {
+        return direction(orderBy.lastName, 'lastName')
+    }
+    if (orderBy.yearLevel) {
+        return direction(orderBy.yearLevel, 'yearLevel')
+    }
+    throw new Error('Invalid orderBy input')
+}
+
 const addUser = async (
     id,
     displayName,
@@ -84,4 +130,4 @@ const editUser = async (
     })
 }
 
-export { getUser, getAllUsers, addUser, editUser }
+export { getUser, getAllUsers, getUsersPagination, addUser, editUser }
