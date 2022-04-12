@@ -6,7 +6,7 @@
                     style="width: 100%; max-width: 300px"
                     class="d-block mx-auto"
                     alt="NZPMC Logo"
-                    src="../assets/logo.png"
+                    src="@/assets/logo.png"
                 />
             </v-list-item-content>
         </v-list-item>
@@ -62,9 +62,9 @@
     </v-navigation-drawer>
 </template>
 <script>
-import { QuestionsQuery } from '../gql/queries/question'
-import SubmissionConfirmation from './SubmissionConfirmation.vue'
-import { UpdateFlagMutation } from '../gql/mutations/flag'
+import { QuestionsQuery } from '@/gql/queries/question'
+import SubmissionConfirmation from '../SubmissionConfirmation.vue'
+import { UpdateFlagMutation } from '@/gql/mutations/flag'
 export default {
     components: {
         SubmissionConfirmation,

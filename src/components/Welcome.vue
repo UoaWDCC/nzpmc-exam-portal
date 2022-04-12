@@ -125,7 +125,7 @@
     </v-container>
 </template>
 <script>
-import SignOutMenu from '../components/SignOutMenu.vue'
+import SignOutMenu from './SignOutMenu.vue'
 import { EditQuizMutation } from '../gql/mutations/userQuiz.js'
 import { UserQuizzesQuery } from '../gql/queries/userQuiz'
 

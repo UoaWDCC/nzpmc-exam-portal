@@ -19,7 +19,7 @@
     </div>
 </template>
 <script>
-import { QuestionQuery } from '../gql/queries/question'
+import { QuestionQuery } from '@/gql/queries/question'
 export default {
     props: {
         questionID: String,

@@ -133,8 +133,8 @@
 </style>
 
 <script>
-import { AdminQuizzesQuery } from '../gql/queries/adminQuiz'
-import { AdminQuizQuestionsQuery } from '../gql/queries/adminQuiz'
+import { AdminQuizzesQuery } from '@/gql/queries/adminQuiz'
+import { AdminQuizQuestionsQuery } from '@/gql/queries/adminQuiz'
 
 export default {
     data: () => ({

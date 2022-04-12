@@ -147,7 +147,7 @@
                         </v-btn>
                     </template>
                     <span>LaTeX Equations (CTRL+M)</span>
-                    <LatexDialog
+                    <QuizAdminLatexDialog
                         :showDialog="latexDialog"
                         :defaultValue="currentSelected"
                         @cancel="latexDialog = false"
@@ -239,11 +239,11 @@ math-field:focus-within {
 <script>
 // Code modified from https://github.com/ServiceStack/servicestack-editor
 import 'mathlive/dist/mathlive.min.js'
-import LatexDialog from '../components/LatexDialog'
+import QuizAdminLatexDialog from './QuizAdminLatexDialog'
 
 export default {
     components: {
-        LatexDialog,
+        QuizAdminLatexDialog,
     },
     data() {
         return {

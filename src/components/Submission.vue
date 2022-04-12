@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import SignOutMenu from './../components/SignOutMenu.vue'
+import SignOutMenu from './SignOutMenu.vue'
 
 export default {
     components: {

@@ -30,7 +30,7 @@
             <div style="flex: 1 1 0">
                 <v-row id="header">
                     <v-col class="col-12 pa-0 pa-md-3">
-                        <Topbar
+                        <QuizTopbar
                             @toggleSidebar="sidebarOpen = !sidebarOpen"
                             :startTimestamp="userQuiz.startTime"
                             :duration="userQuiz.duration"
@@ -42,7 +42,7 @@
                         elevation="2"
                         v-bind:class="{ hide: !sidebarOpen }"
                     >
-                        <Sidebar
+                        <QuizSidebar
                             :quizID="userQuiz.id"
                             :questionIndex="selectedQuestionIndex"
                             @selectQuestion="selectOneQuestion"
@@ -52,7 +52,7 @@
                 </v-row>
                 <v-row class="justify-center" id="content">
                     <v-col class="col-12">
-                        <SingleQuestion
+                        <QuizQuestion
                             :questionID="
                                 selectedQuestionID
                                     ? selectedQuestionID
@@ -63,7 +63,7 @@
                         />
                     </v-col>
                     <v-col class="col-12">
-                        <AnswerList
+                        <QuizAnswers
                             @selectQuestion="selectOneQuestion"
                             :questionID="
                                 selectedQuestionID
@@ -114,18 +114,18 @@
 }
 </style>
 <script>
-import Sidebar from '../components/Sidebar.vue'
-import Topbar from '../components/Topbar.vue'
-import SingleQuestion from './../components/SingleQuestion.vue'
-import AnswerList from './../components/AnswerList.vue'
-import { UserQuizQuery } from '../gql/queries/userQuiz'
+import QuizSidebar from './QuizSidebar.vue'
+import QuizTopbar from './QuizTopbar.vue'
+import QuizQuestion from './QuizQuestion.vue'
+import QuizAnswers from './QuizAnswers.vue'
+import { UserQuizQuery } from '@/gql/queries/userQuiz'
 
 export default {
     components: {
-        Sidebar,
-        Topbar,
-        AnswerList,
-        SingleQuestion,
+        QuizSidebar,
+        QuizTopbar,
+        QuizAnswers,
+        QuizQuestion,
     },
     data() {
         return {

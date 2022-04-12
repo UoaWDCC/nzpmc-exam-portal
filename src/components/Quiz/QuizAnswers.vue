@@ -6,7 +6,7 @@
                 v-for="option in question.options"
                 :key="option.id"
             >
-                <SingleAnswer
+                <QuizAnswer
                     :text="option.option"
                     :optionID="option.id"
                     :selectedID="
@@ -49,14 +49,14 @@
 </template>
 
 <script>
-import SingleAnswer from './SingleAnswer.vue'
-import { OptionsQuery } from '../gql/queries/option'
-import { UpdateUserAnswerMutation } from '../gql/mutations/option'
-import { QuestionsQuery } from '../gql/queries/question'
+import QuizAnswer from './QuizAnswer.vue'
+import { OptionsQuery } from '@/gql/queries/option'
+import { UpdateUserAnswerMutation } from '@/gql/mutations/option'
+import { QuestionsQuery } from '@/gql/queries/question'
 
 export default {
     components: {
-        SingleAnswer,
+        QuizAnswer,
     },
     props: {
         questionID: String,

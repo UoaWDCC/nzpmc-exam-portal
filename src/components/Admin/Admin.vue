@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import AdminTopbar from '../components/AdminTopbar.vue'
+import AdminTopbar from './AdminTopbar.vue'
 
 export default {
     components: {

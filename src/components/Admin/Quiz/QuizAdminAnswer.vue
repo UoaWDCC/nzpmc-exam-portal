@@ -38,7 +38,7 @@
                             >
                                 <v-icon>functions</v-icon>
                             </v-btn>
-                            <LatexDialog
+                            <QuizAdminLatexDialog
                                 :showDialog="showDialog"
                                 :defaultValue="currentSelected"
                                 @cancel="showDialog = false"
@@ -73,10 +73,10 @@
 </template>
 
 <script>
-import LatexDialog from '../components/LatexDialog'
+import QuizAdminLatexDialog from './QuizAdminLatexDialog'
 export default {
     components: {
-        LatexDialog,
+        QuizAdminLatexDialog,
     },
     data() {
         return {

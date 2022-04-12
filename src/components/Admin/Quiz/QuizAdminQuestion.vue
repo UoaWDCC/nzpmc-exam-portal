@@ -40,7 +40,7 @@
                         ></v-skeleton-loader>
                     </template>
 
-                    <Editor
+                    <QuizAdminEditor
                         label="Question text"
                         :value="question"
                         @input="updateQuestion"
@@ -77,7 +77,7 @@
                         </template>
 
                         <template v-if="!loading">
-                            <QuizAdminSingleAnswer
+                            <QuizAdminAnswer
                                 :answer="option"
                                 :correctAnswerId="answerId"
                                 @deleteAnswer="deleteAnswer"
@@ -143,14 +143,14 @@ input {
 </style>
 
 <script>
-import Editor from '../components/Editor'
-import QuizAdminSingleAnswer from '../components/QuizAdminSingleAnswer'
-import { AdminQuizQuestionDetailsQuery } from '../gql/queries/adminQuiz'
+import QuizAdminEditor from './QuizAdminEditor'
+import QuizAdminAnswer from './QuizAdminAnswer'
+import { AdminQuizQuestionDetailsQuery } from '@/gql/queries/adminQuiz'
 
 export default {
     components: {
-        Editor,
-        QuizAdminSingleAnswer,
+        QuizAdminEditor,
+        QuizAdminAnswer,
     },
     data() {
         return {

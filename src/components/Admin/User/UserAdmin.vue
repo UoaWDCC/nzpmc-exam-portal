@@ -1,45 +1,47 @@
 <template>
-    <div>
-        <v-card>
-            <v-row>
-                <v-col class="col-10 mb-6 mr-6 ml-4">
-                    <v-text-field
-                        v-model="search"
-                        label="Search"
-                    ></v-text-field>
-                </v-col>
-                <v-col class="mt-2">
-                    <UserDetailModal />
-                </v-col>
-            </v-row>
-            <v-data-table
-                :headers="headers"
-                :items="users"
-                item-key="name"
-                :options.sync="options"
-                :server-items-length="totalUsers"
-                :loading="loading"
-                class="elevation-1"
-                :footer-props="{
-                    'items-per-page-options': [50],
-                }"
-            >
-                <template v-slot:item.actions="{ item }">
-                    <v-row class="mx-0">
-                        <UserDetailModal :user="item" />
-                        <DeleteUser :user="item" />
-                    </v-row>
-                </template>
-            </v-data-table>
-        </v-card>
-    </div>
+    <v-row>
+        <v-col class="col-12">
+            <v-card>
+                <v-row>
+                    <v-col class="col-10 mb-6 mr-6 ml-4">
+                        <v-text-field
+                            v-model="search"
+                            label="Search"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col class="mt-2">
+                        <UserDetailModal />
+                    </v-col>
+                </v-row>
+                <v-data-table
+                    :headers="headers"
+                    :items="users"
+                    item-key="name"
+                    :options.sync="options"
+                    :server-items-length="totalUsers"
+                    :loading="loading"
+                    class="elevation-1"
+                    :footer-props="{
+                        'items-per-page-options': [50],
+                    }"
+                >
+                    <template v-slot:item.actions="{ item }">
+                        <v-row class="mx-0">
+                            <UserAdminDetails :user="item" />
+                            <UserAdminDelete :user="item" />
+                        </v-row>
+                    </template>
+                </v-data-table>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
-import UserDetailModal from '../components/UserDetailModal.vue'
-import DeleteUser from '../components/DeleteUser.vue'
+import UserAdminDetails from './UserAdminDetails.vue'
+import UserAdminDelete from './UserAdminDelete.vue'
 export default {
-    components: { UserDetailModal, DeleteUser },
+    components: { UserAdminDetails, UserAdminDelete },
     data() {
         return {
             search: '',
@@ -79,7 +81,7 @@ export default {
             })
         },
         fakeApiCall() {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 const { sortBy, sortDesc, page, itemsPerPage } = this.options
 
                 let items = this.getUsers()

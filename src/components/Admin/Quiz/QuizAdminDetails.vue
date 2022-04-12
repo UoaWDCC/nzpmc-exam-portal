@@ -269,9 +269,9 @@
 </style>
 
 <script>
-import { AdminQuizDetailsQuery } from '../gql/queries/adminQuiz'
-import { AddQuizMutation, EditQuizMutation } from '../gql/mutations/adminQuiz'
-import { AdminQuizzesQuery } from '../gql/queries/adminQuiz'
+import { AdminQuizDetailsQuery } from '@/gql/queries/adminQuiz'
+import { AddQuizMutation, EditQuizMutation } from '@/gql/mutations/adminQuiz'
+import { AdminQuizzesQuery } from '@/gql/queries/adminQuiz'
 
 export default {
     data() {
