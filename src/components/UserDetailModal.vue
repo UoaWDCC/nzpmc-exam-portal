@@ -2,13 +2,24 @@
     <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
             <div class="text-center">
-                <v-btn color="primary" fab small v-bind="attrs" v-on="on">
+                <v-icon v-if="user" v-bind="attrs" v-on="on" small class="mr-2"
+                    >edit</v-icon
+                >
+                <v-btn
+                    v-else
+                    color="primary"
+                    fab
+                    small
+                    v-bind="attrs"
+                    v-on="on"
+                >
                     <v-icon class="material-icons">add</v-icon>
                 </v-btn>
             </div>
         </template>
         <v-card elevation="2" class="pa-6">
-            <h1 class="mb-2">Create User</h1>
+            <h1 v-if="user" class="mb-2">Edit User</h1>
+            <h1 v-else class="mb-2">Create User</h1>
             <v-form ref="userForm" v-model="formIsValid">
                 <v-row dense>
                     <v-col class="col">
@@ -58,13 +69,21 @@
                 <v-row>
                     <v-col class="d-flex justify-space-around">
                         <v-btn
+                            v-if="user"
                             type="submit"
                             color="primary"
                             :disabled="!formIsValid"
                         >
-                            <v-icon left class="material-icons">
-                                create
-                            </v-icon>
+                            <v-icon left class="material-icons"> save</v-icon>
+                            Save
+                        </v-btn>
+                        <v-btn
+                            v-else
+                            type="submit"
+                            color="primary"
+                            :disabled="!formIsValid"
+                        >
+                            <v-icon left class="material-icons"> create</v-icon>
                             Create
                         </v-btn>
 
@@ -88,10 +107,10 @@ export default {
         return {
             dialog: false,
             quizzes: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-            userName: null,
+            userName: this.user ? this.user.displayName : null,
             userPassword: null,
-            userYearLevel: null,
-            userEmail: null,
+            userYearLevel: this.user ? this.user.yearLevel : null,
+            userEmail: this.user ? this.user.email : null,
             associatedQuiz: null,
             userForm: null,
             formIsValid: null,
@@ -100,13 +119,11 @@ export default {
             },
         }
     },
+    props: {
+        user: Object,
+    },
     methods: {
         cancel() {
-            this.userName = null
-            this.userPassword = null
-            this.userYearLevel = null
-            this.userEmail = null
-            this.associatedQuiz = null
             this.dialog = false
         },
     },
