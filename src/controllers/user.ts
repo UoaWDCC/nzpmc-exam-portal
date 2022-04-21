@@ -63,7 +63,7 @@ const getUsersOrderByInput = (orderBy: Schema.UsersOrderByInput): string => {
 
 const addUser = async (
     id: string,
-    displayName: string,
+    displayName: string = '',
     email: string,
     photoURL: string,
     firstName: string,

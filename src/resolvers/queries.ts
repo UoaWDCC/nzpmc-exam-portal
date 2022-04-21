@@ -8,7 +8,7 @@ import {
 } from '../controllers'
 import { AuthenticationError } from '../utils/errors'
 import { bucket, UserContext } from '../utils/firebase'
-import { admin } from './helpers/auth'
+import { admin, user } from './helpers/auth'
 import {
     Image,
     Maybe,
@@ -143,13 +143,15 @@ const userQuizzesQuery: Resolver<
 }
 
 const queryResolvers: QueryResolvers = {
-    currentTime: currentTimeQuery,
-    image: imageQuery,
-    me: meQuery,
-    quiz: quizQuery,
-    quizzes: quizzesQuery,
+    currentTime: user(currentTimeQuery),
+    image: user(imageQuery),
+    me: user(meQuery),
+    quiz: admin(quizQuery),
+    quizzes: admin(quizzesQuery),
     user: admin(userQuery),
-    userQuiz: userQuizQuery,
-    userQuizzes: userQuizzesQuery,
+    userQuiz: admin(userQuizQuery),
+    userQuizzes: admin(userQuizzesQuery),
     users: admin(usersQuery),
 }
+
+export default queryResolvers

@@ -35,7 +35,7 @@ const addAdminClaim = async (uid: string): Promise<void> => {
 }
 
 const addFirebaseUser = async (
-    displayName: string,
+    displayName: string | undefined,
     firstName: string,
     lastName: string,
     photoURL: string,
