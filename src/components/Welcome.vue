@@ -31,7 +31,7 @@
                             <h1>Kia ora!</h1>
                             <p>
                                 Welcome to the New Zealand Physics and
-                                Mathematics Competition 2021. Please ensure you
+                                Mathematics Competition 2022. Please ensure you
                                 have watched the introduction video before you
                                 start.
                             </p>
