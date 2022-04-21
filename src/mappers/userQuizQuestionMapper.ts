@@ -1,23 +1,25 @@
 import { Question, UserQuizQuestion } from '../models'
-import { UserQuizQuestion as SchemaUserQuizQuestion } from '../resolvers/resolvers-types'
+import { UserQuizQuestionModel } from '../resolvers/custom/userQuizQuestionModel'
 
 interface PackQuizQuestion {
+    userQuizID: string
     quizQuestion: Question
     userQuizQuestion: UserQuizQuestion
 }
 
 const packUserQuizQuestion = ({
+    userQuizID,
     quizQuestion,
     userQuizQuestion,
-}: PackQuizQuestion): SchemaUserQuizQuestion => {
+}: PackQuizQuestion): UserQuizQuestionModel => {
     return {
+        userQuizID,
         id: quizQuestion.id,
         question: quizQuestion.question,
         imageURI: quizQuestion.imageURI,
         flag: !!userQuizQuestion.flag,
         firstViewed: userQuizQuestion.firstViewed,
         lastAnswered: userQuizQuestion.lastAnswered,
-        options: [], //TODO
         created: quizQuestion.created,
         modified: quizQuestion.modified,
     }
@@ -25,6 +27,6 @@ const packUserQuizQuestion = ({
 
 const packUserQuizQuestions = (
     userQuizQuestions: PackQuizQuestion[],
-): SchemaUserQuizQuestion[] => userQuizQuestions.map(packUserQuizQuestion)
+): UserQuizQuestionModel[] => userQuizQuestions.map(packUserQuizQuestion)
 
 export { packUserQuizQuestion, packUserQuizQuestions, PackQuizQuestion }

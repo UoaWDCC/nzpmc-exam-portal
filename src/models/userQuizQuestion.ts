@@ -10,7 +10,7 @@ class UserQuizQuestion {
     @Type(() => FirestoreDocumentReference)
     answer: FirestoreDocumentReference | null = null
 
-    flag: boolean = false
+    flag = false
     firstViewed: Date | null = null
     lastAnswered: Date | null = null
 

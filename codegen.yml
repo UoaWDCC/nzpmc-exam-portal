@@ -4,3 +4,8 @@ generates:
         plugins:
             - typescript
             - typescript-resolvers
+        config:
+            mappers:
+                Question: ./custom/questionModel#QuestionModel
+                UserQuiz: ./custom/userQuizModel#UserQuizModel
+                UserQuizQuestion: ./custom/userQuizQuestionModel#UserQuizQuestionModel

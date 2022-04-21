@@ -1,20 +1,26 @@
 import { Question } from '../models'
-import { Question as SchemaQuestion } from '../resolvers/resolvers-types'
+import { QuestionModel } from '../resolvers/custom/questionModel'
 
-const packQuestion = (question: Question): SchemaQuestion => {
+interface PackQuestion {
+    quizID: string
+    question: Question
+}
+
+const packQuestion = ({ quizID, question }: PackQuestion): QuestionModel => {
     return {
+        quizID,
         id: question.id,
         question: question.question,
         imageURI: question.imageURI,
         numOfAnswers: question.numOfAnswers,
         topics: question.topics,
-        //option: question.option, //TODO FIX
+        answer: question.answer,
         created: question.created,
         modified: question.modified,
     }
 }
 
-const packQuestions = (questions: Question[]): SchemaQuestion[] =>
+const packQuestions = (questions: PackQuestion[]): QuestionModel[] =>
     questions.map(packQuestion)
 
 export { packQuestion, packQuestions }

@@ -1,5 +1,6 @@
 import './utils/dotenv'
 import { ApolloServer } from 'apollo-server-express'
+import { PluginDefinition } from 'apollo-server-core'
 import { readdirSync, readFileSync } from 'fs'
 import { graphqlUploadExpress } from 'graphql-upload'
 import express from 'express'
@@ -8,11 +9,11 @@ import resolvers from './resolvers'
 import { auth } from './utils/firebase'
 import { imageController } from './utils/cloudstorage'
 
-const schemaFiles = readdirSync('./schemas/').filter((file: string) =>
+const schemaFiles = readdirSync('./src/schemas/').filter((file: string) =>
     file.endsWith('.graphql'),
 )
 const typeDefs = schemaFiles.map((path: string) => {
-    return readFileSync('./schemas/' + path).toString('utf-8')
+    return readFileSync('./src/schemas/' + path).toString('utf-8')
 })
 
 const port = process.env.PORT || 8080

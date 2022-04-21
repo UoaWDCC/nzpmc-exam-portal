@@ -6,7 +6,7 @@ import {
 } from './question'
 import {
     getQuestionOptions,
-    getOptionByQuestionID,
+    getOptionByID,
     addQuestionOption,
     editQuestionOption,
 } from './option'
@@ -32,7 +32,7 @@ import {
     addUserQuizQuestion,
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
-    getUserAnswerIDs,
+    getUserAnswers,
     submitUserQuizQuestions,
 } from './userQuizQuestion'
 
@@ -55,10 +55,10 @@ export {
     getUserQuizQuestions,
     addUserQuizQuestion,
     editUserQuizQuestion,
-    getOptionByQuestionID,
+    getOptionByID,
     getUserQuizQuestionOptions,
     addQuiz,
-    getUserAnswerIDs,
+    getUserAnswers,
     addUserQuiz,
     editQuiz,
     editUserQuiz,

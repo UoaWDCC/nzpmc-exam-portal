@@ -1,3 +1,6 @@
+/**
+ * Used to setup firestore in tests
+ */
 import admin from 'firebase-admin'
 import * as fireorm from 'fireorm'
 import dotenv from 'dotenv'

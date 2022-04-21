@@ -63,7 +63,7 @@ const getUsersOrderByInput = (orderBy: Schema.UsersOrderByInput): string => {
 
 const addUser = async (
     id: string,
-    displayName: string = '',
+    displayName = '',
     email: string,
     photoURL: string,
     firstName: string,
@@ -89,13 +89,13 @@ const addUser = async (
 
 const editUser = async (
     id: string,
-    displayName: string | undefined,
-    email: string | undefined,
-    photoURL: string | undefined,
-    firstName: string | undefined,
-    lastName: string | undefined,
-    yearLevel: string | undefined,
-    role: string | undefined,
+    displayName?: string,
+    email?: string,
+    photoURL?: string,
+    firstName?: string,
+    lastName?: string,
+    yearLevel?: string,
+    role?: string,
 ) => {
     return UserRepository.runTransaction(async (tran) => {
         const user = await tran.findById(id)

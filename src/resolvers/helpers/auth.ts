@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GraphQLResolveInfo } from 'graphql/type'
 import { AuthenticationError } from '../../utils/errors'
 import { AdminAuthenticationError } from '../../utils/errors'

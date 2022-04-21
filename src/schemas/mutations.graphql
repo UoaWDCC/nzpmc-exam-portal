@@ -25,10 +25,9 @@ type Mutation {
 
     editUserQuizQuestion(input: EditUserQuizQuestionInput!): UserQuizQuestion
 
-    submitUserQuizQuestions(input: SubmissionInput): UserQuiz
+    submitUserQuizQuestions(input: SubmissionInput!): UserQuiz
 
     editUserQuiz(input: EditUserQuizInput!): UserQuiz
-
 
     """
     Image

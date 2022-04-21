@@ -1,9 +1,13 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { QuestionModel } from './custom/questionModel';
+import { UserQuizModel } from './custom/userQuizModel';
+import { UserQuizQuestionModel } from './custom/userQuizQuestionModel';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -224,7 +228,7 @@ export type MutationImageArgs = {
 
 
 export type MutationSubmitUserQuizQuestionsArgs = {
-  input?: InputMaybe<SubmissionInput>;
+  input: SubmissionInput;
 };
 
 export type Option = {
@@ -476,16 +480,16 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Option: ResolverTypeWrapper<Option>;
   Query: ResolverTypeWrapper<{}>;
-  Question: ResolverTypeWrapper<Question>;
-  Quiz: ResolverTypeWrapper<Quiz>;
+  Question: ResolverTypeWrapper<QuestionModel>;
+  Quiz: ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'> & { question?: Maybe<ResolversTypes['Question']>, questions?: Maybe<Array<Maybe<ResolversTypes['Question']>>> }>;
   Sort: Sort;
   String: ResolverTypeWrapper<Scalars['String']>;
   SubmissionInput: SubmissionInput;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
   UserPage: ResolverTypeWrapper<UserPage>;
-  UserQuiz: ResolverTypeWrapper<UserQuiz>;
-  UserQuizQuestion: ResolverTypeWrapper<UserQuizQuestion>;
+  UserQuiz: ResolverTypeWrapper<UserQuizModel>;
+  UserQuizQuestion: ResolverTypeWrapper<UserQuizQuestionModel>;
   UsersOrderByInput: UsersOrderByInput;
 };
 
@@ -513,15 +517,15 @@ export type ResolversParentTypes = {
   Mutation: {};
   Option: Option;
   Query: {};
-  Question: Question;
-  Quiz: Quiz;
+  Question: QuestionModel;
+  Quiz: Omit<Quiz, 'question' | 'questions'> & { question?: Maybe<ResolversParentTypes['Question']>, questions?: Maybe<Array<Maybe<ResolversParentTypes['Question']>>> };
   String: Scalars['String'];
   SubmissionInput: SubmissionInput;
   Upload: Scalars['Upload'];
   User: User;
   UserPage: UserPage;
-  UserQuiz: UserQuiz;
-  UserQuizQuestion: UserQuizQuestion;
+  UserQuiz: UserQuizModel;
+  UserQuizQuestion: UserQuizQuestionModel;
   UsersOrderByInput: UsersOrderByInput;
 };
 
@@ -549,7 +553,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editUserQuiz?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationEditUserQuizArgs, 'input'>>;
   editUserQuizQuestion?: Resolver<Maybe<ResolversTypes['UserQuizQuestion']>, ParentType, ContextType, RequireFields<MutationEditUserQuizQuestionArgs, 'input'>>;
   image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationImageArgs, 'input'>>;
-  submitUserQuizQuestions?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, Partial<MutationSubmitUserQuizQuestionsArgs>>;
+  submitUserQuizQuestions?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationSubmitUserQuizQuestionsArgs, 'input'>>;
 };
 
 export type OptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Option'] = ResolversParentTypes['Option']> = {

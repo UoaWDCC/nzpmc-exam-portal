@@ -1,23 +1,24 @@
 {
     "firestore": {
-        "rules": "firestore.rules",
-        "indexes": "firestore.indexes.json"
+        "rules": "./firebase/firestore.rules",
+        "indexes": "./firebase/firestore.indexes.json"
     },
     "storage": {
-        "rules": "storage.rules"
+        "rules": "./firebase/storage.rules"
     },
     "emulators": {
         "auth": {
             "port": 9099
         },
         "firestore": {
-            "port": 8080
+            "port": 8081
         },
         "storage": {
             "port": 9199
         },
         "ui": {
-            "enabled": true
+            "enabled": true,
+            "port": 4001
         }
     }
 }

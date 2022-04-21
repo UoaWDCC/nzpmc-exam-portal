@@ -2,32 +2,32 @@ import { getRepository, runTransaction } from 'fireorm'
 import { packQuestion, packQuestions } from '../mappers/questionMapper'
 import { Question, Quiz } from '../models'
 import Option from '../models/option'
-import * as Schema from '../resolvers/resolvers-types'
+import { QuestionModel } from '../resolvers/custom/questionModel'
 import { NotFoundError } from '../utils/errors'
 import { firestore } from '../utils/firebase'
 
 const QuizRepository = getRepository(Quiz)
 
-const getQuestions = async (
-    schemaQuiz: Schema.Quiz,
-): Promise<Schema.Question[]> => {
+const getQuestions = async (quizID: string): Promise<QuestionModel[]> => {
     return QuizRepository.runTransaction(async (tran) => {
-        const quiz = await tran.findById(schemaQuiz.id)
+        const quiz = await tran.findById(quizID)
         if (!quiz || !quiz.questions) {
             return []
         }
 
         const questions = await quiz.questions.find()
-        return packQuestions(questions)
+        return packQuestions(
+            questions.map((question) => ({ quizID, question })),
+        )
     })
 }
 
 const getQuestion = async (
-    schemaQuiz: Schema.Quiz,
+    quizID: string,
     questionID: string,
-): Promise<Schema.Question> => {
+): Promise<QuestionModel> => {
     return QuizRepository.runTransaction(async (tran) => {
-        const quiz = await tran.findById(schemaQuiz.id)
+        const quiz = await tran.findById(quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
@@ -36,21 +36,21 @@ const getQuestion = async (
         if (!question) {
             throw new NotFoundError()
         }
-        return packQuestion(question)
+        return packQuestion({ quizID, question })
     })
 }
 
 const addQuestion = async (
-    schemaQuiz: Schema.Quiz,
+    quizID: string,
     q: string,
     imageURI: string,
     numOfAnswers: number,
     topics: string,
-): Promise<Schema.Question> => {
+): Promise<QuestionModel> => {
     return runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
 
-        const quiz = await QuizTranRepository.findById(schemaQuiz.id)
+        const quiz = await QuizTranRepository.findById(quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
@@ -77,22 +77,22 @@ const addQuestion = async (
 
         await quiz.questions.update(newQuestion)
 
-        return packQuestion(newQuestion)
+        return packQuestion({ quizID, question: newQuestion })
     })
 }
 
 const editQuestion = async (
-    schemaQuiz: Schema.Quiz,
+    quizID: string,
     id: string,
-    q: string | undefined,
-    imageURI: string | undefined,
-    numOfAnswers: number | undefined,
-    answer: string | undefined,
-    topics: string | undefined,
-): Promise<Schema.Question> => {
+    q?: string,
+    imageURI?: string,
+    numOfAnswers?: number,
+    answer?: string,
+    topics?: string,
+): Promise<QuestionModel> => {
     return runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
-        const quiz = await QuizTranRepository.findById(schemaQuiz.id)
+        const quiz = await QuizTranRepository.findById(quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
@@ -125,7 +125,7 @@ const editQuestion = async (
 
         quiz.questions.update(question)
 
-        return packQuestion(question)
+        return packQuestion({ quizID, question })
     })
 }
 

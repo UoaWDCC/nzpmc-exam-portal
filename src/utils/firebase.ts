@@ -1,4 +1,5 @@
 import admin, { auth } from 'firebase-admin'
+import * as fireorm from 'fireorm'
 import axios from 'axios'
 import { ExpressContext } from 'apollo-server-express'
 
@@ -35,7 +36,7 @@ const addAdminClaim = async (uid: string): Promise<void> => {
 }
 
 const addFirebaseUser = async (
-    displayName: string | undefined,
+    displayName: string,
     firstName: string,
     lastName: string,
     photoURL: string,
@@ -71,27 +72,23 @@ const addFirebaseUser = async (
             'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%'
         let pass = ''
         for (let i = 0; i < passwordLength; i++) {
-            let pos = Math.floor(Math.random() * chars.length)
+            const pos = Math.floor(Math.random() * chars.length)
             pass += chars.substring(pos, pos + 1)
         }
 
         password = pass
     }
 
-    try {
-        const userRecord = await admin.auth().createUser({
-            email: email,
-            emailVerified: false,
-            password: password,
-            displayName: displayName,
-            photoURL: photoURL,
-            disabled: false,
-        })
+    const userRecord = await admin.auth().createUser({
+        email,
+        emailVerified: false,
+        password,
+        displayName,
+        photoURL,
+        disabled: false,
+    })
 
-        return userRecord
-    } catch (err) {
-        throw err
-    }
+    return userRecord
 }
 
 /**
@@ -103,17 +100,15 @@ const resetUserPasswordEmail = (email: string): Promise<void> => {
     const apikey = process.env.PROJECT_API_KEY
     const sendEmailVerificationEndpoint = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apikey}`
 
-    try {
-        return axios.post(sendEmailVerificationEndpoint, {
-            requestType: 'PASSWORD_RESET',
-            email: email,
-        })
-    } catch (err) {
-        throw err
-    }
+    return axios.post(sendEmailVerificationEndpoint, {
+        requestType: 'PASSWORD_RESET',
+        email,
+    })
 }
 
 const firestore = admin.firestore()
+
+fireorm.initialize(firestore)
 
 const bucket = admin.storage().bucket()
 

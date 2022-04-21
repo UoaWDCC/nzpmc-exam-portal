@@ -40,12 +40,12 @@ const addQuiz = async (
 
 const editQuiz = async (
     id: string,
-    name: string | undefined,
-    description: string | undefined,
-    duration: number | undefined,
-    numOfQuestions: number | undefined,
-    startTime: Date | undefined,
-    endTime: Date | undefined,
+    name?: string,
+    description?: string,
+    duration?: number,
+    numOfQuestions?: number,
+    startTime?: Date,
+    endTime?: Date,
 ): Promise<Schema.Quiz> => {
     return QuizRepository.runTransaction(async (tran) => {
         const quiz = await tran.findById(id)

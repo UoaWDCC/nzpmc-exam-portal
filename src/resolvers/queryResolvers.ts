@@ -8,6 +8,7 @@ import {
 } from '../controllers'
 import { AuthenticationError } from '../utils/errors'
 import { bucket, UserContext } from '../utils/firebase'
+import { UserQuizModel } from './custom/userQuizModel'
 import { admin, user } from './helpers/auth'
 import {
     Image,
@@ -25,23 +26,22 @@ import {
     Sort,
     User,
     UserPage,
-    UserQuiz,
 } from './resolvers-types'
 
 const userQuery: Resolver<
     Maybe<ResolverTypeWrapper<User>>,
-    {},
+    unknown,
     UserContext,
     RequireFields<QueryUserArgs, 'userID'>
-> = async (parents, args, context) => {
+> = async (_parents, args, _context) => {
     return await getUser(args.userID)
 }
 const usersQuery: Resolver<
     ResolverTypeWrapper<UserPage>,
-    {},
+    unknown,
     UserContext,
     Partial<QueryUsersArgs>
-> = (parents, { page, limit, orderBy }, context) => {
+> = (_parents, { page, limit, orderBy }, _context) => {
     if (!page) {
         page = 1
     }
@@ -58,26 +58,26 @@ const usersQuery: Resolver<
 
 const meQuery: Resolver<
     Maybe<ResolverTypeWrapper<User>>,
-    {},
+    unknown,
     UserContext,
-    {}
-> = (parents, args, context) => {
+    unknown
+> = (_parents, _args, context) => {
     if (context.user === undefined) {
         throw new AuthenticationError()
     }
     return getUser(context.user.uid)
 }
 
-const currentTimeQuery = (parents, args, context) => {
+const currentTimeQuery = (_parents, _args, _context) => {
     return new Date()
 }
 
 const imageQuery: Resolver<
     Maybe<ResolverTypeWrapper<Image>>[],
-    {},
+    unknown,
     UserContext,
     RequireFields<QueryImageArgs, 'questionID'>
-> = async (parents, { questionID }, context) => {
+> = async (_parents, { questionID }, _context) => {
     const [files] = await bucket.getFiles({
         prefix: `images/${questionID}`,
     })
@@ -91,33 +91,33 @@ const imageQuery: Resolver<
 
 const quizQuery: Resolver<
     Maybe<ResolverTypeWrapper<Quiz>>,
-    {},
+    unknown,
     UserContext,
     RequireFields<QueryQuizArgs, 'quizID'>
-> = (parents, { quizID }, context) => {
+> = (_parents, { quizID }, _context) => {
     return getQuiz(quizID)
 }
 
 const quizzesQuery: Resolver<
     Maybe<Maybe<ResolverTypeWrapper<Quiz>>[]>,
-    {},
+    unknown,
     UserContext,
-    {}
-> = (parents, args, context) => {
+    unknown
+> = (_parents, _args, _context) => {
     return getAllQuizzes()
 }
 
 const userQuizQuery: Resolver<
-    Maybe<ResolverTypeWrapper<UserQuiz>>,
-    {},
+    Maybe<ResolverTypeWrapper<UserQuizModel>>,
+    unknown,
     UserContext,
     RequireFields<QueryUserQuizArgs, 'quizID'>
-> = async (parents, args, context) => {
+> = async (_parents, args, context) => {
     if (context.user === undefined) {
         throw new AuthenticationError()
     }
     const userQuiz = await getUserQuiz(args.quizID)
-    const user = await userQuiz.userObj.get()
+    const user = await getUser(userQuiz.userID)
 
     if (user.id !== context.user.uid && !context.user.admin)
         throw new AuthenticationError()
@@ -125,17 +125,17 @@ const userQuizQuery: Resolver<
     if (!context.user.admin) {
         // If the quiz isn't started yet, throw error
         if (!userQuiz.startTime) throw new AuthenticationError()
-        userQuiz.score = null
+        userQuiz.score = undefined
     }
     return userQuiz
 }
 
 const userQuizzesQuery: Resolver<
-    Maybe<Maybe<ResolverTypeWrapper<UserQuiz>>[]>,
-    {},
+    Maybe<Maybe<ResolverTypeWrapper<UserQuizModel>>[]>,
+    unknown,
     UserContext,
-    {}
-> = (parents, args, context) => {
+    unknown
+> = (_parents, _args, context) => {
     if (context.user === undefined) {
         throw new AuthenticationError()
     }

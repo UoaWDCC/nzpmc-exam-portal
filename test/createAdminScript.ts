@@ -14,11 +14,11 @@ admin.initializeApp({
 })
 
 // Only applies after refreshing the token
-const addAdminClaim = async (uid: string) => {
+const addAdminClaim = async (uid) => {
     admin.auth().setCustomUserClaims(uid, { admin: true })
 }
 
-let args = process.argv.slice(2)
+const args = process.argv.slice(2)
 
 console.log('Create Admin Script:', args)
 

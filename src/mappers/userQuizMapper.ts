@@ -1,13 +1,20 @@
 import { Quiz, UserQuiz } from '../models'
-import { UserQuiz as SchemaUserQuiz } from '../resolvers/resolvers-types'
+import { UserQuizModel } from '../resolvers/custom/userQuizModel'
 
 interface PackUserQuiz {
+    userID: string
     quiz: Quiz
     userQuiz: UserQuiz
 }
 
-const packUserQuiz = ({ quiz, userQuiz }: PackUserQuiz): SchemaUserQuiz => {
+const packUserQuiz = ({
+    userID,
+    quiz,
+    userQuiz,
+}: PackUserQuiz): UserQuizModel => {
     return {
+        userID,
+        userQuizID: userQuiz.id,
         id: userQuiz.id,
         name: quiz.name,
         description: quiz.description,
@@ -20,7 +27,7 @@ const packUserQuiz = ({ quiz, userQuiz }: PackUserQuiz): SchemaUserQuiz => {
     }
 }
 
-const packUserQuizzes = (packUserQuizzes: PackUserQuiz[]): SchemaUserQuiz[] =>
+const packUserQuizzes = (packUserQuizzes: PackUserQuiz[]): UserQuizModel[] =>
     packUserQuizzes.map(packUserQuiz)
 
 export { packUserQuiz, packUserQuizzes, PackUserQuiz }

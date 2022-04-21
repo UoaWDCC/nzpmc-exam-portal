@@ -1,7 +1,7 @@
-import { Option, Question, Quiz, UserQuiz, UserQuizQuestion } from '../models'
+import { Quiz, UserQuiz, UserQuizQuestion } from '../models'
 import { getUserQuiz, setUserQuizScore } from './userQuiz'
-import { firestore as db, firestore } from '../utils/firebase'
-import { getRepository, runTransaction } from 'fireorm'
+import { firestore } from '../utils/firebase'
+import { runTransaction } from 'fireorm'
 import * as Schema from '../resolvers/resolvers-types'
 import { NotFoundError } from '../utils/errors'
 import {
@@ -9,12 +9,13 @@ import {
     packUserQuizQuestion,
     packUserQuizQuestions,
 } from '../mappers/userQuizQuestionMapper'
-import { packOption, packOptions } from '../mappers/optionMapper'
+import { packOptions } from '../mappers/optionMapper'
+import { UserQuizQuestionModel } from '../resolvers/custom/userQuizQuestionModel'
 
 const getUserQuizQuestion = async (
     userQuizID: string,
     id: string,
-): Promise<Schema.UserQuizQuestion> => {
+): Promise<UserQuizQuestionModel> => {
     return runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -32,11 +33,12 @@ const getUserQuizQuestion = async (
         const quizQuestion = await quiz.questions.findById(id)
         const userQuizQuestion = await userQuiz.questions.findById(id)
 
-        if (userQuizQuestion == null || quizQuestion == null) {
+        if (!userQuizQuestion || !quizQuestion) {
             throw new NotFoundError()
         }
 
         return packUserQuizQuestion({
+            userQuizID,
             quizQuestion,
             userQuizQuestion,
         })
@@ -45,7 +47,7 @@ const getUserQuizQuestion = async (
 
 const getUserQuizQuestions = async (
     userQuizID: string,
-): Promise<Schema.UserQuizQuestion[]> => {
+): Promise<UserQuizQuestionModel[]> => {
     return runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -72,6 +74,7 @@ const getUserQuizQuestions = async (
                 }
 
                 return {
+                    userQuizID,
                     quizQuestion,
                     userQuizQuestion,
                 }
@@ -85,7 +88,7 @@ const getUserQuizQuestions = async (
 const addUserQuizQuestion = async (
     userQuizID: string,
     questionID: string,
-): Promise<Schema.UserQuizQuestion> => {
+): Promise<UserQuizQuestionModel> => {
     return runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -127,9 +130,9 @@ const addUserQuizQuestion = async (
 const editUserQuizQuestion = async (
     userQuizID: string,
     questionID: string,
-    optionID: string | undefined,
-    flag: boolean | undefined,
-) => {
+    optionID?: string,
+    flag?: boolean,
+): Promise<UserQuizQuestionModel> => {
     return runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -221,23 +224,59 @@ const getUserQuizQuestionOptions = async (
     })
 }
 
-const getUserAnswerIDs = async (userQuizID: string): Promise<string[]> => {
-    const userQuizQuestions = await getUserQuizQuestions(userQuizID)
+interface UserAnswers {
+    userAnswerIDs: string[]
+    correctAnswerIDs: string[]
+}
 
-    const userAnswerIDs = (
-        await Promise.all(
+const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
+    return runTransaction(async (tran) => {
+        const UserQuizTranRepository = tran.getRepository(UserQuiz)
+        const QuizTranRepository = tran.getRepository(Quiz)
+
+        const userQuiz = await UserQuizTranRepository.findById(userQuizID)
+        if (!userQuiz || !userQuiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const quiz = await QuizTranRepository.findById(userQuiz.id)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const userQuizQuestions = await getUserQuizQuestions(userQuizID)
+
+        const userAnswerIDs = await Promise.all(
             userQuizQuestions.map(async (userQuizQuestion) => {
-                const answer = await userQuizQuestion.userAnswer
-                if (!answer) {
+                const userQuestion = await userQuiz.questions?.findById(
+                    userQuizQuestion.id,
+                )
+                if (!userQuestion || !userQuestion.answer) {
                     // Each question should have an answer
                     throw new NotFoundError()
                 }
-                return answer.id
+                return userQuestion.answer.id
             }),
         )
-    ).filter((question) => question !== null)
 
-    return userAnswerIDs
+        const correctAnswerIDs = await Promise.all(
+            userQuizQuestions.map(async (userQuizQuestion) => {
+                const question = await quiz.questions?.findById(
+                    userQuizQuestion.id,
+                )
+                if (!question) {
+                    // Each question should have a correct answer
+                    throw new NotFoundError()
+                }
+                return question.answer.id
+            }),
+        )
+
+        return {
+            userAnswerIDs,
+            correctAnswerIDs,
+        }
+    })
 }
 
 const submitUserQuizQuestions = async (
@@ -263,5 +302,5 @@ export {
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
     submitUserQuizQuestions,
-    getUserAnswerIDs,
+    getUserAnswers,
 }

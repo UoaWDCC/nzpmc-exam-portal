@@ -1,6 +1,6 @@
 import { getRepository } from 'fireorm'
 import { packOption, packOptions } from '../mappers/optionMapper'
-import { Option, Question, Quiz } from '../models'
+import { Option, Quiz } from '../models'
 import { NotFoundError } from '../utils/errors'
 import * as Schema from '../resolvers/resolvers-types'
 
@@ -26,7 +26,7 @@ const getQuestionOptions = async (
     })
 }
 
-const getOptionByQuestionID = async (
+const getOptionByID = async (
     quizID: string,
     questionID: string,
     optionID: string,
@@ -108,7 +108,7 @@ const editQuestionOption = async (
 
 export {
     getQuestionOptions,
-    getOptionByQuestionID,
+    getOptionByID,
     addQuestionOption,
     editQuestionOption,
 }
