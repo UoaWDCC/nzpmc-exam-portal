@@ -9,7 +9,9 @@
                     src="@/assets/logo_small.png"
                 />
             </a>
-            <v-toolbar-title class="me-4">NZPMC Admin</v-toolbar-title>
+            <v-toolbar-title class="me-4 font-weight-bold">
+                NZPMC Admin
+            </v-toolbar-title>
             <v-toolbar-items>
                 <v-btn text to="/admin/quiz">Quizzes</v-btn>
                 <v-btn text to="/admin/user">Users</v-btn>
