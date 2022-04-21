@@ -1,5 +1,4 @@
 import { getRepository } from 'fireorm'
-import { SchemaDefinitionNode } from 'graphql'
 import { packQuiz, packQuizzes } from '../mappers/quizMapper'
 import { Quiz } from '../models'
 import * as Schema from '../resolvers/resolvers-types'

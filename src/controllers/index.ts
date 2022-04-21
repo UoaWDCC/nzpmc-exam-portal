@@ -6,11 +6,9 @@ import {
 } from './question'
 import {
     getQuestionOptions,
-    getOptionKey,
     getOptionByQuestionID,
     addQuestionOption,
     editQuestionOption,
-    insertQuestionAnswer,
 } from './option'
 import { getAllQuizzes, getQuiz, addQuiz, editQuiz } from './quiz'
 import {
@@ -34,7 +32,6 @@ import {
     addUserQuizQuestion,
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
-    getUserQuizQuestionOptionsByQuestion,
     getUserAnswerIDs,
     submitUserQuizQuestions,
 } from './userQuizQuestion'
@@ -58,10 +55,8 @@ export {
     getUserQuizQuestions,
     addUserQuizQuestion,
     editUserQuizQuestion,
-    getOptionKey,
     getOptionByQuestionID,
     getUserQuizQuestionOptions,
-    getUserQuizQuestionOptionsByQuestion,
     addQuiz,
     getUserAnswerIDs,
     addUserQuiz,
@@ -69,7 +64,6 @@ export {
     editUserQuiz,
     addQuestionOption,
     editQuestionOption,
-    insertQuestionAnswer,
     submitUserQuizQuestions,
     setUserQuizScore,
     getUsersPagination,

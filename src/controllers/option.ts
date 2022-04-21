@@ -1,96 +1,114 @@
 import { getRepository } from 'fireorm'
 import { packOption, packOptions } from '../mappers/optionMapper'
-import { Option, Question } from '../models'
+import { Option, Question, Quiz } from '../models'
+import { NotFoundError } from '../utils/errors'
+import * as Schema from '../resolvers/resolvers-types'
 
-const OptionRepository = getRepository(Option)
+const QuizRepository = getRepository(Quiz)
 
-const getQuestionOptions = async (question) => {
-    const option = (await Option.collection.parent(question.key).fetch()).list
-    return packOptions(option)
-}
-
-const getOptionKey = async (optionKey) => {
-    const option = await Option.collection.get({ key: optionKey })
-    return packOption(option)
-}
-
-const getOptionByQuestionID = async (question, optionID) => {
-    let option
-    if (!question.answerObj || !question.answerObj.ref) {
-        option = await Option.collection.get({
-            key: question.key + '/Option/' + optionID,
-        })
-    } else {
-        const answer = await question.answerObj.get()
-        if (answer.id == optionID) {
-            option = answer
-        } else {
-            option = await Option.collection.get({
-                key: question.key + '/Option/' + optionID,
-            })
+const getQuestionOptions = async (
+    quizID: string,
+    questionID: string,
+): Promise<Schema.Option[]> => {
+    return QuizRepository.runTransaction(async (tran) => {
+        const quiz = await tran.findById(quizID)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
         }
-    }
 
-    return packOption(option)
-}
+        const question = await quiz.questions.findById(questionID)
+        if (!question || !question.options) {
+            throw new NotFoundError()
+        }
 
-const addQuestionOption = async (question, o) => {
-    const option = Option.init({ parent: question.key })
-
-    option.option = o
-    option.created = new Date()
-    option.modified = new Date()
-
-    await option.save()
-
-    return await getOptionKey(option.key)
-}
-
-const editQuestionOption = async (question, id, o) => {
-    const option = await Option.collection.get({
-        key: question.key + '/Option/' + id,
+        const options = await question.options.find()
+        return packOptions(options)
     })
-
-    option.option = o
-    option.created = option.created.toDate()
-    option.modified = new Date()
-
-    await option.update()
-
-    return packOption(option)
 }
 
-const insertQuestionAnswer = async (question, o) => {
-    let option, created
-    if (!question.answer || !question.answer.ref) {
-        option = Option.init()
-        created = new Date()
-    } else {
-        option = await Option.collection.get({ id: question.answer.id })
-        created = option.created.toDate()
-    }
+const getOptionByQuestionID = async (
+    quizID: string,
+    questionID: string,
+    optionID: string,
+): Promise<Schema.Option> => {
+    return QuizRepository.runTransaction(async (tran) => {
+        const quiz = await tran.findById(quizID)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
 
-    option.option = o
-    option.created = created
-    option.modified = new Date()
+        const question = await quiz.questions.findById(questionID)
+        if (!question || !question.options) {
+            throw new NotFoundError()
+        }
 
-    await option.save()
+        const option = await question.options.findById(optionID)
+        if (!option) {
+            throw new NotFoundError()
+        }
 
-    // update question with answer
-    const q = await Question.collection.get({ key: question.key })
-    q.answer = option.key
-    q.created = q.created.toDate()
-    q.modified = new Date()
-    await q.update()
+        return packOption(option)
+    })
+}
 
-    return packOption(option)
+const addQuestionOption = async (
+    quizID: string,
+    questionID: string,
+    o: string,
+) => {
+    return QuizRepository.runTransaction(async (tran) => {
+        const quiz = await tran.findById(quizID)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const question = await quiz.questions.findById(questionID)
+        if (!question || !question.options) {
+            throw new NotFoundError()
+        }
+
+        const option = new Option()
+        option.option = o
+
+        const newOption = await question.options.create(option)
+
+        return packOption(newOption)
+    })
+}
+
+const editQuestionOption = async (
+    quizID: string,
+    questionID: string,
+    optionID: string,
+    o: string,
+) => {
+    return QuizRepository.runTransaction(async (tran) => {
+        const quiz = await tran.findById(quizID)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const question = await quiz.questions.findById(questionID)
+        if (!question || !question.options) {
+            throw new NotFoundError()
+        }
+
+        const option = await question.options.findById(optionID)
+        if (!option) {
+            throw new NotFoundError()
+        }
+
+        option.option = o
+
+        const newOption = await question.options.create(option)
+
+        return packOption(newOption)
+    })
 }
 
 export {
     getQuestionOptions,
-    getOptionKey,
     getOptionByQuestionID,
     addQuestionOption,
     editQuestionOption,
-    insertQuestionAnswer,
 }

@@ -10,7 +10,6 @@ import * as Schema from '../resolvers/resolvers-types'
 import { firestore } from '../utils/firebase'
 import { NotFoundError } from '../utils/errors'
 
-const QuizRepository = getRepository(Quiz)
 const UserQuizRepository = getRepository(UserQuiz)
 
 const getUserQuiz = async (id: string): Promise<Schema.UserQuiz> => {

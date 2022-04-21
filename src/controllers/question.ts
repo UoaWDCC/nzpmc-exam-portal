@@ -1,7 +1,7 @@
 import { getRepository, runTransaction } from 'fireorm'
 import { packQuestion, packQuestions } from '../mappers/questionMapper'
-import { Question, Option, Quiz } from '../models'
-import Answer from '../models/answer'
+import { Question, Quiz } from '../models'
+import Option from '../models/option'
 import * as Schema from '../resolvers/resolvers-types'
 import { NotFoundError } from '../utils/errors'
 import { firestore } from '../utils/firebase'
@@ -49,7 +49,6 @@ const addQuestion = async (
 ): Promise<Schema.Question> => {
     return runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
-        const AnswerTranRepository = tran.getRepository(Answer)
 
         const quiz = await QuizTranRepository.findById(schemaQuiz.id)
         if (!quiz || !quiz.questions) {
@@ -63,15 +62,20 @@ const addQuestion = async (
         question.numOfAnswers = numOfAnswers
         question.topics = topics
 
-        const answer = new Answer()
+        const newQuestion = await quiz.questions.create(question)
+        if (!newQuestion.options) {
+            throw new NotFoundError()
+        }
+
+        const answer = new Option()
         answer.option = ''
 
-        const newAnswer = await AnswerTranRepository.create(answer)
+        const newAnswer = await newQuestion.options.create(answer)
 
         const docRef = firestore.collection('Answers').doc(newAnswer.id)
-        question.answer = docRef
+        newQuestion.answer = docRef
 
-        const newQuestion = await quiz.questions.create(question)
+        await quiz.questions.update(newQuestion)
 
         return packQuestion(newQuestion)
     })
@@ -88,7 +92,6 @@ const editQuestion = async (
 ): Promise<Schema.Question> => {
     return runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
-        const AnswerTranRepository = tran.getRepository(Answer)
         const quiz = await QuizTranRepository.findById(schemaQuiz.id)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
@@ -107,12 +110,17 @@ const editQuestion = async (
         question.topics = topics ? topics : question.topics
         question.modified = new Date()
 
-        if (answer !== undefined) {
-            const answerObj = await AnswerTranRepository.findById(
+        if (answer !== undefined && question.options) {
+            const answerObj = await question.options.findById(
                 question.answer.id,
             )
+
+            if (answerObj === null) {
+                throw new NotFoundError()
+            }
+
             answerObj.option = answer
-            await AnswerTranRepository.update(answerObj)
+            await question.options.update(answerObj)
         }
 
         quiz.questions.update(question)

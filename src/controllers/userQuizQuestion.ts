@@ -5,11 +5,11 @@ import { getRepository, runTransaction } from 'fireorm'
 import * as Schema from '../resolvers/resolvers-types'
 import { NotFoundError } from '../utils/errors'
 import {
+    PackQuizQuestion,
     packUserQuizQuestion,
     packUserQuizQuestions,
 } from '../mappers/userQuizQuestionMapper'
-
-const UserQuizRepository = getRepository(UserQuiz)
+import { packOption, packOptions } from '../mappers/optionMapper'
 
 const getUserQuizQuestion = async (
     userQuizID: string,
@@ -59,7 +59,7 @@ const getUserQuizQuestions = async (
 
         const quizQuestions = await quiz.questions.find()
 
-        const userQuizQuestions: Schema.UserQuizQuestion[] = await Promise.all(
+        const userQuizQuestions: PackQuizQuestion[] = await Promise.all(
             quizQuestions.map(async (quizQuestion) => {
                 if (!userQuiz || !userQuiz.questions) {
                     throw new NotFoundError()
@@ -71,18 +71,21 @@ const getUserQuizQuestions = async (
                     throw new NotFoundError()
                 }
 
-                return packUserQuizQuestion({
+                return {
                     quizQuestion,
                     userQuizQuestion,
-                })
+                }
             }),
         )
 
-        return userQuizQuestions
+        return packUserQuizQuestions(userQuizQuestions)
     })
 }
 
-const addUserQuizQuestion = async (userQuizID: string, questionID: string) => {
+const addUserQuizQuestion = async (
+    userQuizID: string,
+    questionID: string,
+): Promise<Schema.UserQuizQuestion> => {
     return runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -179,58 +182,68 @@ const editUserQuizQuestion = async (
     })
 }
 
-const getUserQuizQuestionOptions = async (quizQuestion) => {
+const getUserQuizQuestionOptions = async (
+    userQuizID: string,
+    questionID: string,
+): Promise<Schema.Option[]> => {
     return runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
 
-    const question = await userQuizQuestion.question.get()
+        const userQuiz = await UserQuizTranRepository.findById(userQuizID)
+        if (!userQuiz || !userQuiz.questions) {
+            throw new NotFoundError()
+        }
 
-    return await getUserQuizQuestionOptionsByQuestion(question)
+        const quiz = await QuizTranRepository.findById(userQuiz.id)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const quizQuestion = await quiz.questions.findById(questionID)
+        if (!quizQuestion || !quizQuestion.options) {
+            throw new NotFoundError()
+        }
+
+        const options = await quizQuestion.options.find()
+
+        let count = options.length,
+            randomnumber,
+            temp
+        while (count) {
+            randomnumber = (Math.random() * count--) | 0
+            temp = options[count]
+            options[count] = options[randomnumber]
+            options[randomnumber] = temp
+        }
+
+        return packOptions(options)
+    })
 }
 
-const getUserQuizQuestionOptionsByQuestion = async (question) => {
-    const options = (await Option.collection.parent(question.key).fetch()).list
+const getUserAnswerIDs = async (userQuizID: string): Promise<string[]> => {
+    const userQuizQuestions = await getUserQuizQuestions(userQuizID)
 
-    let answers
-    if (!question.answer || !question.answer.ref) {
-        answers = options
-    } else {
-        const answer = await question.answer.get()
-        answers = [answer, ...options]
-    }
-
-    let count = answers.length,
-        randomnumber,
-        temp
-    while (count) {
-        randomnumber = (Math.random() * count--) | 0
-        temp = answers[count]
-        answers[count] = answers[randomnumber]
-        answers[randomnumber] = temp
-    }
-
-    return packOptions(answers)
-}
-
-const getUserAnswerIDs = async (userQuiz) => {
-    const userQuizQuestions = await getUserQuizQuestions(userQuiz)
-
-    const userAnswerIDs = await Promise.all(
-        userQuizQuestions.map(async (userQuizQuestion) => {
-            const answer =
-                await userQuizQuestion.userQuizQuestionObj.answer.get()
-            return answer.id
-        }),
-    )
+    const userAnswerIDs = (
+        await Promise.all(
+            userQuizQuestions.map(async (userQuizQuestion) => {
+                const answer = await userQuizQuestion.userAnswer
+                if (!answer) {
+                    // Each question should have an answer
+                    throw new NotFoundError()
+                }
+                return answer.id
+            }),
+        )
+    ).filter((question) => question !== null)
 
     return userAnswerIDs
 }
 
 const submitUserQuizQuestions = async (
-    userQuizID,
-    userAnswers,
-    correctAnswers,
+    userQuizID: string,
+    userAnswers: string[],
+    correctAnswers: string[],
 ) => {
     // calculate score starting at index 0
     const calculatedScore = userAnswers.reduce((score, userAnswer, index) => {
@@ -249,7 +262,6 @@ export {
     addUserQuizQuestion,
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
-    getUserQuizQuestionOptionsByQuestion,
     submitUserQuizQuestions,
     getUserAnswerIDs,
 }

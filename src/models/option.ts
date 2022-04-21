@@ -1,6 +1,3 @@
-import { Collection } from 'fireorm'
-
-@Collection()
 class Option {
     id!: string
     option!: string

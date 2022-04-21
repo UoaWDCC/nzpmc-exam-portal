@@ -1,4 +1,3 @@
-import { Fireo } from 'fireo'
 import { getRepository } from 'fireorm'
 import { packUser, packUsers } from '../mappers/userMapper'
 import { User } from '../models'
