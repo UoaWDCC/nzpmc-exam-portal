@@ -241,18 +241,18 @@ export type Option = {
 
 export type Query = {
   __typename?: 'Query';
-  currentTime?: Maybe<Scalars['DateTime']>;
+  currentTime: Scalars['DateTime'];
   /** Image */
   image: Array<Maybe<Image>>;
   /** General */
-  me?: Maybe<User>;
-  quiz?: Maybe<Quiz>;
-  quizzes?: Maybe<Array<Maybe<Quiz>>>;
+  me: User;
+  quiz: Quiz;
+  quizzes: Array<Quiz>;
   /** Admin */
-  user?: Maybe<User>;
-  userQuiz?: Maybe<UserQuiz>;
+  user: User;
+  userQuiz: UserQuiz;
   /** User */
-  userQuizzes?: Maybe<Array<Maybe<UserQuiz>>>;
+  userQuizzes: Array<UserQuiz>;
   users: UserPage;
 };
 
@@ -565,14 +565,14 @@ export type OptionResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  currentTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  currentTime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   image?: Resolver<Array<Maybe<ResolversTypes['Image']>>, ParentType, ContextType, RequireFields<QueryImageArgs, 'questionID'>>;
-  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  quiz?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<QueryQuizArgs, 'quizID'>>;
-  quizzes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Quiz']>>>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'userID'>>;
-  userQuiz?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<QueryUserQuizArgs, 'quizID'>>;
-  userQuizzes?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserQuiz']>>>, ParentType, ContextType>;
+  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  quiz?: Resolver<ResolversTypes['Quiz'], ParentType, ContextType, RequireFields<QueryQuizArgs, 'quizID'>>;
+  quizzes?: Resolver<Array<ResolversTypes['Quiz']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'userID'>>;
+  userQuiz?: Resolver<ResolversTypes['UserQuiz'], ParentType, ContextType, RequireFields<QueryUserQuizArgs, 'quizID'>>;
+  userQuizzes?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType>;
   users?: Resolver<ResolversTypes['UserPage'], ParentType, ContextType, Partial<QueryUsersArgs>>;
 };
 

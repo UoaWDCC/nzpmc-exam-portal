@@ -12,7 +12,6 @@ import { UserQuizModel } from './custom/userQuizModel'
 import { admin, user } from './helpers/auth'
 import {
     Image,
-    Maybe,
     QueryImageArgs,
     QueryQuizArgs,
     QueryResolvers,
@@ -29,7 +28,7 @@ import {
 } from './resolvers-types'
 
 const userQuery: Resolver<
-    Maybe<ResolverTypeWrapper<User>>,
+    ResolverTypeWrapper<User>,
     unknown,
     UserContext,
     RequireFields<QueryUserArgs, 'userID'>
@@ -57,7 +56,7 @@ const usersQuery: Resolver<
 }
 
 const meQuery: Resolver<
-    Maybe<ResolverTypeWrapper<User>>,
+    ResolverTypeWrapper<User>,
     unknown,
     UserContext,
     unknown
@@ -73,7 +72,7 @@ const currentTimeQuery = (_parents, _args, _context) => {
 }
 
 const imageQuery: Resolver<
-    Maybe<ResolverTypeWrapper<Image>>[],
+    ResolverTypeWrapper<Image>[],
     unknown,
     UserContext,
     RequireFields<QueryImageArgs, 'questionID'>
@@ -90,7 +89,7 @@ const imageQuery: Resolver<
 }
 
 const quizQuery: Resolver<
-    Maybe<ResolverTypeWrapper<Quiz>>,
+    ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'>>,
     unknown,
     UserContext,
     RequireFields<QueryQuizArgs, 'quizID'>
@@ -99,7 +98,7 @@ const quizQuery: Resolver<
 }
 
 const quizzesQuery: Resolver<
-    Maybe<Maybe<ResolverTypeWrapper<Quiz>>[]>,
+    ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'>>[],
     unknown,
     UserContext,
     unknown
@@ -108,7 +107,7 @@ const quizzesQuery: Resolver<
 }
 
 const userQuizQuery: Resolver<
-    Maybe<ResolverTypeWrapper<UserQuizModel>>,
+    ResolverTypeWrapper<UserQuizModel>,
     unknown,
     UserContext,
     RequireFields<QueryUserQuizArgs, 'quizID'>
@@ -131,7 +130,7 @@ const userQuizQuery: Resolver<
 }
 
 const userQuizzesQuery: Resolver<
-    Maybe<Maybe<ResolverTypeWrapper<UserQuizModel>>[]>,
+    ResolverTypeWrapper<UserQuizModel>[],
     unknown,
     UserContext,
     unknown

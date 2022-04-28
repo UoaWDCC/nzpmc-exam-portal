@@ -87,7 +87,7 @@ const addQuestionMutation: Resolver<
 }
 
 const addQuizMutation: Resolver<
-    Maybe<ResolverTypeWrapper<Quiz>>,
+    Maybe<ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'>>>,
     unknown,
     UserContext,
     RequireFields<MutationAddQuizArgs, 'input'>
@@ -224,7 +224,7 @@ const editQuestionMutation: Resolver<
 }
 
 const editQuizMutation: Resolver<
-    Maybe<ResolverTypeWrapper<Quiz>>,
+    Maybe<ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'>>>,
     unknown,
     UserContext,
     RequireFields<MutationEditQuizArgs, 'input'>

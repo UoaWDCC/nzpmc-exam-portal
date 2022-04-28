@@ -4,23 +4,23 @@ type Query {
     """
     General
     """
-    me: User
-    currentTime: DateTime
+    me: User!
+    currentTime: DateTime!
 
     """
     Admin
     """
-    user(userID: ID!): User
+    user(userID: ID!): User!
     users(page: Int, limit: Int, orderBy: UsersOrderByInput): UserPage!
 
-    quizzes: [Quiz]
-    quiz(quizID: ID!): Quiz
+    quizzes: [Quiz!]!
+    quiz(quizID: ID!): Quiz!
 
     """
     User
     """
-    userQuizzes: [UserQuiz]
-    userQuiz(quizID: ID!): UserQuiz
+    userQuizzes: [UserQuiz!]!
+    userQuiz(quizID: ID!): UserQuiz!
 
     """
     Image

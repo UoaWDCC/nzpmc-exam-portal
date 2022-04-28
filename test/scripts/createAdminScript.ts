@@ -1,11 +1,13 @@
 import admin from 'firebase-admin'
 import dotenv from 'dotenv'
-dotenv.config()
+dotenv.config({ path: '../../env' })
 
 /**
  * How to use:
  * ```
- * ts-node createAdminScript <USER_UID>
+ * ts-node ./test/scripts/createAdminScript <USER_UID>
+ *
+ * ts-node ./test/scripts/createAdminScript mdLy2GYwTMZovNtnkj121dWU2YP2
  * ```
  */
 
