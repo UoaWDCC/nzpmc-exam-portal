@@ -149,6 +149,7 @@ export default {
                     .catch((error) => {
                         this.loginError = error.message
                     })
+                this.loading = false
                 onLogin(this.$apollo.provider.defaultClient)
             }
         },
