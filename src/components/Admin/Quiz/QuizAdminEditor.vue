@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card
-            elevation="2"
+            outlined
             v-if="!disabled"
             class="mb-2 pa-2 d-flex justify-space-between"
         >

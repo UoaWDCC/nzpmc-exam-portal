@@ -44,13 +44,25 @@
                         ></v-skeleton-loader>
                     </template>
 
-                    <QuizAdminEditor
-                        label="Question text"
-                        :value="question"
-                        @input="updateQuestion"
-                        :rules="[rules.required]"
-                        v-if="!loading"
-                    />
+                    <v-row>
+                        <v-col cols="12" lg="6">
+                            <QuizAdminEditor
+                                label="Question text"
+                                :value="question"
+                                @input="updateQuestion"
+                                :rules="[rules.required]"
+                                v-if="!loading"
+                            />
+                        </v-col>
+
+                        <v-col>
+                            <DisplayText
+                                :question="question"
+                                v-if="question"
+                                :key="question"
+                            />
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
 
@@ -166,6 +178,7 @@ input {
 
 <script>
 import QuizAdminEditor from './QuizAdminEditor'
+import DisplayText from '@/components/DisplayText'
 import QuizAdminAnswer from './QuizAdminAnswer'
 import {
     AddQuestionMutation,
@@ -177,6 +190,7 @@ import { AdminQuizQuestionDetailsQuery } from '@/gql/queries/adminQuiz'
 export default {
     components: {
         QuizAdminEditor,
+        DisplayText,
         QuizAdminAnswer,
     },
 

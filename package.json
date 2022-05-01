@@ -16,8 +16,10 @@
         "latex2vue": "^2.2.2",
         "material-icons": "^0.7.4",
         "mathlive": "0.69.4",
+        "showdown": "^2.1.0",
         "vue": "^2.6.11",
         "vue-apollo": "^3.0.7",
+        "vue-markdown-render": "^2.0.0",
         "vue-router": "^3.5.1",
         "vuetify": "^2.4.0"
     },
