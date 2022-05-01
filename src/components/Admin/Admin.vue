@@ -1,5 +1,5 @@
 <template>
-    <v-container class="d-flex flex-column" style="height: 100%">
+    <v-container fluid class="d-flex flex-column" style="height: 100%">
         <v-row>
             <v-col class="col-12">
                 <AdminTopbar />

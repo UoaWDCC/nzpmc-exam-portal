@@ -25,3 +25,53 @@ export const EditQuizMutation = gql`
         }
     }
 `
+
+export const AddQuestion = gql`
+    mutation AddQuestion($input: AddQuestionInput!) {
+        addQuestion(input: $input) {
+            id
+            question
+            imageURI
+            numOfAnswers
+            topics
+            answer {
+                id
+                option
+                created
+                modified
+            }
+            options {
+                id
+                option
+                created
+                modified
+            }
+            created
+            modified
+        }
+    }
+`
+
+export const AddQuestionMutation = gql`
+    mutation AddQuestionMutation($input: AddQuestionInput!) {
+        addQuestion(input: $input) {
+            question
+            numOfAnswers
+            topics
+            imageURI
+        }
+    }
+`
+
+export const EditQuestionMutation = gql`
+    mutation EditQuestionMutation($input: EditQuestionInput!) {
+        editQuestion(input: $input) {
+            id
+            quizID
+            question
+            numOfAnswers
+            topics
+            imageURI
+        }
+    }
+`

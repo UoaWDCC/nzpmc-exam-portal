@@ -4,8 +4,14 @@
             {{ createQuestionMode ? 'Create Question' : 'Question #' }}
         </h1>
 
-        <v-form ref="questionForm" v-model="formIsValid">
-            <v-row>
+        <v-form
+            @submit.prevent="
+                createQuestionMode ? createQuestion() : saveQuestion()
+            "
+            ref="questionForm"
+            v-model="formIsValid"
+        >
+            <v-row v-if="!createQuestionMode">
                 <v-col class="col col-12 col-sm-3 col-lg-2 col-xl-1">
                     <v-skeleton-loader
                         height="50"
@@ -24,8 +30,6 @@
 
             <v-row>
                 <v-col>
-                    <h2 class="text-h5 mb-4">Question Text</h2>
-
                     <template v-if="loading">
                         <v-skeleton-loader
                             height="50"
@@ -50,7 +54,7 @@
                 </v-col>
             </v-row>
 
-            <v-row>
+            <v-row v-if="!createQuestionMode">
                 <v-col>
                     <h2 class="text-h5 mb-4">Options</h2>
 
@@ -103,6 +107,24 @@
                 </v-col>
             </v-row>
 
+            <v-alert
+                type="success"
+                v-if="showSuccess"
+                v-text="success"
+                class="my-3"
+                dismissible
+                close-text="Close Alert"
+            >
+            </v-alert>
+
+            <v-alert
+                type="error"
+                v-if="showError"
+                v-text="error"
+                class="my-3"
+                dismissible
+            ></v-alert>
+
             <v-row>
                 <v-col class="col-12 d-flex justify-end">
                     <v-skeleton-loader
@@ -145,6 +167,11 @@ input {
 <script>
 import QuizAdminEditor from './QuizAdminEditor'
 import QuizAdminAnswer from './QuizAdminAnswer'
+import {
+    AddQuestionMutation,
+    AddQuestion,
+    EditQuestionMutation,
+} from '@/gql/mutations/adminQuiz'
 import { AdminQuizQuestionDetailsQuery } from '@/gql/queries/adminQuiz'
 
 export default {
@@ -152,61 +179,122 @@ export default {
         QuizAdminEditor,
         QuizAdminAnswer,
     },
+
     data() {
         return {
             // Form
-            questionForm: null,
+            questionFormLoading: false,
             formIsValid: null,
             rules: {
                 required: (value) => !!value || 'Required.',
             },
 
+            success: null,
+            showSuccess: false,
+            error: null,
+            showError: false,
+
             // Mathlive
             showDialog: false,
 
             // Fetch data
-            loading: true,
+            createQuestionMode: this.$route.name === 'QuizAdminCreateQuestion',
+            loading: this.$route.name !== 'QuizAdminCreateQuestion',
 
             id: null,
             question: null,
-            allOptions: null, // Store the answer combined with the options
+            allOptions: [], // Store the answer combined with the options
             answerId: null,
         }
-    },
-
-    computed: {
-        createQuestionMode() {
-            return this.$route.name === 'QuizAdminCreateQuestion'
-        },
     },
 
     watch: {
         questionDetails(val) {
             // Show values
-            this.id = val.id
-            this.question = val.question
-            this.answerId = val.answer.id
-            this.allOptions = [val.answer, ...val.options]
+            this.id = val?.id
+            this.question = val?.question
+            this.answerId = val?.answer?.id
+            this.allOptions = []
+            if (val?.answer) this.allOptions.push(val.answer)
+            if (val?.options.length > 0)
+                this.allOptions = [...this.allOptions, ...val.options]
 
             // Show inputs
             this.loading = false
+        },
+
+        success(val) {
+            this.showSuccess = !!val
+        },
+
+        error(val) {
+            this.showError = !!val
+        },
+    },
+
+    computed: {
+        addQuestionValues() {
+            return {
+                quizID: this.$route.params.quizId,
+                question: this.question,
+                numOfAnswers: 0,
+                topics: '',
+                imageURI: '',
+            }
         },
     },
 
     methods: {
         updateQuestion(val) {
-            this.question = val
+            if (val !== undefined) this.question = val
         },
 
-        insertLatex(value) {
+        insertLatex() {
             this.showDialog = false
-            console.log(value)
         },
 
         deleteAnswer(answerId) {
-            // Functionality not yet implemented
+            // TODO: Functionality not yet implemented
             console.log(answerId)
         },
+
+        createQuestion() {
+            // Creates a quiz
+            this.success = null
+            this.error = null
+            this.questionFormLoading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: AddQuestion,
+                    variables: {
+                        input: this.addQuestionValues,
+                    },
+                })
+                .then((data) => {
+                    // Result
+                    this.questionFormLoading = false
+                    this.success = 'Question successfully created.'
+
+                    this.$refs.questionForm.reset()
+
+                    // Redirect to new question
+                    this.$router.push({
+                        name: 'QuizAdminQuestion',
+                        params: {
+                            quizId: this.$route.params.quizId,
+                            questionId: data.data.addQuestion.id,
+                        },
+                    })
+                })
+                .catch((error) => {
+                    // Error
+                    this.detailsFormLoading = false
+                    this.error = error.message
+                })
+        },
+
+        saveQuestion() {},
     },
 
     apollo: {
@@ -220,6 +308,9 @@ export default {
             },
             update: (data) => {
                 return data.quiz.question
+            },
+            skip() {
+                return this.createQuestionMode
             },
         },
     },
