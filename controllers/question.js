@@ -40,9 +40,9 @@ const addQuestion = async (quiz, q, imageURI, numOfAnswers, topics) => {
     question.created = new Date()
     question.modified = new Date()
 
-    const answer = Answer.init()
-    answer.option = ""
-    question.answer = answer.key
+    const option = Option.init()
+    option.option = ""
+    question.answer = option.key
 
     await question.save()
 
