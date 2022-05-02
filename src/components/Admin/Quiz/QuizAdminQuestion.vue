@@ -98,7 +98,10 @@
                         <v-btn
                             type="submit"
                             color="primary"
-                            :disabled="!formIsValid"
+                            :disabled="
+                                !formIsValid ||
+                                originalQuestion === questionDetails.question
+                            "
                             v-if="!loading"
                         >
                             <v-icon left class="material-icons">
@@ -130,7 +133,7 @@
                     <QuizAdminOption
                         :text="questionDetails.answer.option"
                         selected
-                        v-else
+                        v-if="!loading && questionDetails.answer"
                     />
 
                     <h2 class="text-h5 my-4">Other options</h2>
@@ -190,7 +193,10 @@ input {
 import QuizAdminEditor from './QuizAdminEditor'
 import DisplayText from '@/components/DisplayText'
 import QuizAdminOption from './QuizAdminOption'
-import { AddQuestion } from '@/gql/mutations/adminQuiz'
+import {
+    AddQuestionMutation,
+    EditQuestionMutation,
+} from '@/gql/mutations/adminQuiz'
 import { AdminQuizQuestionDetailsQuery } from '@/gql/queries/adminQuiz'
 
 export default {
@@ -209,6 +215,7 @@ export default {
                 required: (value) => !!value || 'Required.',
             },
 
+            originalQuestion: '', // Store the unedited question
             success: null,
             showSuccess: false,
             error: null,
@@ -224,9 +231,11 @@ export default {
     },
 
     watch: {
-        questionDetails() {
+        questionDetails(val) {
             // Show inputs
             this.loading = false
+
+            this.originalQuestion = val.question
         },
 
         success(val) {
@@ -242,6 +251,17 @@ export default {
         addQuestionValues() {
             return {
                 quizID: this.$route.params.quizId,
+                question: this.questionDetails.question,
+                numOfAnswers: 0,
+                topics: '',
+                imageURI: '',
+            }
+        },
+
+        editQuestionValues() {
+            return {
+                quizID: this.$route.params.quizId,
+                id: this.$route.params.questionId,
                 question: this.questionDetails.question,
                 numOfAnswers: 0,
                 topics: '',
@@ -272,7 +292,7 @@ export default {
 
             this.$apollo
                 .mutate({
-                    mutation: AddQuestion,
+                    mutation: AddQuestionMutation,
                     variables: {
                         input: this.addQuestionValues,
                     },
@@ -300,7 +320,30 @@ export default {
                 })
         },
 
-        saveQuestion() {},
+        saveQuestion() {
+            // Creates a quiz
+            this.success = null
+            this.error = null
+            this.questionFormLoading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: EditQuestionMutation,
+                    variables: {
+                        input: this.editQuestionValues,
+                    },
+                })
+                .then(() => {
+                    // Result
+                    this.questionFormLoading = false
+                    this.success = 'Question successfully saved.'
+                })
+                .catch((error) => {
+                    // Error
+                    this.detailsFormLoading = false
+                    this.error = error.message
+                })
+        },
     },
 
     apollo: {
