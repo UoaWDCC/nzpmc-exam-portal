@@ -10,6 +10,7 @@
                     createQuestionMode ? createQuestion() : saveQuestion()
                 "
                 ref="questionForm"
+                :disabled="questionFormLoading"
                 v-model="formIsValid"
             >
                 <v-row v-if="!createQuestionMode">
@@ -102,8 +103,10 @@
                             color="primary"
                             :disabled="
                                 !formIsValid ||
-                                originalQuestion === questionDetails.question
+                                originalQuestion === questionDetails.question ||
+                                questionFormLoading
                             "
+                            :loading="questionFormLoading"
                             v-if="!loading"
                         >
                             <v-icon left class="material-icons">
@@ -133,9 +136,13 @@
                     </template>
 
                     <QuizAdminOption
-                        :text="questionDetails.answer.option"
+                        :text="
+                            questionDetails.answer
+                                ? questionDetails.answer.option
+                                : ''
+                        "
                         selected
-                        v-if="!loading && questionDetails.answer"
+                        v-if="!loading"
                     />
 
                     <h2 class="text-h5 my-4">Other options</h2>
@@ -158,16 +165,23 @@
                             v-else
                         />
 
+                        <v-alert
+                            type="error"
+                            v-if="showOptionError"
+                            class="mb-0"
+                            @click="showOptionError = false"
+                            style="cursor: pointer"
+                        >
+                            {{ optionError }}
+                        </v-alert>
+
                         <v-btn
                             outlined
                             class="pa-6"
                             style="line-height: 1.5"
-                            @click="
-                                allOptions.push({
-                                    id: Math.random(),
-                                    option: null,
-                                })
-                            "
+                            @click="addOption"
+                            :loading="addOptionLoading"
+                            :disabled="addOptionLoading"
                             v-if="!loading"
                         >
                             <v-icon left> add</v-icon> Add option
@@ -198,6 +212,7 @@ import QuizAdminOption from './QuizAdminOption'
 import {
     AddQuestionMutation,
     EditQuestionMutation,
+    AddOptionMutation,
 } from '@/gql/mutations/adminQuiz'
 import { AdminQuizQuestionDetailsQuery } from '@/gql/queries/adminQuiz'
 
@@ -229,6 +244,11 @@ export default {
             // Fetch data
             createQuestionMode: this.$route.name === 'QuizAdminCreateQuestion',
             loading: this.$route.name !== 'QuizAdminCreateQuestion',
+
+            // Options
+            addOptionLoading: false,
+            optionError: null,
+            showOptionError: false,
         }
     },
 
@@ -246,6 +266,10 @@ export default {
 
         error(val) {
             this.showError = !!val
+        },
+
+        optionError(val) {
+            this.showOptionError = !!val
         },
     },
 
@@ -284,6 +308,36 @@ export default {
         deleteAnswer(answerId) {
             // TODO: Functionality not yet implemented
             console.log(answerId)
+        },
+
+        addOption() {
+            // Creates a quiz
+            this.success = null
+            this.error = null
+            this.addOptionLoading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: AddOptionMutation,
+                    variables: {
+                        input: {
+                            quizID: this.$route.params.quizId,
+                            questionID: this.$route.params.questionId,
+                            option: '...',
+                        },
+                    },
+                })
+                .then((data) => {
+                    // Result
+                    this.addOptionLoading = false
+
+                    this.questionDetails.options.push(data.data.addOption)
+                })
+                .catch((error) => {
+                    // Error
+                    this.addOptionLoading = false
+                    this.optionError = error.message
+                })
         },
 
         createQuestion() {

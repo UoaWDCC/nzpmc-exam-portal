@@ -11,6 +11,8 @@
         >
             <DisplayText :text="text" v-if="text" :key="text" />
 
+            <div v-else>...</div>
+
             <v-dialog
                 align="center"
                 v-model="dialog"
@@ -52,7 +54,13 @@
                         </v-btn>
 
                         <v-btn color="primary" large>
-                            <v-icon left class="material-icons"> save </v-icon>
+                            <v-icon
+                                left
+                                class="material-icons"
+                                @click="$emit('update', option)"
+                            >
+                                save
+                            </v-icon>
                             Submit
                         </v-btn>
                     </v-card-actions>
