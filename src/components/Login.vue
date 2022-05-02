@@ -94,7 +94,13 @@
                         </v-row>
                         <v-row>
                             <v-col class="text-right">
-                                <v-btn large color="primary" type="submit">
+                                <v-btn
+                                    large
+                                    color="primary"
+                                    type="submit"
+                                    :loading="loading"
+                                    :disabled="loading"
+                                >
                                     <v-icon left class="material-icons">
                                         login
                                     </v-icon>
