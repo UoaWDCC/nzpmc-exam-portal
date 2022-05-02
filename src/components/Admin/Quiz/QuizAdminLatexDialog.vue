@@ -50,7 +50,7 @@ export default {
     props: ['showDialog', 'defaultValue'],
     methods: {
         insertLatex() {
-            this.$emit('insertLatex', this.$refs.latexEl.value)
+            this.$emit('insertLatex', `$${this.$refs.latexEl.value}$`)
             this.$refs.latexEl.value = ''
         },
         cancel() {

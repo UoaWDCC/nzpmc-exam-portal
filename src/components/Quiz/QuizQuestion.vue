@@ -8,7 +8,7 @@
 
             <div class="px-4 pb-4">
                 <DisplayText
-                    :question="question.question"
+                    :text="question.question"
                     v-if="question.question"
                     :key="question"
                 />
@@ -27,6 +27,7 @@
 <script>
 import DisplayText from '@/components/DisplayText'
 import { QuestionQuery } from '@/gql/queries/question'
+
 export default {
     components: {
         DisplayText,

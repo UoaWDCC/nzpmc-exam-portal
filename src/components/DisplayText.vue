@@ -1,14 +1,12 @@
 <template>
-    <div>
-        <latex :content="parsed" />
-    </div>
+    <latex :content="parsed" style="margin-bottom: -16px" />
 </template>
 
 <script>
 import showdown from 'showdown'
 
 export default {
-    props: ['question'],
+    props: ['text'],
 
     data() {
         return {
@@ -18,7 +16,7 @@ export default {
 
     computed: {
         parsed() {
-            return this.converter.makeHtml(this.question)
+            return this.converter.makeHtml(this.text)
         },
     },
 }
