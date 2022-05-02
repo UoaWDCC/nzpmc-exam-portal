@@ -58,7 +58,7 @@ const editQuestion = async (quiz, id, q, imageURI, numOfAnswers, answer, topics)
     question.topics = topics ? topics : question.topics
     question.modified = new Date()
     question.created = question.created.toDate()
-    question.answer = answer ? answer : (await question.answer.get()).key
+    question.answer = answer ? answer : (question.answer.ref ? (await question.answer.get()).key : undefined)
 
     await question.update()
 
