@@ -70,20 +70,22 @@
                 <v-alert
                     type="success"
                     v-if="showSuccess"
-                    v-text="success"
                     class="my-3"
-                    dismissible
-                    close-text="Close Alert"
+                    @click="showSuccess = false"
+                    style="cursor: pointer"
                 >
+                    {{ success }}
                 </v-alert>
 
                 <v-alert
                     type="error"
                     v-if="showError"
-                    v-text="error"
                     class="my-3"
-                    dismissible
-                ></v-alert>
+                    @click="showError = false"
+                    style="cursor: pointer"
+                >
+                    {{ error }}
+                </v-alert>
 
                 <v-row>
                     <v-col class="col-12 d-flex justify-end">
