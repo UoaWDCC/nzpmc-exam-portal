@@ -84,7 +84,6 @@
                                         navigate_next
                                     </v-icon>
                                 </v-btn>
-                                <!-- <v-overlay :value="overlay" align="center"> -->
                                 <v-card>
                                     <v-toolbar color="primary" dark>
                                         <h3>Quiz list</h3>
@@ -96,16 +95,15 @@
                                             <v-row
                                                 :key="index"
                                                 justify="center"
-                                                class="mr-3"
                                             >
-                                                <v-btn
+                                                <v-list-item
                                                     v-if="
                                                         item.startTime != null
                                                     "
                                                     @click="continueQuiz(index)"
                                                     large
                                                     color="secondary"
-                                                    class="mb-3"
+                                                    class="my-3"
                                                 >
                                                     Continue: {{ item.name }}
                                                     <v-icon
@@ -114,27 +112,26 @@
                                                     >
                                                         navigate_next
                                                     </v-icon>
-                                                </v-btn>
-                                                <v-btn
+                                                </v-list-item>
+                                                <v-list-item
                                                     v-else
                                                     @click="startQuiz(index)"
                                                     large
                                                     color="primary"
                                                     class="mb-3"
                                                 >
-                                                    Quiz: {{ item.name }}
+                                                    {{ item.name }}
                                                     <v-icon
                                                         right
                                                         class="material-icons"
                                                     >
                                                         navigate_next
                                                     </v-icon>
-                                                </v-btn>
+                                                </v-list-item>
                                             </v-row>
                                         </template>
                                     </v-container>
                                 </v-card>
-                                <!-- </v-overlay> -->
                             </v-dialog>
                         </v-col>
                     </v-row>
