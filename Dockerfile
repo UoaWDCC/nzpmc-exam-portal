@@ -16,6 +16,6 @@ USER app
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
-COPY --from=builder /usr/src/app/bin/ ./
-EXPOSE 4000
-CMD ["node", "index.js"]
+COPY --from=builder /usr/src/app/bin/ ./src
+COPY --from=builder /usr/src/app/src/schemas/ ./src/schemas
+CMD ["node", "src/index.js"]
