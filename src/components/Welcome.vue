@@ -54,69 +54,84 @@
                     </v-row>
                     <v-row>
                         <v-col class="col-12 text-center">
-                            <v-btn
-                                class="mr-3"
-                                @click="overlay = !overlay"
-                                large
-                                color="primary"
-                            >
-                                Start
-                                <v-icon right class="material-icons">
-                                    navigate_next
-                                </v-icon>
-                            </v-btn>
-                            <v-btn
-                                v-if="getLocalStorage('currentQuizID') != null"
-                                @click="continueQuiz()"
-                                large
-                                color="secondary"
-                                :disabled="!userQuizzes"
-                            >
-                                Continue
-                                <v-icon right class="material-icons">
-                                    navigate_next
-                                </v-icon>
-                            </v-btn>
-                            <v-overlay :value="overlay" align="center">
-                                <template v-for="(item, index) in userQuizzes">
-                                    <v-row
-                                        :key="index"
-                                        justify="center"
+                            <v-dialog v-model="dialog" width="500">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
                                         class="mr-3"
+                                        @click="overlay = !overlay"
+                                        large
+                                        color="primary"
+                                        v-bind="attrs"
+                                        v-on="on"
                                     >
-                                        <v-btn
-                                            v-if="item.startTime != null"
-                                            @click="continueQuiz(index)"
-                                            large
-                                            color="secondary"
-                                            class="mb-3"
-                                        >
-                                            Continue Quiz {{ index + 1 }}
-                                            <v-icon
-                                                right
-                                                class="material-icons"
-                                            >
-                                                navigate_next
-                                            </v-icon>
-                                        </v-btn>
-                                        <v-btn
-                                            v-else
-                                            @click="startQuiz(index)"
-                                            large
-                                            color="primary"
-                                            class="mb-3"
-                                        >
-                                            Quiz {{ index + 1 }}
-                                            <v-icon
-                                                right
-                                                class="material-icons"
-                                            >
-                                                navigate_next
-                                            </v-icon>
-                                        </v-btn>
-                                    </v-row>
+                                        Start
+                                        <v-icon right class="material-icons">
+                                            navigate_next
+                                        </v-icon>
+                                    </v-btn>
                                 </template>
-                            </v-overlay>
+                                <v-btn
+                                    v-if="
+                                        getLocalStorage('currentQuizID') != null
+                                    "
+                                    @click="continueQuiz()"
+                                    large
+                                    color="secondary"
+                                    :disabled="!userQuizzes"
+                                >
+                                    Continue
+                                    <v-icon right class="material-icons">
+                                        navigate_next
+                                    </v-icon>
+                                </v-btn>
+                                <!-- <v-overlay :value="overlay" align="center"> -->
+                                <v-card>
+                                    <v-toolbar color="primary" dark>
+                                        <h3>Quiz list</h3>
+                                    </v-toolbar>
+                                    <template
+                                        v-for="(item, index) in userQuizzes"
+                                    >
+                                        <v-row
+                                            :key="index"
+                                            justify="center"
+                                            class="mr-3"
+                                        >
+                                            <v-btn
+                                                v-if="item.startTime != null"
+                                                @click="continueQuiz(index)"
+                                                large
+                                                color="secondary"
+                                                class="mb-3"
+                                            >
+                                                Continue: {{ item.name }}
+                                                <v-icon
+                                                    right
+                                                    class="material-icons"
+                                                >
+                                                    navigate_next
+                                                </v-icon>
+                                            </v-btn>
+                                            <v-btn
+                                                v-else
+                                                @click="startQuiz(index)"
+                                                large
+                                                color="primary"
+                                                class="mb-3"
+                                            >
+                                                Quiz: {{ item.name }}
+                                                <v-icon
+                                                    right
+                                                    class="material-icons"
+                                                >
+                                                    navigate_next
+                                                </v-icon>
+                                            </v-btn>
+                                        </v-row>
+                                    </template>
+                                </v-card>
+                                <!-- </v-overlay> -->
+                            </v-dialog>
                         </v-col>
                     </v-row>
                 </v-card>
