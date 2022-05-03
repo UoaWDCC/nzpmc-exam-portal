@@ -16,6 +16,7 @@
                     arrow_drop_down
                 </v-icon>
             </v-select>
+
             <v-tooltip right>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn icon v-bind="attrs" v-on="on" @click="createQuiz">
@@ -25,10 +26,13 @@
                 <span>Create quiz</span>
             </v-tooltip>
         </div>
+
         <v-divider />
+
         <p v-if="!selectedQuiz" class="pa-4 text--secondary text-center">
             No quiz selected
         </p>
+
         <v-list v-if="selectedQuiz" dense nav>
             <v-list-item-group
                 v-model="selectedQuizPage"
@@ -55,7 +59,11 @@
                     </v-list-item-content>
                 </v-list-item>
 
-                <v-list-group :value="true" no-action>
+                <v-list-group
+                    :value="true"
+                    no-action
+                    v-if="questions ? questions.length > 0 : false"
+                >
                     <template v-slot:activator>
                         <v-list-item-icon class="me-4">
                             <v-icon class="material-icons">
@@ -114,6 +122,31 @@
                     </v-list-item>
                 </v-list-group>
             </v-list-item-group>
+
+            <v-list-item v-if="questions ? questions.length == 0 : true">
+                <v-list-item-icon class="me-4">
+                    <v-icon class="material-icons"> question_answer </v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>Questions</v-list-item-title>
+                </v-list-item-content>
+
+                <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            icon
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="createQuestion"
+                        >
+                            <v-icon class="material-icons">add</v-icon>
+                        </v-btn>
+                    </template>
+
+                    <span>Create question</span>
+                </v-tooltip>
+            </v-list-item>
         </v-list>
     </v-card>
 </template>
@@ -166,6 +199,15 @@ export default {
         quiz() {
             this.questions = this.quiz.questions
             this.questionsLoading = false
+
+            // Set quiz dropdown based on URL
+            const questionLoaded = !this?.quiz?.questions.some(
+                (question) => question.id === this.$route.params.questionId,
+            )
+            if (questionLoaded && this.$route.params.questionId) {
+                // Question is not in the dropdown
+                this.$apollo.queries.quiz.refetch() // Refetch quiz
+            }
         },
 
         $route() {

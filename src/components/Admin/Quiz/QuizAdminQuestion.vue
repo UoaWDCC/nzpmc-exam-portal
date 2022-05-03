@@ -256,6 +256,8 @@ export default {
             error: null,
             showError: false,
 
+            questionDetails: { question: '' },
+
             // Mathlive
             showDialog: false,
 
