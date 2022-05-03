@@ -5,7 +5,7 @@
         outlined
     >
         <div
-            class="d-flex justify-space-between pa-2 font-weight-bold"
+            class="d-flex justify-space-between pa-2"
             style="height: 100%; align-items: center"
             :style="{ color: selected ? '#03a9f5' : '#385F73' }"
         >
@@ -13,59 +13,73 @@
 
             <div v-else>...</div>
 
-            <v-dialog
-                align="center"
-                v-model="dialog"
-                max-width="500"
-                persistent
-            >
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon>edit</v-icon>
-                    </v-btn>
-                </template>
-
-                <v-card>
-                    <v-toolbar color="primary" dark>
-                        <h3>Option Editor</h3>
-                    </v-toolbar>
-
-                    <div class="pa-4 pb-2">
-                        <QuizAdminEditor
-                            label="Option text"
-                            :value="option"
-                            @input="updateOption"
-                            :rules="[(value) => !!value || 'Required.']"
-                            rows="1"
-                        />
-
-                        <h2 class="text-h5 mb-2 mt-6">Preview</h2>
-
-                        <DisplayText
-                            :text="option"
-                            :key="option"
-                            v-if="option"
-                        />
-                    </div>
-
-                    <v-card-actions class="justify-end">
-                        <v-btn large text @click="dialog = false">
-                            Cancel
+            <v-form v-model="valid" :disabled="loading">
+                <v-dialog
+                    align="center"
+                    v-model="dialog"
+                    max-width="500"
+                    persistent
+                >
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon v-bind="attrs" v-on="on">
+                            <v-icon>edit</v-icon>
                         </v-btn>
+                    </template>
 
-                        <v-btn color="primary" large>
-                            <v-icon
-                                left
-                                class="material-icons"
-                                @click="$emit('update', option)"
+                    <v-card>
+                        <v-toolbar color="primary" dark>
+                            <h3>Option Editor</h3>
+                        </v-toolbar>
+
+                        <div class="pa-4 pb-2">
+                            <QuizAdminEditor
+                                label="Option text"
+                                :value="option"
+                                @input="updateOption"
+                                :rules="[(value) => !!value || 'Required.']"
+                                rows="1"
+                            />
+
+                            <h2 class="text-h5 mb-2 mt-6">Preview</h2>
+
+                            <DisplayText
+                                :text="option"
+                                :key="option"
+                                v-if="option"
+                            />
+                        </div>
+
+                        <v-alert
+                            type="error"
+                            v-if="showError"
+                            class="ma-3"
+                            @click="showError = false"
+                            style="cursor: pointer"
+                        >
+                            {{ error }}
+                        </v-alert>
+
+                        <v-card-actions class="justify-end">
+                            <v-btn large text @click="dialog = false">
+                                Cancel
+                            </v-btn>
+
+                            <v-btn
+                                color="primary"
+                                large
+                                @click="editOption"
+                                :disabled="loading || !valid"
+                                :loading="loading"
                             >
-                                save
-                            </v-icon>
-                            Submit
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+                                <v-icon left class="material-icons">
+                                    save
+                                </v-icon>
+                                Submit
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-form>
         </div>
     </v-sheet>
 </template>
@@ -73,6 +87,7 @@
 <script>
 import QuizAdminEditor from './QuizAdminEditor'
 import DisplayText from '@/components/DisplayText'
+import { EditOptionMutation } from '@/gql/mutations/adminQuiz'
 
 export default {
     components: {
@@ -82,6 +97,7 @@ export default {
 
     props: {
         text: String,
+        id: String,
         selected: Boolean,
     },
 
@@ -90,6 +106,12 @@ export default {
             dialog: false,
 
             option: '',
+
+            // Form
+            valid: false,
+            loading: false,
+            error: null,
+            showError: false,
         }
     },
 
@@ -101,11 +123,46 @@ export default {
         text(val) {
             this.option = val
         },
+
+        error(val) {
+            this.showError = !!val
+        },
     },
 
     methods: {
         updateOption(val) {
             if (val !== undefined) this.option = val
+        },
+
+        editOption() {
+            // Edits a given option
+            this.error = null
+            this.loading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: EditOptionMutation,
+                    variables: {
+                        input: {
+                            quizID: this.$route.params.quizId,
+                            questionID: this.$route.params.questionId,
+                            id: this.id,
+                            option: this.option,
+                        },
+                    },
+                })
+                .then(() => {
+                    // Result
+                    this.loading = false
+
+                    this.$emit('updateOption', this.option)
+                    this.dialog = false
+                })
+                .catch((error) => {
+                    // Error
+                    this.addOptionLoading = false
+                    this.optionError = error.message
+                })
         },
     },
 }

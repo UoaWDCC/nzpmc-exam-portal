@@ -152,7 +152,7 @@
                             <v-skeleton-loader
                                 height="56"
                                 type="text"
-                                class="my-0"
+                                class="mt-0"
                                 v-for="index in 4"
                                 :key="index"
                             ></v-skeleton-loader>
@@ -160,8 +160,14 @@
 
                         <QuizAdminOption
                             :text="option.option"
-                            v-for="option in questionDetails.options"
+                            :id="option.id"
+                            v-for="(option, i) in questionDetails.options"
                             :key="option.id"
+                            @updateOption="
+                                (newOption) =>
+                                    (questionDetails.options[i].option =
+                                        newOption)
+                            "
                             v-else
                         />
 
@@ -311,8 +317,7 @@ export default {
         },
 
         addOption() {
-            // Creates a quiz
-            this.success = null
+            // Creates a blank option
             this.error = null
             this.addOptionLoading = true
 
