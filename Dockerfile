@@ -1,22 +1,21 @@
-# Use the official lightweight Node.js 12 image.
-# https://hub.docker.com/_/node
-FROM node:16-slim
-
-# Create and change to the app directory.
+# Build the project within a container
+FROM node:16-alpine AS builder
 WORKDIR /usr/src/app
-
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure both package.json AND package-lock.json are copied.
-# Copying this separately prevents re-running npm install on every code change.
 COPY package*.json ./
+RUN npm ci
+COPY tsconfig*.json ./
+COPY . .
+RUN npm run build
 
-# Install dependencies.
-# If you add a package-lock.json speed your build by switching to 'npm ci'.
-# RUN npm ci --only=production
-RUN npm install --production
-
-# Copy local code to the container image.
-COPY . ./
-
-# Run the web service on container startup.
-CMD ["node", "-r", "esm", "index.js"]
+# Create a container to run the project
+FROM node:16-alpine
+ENV NODE_ENV=production
+RUN addgroup app && adduser -S -G app app
+RUN mkdir -p /usr/src/app && chown -R app:app /usr/src/app
+USER app
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm ci
+COPY --from=builder /usr/src/app/bin/ ./
+EXPOSE 4000
+CMD ["node", "index.js"]

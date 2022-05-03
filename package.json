@@ -8,6 +8,7 @@
         "lint": "eslint . --ext .js,.ts",
         "fix": "eslint . --fix --ext .js,.ts",
         "build": "tsc",
+        "docker": "docker build . -t nzpmc-backend:latest",
         "test": "jest",
         "prestart": "npm run generate",
         "predev": "npm run generate",
