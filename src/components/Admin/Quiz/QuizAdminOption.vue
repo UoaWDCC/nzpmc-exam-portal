@@ -1,19 +1,23 @@
 <template>
     <v-sheet
         rounded
-        :style="{ borderColor: selected ? '#03a9f5' : '#385F73' }"
+        :style="{ borderColor: answer ? '#03a9f5' : '#385F73' }"
         outlined
     >
         <div
             class="d-flex justify-space-between pa-2"
             style="height: 100%; align-items: center"
-            :style="{ color: selected ? '#03a9f5' : '#385F73' }"
+            :style="{ color: answer ? '#03a9f5' : '#385F73' }"
         >
             <DisplayText :text="text" v-if="text" :key="text" />
 
             <div v-else>...</div>
 
-            <v-form v-model="valid" :disabled="loading">
+            <v-form
+                v-model="valid"
+                :disabled="loading"
+                @submit.prevent="answer ? editAnswer() : editOption()"
+            >
                 <v-dialog
                     align="center"
                     v-model="dialog"
@@ -65,9 +69,10 @@
                             </v-btn>
 
                             <v-btn
+                                type="submit"
                                 color="primary"
                                 large
-                                @click="editOption"
+                                @click="answer ? editAnswer() : editOption()"
                                 :disabled="loading || !valid"
                                 :loading="loading"
                             >
@@ -87,7 +92,10 @@
 <script>
 import QuizAdminEditor from './QuizAdminEditor'
 import DisplayText from '@/components/DisplayText'
-import { EditOptionMutation } from '@/gql/mutations/adminQuiz'
+import {
+    EditOptionMutation,
+    EditAnswerMutation,
+} from '@/gql/mutations/adminQuiz'
 
 export default {
     components: {
@@ -98,7 +106,7 @@ export default {
     props: {
         text: String,
         id: String,
-        selected: Boolean,
+        answer: Boolean,
     },
 
     data() {
@@ -155,13 +163,43 @@ export default {
                     // Result
                     this.loading = false
 
-                    this.$emit('updateOption', this.option)
+                    this.$emit('updateOption', this.id, this.option)
                     this.dialog = false
                 })
                 .catch((error) => {
                     // Error
-                    this.addOptionLoading = false
-                    this.optionError = error.message
+                    this.loading = false
+                    this.error = error.message
+                })
+        },
+
+        editAnswer() {
+            // Edits a given answer
+            this.error = null
+            this.loading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: EditAnswerMutation,
+                    variables: {
+                        input: {
+                            quizID: this.$route.params.quizId,
+                            questionID: this.$route.params.questionId,
+                            option: this.option,
+                        },
+                    },
+                })
+                .then(() => {
+                    // Result
+                    this.loading = false
+
+                    this.$emit('updateOption', this.id, this.option)
+                    this.dialog = false
+                })
+                .catch((error) => {
+                    // Error
+                    this.loading = false
+                    this.error = error.message
                 })
         },
     },

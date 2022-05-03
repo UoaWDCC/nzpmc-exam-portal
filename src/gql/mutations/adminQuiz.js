@@ -46,6 +46,7 @@ export const AddOptionMutation = gql`
     mutation AddOptionMutation($input: AddOptionInput!) {
         addOption(input: $input) {
             id
+            option
         }
     }
 `
@@ -53,6 +54,14 @@ export const AddOptionMutation = gql`
 export const EditOptionMutation = gql`
     mutation EditOptionMutation($input: EditOptionInput!) {
         editOption(input: $input) {
+            id
+        }
+    }
+`
+
+export const EditAnswerMutation = gql`
+    mutation EditAnswerMutation($input: EditAnswerInput!) {
+        editAnswer(input: $input) {
             id
         }
     }

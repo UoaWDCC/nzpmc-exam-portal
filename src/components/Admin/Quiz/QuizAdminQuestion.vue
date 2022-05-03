@@ -141,7 +141,19 @@
                                 ? questionDetails.answer.option
                                 : ''
                         "
-                        selected
+                        :id="
+                            questionDetails.answer
+                                ? questionDetails.answer.id
+                                : ''
+                        "
+                        @updateOption="
+                            (optionId, newOption) =>
+                                (questionDetails.answer = {
+                                    id: optionId,
+                                    option: newOption,
+                                })
+                        "
+                        answer
                         v-if="!loading"
                     />
 
@@ -164,7 +176,7 @@
                             v-for="(option, i) in questionDetails.options"
                             :key="option.id"
                             @updateOption="
-                                (newOption) =>
+                                (optionId, newOption) =>
                                     (questionDetails.options[i].option =
                                         newOption)
                             "
@@ -328,7 +340,7 @@ export default {
                         input: {
                             quizID: this.$route.params.quizId,
                             questionID: this.$route.params.questionId,
-                            option: '...',
+                            option: '',
                         },
                     },
                 })
