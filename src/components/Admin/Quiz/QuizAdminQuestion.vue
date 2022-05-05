@@ -390,7 +390,7 @@ export default {
                 })
                 .catch((error) => {
                     // Error
-                    this.detailsFormLoading = false
+                    this.questionFormLoading = false
                     this.error = error.message
                 })
         },
@@ -415,7 +415,7 @@ export default {
                 })
                 .catch((error) => {
                     // Error
-                    this.detailsFormLoading = false
+                    this.questionFormLoading = false
                     this.error = error.message
                 })
         },
