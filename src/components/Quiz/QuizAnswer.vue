@@ -7,7 +7,7 @@
     >
         <div class="d-flex" style="height: 100%; align-items: center">
             <latex
-                class="font-weight-bold pa-4"
+                class="pa-4"
                 :content="text"
                 style="width: calc(100% - 3.5rem); display: block"
             />

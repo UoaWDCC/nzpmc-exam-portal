@@ -1,6 +1,6 @@
 <template>
     <v-row style="height: 100%">
-        <v-col class="col-12 col-md-4 col-xl-3">
+        <v-col class="col-12 col-md-4 col-lg-3 col-xl-2">
             <QuizAdminSidebar :key="$route.path" />
         </v-col>
         <v-col class="col">

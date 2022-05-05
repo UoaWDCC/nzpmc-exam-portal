@@ -10,6 +10,7 @@
         </v-overlay>
 
         <v-container
+            fluid
             v-else
             v-resize="onResize"
             class="d-flex"

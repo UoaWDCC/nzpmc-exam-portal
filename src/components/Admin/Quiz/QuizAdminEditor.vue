@@ -1,9 +1,9 @@
 <template>
     <div>
-        <v-card
-            elevation="2"
+        <v-sheet
+            outlined
             v-if="!disabled"
-            class="mb-2 pa-2 d-flex justify-space-between"
+            class="pa-2 d-flex justify-space-between rounded rounded-b-0"
         >
             <div>
                 <v-tooltip bottom>
@@ -47,20 +47,6 @@
                         </v-btn>
                     </template>
                     <span>Insert Link (CTRL+L)</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                            small
-                            icon
-                            @click="quote"
-                            v-bind="attrs"
-                            v-on="on"
-                        >
-                            <v-icon>format_quote</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>Blockquote (CTRL+Q)</span>
                 </v-tooltip>
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
@@ -119,20 +105,6 @@
                         </v-btn>
                     </template>
                     <span>Bulleted List (ALT+-)</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                            small
-                            icon
-                            @click="strikethrough"
-                            v-bind="attrs"
-                            v-on="on"
-                        >
-                            <v-icon>format_strikethrough</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>Strike Through (ALT+S)</span>
                 </v-tooltip>
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
@@ -204,22 +176,26 @@
                     <span>Formatting help</span>
                 </v-tooltip>
             </div>
-        </v-card>
-        <v-textarea
-            ref="txt"
-            :label="label"
-            :spellcheck="!value || value.indexOf('```') === -1"
-            :counter="counter"
-            multi-line
-            auto-grow
-            :rows="rows || 6"
-            :disabled="disabled"
-            :rules="rules"
-            :value="value"
-            :error-messages="errorMessages"
-            @input="(v) => $emit('input', v)"
-            solo
-        ></v-textarea>
+        </v-sheet>
+
+        <v-sheet outlined class="rounded rounded-t-0" style="border-top: none">
+            <v-textarea
+                ref="txt"
+                :label="label"
+                :spellcheck="!value || value.indexOf('```') === -1"
+                :counter="counter"
+                multi-line
+                auto-grow
+                :rows="rows || 6"
+                :disabled="disabled"
+                :rules="rules"
+                :value="value"
+                :error-messages="errorMessages"
+                @input="(v) => $emit('input', v)"
+                solo
+                flat
+            ></v-textarea>
+        </v-sheet>
     </div>
 </template>
 
@@ -433,17 +409,11 @@ export default {
         italic() {
             this.insert('_', '_', 'italics')
         },
-        strikethrough() {
-            this.insert('~~', '~~', 'strikethrough')
-        },
         link() {
             this.insert('[', '](http://)', '', {
                 offsetStart: -8,
                 offsetEnd: 7,
             })
-        },
-        quote() {
-            this.insert('\n> ', '\n', 'Blockquote', {})
         },
         image() {
             this.insert('![', '](http://)', 'alt text', {
@@ -718,10 +688,6 @@ export default {
                     //i: italic
                     this.italic()
                     e.preventDefault()
-                } else if (c === 'q' && !e.shiftKey) {
-                    //q: blockquote
-                    this.quote()
-                    e.preventDefault()
                 } else if (c === 'l') {
                     //l: link/image
                     if (!e.shiftKey) {
@@ -757,9 +723,6 @@ export default {
                     e.preventDefault()
                 } else if (e.key === '-') {
                     this.ul()
-                    e.preventDefault()
-                } else if (e.key === 's') {
-                    this.strikethrough()
                     e.preventDefault()
                 }
             }
