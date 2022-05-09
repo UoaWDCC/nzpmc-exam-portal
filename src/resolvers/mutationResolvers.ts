@@ -181,14 +181,14 @@ const editAnswerMutation: Resolver<
 
     const question = await getQuestion(quizID, questionID)
 
-    if (!question.answer) {
+    if (!question.answerID) {
         throw new NotFoundError()
     }
 
     return await editQuestionOption(
         quizID,
         questionID,
-        question.answer.id,
+        question.answerID,
         option,
     )
 }

@@ -1,5 +1,3 @@
-import { FirestoreDocumentReference } from '../../models/utils'
-
 export type QuestionModel = {
     quizID: string
     id: string
@@ -7,7 +5,7 @@ export type QuestionModel = {
     imageURI: string
     numOfAnswers: number
     topics: string
-    answer: FirestoreDocumentReference
+    answerID: string
     created: Date
     modified: Date
 }

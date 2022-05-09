@@ -1,4 +1,8 @@
-import { getUserQuizQuestions, getUserQuizQuestion } from '../controllers'
+import {
+    getUserQuizQuestions,
+    getUserQuizQuestion,
+    getUser,
+} from '../controllers'
 import { UserQuizModel } from './custom/userQuizModel'
 import { UserQuizQuestionModel } from './custom/userQuizQuestionModel'
 import {
@@ -17,8 +21,8 @@ const userUserQuiz: Resolver<
     unknown,
     unknown
 > = (parents, _args, _context) => {
-    const { userQuizID, id: userQuizQuestionID } = parents
-    return getUserQuizQuestion(userQuizID, userQuizQuestionID)
+    const { userID } = parents
+    return getUser(userID)
 }
 
 const questionUserQuiz: Resolver<
