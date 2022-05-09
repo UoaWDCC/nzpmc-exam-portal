@@ -25,8 +25,8 @@ const optionsQuestion: Resolver<
     unknown,
     unknown
 > = async (parents, _args, _context) => {
-    const { id } = parents
-    return await getQuestionOptions(id, id)
+    const { quizID, id } = parents
+    return await getQuestionOptions(quizID, id)
 }
 
 const questionResolvers: QuestionResolvers = {
