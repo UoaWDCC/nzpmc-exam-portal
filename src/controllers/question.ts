@@ -4,7 +4,6 @@ import { Question, Quiz } from '../models'
 import Option from '../models/option'
 import { QuestionModel } from '../resolvers/custom/questionModel'
 import { NotFoundError } from '../utils/errors'
-import { firestore } from '../utils/firebase'
 
 const QuizRepository = getRepository(Quiz)
 
@@ -61,6 +60,7 @@ const addQuestion = async (
         question.imageURI = imageURI
         question.numOfAnswers = numOfAnswers
         question.topics = topics
+        question.answerID = ''
 
         const newQuestion = await quiz.questions.create(question)
         if (!newQuestion.options) {
@@ -72,8 +72,7 @@ const addQuestion = async (
 
         const newAnswer = await newQuestion.options.create(answer)
 
-        const docRef = firestore.collection('Answers').doc(newAnswer.id)
-        newQuestion.answer = docRef
+        newQuestion.answerID = newAnswer.id
 
         await quiz.questions.update(newQuestion)
 
@@ -111,9 +110,7 @@ const editQuestion = async (
         question.modified = new Date()
 
         if (answer !== undefined && question.options) {
-            const answerObj = await question.options.findById(
-                question.answer.id,
-            )
+            const answerObj = await question.options.findById(question.answerID)
 
             if (answerObj === null) {
                 throw new NotFoundError()
