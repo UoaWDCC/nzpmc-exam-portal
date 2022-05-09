@@ -1,18 +1,13 @@
-import { SubCollection, ISubCollection, Collection, Type } from 'fireorm'
+import { SubCollection, ISubCollection, Collection } from 'fireorm'
 import UserQuizQuestion from './userQuizQuestion'
-import { FirestoreDocumentReference } from './utils'
 
 @Collection()
 class UserQuiz {
     id!: string
+    userID!: string
+    quizID!: string
 
-    @Type(() => FirestoreDocumentReference)
-    user!: FirestoreDocumentReference
-
-    @Type(() => FirestoreDocumentReference)
-    quiz!: FirestoreDocumentReference
-
-    score?: number
+    score: number | null = null
 
     startTime?: Date
     endTime?: Date

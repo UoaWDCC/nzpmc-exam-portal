@@ -1,7 +1,6 @@
 import { IsDataURI } from 'class-validator'
-import { ISubCollection, SubCollection, Type } from 'fireorm'
+import { ISubCollection, SubCollection } from 'fireorm'
 import Option from './option'
-import { FirestoreDocumentReference } from './utils'
 
 class Question {
     id!: string
@@ -12,8 +11,7 @@ class Question {
     numOfAnswers!: number
     topics!: string
 
-    @Type(() => FirestoreDocumentReference)
-    answer!: FirestoreDocumentReference
+    answerID!: string
 
     @SubCollection(Option, 'Option')
     options?: ISubCollection<Option>

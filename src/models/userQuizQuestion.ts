@@ -1,14 +1,9 @@
-import { Type } from 'fireorm'
-import { FirestoreDocumentReference } from './utils'
-
 class UserQuizQuestion {
     id!: string
 
-    @Type(() => FirestoreDocumentReference)
-    question!: FirestoreDocumentReference
+    questionID!: string
 
-    @Type(() => FirestoreDocumentReference)
-    answer: FirestoreDocumentReference | null = null
+    answerID: string | null = null
 
     flag = false
     firstViewed: Date | null = null
