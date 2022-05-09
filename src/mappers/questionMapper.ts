@@ -14,7 +14,7 @@ const packQuestion = ({ quizID, question }: PackQuestion): QuestionModel => {
         imageURI: question.imageURI,
         numOfAnswers: question.numOfAnswers,
         topics: question.topics,
-        answer: question.answer,
+        answerID: question.answerID,
         created: question.created,
         modified: question.modified,
     }

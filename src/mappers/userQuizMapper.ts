@@ -19,7 +19,7 @@ const packUserQuiz = ({
         name: quiz.name,
         description: quiz.description,
         duration: quiz.duration,
-        score: userQuiz.score,
+        score: userQuiz.score ?? undefined,
         startTime: userQuiz.startTime,
         endTime: userQuiz.endTime,
         created: userQuiz.created,
