@@ -1,6 +1,5 @@
 import { Quiz, UserQuiz, UserQuizQuestion } from '../models'
 import { getUserQuiz, setUserQuizScore } from './userQuiz'
-import { firestore } from '../utils/firebase'
 import { runTransaction } from 'fireorm'
 import * as Schema from '../resolvers/resolvers-types'
 import { NotFoundError } from '../utils/errors'
@@ -16,80 +15,92 @@ const getUserQuizQuestion = async (
     userQuizID: string,
     id: string,
 ): Promise<UserQuizQuestionModel> => {
-    return runTransaction(async (tran) => {
+    let userQuiz
+    let quizQuestion
+    await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
 
-        const userQuiz = await UserQuizTranRepository.findById(userQuizID)
+        userQuiz = await UserQuizTranRepository.findById(userQuizID)
         if (!userQuiz || !userQuiz.questions) {
             throw new NotFoundError()
         }
 
-        const quiz = await QuizTranRepository.findById(userQuiz.id)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
 
-        const quizQuestion = await quiz.questions.findById(id)
-        const userQuizQuestion = await userQuiz.questions.findById(id)
-
-        if (!userQuizQuestion || !quizQuestion) {
+        quizQuestion = await quiz.questions.findById(id)
+        if (!quizQuestion) {
             throw new NotFoundError()
         }
+    })
 
-        return packUserQuizQuestion({
-            userQuizID,
-            quizQuestion,
-            userQuizQuestion,
-        })
+    let userQuizQuestion = await userQuiz.questions.findById(id)
+    if (!userQuizQuestion) {
+        // if this doesn't exist create it
+        userQuizQuestion = addUserQuizQuestion(userQuiz.id, quizQuestion.id)
+    }
+
+    return packUserQuizQuestion({
+        userQuizID,
+        quizQuestion,
+        userQuizQuestion,
     })
 }
 
 const getUserQuizQuestions = async (
     userQuizID: string,
 ): Promise<UserQuizQuestionModel[]> => {
-    return runTransaction(async (tran) => {
+    let quizQuestions
+    let userQuiz
+    await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
 
-        const userQuiz = await UserQuizTranRepository.findById(userQuizID)
+        userQuiz = await UserQuizTranRepository.findById(userQuizID)
 
-        const quiz = await QuizTranRepository.findById(userQuiz.id)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
 
-        const quizQuestions = await quiz.questions.find()
+        quizQuestions = await quiz.questions.find()
+    })
 
-        const userQuizQuestions: PackQuizQuestion[] = await Promise.all(
-            quizQuestions.map(async (quizQuestion) => {
-                if (!userQuiz || !userQuiz.questions) {
-                    throw new NotFoundError()
-                }
-                const userQuizQuestion = await userQuiz.questions.findById(
+    const userQuizQuestions: PackQuizQuestion[] = await Promise.all(
+        quizQuestions.map(async (quizQuestion) => {
+            if (!userQuiz || !userQuiz.questions) {
+                throw new NotFoundError()
+            }
+            let userQuizQuestion = await userQuiz.questions.findById(
+                quizQuestion.id,
+            )
+            if (!userQuizQuestion) {
+                // if this doesn't exist create it
+                userQuizQuestion = addUserQuizQuestion(
+                    userQuiz.id,
                     quizQuestion.id,
                 )
-                if (!userQuizQuestion) {
-                    throw new NotFoundError()
-                }
+            }
 
-                return {
-                    userQuizID,
-                    quizQuestion,
-                    userQuizQuestion,
-                }
-            }),
-        )
-
-        return packUserQuizQuestions(userQuizQuestions)
-    })
+            return {
+                userQuizID,
+                quizQuestion,
+                userQuizQuestion,
+            }
+        }),
+    )
+    return packUserQuizQuestions(userQuizQuestions)
 }
 
 const addUserQuizQuestion = async (
     userQuizID: string,
     questionID: string,
 ): Promise<UserQuizQuestionModel> => {
-    return runTransaction(async (tran) => {
+    let userQuizQuestionID: string | undefined
+    await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
 
@@ -98,7 +109,7 @@ const addUserQuizQuestion = async (
             throw new NotFoundError()
         }
 
-        const quiz = await QuizTranRepository.findById(userQuiz.quiz.id)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
@@ -110,21 +121,22 @@ const addUserQuizQuestion = async (
 
         const userQuizQuestion = new UserQuizQuestion()
         userQuizQuestion.id = question.id
-        userQuizQuestion.question = firestore
-            .collection('Quizzes')
-            .doc(quiz.id)
-            .collection('Questions')
-            .doc(question.id)
-        userQuizQuestion.answer = null
+        userQuizQuestion.questionID = question.id
+        userQuizQuestion.answerID = null
         userQuizQuestion.firstViewed = null
         userQuizQuestion.lastAnswered = null
 
         const newUserQuizQuestion = await userQuiz.questions.create(
             userQuizQuestion,
         )
-
-        return await getUserQuizQuestion(userQuizID, newUserQuizQuestion.id)
+        userQuizQuestionID = newUserQuizQuestion.id
     })
+
+    if (!userQuizQuestionID) {
+        throw new NotFoundError()
+    }
+
+    return await getUserQuizQuestion(userQuizID, userQuizQuestionID)
 }
 
 const editUserQuizQuestion = async (
@@ -142,7 +154,7 @@ const editUserQuizQuestion = async (
             throw new NotFoundError()
         }
 
-        const quiz = await QuizTranRepository.findById(userQuiz.quiz.id)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
@@ -158,20 +170,8 @@ const editUserQuizQuestion = async (
         }
 
         userQuizQuestion.id = question.id
-        userQuizQuestion.question = firestore
-            .collection('Quizzes')
-            .doc(quiz.id)
-            .collection('Questions')
-            .doc(question.id)
-        userQuizQuestion.answer = optionID
-            ? firestore
-                  .collection('Quizzes')
-                  .doc(quiz.id)
-                  .collection('Questions')
-                  .doc(question.id)
-                  .collection('Options')
-                  .doc(optionID)
-            : userQuizQuestion.answer
+        userQuizQuestion.questionID = question.id
+        userQuizQuestion.answerID = optionID ?? userQuizQuestion.answerID
         userQuizQuestion.firstViewed = new Date()
         userQuizQuestion.lastAnswered = new Date()
         userQuizQuestion.modified = new Date()
@@ -198,7 +198,7 @@ const getUserQuizQuestionOptions = async (
             throw new NotFoundError()
         }
 
-        const quiz = await QuizTranRepository.findById(userQuiz.id)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
@@ -239,7 +239,7 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
             throw new NotFoundError()
         }
 
-        const quiz = await QuizTranRepository.findById(userQuiz.id)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
@@ -251,11 +251,11 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
                 const userQuestion = await userQuiz.questions?.findById(
                     userQuizQuestion.id,
                 )
-                if (!userQuestion || !userQuestion.answer) {
+                if (!userQuestion || !userQuestion.answerID) {
                     // Each question should have an answer
                     throw new NotFoundError()
                 }
-                return userQuestion.answer.id
+                return userQuestion.answerID
             }),
         )
 
@@ -268,7 +268,7 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
                     // Each question should have a correct answer
                     throw new NotFoundError()
                 }
-                return question.answer.id
+                return question.answerID
             }),
         )
 

@@ -5,9 +5,9 @@ import {
     packUserQuizzes,
 } from '../mappers/userQuizMapper'
 import { Quiz, UserQuiz } from '../models'
-import { firestore } from '../utils/firebase'
 import { NotFoundError } from '../utils/errors'
 import { UserQuizModel } from '../resolvers/custom/userQuizModel'
+import { addUserQuizQuestion } from './userQuizQuestion'
 
 const UserQuizRepository = getRepository(UserQuiz)
 
@@ -17,9 +17,9 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
 
         const userQuiz = await UserQuizTranRepository.findById(userQuizID)
-        const quiz = await QuizTranRepository.findById(userQuiz.quiz.id)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
 
-        return packUserQuiz({ userID: userQuiz.user.id, quiz, userQuiz })
+        return packUserQuiz({ userID: userQuiz.userID, quiz, userQuiz })
     })
 }
 
@@ -28,17 +28,16 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
         const QuizTranRepository = tran.getRepository(Quiz)
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
 
-        const userRefDoc = await firestore.collection('Users').doc(userID)
         const quizzes = await UserQuizTranRepository.whereEqualTo(
-            (q) => q.user,
-            userRefDoc,
+            (q) => q.userID,
+            userID,
         ).find()
 
         const userQuizzesPack: PackUserQuiz[] = await Promise.all(
             quizzes.map(
                 async (userQuiz): Promise<PackUserQuiz> => ({
                     userID,
-                    quiz: await QuizTranRepository.findById(userQuiz.quiz.id),
+                    quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                 }),
             ),
@@ -58,8 +57,8 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
         const userQuizzesPack: PackUserQuiz[] = await Promise.all(
             quizzes.map(
                 async (userQuiz): Promise<PackUserQuiz> => ({
-                    userID: userQuiz.user.id,
-                    quiz: await QuizTranRepository.findById(userQuiz.quiz.id),
+                    userID: userQuiz.userID,
+                    quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                 }),
             ),
@@ -77,8 +76,8 @@ const addUserQuiz = async (
 ): Promise<UserQuizModel> => {
     const userQuiz = new UserQuiz()
 
-    userQuiz.user = firestore.collection('Users').doc(userID)
-    userQuiz.quiz = firestore.collection('Quizzes').doc(quizID)
+    userQuiz.userID = userID
+    userQuiz.quizID = quizID
     if (startTime && endTime) {
         userQuiz.startTime = startTime
         userQuiz.endTime = endTime
@@ -87,6 +86,19 @@ const addUserQuiz = async (
     userQuiz.modified = new Date()
 
     UserQuizRepository.create(userQuiz)
+
+    runTransaction(async (tran) => {
+        const QuizTranRepository = tran.getRepository(Quiz)
+
+        const questions = (await QuizTranRepository.findById(quizID)).questions
+        if (!questions) {
+            throw new NotFoundError()
+        }
+
+        ;(await questions.find()).map((question) => {
+            addUserQuizQuestion(userQuiz.id, question.id)
+        })
+    })
 
     return await getUserQuiz(userQuiz.id)
 }
@@ -97,7 +109,7 @@ const editUserQuiz = async (
     startTime?: Date,
     endTime?: Date,
 ): Promise<UserQuizModel> => {
-    return UserQuizRepository.runTransaction(async (tran) => {
+    await UserQuizRepository.runTransaction(async (tran) => {
         const userQuiz = await tran.findById(userQuizID)
         if (!userQuiz) {
             throw new NotFoundError()
@@ -109,9 +121,9 @@ const editUserQuiz = async (
         userQuiz.modified = new Date()
 
         tran.update(userQuiz)
-
-        return await getUserQuiz(userQuizID)
     })
+
+    return await getUserQuiz(userQuizID)
 }
 
 const setUserQuizScore = (
