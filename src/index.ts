@@ -1,12 +1,11 @@
 import './utils/dotenv'
 import { ApolloServer } from 'apollo-server-express'
-import { PluginDefinition } from 'apollo-server-core'
 import { readdirSync, readFileSync } from 'fs'
 import { graphqlUploadExpress } from 'graphql-upload'
 import express from 'express'
 import cors from 'cors'
-import resolvers from './resolvers'
 import { auth } from './utils/firebase'
+import resolvers from './resolvers'
 import { imageController } from './utils/cloudstorage'
 
 const schemaFiles = readdirSync('./src/schemas/').filter((file: string) =>
