@@ -56,7 +56,7 @@
                                 />
                             </v-col>
 
-                            <v-col>
+                            <v-col cols="12" lg="6">
                                 <h2 class="text-h5 mb-2">Preview</h2>
                                 <DisplayText
                                     :text="questionDetails.question"
@@ -120,6 +120,14 @@
                     </v-col>
                 </v-row>
             </v-form>
+        </v-card>
+
+        <v-card elevation="2" class="pa-4 mb-6" v-if="!createQuestionMode">
+            <v-row>
+                <v-col>
+                    <QuizAdminQuestionFiles />
+                </v-col>
+            </v-row>
         </v-card>
 
         <v-card elevation="2" class="pa-4" v-if="!createQuestionMode">
@@ -227,6 +235,7 @@ input {
 import QuizAdminEditor from './QuizAdminEditor'
 import DisplayText from '@/components/DisplayText'
 import QuizAdminOption from './QuizAdminOption'
+import QuizAdminQuestionFiles from './QuizAdminQuestionFiles'
 import {
     AddQuestionMutation,
     EditQuestionMutation,
@@ -239,6 +248,7 @@ export default {
         QuizAdminEditor,
         DisplayText,
         QuizAdminOption,
+        QuizAdminQuestionFiles,
     },
 
     data() {
@@ -390,7 +400,7 @@ export default {
                 })
                 .catch((error) => {
                     // Error
-                    this.detailsFormLoading = false
+                    this.questionFormLoading = false
                     this.error = error.message
                 })
         },
@@ -415,7 +425,7 @@ export default {
                 })
                 .catch((error) => {
                     // Error
-                    this.detailsFormLoading = false
+                    this.questionFormLoading = false
                     this.error = error.message
                 })
         },
