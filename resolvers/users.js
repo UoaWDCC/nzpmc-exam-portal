@@ -24,7 +24,7 @@ const resolvers = {
             if (!context.user) return
             return await getUser(context.user.uid)
         },
-        users: async (parents, { page, limit, orderBy }, context) => {
+        users: async (parents, { page, limit, orderBy, term }, context) => {
             if (!context.user) throw new AuthenticationError()
             if (!context.user.admin) throw new AdminAuthenticationError()
 
@@ -39,7 +39,10 @@ const resolvers = {
             if (!orderBy) {
                 orderBy = { displayName: 'ASC' }
             }
-            return await getUsersPagination(page, limit, orderBy)
+            if (!term) {
+                term = ''
+            }
+            return await getUsersPagination(page, limit, orderBy, term)
         },
     },
     Mutation: {

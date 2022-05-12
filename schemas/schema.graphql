@@ -11,7 +11,12 @@ type Query {
     Admin
     """
     user(userID: ID!): User
-    users(page: Int, limit: Int, orderBy: UsersOrderByInput): UserPage!
+    users(
+        page: Int
+        limit: Int
+        orderBy: UsersOrderByInput
+        term: String
+    ): UserPage!
 
     quizzes: [Quiz]
     quiz(quizID: ID!): Quiz
