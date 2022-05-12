@@ -29,7 +29,7 @@ const getAllUsers = async () => {
     return packUsers(users)
 }
 
-const getUsersPagination = async (page, limit, orderBy) => {
+const getUsersPagination = async (page, limit, orderBy, term) => {
     if (page < 0) {
         throw new Error('Page cannot be 0 or negative')
     }
@@ -37,21 +37,86 @@ const getUsersPagination = async (page, limit, orderBy) => {
     const order = getUsersOrderByInput(orderBy)
     const limits = page * limit
     console.log(order, limits)
-    const users = (await User.collection.orderBy(order).limit(limits).fetch()).list
+    const users = (await User.collection.orderBy(order).fetch()).list
+
+    const sortedUsers = caseInsensitiveSort(orderBy, users)
+    const finalUsers = sortedUsers.filter(
+        (user) =>
+            user.displayName
+                .trim()
+                .toLowerCase()
+                .includes(term.toLowerCase()) ||
+            user.firstName.trim().toLowerCase().includes(term.toLowerCase()) ||
+            user.lastName.trim().toLowerCase().includes(term.toLowerCase()),
+    )
 
     // find length of pages
-    const total = Math.ceil(users.length / limit)
+    const total = Math.ceil(finalUsers.length / limit)
 
-    console.log(users.length)
+    const finalUsersSliced = finalUsers.slice((page - 1) * limit, page * limit)
 
-    users.splice(0, (page - 1) * limit)
-
-    console.log(users.length)
+    console.log(finalUsers.length)
 
     return {
-        total: total,
-        users: packUsers(users),
+        pages: total,
+        users: packUsers(finalUsersSliced),
     }
+}
+
+const sortUsersList = (users, key, isDescending) => {
+    const sortedUsers = users.sort((user1, user2) =>
+        user1[key].trim().localeCompare(user2[key].trim(), undefined, {
+            sensitivity: 'accent',
+        }),
+    )
+    if (isDescending) {
+        return sortedUsers.reverse()
+    } else {
+        return sortedUsers
+    }
+}
+
+const sortUsersYearLevel = (users, key, isDescending) => {
+    const sortedUsers = users.sort(
+        (user1, user2) =>
+            parseInt(user1[key].trim()) - parseInt(user2[key].trim()),
+    )
+    if (isDescending) {
+        return sortedUsers.reverse()
+    } else {
+        return sortedUsers
+    }
+}
+
+const caseInsensitiveSort = (orderBy, users) => {
+    let sortedUsers
+    let key
+    if (orderBy.displayName) {
+        key = 'displayName'
+        sortedUsers = sortUsersList(users, key, orderBy.displayName === 'DESC')
+        return sortedUsers
+    } else if (orderBy.email) {
+        key = 'email'
+        sortedUsers = sortUsersList(users, key, orderBy.email === 'DESC')
+        return sortedUsers
+    } else if (orderBy.firstName) {
+        key = 'firstName'
+        sortedUsers = sortUsersList(users, key, orderBy.firstName === 'DESC')
+        return sortedUsers
+    } else if (orderBy.lastName) {
+        key = 'lastName'
+        sortedUsers = sortUsersList(users, key, orderBy.lastName === 'DESC')
+        return sortedUsers
+    } else if (orderBy.yearLevel) {
+        key = 'yearLevel'
+        sortedUsers = sortUsersYearLevel(
+            users,
+            key,
+            orderBy.yearLevel === 'DESC',
+        )
+        return sortedUsers
+    }
+    throw new Error('Invalid orderBy input')
 }
 
 const getUsersOrderByInput = (orderBy) => {
