@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <v-row style="height: 100%">
         <v-col class="col-12">
             <v-card>
                 <v-row>
@@ -10,28 +10,38 @@
                         ></v-text-field>
                     </v-col>
                     <v-col class="mt-2">
-                        <UserDetailModal />
+                        <UserAdminDetails />
                     </v-col>
                 </v-row>
                 <v-data-table
                     :headers="headers"
-                    :items="users"
-                    item-key="name"
-                    :options.sync="options"
-                    :server-items-length="totalUsers"
-                    :loading="loading"
-                    class="elevation-1"
-                    :footer-props="{
-                        'items-per-page-options': [50],
-                    }"
+                    :items="userPaginationInfo.users"
+                    :page.sync="page"
+                    :items-per-page="itemsPerPage"
+                    :sort-by.sync="sortBy"
+                    :sort-desc.sync="sortDesc"
+                    hide-default-footer
+                    style="border-bottom: 1px solid #d3d3d3"
                 >
                     <template v-slot:item.actions="{ item }">
                         <v-row class="mx-0">
                             <UserAdminDetails :user="item" />
-                            <UserAdminDelete :user="item" />
                         </v-row>
                     </template>
+                    <template v-slot:item.photoURL="{ item }">
+                        <v-avatar size="36">
+                            <img :src="item.photoURL" :alt="item.firstName" />
+                        </v-avatar>
+                    </template>
                 </v-data-table>
+                <div class="text-center pt-2">
+                    <v-pagination
+                        v-model="page"
+                        :length="userPaginationInfo.pages"
+                        circle
+                        :total-visible="7"
+                    ></v-pagination>
+                </div>
             </v-card>
         </v-col>
     </v-row>
@@ -39,537 +49,117 @@
 
 <script>
 import UserAdminDetails from './UserAdminDetails.vue'
-import UserAdminDelete from './UserAdminDelete.vue'
+import { UsersQuery } from '@/gql/queries/user'
 export default {
-    components: { UserAdminDetails, UserAdminDelete },
+    components: { UserAdminDetails },
     data() {
         return {
+            sortBy: 'firstName',
+            sortDesc: false,
             search: '',
-            totalUsers: 0,
-            users: [],
-            options: {},
+            page: 1,
+            itemsPerPage: 5, // change to 50 once there are more users
+            userPaginationInfo: null,
+            orderBy: {
+                firstName: 'ASC',
+            },
+            orderByDefaultTemplate: {
+                firstName: 'ASC',
+            },
             headers: [
+                { text: 'Photo', value: 'photoURL', sortable: false },
                 {
                     text: 'Display Name',
-                    align: 'start',
                     value: 'displayName',
                 },
                 { text: 'First Name', value: 'firstName' },
                 { text: 'Last Name', value: 'lastName' },
                 { text: 'Email', value: 'email' },
                 { text: 'Year Level', value: 'yearLevel' },
-                { text: 'Photo URL', value: 'photoUrl' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
         }
     },
     watch: {
-        options: {
-            handler() {
-                this.getDataFromApi()
-            },
-            deep: true,
+        sortDesc(currentDesc) {
+            let finalObject = {}
+            if (currentDesc === undefined) {
+                if (this.sortBy in this.orderBy) {
+                    finalObject = {
+                        firstName: 'ASC',
+                    }
+                }
+            } else if (currentDesc === true) {
+                finalObject[this.sortBy] = 'DESC'
+            } else if (currentDesc === false) {
+                finalObject[this.sortBy] = 'ASC'
+            } else {
+                if (currentDesc[0] === true) {
+                    finalObject[this.sortBy] = 'DESC'
+                } else if (currentDesc[0] === false) {
+                    finalObject[this.sortBy] = 'ASC'
+                } else if (currentDesc[0] === undefined) {
+                    finalObject = {
+                        firstName: 'ASC',
+                    }
+                }
+            }
+            if (Object.keys(finalObject).length === 0) {
+                finalObject = {
+                    firstName: 'ASC',
+                }
+            }
+            this.orderBy = finalObject
+            this.page = 1
+        },
+        sortBy(currentSortBy, previousSortBy) {
+            let finalObject = {}
+            if (currentSortBy === undefined) {
+                finalObject = {
+                    firstName: 'ASC',
+                }
+            } else if (currentSortBy[0] === undefined) {
+                finalObject = {
+                    firstName: 'ASC',
+                }
+            } else if (
+                previousSortBy !== undefined &&
+                currentSortBy !== previousSortBy
+            ) {
+                finalObject[currentSortBy] = 'ASC'
+            } else if (
+                previousSortBy[0] !== undefined &&
+                currentSortBy[0] !== previousSortBy[0]
+            ) {
+                finalObject[currentSortBy[0]] = 'ASC'
+            }
+            if (Object.keys(finalObject).length === 0) {
+                finalObject = {
+                    firstName: 'ASC',
+                }
+            }
+            this.orderBy = finalObject
+            this.page = 1
+        },
+        search() {
+            this.page = 1
         },
     },
-    methods: {
-        getDataFromApi() {
-            this.loading = true
-            this.fakeApiCall().then((data) => {
-                this.users = data.items
-                this.totalUsers = data.total
-                this.loading = false
-            })
-        },
-        fakeApiCall() {
-            return new Promise((resolve) => {
-                const { sortBy, sortDesc, page, itemsPerPage } = this.options
 
-                let items = this.getUsers()
-                const total = items.length
-
-                if (sortBy.length === 1 && sortDesc.length === 1) {
-                    items = items.sort((a, b) => {
-                        const sortA = a[sortBy[0]]
-                        const sortB = b[sortBy[0]]
-
-                        if (sortDesc[0]) {
-                            if (sortA < sortB) return 1
-                            if (sortA > sortB) return -1
-                            return 0
-                        } else {
-                            if (sortA < sortB) return -1
-                            if (sortA > sortB) return 1
-                            return 0
-                        }
-                    })
+    apollo: {
+        userPaginationInfo: {
+            query: UsersQuery,
+            variables() {
+                return {
+                    page: this.page,
+                    limit: this.itemsPerPage,
+                    orderBy: this.orderBy,
+                    term: this.search,
                 }
-
-                if (itemsPerPage > 0) {
-                    items = items.slice(
-                        (page - 1) * itemsPerPage,
-                        page * itemsPerPage,
-                    )
-                }
-
-                setTimeout(() => {
-                    resolve({
-                        items,
-                        total,
-                    })
-                }, 1000)
-            })
-        },
-        getUsers() {
-            return [
-                {
-                    displayName: 'FrozenYogurt',
-                    firstName: 'Bob',
-                    lastName: 'Yogurt',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 5,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Cooluser123',
-                    firstName: 'Test',
-                    lastName: 'User',
-                    email: 'user@mail.com',
-                    yearLevel: 1,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'randomuser456',
-                    firstName: 'Random',
-                    lastName: 'User',
-                    email: 'random@mail.com',
-                    yearLevel: 3,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TestPerson',
-                    firstName: 'Test',
-                    lastName: 'Person',
-                    email: 'testperson@mail.com',
-                    yearLevel: 10,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'qwertyuser',
-                    firstName: 'User',
-                    lastName: 'Qwerty',
-                    email: 'qwerty@mail.com',
-                    yearLevel: 20,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TheOther',
-                    firstName: 'Person',
-                    lastName: 'Other',
-                    email: 'other@mail.com',
-                    yearLevel: 2,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Freezed',
-                    firstName: 'Freeze',
-                    lastName: 'Froze',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 6,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'NormalYogurt',
-                    firstName: 'Yogurt',
-                    lastName: 'Normal',
-                    email: 'normal@mail.com',
-                    yearLevel: 7,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'FrozenYogurt',
-                    firstName: 'Bob',
-                    lastName: 'Yogurt',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 5,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Cooluser123',
-                    firstName: 'Test',
-                    lastName: 'User',
-                    email: 'user@mail.com',
-                    yearLevel: 1,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'randomuser456',
-                    firstName: 'Random',
-                    lastName: 'User',
-                    email: 'random@mail.com',
-                    yearLevel: 3,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TestPerson',
-                    firstName: 'Test',
-                    lastName: 'Person',
-                    email: 'testperson@mail.com',
-                    yearLevel: 10,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'qwertyuser',
-                    firstName: 'User',
-                    lastName: 'Qwerty',
-                    email: 'qwerty@mail.com',
-                    yearLevel: 20,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TheOther',
-                    firstName: 'Person',
-                    lastName: 'Other',
-                    email: 'other@mail.com',
-                    yearLevel: 2,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Freezed',
-                    firstName: 'Freeze',
-                    lastName: 'Froze',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 6,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'NormalYogurt',
-                    firstName: 'Yogurt',
-                    lastName: 'Normal',
-                    email: 'normal@mail.com',
-                    yearLevel: 7,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'FrozenYogurt',
-                    firstName: 'Bob',
-                    lastName: 'Yogurt',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 5,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Cooluser123',
-                    firstName: 'Test',
-                    lastName: 'User',
-                    email: 'user@mail.com',
-                    yearLevel: 1,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'randomuser456',
-                    firstName: 'Random',
-                    lastName: 'User',
-                    email: 'random@mail.com',
-                    yearLevel: 3,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TestPerson',
-                    firstName: 'Test',
-                    lastName: 'Person',
-                    email: 'testperson@mail.com',
-                    yearLevel: 10,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'qwertyuser',
-                    firstName: 'User',
-                    lastName: 'Qwerty',
-                    email: 'qwerty@mail.com',
-                    yearLevel: 20,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TheOther',
-                    firstName: 'Person',
-                    lastName: 'Other',
-                    email: 'other@mail.com',
-                    yearLevel: 2,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Freezed',
-                    firstName: 'Freeze',
-                    lastName: 'Froze',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 6,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'NormalYogurt',
-                    firstName: 'Yogurt',
-                    lastName: 'Normal',
-                    email: 'normal@mail.com',
-                    yearLevel: 7,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'FrozenYogurt',
-                    firstName: 'Bob',
-                    lastName: 'Yogurt',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 5,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Cooluser123',
-                    firstName: 'Test',
-                    lastName: 'User',
-                    email: 'user@mail.com',
-                    yearLevel: 1,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'randomuser456',
-                    firstName: 'Random',
-                    lastName: 'User',
-                    email: 'random@mail.com',
-                    yearLevel: 3,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TestPerson',
-                    firstName: 'Test',
-                    lastName: 'Person',
-                    email: 'testperson@mail.com',
-                    yearLevel: 10,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'qwertyuser',
-                    firstName: 'User',
-                    lastName: 'Qwerty',
-                    email: 'qwerty@mail.com',
-                    yearLevel: 20,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TheOther',
-                    firstName: 'Person',
-                    lastName: 'Other',
-                    email: 'other@mail.com',
-                    yearLevel: 2,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Freezed',
-                    firstName: 'Freeze',
-                    lastName: 'Froze',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 6,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'NormalYogurt',
-                    firstName: 'Yogurt',
-                    lastName: 'Normal',
-                    email: 'normal@mail.com',
-                    yearLevel: 7,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'FrozenYogurt',
-                    firstName: 'Bob',
-                    lastName: 'Yogurt',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 5,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Cooluser123',
-                    firstName: 'Test',
-                    lastName: 'User',
-                    email: 'user@mail.com',
-                    yearLevel: 1,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'randomuser456',
-                    firstName: 'Random',
-                    lastName: 'User',
-                    email: 'random@mail.com',
-                    yearLevel: 3,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TestPerson',
-                    firstName: 'Test',
-                    lastName: 'Person',
-                    email: 'testperson@mail.com',
-                    yearLevel: 10,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'qwertyuser',
-                    firstName: 'User',
-                    lastName: 'Qwerty',
-                    email: 'qwerty@mail.com',
-                    yearLevel: 20,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TheOther',
-                    firstName: 'Person',
-                    lastName: 'Other',
-                    email: 'other@mail.com',
-                    yearLevel: 2,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Freezed',
-                    firstName: 'Freeze',
-                    lastName: 'Froze',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 6,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'NormalYogurt',
-                    firstName: 'Yogurt',
-                    lastName: 'Normal',
-                    email: 'normal@mail.com',
-                    yearLevel: 7,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'FrozenYogurt',
-                    firstName: 'Bob',
-                    lastName: 'Yogurt',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 5,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Cooluser123',
-                    firstName: 'Test',
-                    lastName: 'User',
-                    email: 'user@mail.com',
-                    yearLevel: 1,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'randomuser456',
-                    firstName: 'Random',
-                    lastName: 'User',
-                    email: 'random@mail.com',
-                    yearLevel: 3,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TestPerson',
-                    firstName: 'Test',
-                    lastName: 'Person',
-                    email: 'testperson@mail.com',
-                    yearLevel: 10,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'qwertyuser',
-                    firstName: 'User',
-                    lastName: 'Qwerty',
-                    email: 'qwerty@mail.com',
-                    yearLevel: 20,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TheOther',
-                    firstName: 'Person',
-                    lastName: 'Other',
-                    email: 'other@mail.com',
-                    yearLevel: 2,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Freezed',
-                    firstName: 'Freeze',
-                    lastName: 'Froze',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 6,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'NormalYogurt',
-                    firstName: 'Yogurt',
-                    lastName: 'Normal',
-                    email: 'normal@mail.com',
-                    yearLevel: 7,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'FrozenYogurt',
-                    firstName: 'Bob',
-                    lastName: 'Yogurt',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 5,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Cooluser123',
-                    firstName: 'Test',
-                    lastName: 'User',
-                    email: 'user@mail.com',
-                    yearLevel: 1,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'randomuser456',
-                    firstName: 'Random',
-                    lastName: 'User',
-                    email: 'random@mail.com',
-                    yearLevel: 3,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TestPerson',
-                    firstName: 'Test',
-                    lastName: 'Person',
-                    email: 'testperson@mail.com',
-                    yearLevel: 10,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'qwertyuser',
-                    firstName: 'User',
-                    lastName: 'Qwerty',
-                    email: 'qwerty@mail.com',
-                    yearLevel: 20,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'TheOther',
-                    firstName: 'Person',
-                    lastName: 'Other',
-                    email: 'other@mail.com',
-                    yearLevel: 2,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'Freezed',
-                    firstName: 'Freeze',
-                    lastName: 'Froze',
-                    email: 'yogurt@mail.com',
-                    yearLevel: 6,
-                    photoUrl: 'url',
-                },
-                {
-                    displayName: 'NormalYogurt',
-                    firstName: 'Yogurt',
-                    lastName: 'Normal',
-                    email: 'normal@mail.com',
-                    yearLevel: 7,
-                    photoUrl: 'url',
-                },
-            ]
+            },
+            update: (data) => {
+                return { users: data.users.users, pages: data.users.pages }
+            },
         },
     },
 }
