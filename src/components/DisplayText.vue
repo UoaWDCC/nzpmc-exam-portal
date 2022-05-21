@@ -2,6 +2,14 @@
     <latex :content="parsed" style="margin-bottom: -16px" />
 </template>
 
+<style>
+/* Sizing will depend on screen size*/
+img {
+    width: 100%;
+    height: 100%;
+}
+</style>
+
 <script>
 import showdown from 'showdown'
 
