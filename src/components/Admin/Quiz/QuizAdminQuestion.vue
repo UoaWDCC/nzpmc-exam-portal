@@ -406,10 +406,11 @@ export default {
         },
 
         saveQuestion() {
-            // Creates a quiz
+            // Saves changes to Quiz
             this.success = null
             this.error = null
             this.questionFormLoading = true
+            this.originalQuestion = this.questionDetails.question
 
             this.$apollo
                 .mutate({
