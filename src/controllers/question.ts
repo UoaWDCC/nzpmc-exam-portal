@@ -126,4 +126,56 @@ const editQuestion = async (
     })
 }
 
-export { getQuestions, getQuestion, addQuestion, editQuestion }
+const swapQuestion = async (
+    quizID: string,
+    oldID: string,
+    newID: string,
+): Promise<void> => {
+    return runTransaction(async (tran) => {
+        const QuizTranRepository = tran.getRepository(Quiz)
+        const quiz = await QuizTranRepository.findById(quizID)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const oldQuestion = await quiz.questions.findById(oldID)
+        if (!oldQuestion) {
+            throw new NotFoundError()
+        }
+
+        const newQuestion = await quiz.questions.findById(newID)
+        if (!newQuestion) {
+            throw new NotFoundError()
+        }
+
+        const tempId = newQuestion.id
+        newQuestion.id = oldQuestion.id
+
+        quiz.questions.delete(oldQuestion.id)
+        quiz.questions.create(newQuestion)
+
+        oldQuestion.id = tempId
+        quiz.questions.delete(tempId)
+        quiz.questions.create(oldQuestion)
+    })
+}
+
+const deleteQuestion = async (quizID: string, questionID: string) => {
+    return runTransaction(async (tran) => {
+        const QuizTranRepository = tran.getRepository(Quiz)
+        const quiz = await QuizTranRepository.findById(quizID)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
+        return quiz.questions.delete(questionID)
+    })
+}
+
+export {
+    getQuestions,
+    getQuestion,
+    addQuestion,
+    editQuestion,
+    swapQuestion,
+    deleteQuestion,
+}

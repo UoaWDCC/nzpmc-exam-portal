@@ -69,4 +69,10 @@ const editQuiz = async (
     })
 }
 
-export { getAllQuizzes, getQuiz, addQuiz, editQuiz }
+const deleteQuiz = async (id: string): Promise<void> => {
+    return QuizRepository.runTransaction(async (tran) => {
+        return tran.delete(id)
+    })
+}
+
+export { getAllQuizzes, getQuiz, addQuiz, editQuiz, deleteQuiz }

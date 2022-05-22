@@ -15,6 +15,9 @@ import {
     getUserQuiz,
     submitUserQuizQuestions,
     getUserAnswers,
+    deleteQuestion,
+    deleteQuiz,
+    swapQuestion,
 } from '../controllers'
 import {
     AdminAuthenticationError,
@@ -35,6 +38,8 @@ import {
     MutationAddQuizArgs,
     MutationAddUserArgs,
     MutationAddUserQuizArgs,
+    MutationDeleteQuestionArgs,
+    MutationDeleteQuizArgs,
     MutationEditAnswerArgs,
     MutationEditOptionArgs,
     MutationEditQuestionArgs,
@@ -46,6 +51,7 @@ import {
     MutationImageArgs,
     MutationResolvers,
     MutationSubmitUserQuizQuestionsArgs,
+    MutationSwapQuestionArgs,
     Option,
     Quiz,
     RequireFields,
@@ -422,12 +428,48 @@ const submitUserQuizQuestionsMutation: Resolver<
     )
 }
 
+const deleteQuestionMutation: Resolver<
+    Maybe<ResolverTypeWrapper<QuestionModel>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationDeleteQuestionArgs, 'quizID' | 'id'>
+> = async (_parent, { quizID, id }, _context) => {
+    const question = await getQuestion(quizID, id)
+    deleteQuestion(quizID, id)
+    return question
+}
+
+const deleteQuizMutation: Resolver<
+    Maybe<ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'>>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationDeleteQuizArgs, 'id'>
+> = async (_parent, { id }, _context) => {
+    const quiz = await getQuiz(id)
+    deleteQuiz(id)
+    return quiz
+}
+
+const swapQuestionMutation: Resolver<
+    Maybe<ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'>>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationSwapQuestionArgs, 'newID' | 'oldID' | 'quizID'>
+> = async (_parent, { newID, oldID, quizID }, _context) => {
+    swapQuestion(quizID, oldID, newID)
+
+    const quiz = await getQuiz(quizID)
+    return quiz
+}
+
 const mutationResolvers: MutationResolvers = {
     addOption: admin(addOptionMutation),
     addQuestion: admin(addQuestionMutation),
     addQuiz: admin(addQuizMutation),
     addUser: admin(addUserMutation),
     addUserQuiz: admin(addUserQuizMutation),
+    deleteQuestion: admin(deleteQuestionMutation),
+    deleteQuiz: admin(deleteQuizMutation),
     editAnswer: admin(editAnswerMutation),
     editOption: admin(editOptionMutation),
     editQuestion: admin(editQuestionMutation),
@@ -438,6 +480,7 @@ const mutationResolvers: MutationResolvers = {
     editUserQuizQuestion: admin(editUserQuizQuestionMutation),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
+    swapQuestion: admin(swapQuestionMutation),
 }
 
 export default mutationResolvers
