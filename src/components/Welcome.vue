@@ -41,98 +41,46 @@
                                 style="width: 100%"
                                 :aspect-ratio="16 / 9"
                             >
-                                <iframe
-                                    style="width: 100%; height: 100%"
-                                    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                                    title="YouTube video player"
-                                    frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen
-                                ></iframe>
-                            </v-responsive>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col class="col-12 text-center">
-                            <v-dialog v-model="dialog" width="500">
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn
-                                        class="mr-3"
-                                        @click="overlay = !overlay"
-                                        large
-                                        color="primary"
-                                        v-bind="attrs"
-                                        v-on="on"
+                                <h2 class="text-center">Quizzes</h2>
+                                <v-container>
+                                    <template
+                                        v-for="(item, index) in userQuizzes"
                                     >
-                                        Start
-                                        <v-icon right class="material-icons">
-                                            navigate_next
-                                        </v-icon>
-                                    </v-btn>
-                                </template>
-                                <v-btn
-                                    v-if="
-                                        getLocalStorage('currentQuizID') != null
-                                    "
-                                    @click="continueQuiz()"
-                                    large
-                                    color="secondary"
-                                    :disabled="!userQuizzes"
-                                >
-                                    Continue
-                                    <v-icon right class="material-icons">
-                                        navigate_next
-                                    </v-icon>
-                                </v-btn>
-                                <v-card>
-                                    <v-toolbar color="primary" dark>
-                                        <h3>Quiz list</h3>
-                                    </v-toolbar>
-                                    <v-container>
-                                        <template
-                                            v-for="(item, index) in userQuizzes"
-                                        >
-                                            <v-row
-                                                :key="index"
-                                                justify="center"
+                                        <v-row :key="index" justify="center">
+                                            <v-list-item
+                                                v-if="item.startTime != null"
+                                                @click="continueQuiz(index)"
+                                                large
+                                                color="secondary"
+                                                class="my-3"
                                             >
-                                                <v-list-item
-                                                    v-if="
-                                                        item.startTime != null
-                                                    "
-                                                    @click="continueQuiz(index)"
-                                                    large
-                                                    color="secondary"
-                                                    class="my-3"
+                                                Continue: {{ item.name }}
+                                                <v-icon
+                                                    right
+                                                    class="material-icons"
                                                 >
-                                                    Continue: {{ item.name }}
-                                                    <v-icon
-                                                        right
-                                                        class="material-icons"
-                                                    >
-                                                        navigate_next
-                                                    </v-icon>
-                                                </v-list-item>
-                                                <v-list-item
-                                                    v-else
-                                                    @click="startQuiz(index)"
-                                                    large
-                                                    color="primary"
-                                                    class="mb-3"
+                                                    navigate_next
+                                                </v-icon>
+                                            </v-list-item>
+                                            <v-list-item
+                                                v-else
+                                                @click="startQuiz(index)"
+                                                large
+                                                color="primary"
+                                                class="mb-3"
+                                            >
+                                                {{ item.name }}
+                                                <v-icon
+                                                    right
+                                                    class="material-icons"
                                                 >
-                                                    {{ item.name }}
-                                                    <v-icon
-                                                        right
-                                                        class="material-icons"
-                                                    >
-                                                        navigate_next
-                                                    </v-icon>
-                                                </v-list-item>
-                                            </v-row>
-                                        </template>
-                                    </v-container>
-                                </v-card>
-                            </v-dialog>
+                                                    navigate_next
+                                                </v-icon>
+                                            </v-list-item>
+                                        </v-row>
+                                    </template>
+                                </v-container>
+                            </v-responsive>
                         </v-col>
                     </v-row>
                 </v-card>
