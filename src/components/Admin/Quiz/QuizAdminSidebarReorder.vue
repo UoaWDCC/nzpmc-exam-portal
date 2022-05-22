@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-tooltip bottom>
+        <v-tooltip bottom v-if="beforeId !== undefined">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" v-on="on" @click="createQuestion">
                     <v-icon class="material-icons">arrow_upward</v-icon>
@@ -10,7 +10,7 @@
             <span>Move question upward</span>
         </v-tooltip>
 
-        <v-tooltip bottom>
+        <v-tooltip bottom v-if="afterId !== undefined">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" v-on="on" @click="createQuestion">
                     <v-icon class="material-icons">arrow_downward</v-icon>
@@ -23,5 +23,7 @@
 </template>
 
 <script>
-export default {}
+export default {
+    props: ['currentId', 'beforeId', 'afterId'],
+}
 </script>

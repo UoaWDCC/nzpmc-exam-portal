@@ -122,7 +122,19 @@
                             </v-list-item-title>
                         </v-list-item-content>
 
-                        <QuizAdminSidebarReorder />
+                        <QuizAdminSidebarReorder
+                            :currentId="question.id"
+                            :beforeId="
+                                index === 0
+                                    ? undefined
+                                    : questions[index - 1].id
+                            "
+                            :afterId="
+                                index === questions.length - 1
+                                    ? undefined
+                                    : questions[index + 1].id
+                            "
+                        />
                     </v-list-item>
                 </v-list-group>
             </v-list-item-group>
