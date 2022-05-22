@@ -7,9 +7,12 @@ type Mutation {
 
     addQuiz(input: AddQuizInput!): Quiz
     editQuiz(input: EditQuizInput!): Quiz
+    deleteQuiz(id: ID!): Quiz
 
     addQuestion(input: AddQuestionInput!): Question
     editQuestion(input: EditQuestionInput!): Question
+    deleteQuestion(quizID: ID!, id: ID!): Question
+    swapQuestion(quizID: ID!, oldID: ID!, newID: ID!): Quiz
 
     addOption(input: AddOptionInput!): Option
     editOption(input: EditOptionInput!): Option

@@ -142,6 +142,8 @@ export type Mutation = {
   /** Admin */
   addUser?: Maybe<User>;
   addUserQuiz?: Maybe<UserQuiz>;
+  deleteQuestion?: Maybe<Question>;
+  deleteQuiz?: Maybe<Quiz>;
   editAnswer?: Maybe<Option>;
   editOption?: Maybe<Option>;
   editQuestion?: Maybe<Question>;
@@ -154,6 +156,7 @@ export type Mutation = {
   /** Image */
   image?: Maybe<Image>;
   submitUserQuizQuestions?: Maybe<UserQuiz>;
+  swapQuestion?: Maybe<Quiz>;
 };
 
 
@@ -179,6 +182,17 @@ export type MutationAddUserArgs = {
 
 export type MutationAddUserQuizArgs = {
   input: AddUserQuizInput;
+};
+
+
+export type MutationDeleteQuestionArgs = {
+  id: Scalars['ID'];
+  quizID: Scalars['ID'];
+};
+
+
+export type MutationDeleteQuizArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -229,6 +243,13 @@ export type MutationImageArgs = {
 
 export type MutationSubmitUserQuizQuestionsArgs = {
   input: SubmissionInput;
+};
+
+
+export type MutationSwapQuestionArgs = {
+  newID: Scalars['ID'];
+  oldID: Scalars['ID'];
+  quizID: Scalars['ID'];
 };
 
 export type Option = {
@@ -544,6 +565,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addQuiz?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationAddQuizArgs, 'input'>>;
   addUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddUserArgs, 'input'>>;
   addUserQuiz?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationAddUserQuizArgs, 'input'>>;
+  deleteQuestion?: Resolver<Maybe<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<MutationDeleteQuestionArgs, 'id' | 'quizID'>>;
+  deleteQuiz?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationDeleteQuizArgs, 'id'>>;
   editAnswer?: Resolver<Maybe<ResolversTypes['Option']>, ParentType, ContextType, RequireFields<MutationEditAnswerArgs, 'input'>>;
   editOption?: Resolver<Maybe<ResolversTypes['Option']>, ParentType, ContextType, RequireFields<MutationEditOptionArgs, 'input'>>;
   editQuestion?: Resolver<Maybe<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<MutationEditQuestionArgs, 'input'>>;
@@ -554,6 +577,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editUserQuizQuestion?: Resolver<Maybe<ResolversTypes['UserQuizQuestion']>, ParentType, ContextType, RequireFields<MutationEditUserQuizQuestionArgs, 'input'>>;
   image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationImageArgs, 'input'>>;
   submitUserQuizQuestions?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationSubmitUserQuizQuestionsArgs, 'input'>>;
+  swapQuestion?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationSwapQuestionArgs, 'newID' | 'oldID' | 'quizID'>>;
 };
 
 export type OptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Option'] = ResolversParentTypes['Option']> = {

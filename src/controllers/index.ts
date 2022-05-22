@@ -3,6 +3,8 @@ import {
     getQuestion,
     addQuestion,
     editQuestion,
+    swapQuestion,
+    deleteQuestion,
 } from './question'
 import {
     getQuestionOptions,
@@ -10,7 +12,7 @@ import {
     addQuestionOption,
     editQuestionOption,
 } from './option'
-import { getAllQuizzes, getQuiz, addQuiz, editQuiz } from './quiz'
+import { getAllQuizzes, getQuiz, addQuiz, editQuiz, deleteQuiz } from './quiz'
 import {
     getUser,
     getAllUsers,
@@ -41,11 +43,14 @@ export {
     getQuestion,
     addQuestion,
     editQuestion,
+    swapQuestion,
+    deleteQuestion,
     getQuestionOptions,
     getUserQuiz,
     getUserQuizzes,
     getAllQuizzes,
     getQuiz,
+    deleteQuiz,
     getAllUserQuizzes,
     getUser,
     getAllUsers,
