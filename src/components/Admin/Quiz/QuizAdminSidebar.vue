@@ -116,9 +116,13 @@
                             question.id
                         "
                     >
-                        <v-list-item-title>
-                            Question {{ index + 1 }}
-                        </v-list-item-title>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Question {{ index + 1 }}
+                            </v-list-item-title>
+                        </v-list-item-content>
+
+                        <QuizAdminSidebarReorder />
                     </v-list-item>
                 </v-list-group>
             </v-list-item-group>
@@ -168,8 +172,13 @@
 <script>
 import { AdminQuizzesQuery } from '@/gql/queries/adminQuiz'
 import { AdminQuizQuestionsQuery } from '@/gql/queries/adminQuiz'
+import QuizAdminSidebarReorder from './QuizAdminSidebarReorder.vue'
 
 export default {
+    components: {
+        QuizAdminSidebarReorder,
+    },
+
     data: () => ({
         quizzesLoading: true,
 
