@@ -181,7 +181,9 @@
                         <QuizAdminOption
                             :text="option.option"
                             :id="option.id"
-                            v-for="(option, i) in questionDetails.options"
+                            v-for="(option, i) in filterOptions(
+                                questionDetails.options,
+                            )"
                             :key="option.id"
                             @updateOption="
                                 (optionId, newOption) =>
@@ -428,6 +430,21 @@ export default {
                     this.questionFormLoading = false
                     this.error = error.message
                 })
+        },
+
+        filterOptions(optionArr) {
+            //Takes in the options array from questionDetail and filters out the answer to render options only without changing the actual options array
+            const tempArr = optionArr
+            for (let i = 0; i < optionArr.length; i++) {
+                if (
+                    optionArr[i].option === this.questionDetails.answer.option
+                ) {
+                    console.log('Here')
+                    tempArr.splice(i, 1)
+                    break
+                }
+            }
+            return tempArr
         },
     },
 
