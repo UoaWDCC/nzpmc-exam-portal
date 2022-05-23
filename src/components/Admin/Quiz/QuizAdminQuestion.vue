@@ -439,7 +439,6 @@ export default {
                 if (
                     optionArr[i].option === this.questionDetails.answer.option
                 ) {
-                    console.log('Here')
                     tempArr.splice(i, 1)
                     break
                 }
