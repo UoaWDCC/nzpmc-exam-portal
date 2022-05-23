@@ -143,20 +143,50 @@ const swapQuestion = async (
             throw new NotFoundError()
         }
 
+        const oldQuestionOptions = await oldQuestion.options?.find()
+        if (!oldQuestionOptions) {
+            throw new NotFoundError()
+        }
+
         const newQuestion = await quiz.questions.findById(newID)
         if (!newQuestion) {
             throw new NotFoundError()
         }
 
+        const newQuestionOptions = await newQuestion.options?.find()
+        if (!newQuestionOptions) {
+            throw new NotFoundError()
+        }
+        await Promise.all(
+            oldQuestionOptions.map(async (option) => {
+                await oldQuestion.options?.delete(option.id)
+            }),
+        )
+
+        await Promise.all(
+            newQuestionOptions.map(async (option) => {
+                await newQuestion.options?.delete(option.id)
+            }),
+        )
+        await Promise.all(
+            oldQuestionOptions.map(async (option) => {
+                await newQuestion.options?.create(option)
+            }),
+        )
+        await Promise.all(
+            newQuestionOptions.map(async (option) => {
+                await oldQuestion.options?.create(option)
+            }),
+        )
         const tempId = newQuestion.id
         newQuestion.id = oldQuestion.id
 
-        quiz.questions.delete(oldQuestion.id)
-        quiz.questions.create(newQuestion)
+        await quiz.questions.delete(oldQuestion.id)
+        await quiz.questions.create(newQuestion)
 
         oldQuestion.id = tempId
-        quiz.questions.delete(tempId)
-        quiz.questions.create(oldQuestion)
+        await quiz.questions.delete(tempId)
+        await quiz.questions.create(oldQuestion)
     })
 }
 

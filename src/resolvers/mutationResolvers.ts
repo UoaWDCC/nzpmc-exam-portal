@@ -456,7 +456,7 @@ const swapQuestionMutation: Resolver<
     UserContext,
     RequireFields<MutationSwapQuestionArgs, 'newID' | 'oldID' | 'quizID'>
 > = async (_parent, { newID, oldID, quizID }, _context) => {
-    swapQuestion(quizID, oldID, newID)
+    await swapQuestion(quizID, oldID, newID)
 
     const quiz = await getQuiz(quizID)
     return quiz
