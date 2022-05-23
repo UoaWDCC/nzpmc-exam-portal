@@ -107,7 +107,7 @@
 
                     <v-list-item
                         v-for="(question, index) in questions"
-                        :key="question.id"
+                        :key="index + question.id"
                         link
                         :to="
                             '/admin/quiz/' +
@@ -123,6 +123,7 @@
                         </v-list-item-content>
 
                         <QuizAdminSidebarReorder
+                            :quizId="selectedQuiz"
                             :currentId="question.id"
                             :beforeId="
                                 index === 0
