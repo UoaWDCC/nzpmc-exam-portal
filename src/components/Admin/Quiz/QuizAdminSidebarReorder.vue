@@ -54,7 +54,7 @@ export default {
                     variables: {
                         quizId: this.quizId,
                         oldId: this.currentId,
-                        newId: newId,
+                        newId,
                     },
                     refetchQueries: [
                         {
