@@ -107,7 +107,7 @@
 
                     <v-list-item
                         v-for="(question, index) in questions"
-                        :key="question.id"
+                        :key="index + question.id"
                         link
                         :to="
                             '/admin/quiz/' +
@@ -116,9 +116,26 @@
                             question.id
                         "
                     >
-                        <v-list-item-title>
-                            Question {{ index + 1 }}
-                        </v-list-item-title>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Question {{ index + 1 }}
+                            </v-list-item-title>
+                        </v-list-item-content>
+
+                        <QuizAdminSidebarReorder
+                            :quizId="selectedQuiz"
+                            :currentId="question.id"
+                            :beforeId="
+                                index === 0
+                                    ? undefined
+                                    : questions[index - 1].id
+                            "
+                            :afterId="
+                                index === questions.length - 1
+                                    ? undefined
+                                    : questions[index + 1].id
+                            "
+                        />
                     </v-list-item>
                 </v-list-group>
             </v-list-item-group>
@@ -168,8 +185,13 @@
 <script>
 import { AdminQuizzesQuery } from '@/gql/queries/adminQuiz'
 import { AdminQuizQuestionsQuery } from '@/gql/queries/adminQuiz'
+import QuizAdminSidebarReorder from './QuizAdminSidebarReorder.vue'
 
 export default {
+    components: {
+        QuizAdminSidebarReorder,
+    },
+
     data: () => ({
         quizzesLoading: true,
 
