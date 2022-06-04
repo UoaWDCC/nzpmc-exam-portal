@@ -18,6 +18,7 @@ const getUsersPagination = async (
     page: number,
     limit: number,
     orderBy: Schema.UsersOrderByInput,
+    term: string,
 ): Promise<Schema.UserPage> => {
     if (page < 0) {
         throw new Error('Page cannot be 0 or negative')
@@ -31,12 +32,79 @@ const getUsersPagination = async (
     // find length of pages
     const total = Math.ceil(users.length / limit)
 
-    users.splice(0, (page - 1) * limit)
+    const sortedUsers = caseInsensitiveSort(orderBy, users)
+
+    const finalUsers = sortedUsers.filter(
+        (user: any) =>
+            user.displayName
+                .trim()
+                .toLowerCase()
+                .includes(term.toLowerCase()) ||
+            user.firstName.trim().toLowerCase().includes(term.toLowerCase()) ||
+            user.lastName.trim().toLowerCase().includes(term.toLowerCase()),
+    )
+
+    finalUsers.slice((page - 1) * limit, page * limit)
 
     return {
         pages: total,
         users: packUsers(users),
     }
+}
+
+const sortUsersList = (users: any, key: string, isDescending: boolean) => {
+    const sortedUsers = users.sort((user1: any, user2: any) => {
+        user1[key].trim().localeCompare(user2[key].trim(), undefined, {
+            sensitivity: 'accent',
+        })
+    })
+    if (isDescending) {
+        return sortedUsers.reverse()
+    } else {
+        return sortedUsers
+    }
+}
+
+const sortUsersYearLevel = (users: any, key: string, isDescending: boolean) => {
+    const sortedUsers = users.sort((user1: any, user2: any) => {
+        parseInt(user1[key].trim()) - parseInt(user2[key].trim())
+    })
+    if (isDescending) {
+        return sortedUsers.reverse()
+    } else {
+        return sortedUsers
+    }
+}
+
+const caseInsensitiveSort = (orderBy: Schema.UsersOrderByInput, users: any) => {
+    let sortedUsers: any
+    let key: string
+    if (orderBy.displayName) {
+        key = 'displayName'
+        sortedUsers = sortUsersList(users, key, orderBy.displayName === 'DESC')
+        return sortedUsers
+    } else if (orderBy.email) {
+        key = 'email'
+        sortedUsers = sortUsersList(users, key, orderBy.email === 'DESC')
+        return sortedUsers
+    } else if (orderBy.firstName) {
+        key = 'firstName'
+        sortedUsers = sortUsersList(users, key, orderBy.firstName === 'DESC')
+        return sortedUsers
+    } else if (orderBy.lastName) {
+        key = 'lastName'
+        sortedUsers = sortUsersList(users, key, orderBy.lastName === 'DESC')
+        return sortedUsers
+    } else if (orderBy.yearLevel) {
+        key = 'yearLevel'
+        sortedUsers = sortUsersYearLevel(
+            users,
+            key,
+            orderBy.yearLevel === 'DESC',
+        )
+        return sortedUsers
+    }
+    throw new Error('Invalid orderBy input')
 }
 
 const getUsersOrderByInput = (orderBy: Schema.UsersOrderByInput): string => {

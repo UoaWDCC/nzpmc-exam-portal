@@ -54,7 +54,7 @@ const addFirebaseUser = async (
 
     if (!photoURL) {
         // Generate random dark color for profile background
-        let randomDarkColor = '#'
+        let randomDarkColor = ''
         for (let i = 0; i < 6; i++) {
             randomDarkColor += Math.floor(Math.random() * 10)
         }
