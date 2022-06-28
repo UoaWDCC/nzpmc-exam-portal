@@ -99,6 +99,25 @@
                         ></v-skeleton-loader>
 
                         <v-btn
+                            color="red"
+                            class="mr-3"
+                            :loading="questionFormLoading"
+                            :disabled="
+                                !formIsValid ||
+                                createQuestionMode ||
+                                questionFormLoading
+                            "
+                            v-if="!loading"
+                            @click="deleteQuestion()"
+                        >
+                            <v-icon left class="material-icons">
+                                {{ 'delete' }}
+                            </v-icon>
+
+                            {{ 'Delete' }}
+                        </v-btn>
+
+                        <v-btn
                             type="submit"
                             color="primary"
                             :disabled="
@@ -242,6 +261,7 @@ import {
     AddQuestionMutation,
     EditQuestionMutation,
     AddOptionMutation,
+    DeleteQuestionMutation,
 } from '@/gql/mutations/adminQuiz'
 import { AdminQuizQuestionDetailsQuery } from '@/gql/queries/adminQuiz'
 
@@ -445,6 +465,38 @@ export default {
                 }
             }
             return tempArr
+        },
+
+        test() {
+            console.log('HERE')
+        },
+
+        deleteQuestion() {
+            //Deletes the question from the quiz
+
+            console.log('In the Delete Question function')
+
+            this.success = null
+            this.error = null
+            this.questionFormLoading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: DeleteQuestionMutation,
+                    variables: {
+                        quizID: this.$route.params.quizId,
+                        questionID: this.$route.params.questionId,
+                    },
+                })
+                .then(() => {
+                    this.questionFormLoading = false
+                    this.success = 'Question successfully deleted.'
+                })
+                .catch((error) => {
+                    this.questionFormLoading = false
+                    this.error = error.message
+                    console.log('Error Occurred')
+                })
         },
     },
 

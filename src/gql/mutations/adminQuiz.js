@@ -42,6 +42,14 @@ export const EditQuestionMutation = gql`
     }
 `
 
+export const DeleteQuestionMutation = gql`
+    mutation DeleteQuestionMutation($quizId: ID!, $questionId: ID!) {
+        deleteQuestion(quizID: $quizId, questionID: $questionId) {
+            id
+        }
+    }
+`
+
 export const AddOptionMutation = gql`
     mutation AddOptionMutation($input: AddOptionInput!) {
         addOption(input: $input) {
