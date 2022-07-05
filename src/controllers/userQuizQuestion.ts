@@ -8,7 +8,7 @@ import {
     packUserQuizQuestion,
     packUserQuizQuestions,
 } from '../mappers/userQuizQuestionMapper'
-import { packOptions } from '../mappers/optionMapper'
+import { packOption, packOptions } from '../mappers/optionMapper'
 import { UserQuizQuestionModel } from '../resolvers/custom/userQuizQuestionModel'
 
 const getUserQuizQuestion = async (
@@ -224,6 +224,45 @@ const getUserQuizQuestionOptions = async (
     })
 }
 
+const getUserQuizQuestionAnswer = async (
+    userQuizID: string,
+    questionID: string,
+): Promise<Schema.Option | null> => {
+    return runTransaction(async (tran) => {
+        const UserQuizTranRepository = tran.getRepository(UserQuiz)
+        const QuizTranRepository = tran.getRepository(Quiz)
+
+        const userQuiz = await UserQuizTranRepository.findById(userQuizID)
+        if (!userQuiz || !userQuiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const quizQuestion = await quiz.questions.findById(questionID)
+        if (!quizQuestion || !quizQuestion.options) {
+            throw new NotFoundError()
+        }
+
+        const userQuizQuestion = await userQuiz.questions.findById(questionID)
+        if (!userQuizQuestion || !userQuizQuestion.answerID) {
+            return null
+        }
+
+        const option = await quizQuestion.options.findById(
+            userQuizQuestion.answerID,
+        )
+        if (!option) {
+            return null
+        }
+
+        return packOption(option)
+    })
+}
+
 interface UserAnswers {
     userAnswerIDs: string[]
     correctAnswerIDs: string[]
@@ -252,8 +291,7 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
                     userQuizQuestion.id,
                 )
                 if (!userQuestion || !userQuestion.answerID) {
-                    // Each question should have an answer
-                    throw new NotFoundError()
+                    return ''
                 }
                 return userQuestion.answerID
             }),
@@ -301,6 +339,7 @@ export {
     addUserQuizQuestion,
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
+    getUserQuizQuestionAnswer,
     submitUserQuizQuestions,
     getUserAnswers,
 }
