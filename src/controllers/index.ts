@@ -34,6 +34,7 @@ import {
     addUserQuizQuestion,
     editUserQuizQuestion,
     getUserQuizQuestionOptions,
+    getUserQuizQuestionAnswer,
     getUserAnswers,
     submitUserQuizQuestions,
 } from './userQuizQuestion'
@@ -62,6 +63,7 @@ export {
     editUserQuizQuestion,
     getOptionByID,
     getUserQuizQuestionOptions,
+    getUserQuizQuestionAnswer,
     addQuiz,
     getUserAnswers,
     addUserQuiz,

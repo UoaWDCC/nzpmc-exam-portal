@@ -1,4 +1,7 @@
-import { getUserQuizQuestion, getUserQuizQuestionOptions } from '../controllers'
+import {
+    getUserQuizQuestionAnswer,
+    getUserQuizQuestionOptions,
+} from '../controllers'
 import { user } from './helpers/auth'
 import { UserQuizQuestionModel } from './custom/userQuizQuestionModel'
 import {
@@ -16,7 +19,7 @@ const userAnswerUserQuizQuestion: Resolver<
     unknown
 > = (parents, _args, _context) => {
     const { userQuizID, id: userQuizQuestionID } = parents
-    return getUserQuizQuestion(userQuizID, userQuizQuestionID)
+    return getUserQuizQuestionAnswer(userQuizID, userQuizQuestionID)
 }
 
 const optionsUserQuizQuestion: Resolver<
