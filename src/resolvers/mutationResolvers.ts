@@ -42,6 +42,7 @@ import {
     MutationDeleteQuizArgs,
     MutationEditAnswerArgs,
     MutationEditOptionArgs,
+    MutationEditOrderQuestionArgs,
     MutationEditQuestionArgs,
     MutationEditQuizArgs,
     MutationEditSelfArgs,
@@ -462,6 +463,15 @@ const swapQuestionMutation: Resolver<
     return quiz
 }
 
+const editOrderQuestionMutation: Resolver<
+    ResolverTypeWrapper<UserQuizQuestionModel>[],
+    unknown,
+    UserContext,
+    RequireFields<MutationEditOrderQuestionArgs, 'input'>
+> = async (_parent, { input }, _context) => {
+    return []
+}
+
 const mutationResolvers: MutationResolvers = {
     addOption: admin(addOptionMutation),
     addQuestion: admin(addQuestionMutation),
@@ -472,6 +482,7 @@ const mutationResolvers: MutationResolvers = {
     deleteQuiz: admin(deleteQuizMutation),
     editAnswer: admin(editAnswerMutation),
     editOption: admin(editOptionMutation),
+    editOrderQuestion: admin(editOrderQuestionMutation),
     editQuestion: admin(editQuestionMutation),
     editQuiz: admin(editQuizMutation),
     editSelf: user(editSelfMutation),

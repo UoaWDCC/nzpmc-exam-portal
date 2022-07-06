@@ -121,6 +121,10 @@ input UsersOrderByInput {
     yearLevel: Sort
 }
 
+input EditOrderQuestionInput {
+    questionIDs: [ID!]!
+}
+
 enum Sort {
     ASC
     DESC

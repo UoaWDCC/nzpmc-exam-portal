@@ -72,6 +72,10 @@ export type EditOptionInput = {
   quizID: Scalars['ID'];
 };
 
+export type EditOrderQuestionInput = {
+  questionIDs: Array<Scalars['ID']>;
+};
+
 export type EditQuestionInput = {
   id: Scalars['ID'];
   imageURI?: InputMaybe<Scalars['String']>;
@@ -146,6 +150,7 @@ export type Mutation = {
   deleteQuiz?: Maybe<Quiz>;
   editAnswer?: Maybe<Option>;
   editOption?: Maybe<Option>;
+  editOrderQuestion?: Maybe<Array<Maybe<UserQuizQuestion>>>;
   editQuestion?: Maybe<Question>;
   editQuiz?: Maybe<Quiz>;
   /** User */
@@ -203,6 +208,11 @@ export type MutationEditAnswerArgs = {
 
 export type MutationEditOptionArgs = {
   input: EditOptionInput;
+};
+
+
+export type MutationEditOrderQuestionArgs = {
+  input: EditOrderQuestionInput;
 };
 
 
@@ -488,6 +498,7 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   EditAnswerInput: EditAnswerInput;
   EditOptionInput: EditOptionInput;
+  EditOrderQuestionInput: EditOrderQuestionInput;
   EditQuestionInput: EditQuestionInput;
   EditQuizInput: EditQuizInput;
   EditSelfInput: EditSelfInput;
@@ -525,6 +536,7 @@ export type ResolversParentTypes = {
   DateTime: Scalars['DateTime'];
   EditAnswerInput: EditAnswerInput;
   EditOptionInput: EditOptionInput;
+  EditOrderQuestionInput: EditOrderQuestionInput;
   EditQuestionInput: EditQuestionInput;
   EditQuizInput: EditQuizInput;
   EditSelfInput: EditSelfInput;
@@ -569,6 +581,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteQuiz?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationDeleteQuizArgs, 'id'>>;
   editAnswer?: Resolver<Maybe<ResolversTypes['Option']>, ParentType, ContextType, RequireFields<MutationEditAnswerArgs, 'input'>>;
   editOption?: Resolver<Maybe<ResolversTypes['Option']>, ParentType, ContextType, RequireFields<MutationEditOptionArgs, 'input'>>;
+  editOrderQuestion?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserQuizQuestion']>>>, ParentType, ContextType, RequireFields<MutationEditOrderQuestionArgs, 'input'>>;
   editQuestion?: Resolver<Maybe<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<MutationEditQuestionArgs, 'input'>>;
   editQuiz?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationEditQuizArgs, 'input'>>;
   editSelf?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationEditSelfArgs, 'input'>>;
