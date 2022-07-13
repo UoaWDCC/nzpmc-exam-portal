@@ -17,6 +17,7 @@
         "material-icons": "^0.7.4",
         "mathlive": "0.69.4",
         "showdown": "^2.1.0",
+        "showdown-katex": "^0.8.0",
         "vue": "^2.6.11",
         "vue-apollo": "^3.0.7",
         "vue-markdown-render": "^2.0.0",
