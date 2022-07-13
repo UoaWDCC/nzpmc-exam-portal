@@ -31,9 +31,9 @@ const questionUserQuiz: Resolver<
     unknown,
     RequireFields<UserQuizQuestionArgs, 'id'>
 > = (parents, args, _context) => {
-    const { id: userQuizID } = parents
+    const { id: userQuizID, expired } = parents
     const { id: questionID } = args
-    return getUserQuizQuestion(userQuizID, questionID)
+    return getUserQuizQuestion(userQuizID, questionID, expired)
 }
 
 const questionsUserQuiz: Resolver<
@@ -42,8 +42,8 @@ const questionsUserQuiz: Resolver<
     unknown,
     unknown
 > = (parents, _args, _context) => {
-    const { id: userQuizID } = parents
-    return getUserQuizQuestions(userQuizID)
+    const { id: userQuizID, expired } = parents
+    return getUserQuizQuestions(userQuizID, expired)
 }
 
 const userQuizResolvers: UserQuizResolvers = {

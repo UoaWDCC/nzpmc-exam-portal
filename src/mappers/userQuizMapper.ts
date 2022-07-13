@@ -5,16 +5,19 @@ interface PackUserQuiz {
     userID: string
     quiz: Quiz
     userQuiz: UserQuiz
+    expired: boolean
 }
 
 const packUserQuiz = ({
     userID,
     quiz,
     userQuiz,
+    expired,
 }: PackUserQuiz): UserQuizModel => {
     return {
         userID,
         userQuizID: userQuiz.id,
+        expired,
         id: userQuiz.id,
         name: quiz.name,
         description: quiz.description,

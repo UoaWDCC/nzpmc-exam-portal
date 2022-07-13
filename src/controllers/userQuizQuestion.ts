@@ -2,7 +2,7 @@ import { Quiz, UserQuiz, UserQuizQuestion } from '../models'
 import { getUserQuiz, setUserQuizScore } from './userQuiz'
 import { runTransaction } from 'fireorm'
 import * as Schema from '../resolvers/resolvers-types'
-import { NotFoundError } from '../utils/errors'
+import { NotFoundError, UserQuizExpiredError } from '../utils/errors'
 import {
     PackQuizQuestion,
     packUserQuizQuestion,
@@ -14,9 +14,15 @@ import { UserQuizQuestionModel } from '../resolvers/custom/userQuizQuestionModel
 const getUserQuizQuestion = async (
     userQuizID: string,
     id: string,
+    expired: boolean,
 ): Promise<UserQuizQuestionModel> => {
     let userQuiz
     let quizQuestion
+
+    if (expired) {
+        throw new UserQuizExpiredError()
+    }
+
     await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -52,9 +58,15 @@ const getUserQuizQuestion = async (
 
 const getUserQuizQuestions = async (
     userQuizID: string,
+    expired: boolean,
 ): Promise<UserQuizQuestionModel[]> => {
     let quizQuestions
     let userQuiz
+
+    if (expired) {
+        throw new UserQuizExpiredError()
+    }
+
     await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -100,6 +112,7 @@ const addUserQuizQuestion = async (
     questionID: string,
 ): Promise<UserQuizQuestionModel> => {
     let userQuizQuestionID: string | undefined
+    let expired = true
     await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -108,6 +121,8 @@ const addUserQuizQuestion = async (
         if (!userQuiz || !userQuiz.questions) {
             throw new NotFoundError()
         }
+
+        expired = (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
@@ -136,7 +151,7 @@ const addUserQuizQuestion = async (
         throw new NotFoundError()
     }
 
-    return await getUserQuizQuestion(userQuizID, userQuizQuestionID)
+    return await getUserQuizQuestion(userQuizID, userQuizQuestionID, expired)
 }
 
 const editUserQuizQuestion = async (
@@ -145,6 +160,7 @@ const editUserQuizQuestion = async (
     optionID?: string,
     flag?: boolean,
 ): Promise<UserQuizQuestionModel> => {
+    let expired = true
     return runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
@@ -153,6 +169,8 @@ const editUserQuizQuestion = async (
         if (!userQuiz || !userQuiz.questions) {
             throw new NotFoundError()
         }
+
+        expired = (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
@@ -181,7 +199,11 @@ const editUserQuizQuestion = async (
             userQuizQuestion,
         )
 
-        return await getUserQuizQuestion(userQuizID, newUserQuizQuestion.id)
+        return await getUserQuizQuestion(
+            userQuizID,
+            newUserQuizQuestion.id,
+            expired,
+        )
     })
 }
 
@@ -278,12 +300,21 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
             throw new NotFoundError()
         }
 
+        const expired =
+            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+        if (expired) {
+            throw new UserQuizExpiredError()
+        }
+
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
 
-        const userQuizQuestions = await getUserQuizQuestions(userQuizID)
+        const userQuizQuestions = await getUserQuizQuestions(
+            userQuizID,
+            expired,
+        )
 
         const userAnswerIDs = await Promise.all(
             userQuizQuestions.map(async (userQuizQuestion) => {
