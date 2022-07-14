@@ -51,14 +51,13 @@ export default {
             for (const match of matches) {
                 const startIndex = match.index
                 const endIndex = match.index + match[0].length
-                let substring = newText.slice(startIndex, endIndex)
-                substring = substring.replaceAll('*', '\\*')
-                substring = substring.replaceAll('_', '\\_')
+                const leftSubstring = newText.slice(0, startIndex)
+                const rightSubstring = newText.slice(endIndex)
+                let midSubstring = newText.slice(startIndex, endIndex)
+                midSubstring = midSubstring.replaceAll('*', '\\*')
+                midSubstring = midSubstring.replaceAll('_', '\\_')
 
-                newText =
-                    newText.slice(0, startIndex) +
-                    substring +
-                    newText.slice(endIndex)
+                newText = leftSubstring + midSubstring + rightSubstring
             }
             return this.converter.makeHtml(newText)
         },
