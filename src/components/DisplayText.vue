@@ -47,7 +47,11 @@ export default {
             // The regex expression is used to find
             // substrings which are latex blocks and ignores \$
             const latexRegex = /(?<!\\)\$.*?(?<!\\)\$/g
-            const matches = newText.matchAll(latexRegex)
+            const matches = [...newText.matchAll(latexRegex)]
+            // Reverses array, so that indexing is still correct
+            // while modifying the string
+            matches.reverse()
+            console.log(matches)
             for (const match of matches) {
                 const startIndex = match.index
                 const endIndex = match.index + match[0].length
