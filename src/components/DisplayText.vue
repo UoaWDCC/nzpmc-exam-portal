@@ -51,7 +51,6 @@ export default {
             // Reverses array, so that indexing is still correct
             // while modifying the string
             matches.reverse()
-            console.log(matches)
             for (const match of matches) {
                 const startIndex = match.index
                 const endIndex = match.index + match[0].length
@@ -60,7 +59,6 @@ export default {
                 let midSubstring = newText.slice(startIndex, endIndex)
                 midSubstring = midSubstring.replaceAll('*', '\\*')
                 midSubstring = midSubstring.replaceAll('_', '\\_')
-
                 newText = leftSubstring + midSubstring + rightSubstring
             }
             return this.converter.makeHtml(newText)
