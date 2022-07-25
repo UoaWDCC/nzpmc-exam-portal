@@ -40,7 +40,7 @@ const usersQuery: Resolver<
     unknown,
     UserContext,
     Partial<QueryUsersArgs>
-> = (_parents, { page, limit, orderBy }, _context) => {
+> = (_parents, { page, limit, orderBy, term }, _context) => {
     if (!page) {
         page = 1
     }
@@ -52,7 +52,11 @@ const usersQuery: Resolver<
     if (!orderBy) {
         orderBy = { displayName: Sort.Asc }
     }
-    return getUsersPagination(page, limit, orderBy)
+
+    if (!term) {
+        term = ''
+    }
+    return getUsersPagination(page, limit, orderBy, term)
 }
 
 const meQuery: Resolver<

@@ -312,6 +312,7 @@ export type QueryUsersArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<UsersOrderByInput>;
   page?: InputMaybe<Scalars['Int']>;
+  term?: InputMaybe<Scalars['String']>;
 };
 
 export type Question = {
