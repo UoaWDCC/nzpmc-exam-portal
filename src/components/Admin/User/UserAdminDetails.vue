@@ -24,8 +24,26 @@
                 <v-row dense>
                     <v-col class="col">
                         <v-text-field
-                            label="Name"
-                            v-model="userName"
+                            label="First Name"
+                            v-model="firstName"
+                            :rules="[rules.required]"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row dense>
+                    <v-col class="col">
+                        <v-text-field
+                            label="Last Name"
+                            v-model="lastName"
+                            :rules="[rules.required]"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row dense>
+                    <v-col class="col">
+                        <v-text-field
+                            label="Display Name"
+                            v-model="displayName"
                             :rules="[rules.required]"
                         ></v-text-field>
                     </v-col>
@@ -73,6 +91,7 @@
                             type="submit"
                             color="primary"
                             :disabled="!formIsValid"
+                            @click="updateInformation"
                         >
                             <v-icon left class="material-icons"> save</v-icon>
                             Save
@@ -82,6 +101,7 @@
                             type="submit"
                             color="primary"
                             :disabled="!formIsValid"
+                            @click="updateInformation"
                         >
                             <v-icon left class="material-icons"> create</v-icon>
                             Create
@@ -102,15 +122,18 @@
 </style>
 
 <script>
+import { EditUser, AddUser } from '@/gql/mutations/user'
 export default {
     data() {
         return {
             dialog: false,
             quizzes: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-            userName: this.user ? this.user.displayName : null,
+            displayName: this.user ? this.user.displayName : null,
             userPassword: null,
             userYearLevel: this.user ? this.user.yearLevel : null,
             userEmail: this.user ? this.user.email : null,
+            firstName: this.user ? this.user.firstName : null,
+            lastName: this.user ? this.user.lastName : null,
             associatedQuiz: null,
             userForm: null,
             formIsValid: null,
@@ -125,6 +148,36 @@ export default {
     methods: {
         cancel() {
             this.dialog = false
+        },
+        updateInformation() {
+            if (this.user) {
+                this.$apollo.mutate({
+                    mutation: EditUser,
+                    variables: {
+                        input: {
+                            id: this.user.id,
+                            displayName: this.displayName,
+                            email: this.userEmail,
+                            yearLevel: this.userYearLevel,
+                            firstName: this.firstName,
+                            lastName: this.lastName,
+                        },
+                    },
+                })
+            } else {
+                this.$apollo.mutate({
+                    mutation: AddUser,
+                    variables: {
+                        input: {
+                            displayName: this.displayName,
+                            email: this.userEmail,
+                            yearLevel: this.userYearLevel,
+                            firstName: this.firstName,
+                            lastName: this.lastName,
+                        },
+                    },
+                })
+            }
         },
     },
 }
