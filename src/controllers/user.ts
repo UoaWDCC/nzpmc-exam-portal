@@ -29,9 +29,6 @@ const getUsersPagination = async (
     console.log(order, limits)
     const users = await UserRepository.find()
 
-    // find length of pages
-    const total = Math.ceil(users.length / limit)
-
     const sortedUsers = caseInsensitiveSort(orderBy, users)
 
     const finalUsers = sortedUsers.filter(
@@ -46,9 +43,12 @@ const getUsersPagination = async (
 
     finalUsers.slice((page - 1) * limit, page * limit)
 
+    // find length of pages
+    const total = Math.ceil(finalUsers.length / limit)
+
     return {
         pages: total,
-        users: packUsers(users),
+        users: packUsers(finalUsers),
     }
 }
 
