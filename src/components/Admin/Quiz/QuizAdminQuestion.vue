@@ -118,6 +118,25 @@
                         </v-btn>
 
                         <v-btn
+                            color="green"
+                            class="mr-3"
+                            :loading="questionFormLoading"
+                            :disabled="
+                                !formIsValid ||
+                                createQuestionMode ||
+                                questionFormLoading
+                            "
+                            v-if="!loading"
+                            @click="testQuery()"
+                        >
+                            <v-icon left class="material-icons">
+                                {{ 'cross' }}
+                            </v-icon>
+
+                            {{ 'test query' }}
+                        </v-btn>
+
+                        <v-btn
                             type="submit"
                             color="primary"
                             :disabled="
@@ -264,6 +283,7 @@ import {
     DeleteQuestionMutation,
 } from '@/gql/mutations/adminQuiz'
 import { AdminQuizQuestionDetailsQuery } from '@/gql/queries/adminQuiz'
+import { GetTimesQuery } from '@/gql/queries/time'
 
 export default {
     components: {
@@ -467,12 +487,39 @@ export default {
             return tempArr
         },
 
+        testQuery() {
+            // console.log(Date().valueOf())
+            this.$apollo
+                .query({
+                    query: GetTimesQuery,
+                })
+                .then((resp) => {
+                    console.log(resp.data)
+                })
+        },
+
         deleteQuestion() {
             //Deletes the question from the quiz
 
             this.success = null
             this.error = null
             this.questionFormLoading = true
+
+            //Testing using a timer
+            console.log(Date().valueOf())
+            this.$apollo
+                .query({
+                    query: GetTimesQuery,
+                    variables: {
+                        quizId: this.$route.params.quizId,
+                    },
+                })
+                .then((resp) => {
+                    console.log(resp.data.quiz)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
 
             this.$apollo
                 .mutate({
