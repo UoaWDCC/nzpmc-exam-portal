@@ -33,11 +33,49 @@ const routes = [
         },
     },
     {
-        path: '/exam/:quizId',
-        name: 'Exam',
+        path: '/app',
+        name: 'App',
+        component: () =>
+            import(/* webpackChunkName: "AppChunk" */ '@/components/App'),
+        meta: {
+            title: 'App - NZPMC',
+            authRequired: true,
+        },
+        children: [
+            {
+                path: 'exam/:quizID',
+                name: 'AppExam',
+                // Load in same chunk as the exams route for better reliability
+                component: () =>
+                    import(
+                        /* webpackChunkName: "AppExamsChunk" */ '@/components/App/Exam'
+                    ),
+                meta: {
+                    title: 'Exam - NZPMC',
+                    authRequired: true,
+                },
+                children: [
+                    {
+                        path: ':questionID',
+                        name: 'AppExamQuestion',
+                        component: () =>
+                            import(
+                                /* webpackChunkName: "AppExamsChunk" */ '@/components/App/Exam/Question'
+                            ),
+                        meta: {
+                            authRequired: true,
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        path: '/quiz/:quizId',
+        name: 'Quiz',
         component: Quiz,
         meta: {
-            title: 'Exam - NZPMC',
+            title: 'Quiz - NZPMC',
             authRequired: true,
         },
     },

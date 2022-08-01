@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import { createPinia } from 'pinia'
 import vuetify from './plugins/vuetify'
 import router from './router'
 import VueLaTeX2JS from './plugins/latex'
@@ -7,6 +8,8 @@ import 'material-icons/iconfont/material-icons.css'
 import 'material-icons/css/material-icons.min.css'
 import firebase from 'firebase'
 import { createProvider } from './vue-apollo'
+
+Vue.use(createPinia())
 
 // Initialize Firebase
 firebase.initializeApp(JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG))
