@@ -221,7 +221,6 @@ export default {
         deleteAnswer() {
             //Deletes the given answer
             //Place holder for now
-            console.log('Delete answer')
             this.error = null
             this.loading = true
 
@@ -229,11 +228,9 @@ export default {
                 .mutate({
                     mutation: DeleteOptionMutation,
                     variables: {
-                        input: {
-                            quizID: this.$route.params.quizId,
-                            questionID: this.$route.params.questionId,
-                            id: this.id,
-                        },
+                        quizId: this.$route.params.quizId,
+                        questionId: this.$route.params.questionId,
+                        optionId: this.id,
                     },
                 })
                 .then(() => {

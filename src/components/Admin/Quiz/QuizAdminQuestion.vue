@@ -467,14 +467,8 @@ export default {
             return tempArr
         },
 
-        test() {
-            console.log('HERE')
-        },
-
         deleteQuestion() {
             //Deletes the question from the quiz
-
-            console.log('In the Delete Question function')
 
             this.success = null
             this.error = null
@@ -489,14 +483,11 @@ export default {
                     },
                 })
                 .then(() => {
-                    console.log('Deleted Question Successfully')
                     this.questionFormLoading = false
-                    this.success = 'Question successfully deleted.'
                 })
                 .catch((error) => {
                     this.questionFormLoading = false
                     this.error = error.message
-                    console.log('Error Occurred')
                 })
         },
     },
