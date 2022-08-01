@@ -106,9 +106,36 @@ const editQuestionOption = async (
     })
 }
 
+const deleteQuestionOption = async (
+    quizID: string,
+    questionID: string,
+    optionID: string,
+) => {
+    return QuizRepository.runTransaction(async (tran) => {
+        const quiz = await tran.findById(quizID)
+        if (!quiz || !quiz.questions) {
+            throw new NotFoundError()
+        }
+
+        const question = await quiz.questions.findById(questionID)
+        if (!question || !question.options) {
+            throw new NotFoundError()
+        }
+
+        const option = await question.options.findById(optionID)
+        if (!option) {
+            throw new NotFoundError()
+        }
+
+        return question.options.delete(optionID)
+        // return quiz.questions.delete(questionID)
+    })
+}
+
 export {
     getQuestionOptions,
     getOptionByID,
     addQuestionOption,
     editQuestionOption,
+    deleteQuestionOption,
 }
