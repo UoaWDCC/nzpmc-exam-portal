@@ -484,8 +484,8 @@ export default {
                 .mutate({
                     mutation: DeleteQuestionMutation,
                     variables: {
-                        quizID: this.$route.params.quizId,
-                        questionID: this.$route.params.questionId,
+                        quizId: this.$route.params.quizId,
+                        questionId: this.$route.params.questionId,
                     },
                 })
                 .then(() => {
