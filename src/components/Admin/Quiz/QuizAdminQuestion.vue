@@ -489,6 +489,7 @@ export default {
                     },
                 })
                 .then(() => {
+                    console.log('Deleted Question Successfully')
                     this.questionFormLoading = false
                     this.success = 'Question successfully deleted.'
                 })

@@ -109,6 +109,7 @@ import DisplayText from '@/components/DisplayText'
 import {
     EditOptionMutation,
     EditAnswerMutation,
+    DeleteOptionMutation,
 } from '@/gql/mutations/adminQuiz'
 
 export default {
@@ -221,6 +222,29 @@ export default {
             //Deletes the given answer
             //Place holder for now
             console.log('Delete answer')
+            this.error = null
+            this.loading = true
+
+            this.$apollo
+                .mutate({
+                    mutation: DeleteOptionMutation,
+                    variables: {
+                        input: {
+                            quizID: this.$route.params.quizId,
+                            questionID: this.$route.params.questionId,
+                            id: this.id,
+                        },
+                    },
+                })
+                .then(() => {
+                    // Result
+                    this.loading = false
+                })
+                .catch((error) => {
+                    // Error
+                    this.loading = false
+                    this.error = error.message
+                })
         },
     },
 }
