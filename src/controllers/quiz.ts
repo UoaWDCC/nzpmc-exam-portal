@@ -46,6 +46,7 @@ const editQuiz = async (
     numOfQuestions?: number,
     startTime?: Date,
     endTime?: Date,
+    questionIDsOrder?: string[],
 ): Promise<Schema.Quiz> => {
     return QuizRepository.runTransaction(async (tran) => {
         const quiz = await tran.findById(id)
@@ -61,6 +62,9 @@ const editQuiz = async (
             : quiz.numOfQuestions
         quiz.startTime = startTime ? startTime : quiz.startTime
         quiz.endTime = endTime ? endTime : quiz.endTime
+        quiz.questionIDsOrder = questionIDsOrder
+            ? questionIDsOrder
+            : quiz.questionIDsOrder
         quiz.modified = new Date()
 
         tran.update(quiz)
