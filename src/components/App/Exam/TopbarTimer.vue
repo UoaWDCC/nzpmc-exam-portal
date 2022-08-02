@@ -4,18 +4,21 @@
         style="line-height: 34px"
         outlined
     >
+        <FinishedDialog :counter="this.secondsRemaining" />
         {{ timeString }} remaining
     </v-sheet>
 </template>
 
 <script>
+import FinishedDialog from './FinishedDialog'
 export default {
     name: 'AppExamTopbarTimer',
+
+    components: { FinishedDialog },
 
     data() {
         return {
             secondsRemaining: 20,
-
             timer: null,
         }
     },
@@ -44,7 +47,9 @@ export default {
         decreaseTimer() {
             this.secondsRemaining--
 
-            if (this.secondsRemaining === 0) this.stopTimer()
+            if (this.secondsRemaining === 0) {
+                this.stopTimer()
+            }
         },
 
         stopTimer() {
