@@ -128,7 +128,6 @@ const deleteQuestionOption = async (
         }
 
         return question.options.delete(optionID)
-        // return quiz.questions.delete(questionID)
     })
 }
 
