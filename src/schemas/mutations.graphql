@@ -18,6 +18,7 @@ type Mutation {
 
     addOption(input: AddOptionInput!): Option
     editOption(input: EditOptionInput!): Option
+    deleteOption(quizID: ID!, id:ID!, optionID:ID!): Option
 
     editAnswer(input: EditAnswerInput!): Option
 

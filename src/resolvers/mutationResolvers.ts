@@ -6,6 +6,7 @@ import {
     addUser,
     addUserQuiz,
     editQuestionOption,
+    deleteQuestionOption,
     getQuestion,
     editQuestion,
     editQuiz,
@@ -18,6 +19,7 @@ import {
     deleteQuestion,
     deleteQuiz,
     swapQuestion,
+    getOptionByID,
 } from '../controllers'
 import {
     AdminAuthenticationError,
@@ -40,6 +42,7 @@ import {
     MutationAddUserQuizArgs,
     MutationDeleteQuestionArgs,
     MutationDeleteQuizArgs,
+    MutationDeleteOptionArgs,
     MutationEditAnswerArgs,
     MutationEditOptionArgs,
     MutationEditOrderQuestionArgs,
@@ -209,6 +212,17 @@ const editOptionMutation: Resolver<
     const { quizID, questionID, option, id } = input
 
     return await editQuestionOption(quizID, questionID, id, option)
+}
+
+const deleteOptionMutation: Resolver<
+    Maybe<ResolverTypeWrapper<Option>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationDeleteOptionArgs, 'quizID' | 'id' | 'optionID'>
+> = async (_parent, { quizID, id, optionID }, _context) => {
+    const option = await getOptionByID(quizID, id, optionID)
+    deleteQuestionOption(quizID, id, optionID)
+    return option
 }
 
 const editQuestionMutation: Resolver<
@@ -480,6 +494,7 @@ const mutationResolvers: MutationResolvers = {
     addUserQuiz: admin(addUserQuizMutation),
     deleteQuestion: admin(deleteQuestionMutation),
     deleteQuiz: admin(deleteQuizMutation),
+    deleteOption: admin(deleteOptionMutation),
     editAnswer: admin(editAnswerMutation),
     editOption: admin(editOptionMutation),
     editOrderQuestion: admin(editOrderQuestionMutation),

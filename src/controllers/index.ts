@@ -11,6 +11,7 @@ import {
     getOptionByID,
     addQuestionOption,
     editQuestionOption,
+    deleteQuestionOption,
 } from './option'
 import { getAllQuizzes, getQuiz, addQuiz, editQuiz, deleteQuiz } from './quiz'
 import {
@@ -71,6 +72,7 @@ export {
     editUserQuiz,
     addQuestionOption,
     editQuestionOption,
+    deleteQuestionOption,
     submitUserQuizQuestions,
     setUserQuizScore,
     getUsersPagination,
