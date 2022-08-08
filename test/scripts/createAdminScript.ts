@@ -1,6 +1,6 @@
 import admin from 'firebase-admin'
 import dotenv from 'dotenv'
-dotenv.config({ path: '../../env' })
+dotenv.config()
 
 /**
  * How to use:

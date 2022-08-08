@@ -1,4 +1,4 @@
-import { GraphQLUpload } from 'graphql-upload'
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.js'
 import datetimeScalar from '../scalars/datetime'
 import { Resolvers } from './resolvers-types'
 import mutationResolvers from './mutationResolvers'
