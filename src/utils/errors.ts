@@ -1,6 +1,7 @@
 import {
     ForbiddenError,
     AuthenticationError as AuthError,
+    ApolloError,
 } from 'apollo-server-express'
 
 // READ https://www.apollographql.com/docs/apollo-server/data/errors/
@@ -22,4 +23,23 @@ class NotFoundError extends ForbiddenError {
     }
 }
 
-export { AdminAuthenticationError, NotFoundError, AuthenticationError }
+class ExpiredError extends ApolloError {
+    constructor(message: string) {
+        super(message, 'EXPIRED')
+
+        Object.defineProperty(this, 'name', { value: 'ExpiredError' })
+    }
+}
+
+class UserQuizExpiredError extends ExpiredError {
+    constructor() {
+        super('User quiz has expired')
+    }
+}
+
+export {
+    AdminAuthenticationError,
+    NotFoundError,
+    AuthenticationError,
+    UserQuizExpiredError,
+}
