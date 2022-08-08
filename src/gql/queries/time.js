@@ -9,6 +9,7 @@ export const CurrentTimeQuery = gql`
 export const GetTimesQuery = gql`
     query GetTimesQuery($quizId: ID!) {
         quiz(quizID: $quizId) {
+            id
             startTime
             endTime
         }
