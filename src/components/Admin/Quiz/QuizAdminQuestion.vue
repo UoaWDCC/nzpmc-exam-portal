@@ -99,6 +99,25 @@
                         ></v-skeleton-loader>
 
                         <v-btn
+                            color="red"
+                            class="mr-3"
+                            :loading="questionFormLoading"
+                            :disabled="
+                                !formIsValid ||
+                                createQuestionMode ||
+                                questionFormLoading
+                            "
+                            v-if="!loading"
+                            @click="deleteQuestion()"
+                        >
+                            <v-icon left class="material-icons">
+                                {{ 'delete' }}
+                            </v-icon>
+
+                            {{ 'Delete' }}
+                        </v-btn>
+
+                        <v-btn
                             type="submit"
                             color="primary"
                             :disabled="
@@ -242,8 +261,13 @@ import {
     AddQuestionMutation,
     EditQuestionMutation,
     AddOptionMutation,
+    DeleteQuestionMutation,
 } from '@/gql/mutations/adminQuiz'
-import { AdminQuizQuestionDetailsQuery } from '@/gql/queries/adminQuiz'
+import {
+    AdminQuizQuestionsQuery,
+    AdminQuizQuestionDetailsQuery,
+} from '@/gql/queries/adminQuiz'
+import { GetTimesQuery } from '@/gql/queries/time'
 
 export default {
     components: {
@@ -281,6 +305,12 @@ export default {
             addOptionLoading: false,
             optionError: null,
             showOptionError: false,
+
+            //Time
+            times: [],
+
+            //using the most recent question
+            questionRoute: null,
         }
     },
 
@@ -424,7 +454,6 @@ export default {
                 .then(() => {
                     // Result
                     this.questionFormLoading = false
-                    this.success = 'Question successfully saved.'
                 })
                 .catch((error) => {
                     // Error
@@ -445,6 +474,87 @@ export default {
                 }
             }
             return tempArr
+        },
+
+        async getTime() {
+            //Checks if the current time is in the duration of the quiz
+            await this.$apollo
+                .query({
+                    query: GetTimesQuery,
+                    variables: {
+                        quizId: this.$route.params.quizId,
+                    },
+                })
+                .then((resp) => {
+                    this.times[0] = Date.parse(resp.data.quiz.startTime)
+                    this.times[1] = Date.parse(resp.data.quiz.endTime)
+                    this.times[2] = Date.now()
+                    if (
+                        !(
+                            this.times[0] < this.times[2] &&
+                            this.times[1] > this.times[2]
+                        )
+                    ) {
+                        // If the quiz is not active, then can make changes to the question
+                        return true
+                    } else {
+                        // If the quiz is active, then cannot make changes to the question
+                        return false
+                    }
+                })
+                .catch((error) => {
+                    //Errors will be caught and no changes will occur
+                    console.log(error)
+                    return false
+                })
+        },
+
+        async deleteQuestion() {
+            //Deletes the question from the quiz and redirects to the first question in the quiz
+            this.success = null
+            this.error = null
+            this.questionFormLoading = true
+
+            //Gets the first question in the quiz
+            await this.$apollo
+                .query({
+                    query: AdminQuizQuestionsQuery,
+                    variables: { quizID: this.$route.params.quizId },
+                })
+                .then((resp) => {
+                    this.questionRoute = resp.data.quiz.questions[0].id
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+
+            if (this.getTime()) {
+                this.$apollo
+                    .mutate({
+                        mutation: DeleteQuestionMutation,
+                        variables: {
+                            quizId: this.$route.params.quizId,
+                            questionId: this.$route.params.questionId,
+                        },
+                    })
+                    .then(() => {
+                        this.questionFormLoading = false
+                        //Routes to the first question in quiz
+                        this.$router.push({
+                            name: 'QuizAdminQuestion',
+                            params: {
+                                quizId: this.$route.params.quizId,
+                                questionId: this.questionRoute,
+                            },
+                        })
+                    })
+                    .catch((error) => {
+                        this.questionFormLoading = false
+                        this.error = error.message
+                    })
+            } else {
+                this.questionFormLoading = false
+            }
         },
     },
 
