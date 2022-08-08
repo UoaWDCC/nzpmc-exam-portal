@@ -1,7 +1,7 @@
 import './utils/dotenv'
 import { ApolloServer } from 'apollo-server-express'
 import { readdirSync, readFileSync } from 'fs'
-import { graphqlUploadExpress } from 'graphql-upload'
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js'
 import express from 'express'
 import cors from 'cors'
 import { auth } from './utils/firebase'
