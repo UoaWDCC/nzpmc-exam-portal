@@ -1,12 +1,14 @@
 <template>
-    <v-sheet
-        class="app-exam-topbar-timer ml-2 px-2 rounded text-no-wrap"
-        style="line-height: 34px"
-        outlined
-    >
+    <div>
+        <v-sheet
+            class="app-exam-topbar-timer ml-2 mb-6 px-2 rounded text-no-wrap"
+            style="line-height: 34px"
+            outlined
+        >
+            {{ timeString }} remaining
+        </v-sheet>
         <FinishedDialog :counter="this.secondsRemaining" />
-        {{ timeString }} remaining
-    </v-sheet>
+    </div>
 </template>
 
 <script>
