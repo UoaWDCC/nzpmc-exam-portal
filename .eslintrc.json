@@ -10,7 +10,7 @@
         "prettier"
     ],
     "parserOptions": {
-        "parser": "babel-eslint"
+        "parser": "@babel/eslint-parser"
     },
     "rules": {
         "prettier-vue-scorpionknifes/prettier": [
@@ -35,6 +35,7 @@
         "quotes": ["error", "single"],
         "semi": ["error", "never"],
         "space-in-parens": ["error", "never"],
-        "prefer-const": "error"
+        "prefer-const": "error",
+        "vue/multi-word-component-names": "off"
     }
 }

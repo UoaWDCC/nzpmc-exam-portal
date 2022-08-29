@@ -23,12 +23,12 @@
                     hide-default-footer
                     style="border-bottom: 1px solid #d3d3d3"
                 >
-                    <template v-slot:item.actions="{ item }">
+                    <template v-slot:[`item.actions`]="{ item }">
                         <v-row class="mx-0">
                             <UserAdminDetails :user="item" />
                         </v-row>
                     </template>
-                    <template v-slot:item.photoURL="{ item }">
+                    <template v-slot:[`item.photoURL`]="{ item }">
                         <v-avatar size="36">
                             <img :src="item.photoURL" :alt="item.firstName" />
                         </v-avatar>

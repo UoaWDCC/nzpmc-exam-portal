@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import firebase from 'firebase'
+import { getAuth } from '@firebase/auth'
 import Login from '@/components/Login'
 import Welcome from '@/components/Welcome'
 import Quiz from '@/components/Quiz/Quiz'
@@ -187,7 +187,7 @@ const router = new VueRouter({
 // Run user login checks
 function getCurrentUser() {
     return new Promise((resolve, reject) => {
-        const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+        const unsubscribe = getAuth().onAuthStateChanged((user) => {
             unsubscribe()
             resolve(user)
         }, reject)
@@ -201,7 +201,7 @@ router.beforeEach(async (to, from, next) => {
         // When the requested page requires admin access
         if (await getCurrentUser()) {
             // Check if auth token shows admin access
-            const jwt = await firebase.auth().currentUser.getIdToken(true)
+            const jwt = await getAuth().currentUser.getIdToken(true)
             const payload = jwt.split('.')[1]
             const isAdmin = JSON.parse(atob(payload)).admin
 

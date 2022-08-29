@@ -6,26 +6,32 @@ import router from './router'
 import VueLaTeX2JS from './plugins/latex'
 import 'material-icons/iconfont/material-icons.css'
 import 'material-icons/css/material-icons.min.css'
-import firebase from 'firebase'
+import { initializeApp } from 'firebase/app'
+import { getAnalytics } from 'firebase/analytics'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { createProvider } from './vue-apollo'
+import 'regenerator-runtime/runtime.js'
 
 Vue.use(createPinia())
 
 // Initialize Firebase
-firebase.initializeApp(JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG))
-firebase.analytics()
+const app = initializeApp(JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG))
+// Initialize Analytics and get a reference to the service
+const analytics = getAnalytics(app)
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app)
 
 // Name of the localStorage item
 const AUTH_TOKEN = 'apollo-token'
 
 let firebaseLoaded = false
-firebase.auth().onAuthStateChanged(async function (user) {
+onAuthStateChanged(auth, async (user) => {
     // Update token to be used for backend authentication
     if (user) {
         // User has logged in, add token to storage
         localStorage.setItem(
             AUTH_TOKEN,
-            await firebase.auth().currentUser.getIdToken(true),
+            await getAuth().currentUser.getIdToken(true),
         )
     } else if (typeof localStorage !== 'undefined') {
         // User has logged out, remove token from storage

@@ -122,7 +122,7 @@
 </style>
 
 <script>
-import firebase from 'firebase'
+import { getAuth, signInWithEmailAndPassword } from '@firebase/auth'
 import { onLogin } from '../vue-apollo'
 export default {
     name: 'Login',
@@ -149,12 +149,14 @@ export default {
         async login() {
             this.loading = true
             if (this.loading === true) {
-                await firebase
-                    .auth()
-                    .signInWithEmailAndPassword(this.email, this.password)
-                    .catch((error) => {
-                        this.loginError = error.message
-                    })
+                const auth = getAuth()
+                signInWithEmailAndPassword(
+                    auth,
+                    this.email,
+                    this.password,
+                ).catch((error) => {
+                    this.loginError = error.message
+                })
                 this.loading = false
                 onLogin(this.$apollo.provider.defaultClient)
             }
