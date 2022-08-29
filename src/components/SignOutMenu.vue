@@ -24,17 +24,17 @@
 </template>
 
 <script>
-import firebase from 'firebase'
+import { getAuth } from '@firebase/auth'
 import { onLogout } from '../vue-apollo'
 export default {
     methods: {
         signOut() {
-            firebase.auth().signOut()
+            getAuth().signOut()
             onLogout(this.$apollo.provider.defaultClient)
         },
         async isAdmin() {
             // Check if auth token shows admin access
-            const jwt = await firebase.auth().currentUser.getIdToken(true)
+            const jwt = await getAuth().currentUser.getIdToken(true)
             const payload = jwt.split('.')[1]
             const isAdmin = JSON.parse(atob(payload)).admin
 

@@ -160,11 +160,7 @@
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                         <a
-                            class="
-                                btn btn--icon btn--small
-                                text-decoration-none
-                                ml-4
-                            "
+                            class="btn btn--icon btn--small text-decoration-none ml-4"
                             target="_blank"
                             href="https://guides.github.com/features/mastering-markdown/"
                             v-bind="attrs"

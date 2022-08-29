@@ -3,13 +3,7 @@
         <v-toolbar-title class="ma-n1 pa-1">
             <router-link
                 :to="{ name: 'Site' }"
-                class="
-                    align-center
-                    d-flex
-                    mr-2
-                    text-decoration-none
-                    white--text
-                "
+                class="align-center d-flex mr-2 text-decoration-none white--text"
             >
                 <v-img
                     src="@/assets/icon.svg"
@@ -56,10 +50,10 @@
 </template>
 
 <script>
-import firebase from 'firebase'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 import { onLogout } from '@/vue-apollo'
+import { getAuth } from '@firebase/auth'
 
 export default {
     name: 'AppTopbar',
@@ -71,8 +65,7 @@ export default {
 
     methods: {
         signOut() {
-            firebase
-                .auth()
+            getAuth()
                 .signOut()
                 .catch(() => {
                     // An error happened.
@@ -88,7 +81,7 @@ export default {
 
         async isAdmin() {
             // Check if auth token shows admin access
-            const jwt = await firebase.auth().currentUser.getIdToken(true)
+            const jwt = await getAuth().currentUser.getIdToken(true)
             const payload = jwt.split('.')[1]
             const isAdmin = JSON.parse(atob(payload)).admin
 

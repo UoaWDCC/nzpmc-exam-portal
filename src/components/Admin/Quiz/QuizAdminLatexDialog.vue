@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/no-mutating-props -->
+
 <template>
     <v-dialog
         v-model="showDialog"
