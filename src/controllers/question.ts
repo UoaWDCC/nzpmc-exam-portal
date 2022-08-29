@@ -16,9 +16,11 @@ const getQuestions = async (quizID: string): Promise<QuestionModel[]> => {
         // filter order by question id
         const order = quiz.questionIDsOrder
         const questions = await quiz.questions.find()
+        order.reverse()
         questions.sort((a, b) => {
-            return order.indexOf(a.id) - order.indexOf(b.id)
+            return order.indexOf(b.id) - order.indexOf(a.id)
         })
+
         return packQuestions(
             questions.map((question) => ({ quizID, question })),
         )

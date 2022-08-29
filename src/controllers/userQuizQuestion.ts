@@ -57,7 +57,6 @@ const getUserQuizQuestion = async (
 }
 
 const getUserQuizQuestions = async (
-    // do something here
     userQuizID: string,
     expired: boolean,
 ): Promise<UserQuizQuestionModel[]> => {
@@ -82,8 +81,9 @@ const getUserQuizQuestions = async (
         // get questions from quiz
         const quizQuestions = await quiz.questions.find()
         const order = quiz.questionIDsOrder
+        order.reverse()
         quizQuestions.sort((a, b) => {
-            return order.indexOf(a.id) - order.indexOf(b.id)
+            return order.indexOf(b.id) - order.indexOf(a.id)
         })
     })
 
