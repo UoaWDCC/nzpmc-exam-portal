@@ -72,14 +72,19 @@ const getUserQuizQuestions = async (
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
 
+        // join table
         userQuiz = await UserQuizTranRepository.findById(userQuizID)
-
+        // get quiz based using join table
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
-
-        quizQuestions = await quiz.questions.find()
+        // get questions from quiz
+        const quizQuestions = await quiz.questions.find()
+        const order = quiz.questionIDsOrder
+        quizQuestions.sort((a, b) => {
+            return order.indexOf(a.id) - order.indexOf(b.id)
+        })
     })
 
     const userQuizQuestions: PackQuizQuestion[] = await Promise.all(
