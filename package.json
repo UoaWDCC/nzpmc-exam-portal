@@ -36,7 +36,7 @@
         "fireo": "^1.0.3",
         "fireorm": "^0.23.3",
         "graphql": "^16.5.0",
-        "graphql-upload": "15.0.2",
+        "graphql-upload": "16.0.1",
         "handlebars": "^4.7.7",
         "lodash": "^4.17.21",
         "reflect-metadata": "^0.1.13"
