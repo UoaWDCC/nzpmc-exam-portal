@@ -79,7 +79,7 @@ const getUserQuizQuestions = async (
             throw new NotFoundError()
         }
         // get questions from quiz
-        const quizQuestions = await quiz.questions.find()
+        quizQuestions = await quiz.questions.find()
         const order = quiz.questionIDsOrder
         order.reverse()
         quizQuestions.sort((a, b) => {
