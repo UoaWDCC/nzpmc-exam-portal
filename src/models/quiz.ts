@@ -13,6 +13,7 @@ class Quiz {
 
     @SubCollection(Question, 'Question')
     questions?: ISubCollection<Question>
+    questionIDsOrder: string[] = []
     created: Date = new Date()
     modified: Date = new Date()
     deleted: Date | null = null

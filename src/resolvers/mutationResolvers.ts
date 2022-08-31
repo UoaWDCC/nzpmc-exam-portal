@@ -478,12 +478,23 @@ const swapQuestionMutation: Resolver<
 }
 
 const editOrderQuestionMutation: Resolver<
-    ResolverTypeWrapper<UserQuizQuestionModel>[],
+    Maybe<ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'>>>,
     unknown,
     UserContext,
     RequireFields<MutationEditOrderQuestionArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    return []
+    const { questionIDs, quizID } = input
+    const quiz = await editQuiz(
+        quizID,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        questionIDs,
+    )
+    return quiz
 }
 
 const mutationResolvers: MutationResolvers = {

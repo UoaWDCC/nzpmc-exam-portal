@@ -123,6 +123,7 @@ input UsersOrderByInput {
 
 input EditOrderQuestionInput {
     questionIDs: [ID!]!
+    quizID: ID!
 }
 
 enum Sort {

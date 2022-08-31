@@ -14,7 +14,7 @@ type Mutation {
     deleteQuestion(quizID: ID!, id: ID!): Question
     swapQuestion(quizID: ID!, oldID: ID!, newID: ID!): Quiz
 
-    editOrderQuestion(input: EditOrderQuestionInput!): [UserQuizQuestion]
+    editOrderQuestion(input: EditOrderQuestionInput!): Quiz
 
     addOption(input: AddOptionInput!): Option
     editOption(input: EditOptionInput!): Option
