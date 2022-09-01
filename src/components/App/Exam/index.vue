@@ -7,6 +7,7 @@
         class="app-exam"
     >
         <template #default="{ result: { data, error }, isLoading }">
+            <FinishedDialog v-if="error" :counter="0" />
             <v-scroll-y-reverse-transition>
                 <v-alert v-if="error" type="error" class="mx-3 my-6">
                     {{ $errorMessage }}
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+import FinishedDialog from './FinishedDialog'
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamTopbarLoader from './TopbarLoader'
 import AppExamTopbar from './Topbar'
@@ -72,6 +74,7 @@ export default {
         AppExamSidebarLoader,
         AppExamQuestionLoader,
         AppExamSidebar,
+        FinishedDialog,
     },
 
     beforeRouteUpdate(to, from, next) {
