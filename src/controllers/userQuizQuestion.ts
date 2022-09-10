@@ -199,7 +199,7 @@ const editUserQuizQuestion = async (
         userQuizQuestion.firstViewed = new Date()
         userQuizQuestion.lastAnswered = new Date()
         userQuizQuestion.modified = new Date()
-        userQuizQuestion.flag = flag ?? userQuizQuestion.flag
+        userQuizQuestion.flag = flag ?? false
 
         const newUserQuizQuestion = await userQuiz.questions.create(
             userQuizQuestion,
