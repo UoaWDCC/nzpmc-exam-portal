@@ -46,7 +46,10 @@ const getUserQuizQuestion = async (
     let userQuizQuestion = await userQuiz.questions.findById(id)
     if (!userQuizQuestion) {
         // if this doesn't exist create it
-        userQuizQuestion = addUserQuizQuestion(userQuiz.id, quizQuestion.id)
+        userQuizQuestion = await addUserQuizQuestion(
+            userQuiz.id,
+            quizQuestion.id,
+        )
     }
 
     return packUserQuizQuestion({
@@ -167,7 +170,10 @@ const editUserQuizQuestion = async (
     flag?: boolean,
 ): Promise<UserQuizQuestionModel> => {
     let expired = true
-    return runTransaction(async (tran) => {
+
+    let newUserQuizQuestion
+
+    await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
         const QuizTranRepository = tran.getRepository(Quiz)
 
@@ -201,16 +207,14 @@ const editUserQuizQuestion = async (
         userQuizQuestion.modified = new Date()
         userQuizQuestion.flag = flag ?? userQuizQuestion.flag
 
-        const newUserQuizQuestion = await userQuiz.questions.create(
-            userQuizQuestion,
-        )
-
-        return await getUserQuizQuestion(
-            userQuizID,
-            newUserQuizQuestion.id,
-            expired,
-        )
+        newUserQuizQuestion = await userQuiz.questions.create(userQuizQuestion)
     })
+
+    return await getUserQuizQuestion(
+        userQuizID,
+        newUserQuizQuestion.id,
+        expired,
+    )
 }
 
 const getUserQuizQuestionOptions = async (
