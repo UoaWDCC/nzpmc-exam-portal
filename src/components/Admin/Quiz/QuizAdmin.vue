@@ -1,5 +1,5 @@
 <template>
-    <v-row style="height: 100%">
+    <v-row class="flex-nowrap" style="height: 100%">
         <v-col class="col-12 col-md-4 col-lg-3 col-xl-2">
             <QuizAdminSidebar :key="$route.path" />
         </v-col>

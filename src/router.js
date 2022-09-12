@@ -10,6 +10,7 @@ import QuizAdmin from '@/components/Admin/Quiz/QuizAdmin'
 import QuizAdminDetails from '@/components/Admin/Quiz/QuizAdminDetails'
 import QuizAdminUsers from '@/components/Admin/Quiz/QuizAdminUsers'
 import QuizAdminQuestion from '@/components/Admin/Quiz/QuizAdminQuestion'
+import QuizAdminQuestionOrder from '@/components/Admin/Quiz/QuizAdminQuestionOrder'
 import UserAdmin from '@/components/Admin/User/UserAdmin'
 
 Vue.use(VueRouter)
@@ -94,6 +95,16 @@ const routes = [
                         path: ':quizId/users',
                         name: 'QuizAdminUsers',
                         component: QuizAdminUsers,
+                        meta: {
+                            title: 'Quiz Admin - NZPMC',
+                            authRequired: true,
+                            adminRequired: true,
+                        },
+                    },
+                    {
+                        path: ':quizId/order',
+                        name: 'QuizAdminOrder',
+                        component: QuizAdminQuestionOrder,
                         meta: {
                             title: 'Quiz Admin - NZPMC',
                             authRequired: true,
