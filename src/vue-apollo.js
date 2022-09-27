@@ -4,7 +4,7 @@ import {
     createApolloClient,
     restartWebsockets,
 } from 'vue-cli-plugin-apollo/graphql-client'
-import firebase from 'firebase'
+import { getAuth } from '@firebase/auth'
 
 // Install the vue plugin
 Vue.use(VueApollo)
@@ -60,7 +60,7 @@ const defaultOptions = {
             // Allows up to 10 second difference between server and client time
             localStorage.setItem(
                 tokenName,
-                await firebase.auth().currentUser.getIdToken(true),
+                await getAuth().currentUser.getIdToken(true),
             )
         }
 

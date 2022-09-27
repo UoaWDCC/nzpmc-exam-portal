@@ -127,7 +127,7 @@ export default {
             })
             localStorage.setItem('currentQuizID', this.userQuizzes[index].id)
             this.$router.push({
-                name: 'Exam',
+                name: 'Quiz',
                 params: { quizId: this.userQuizzes[index].id },
             })
         },
@@ -138,7 +138,7 @@ export default {
                     : localStorage.getItem('currentQuizID')
 
             this.$router.push({
-                name: 'Exam',
+                name: 'Quiz',
                 params: { quizId: quizIdTemp },
             })
         },
