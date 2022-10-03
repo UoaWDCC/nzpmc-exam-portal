@@ -26,6 +26,7 @@ export const AdminQuizQuestionsQuery = gql`
             id
             questions {
                 id
+                question
             }
         }
     }

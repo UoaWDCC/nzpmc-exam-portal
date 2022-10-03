@@ -59,6 +59,18 @@
                     </v-list-item-content>
                 </v-list-item>
 
+                <v-list-item :to="'/admin/quiz/' + selectedQuiz + '/order'">
+                    <v-list-item-icon class="me-4">
+                        <v-icon class="material-icons">
+                            swap_vertical_circle
+                        </v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content link>
+                        <v-list-item-title> Question Order </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
                 <v-list-group
                     :value="true"
                     no-action
