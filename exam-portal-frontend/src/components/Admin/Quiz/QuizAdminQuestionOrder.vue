@@ -17,18 +17,15 @@
                     >
                         <template v-slot:default="{ active }">
                             <v-list-item-content>
-                                <v-list-item-title
-                                    v-text="i + 1"
-                                ></v-list-item-title>
-                                <v-list-item-subtitle
-                                    v-text="
-                                        questions.find(
-                                            (question) =>
-                                                question.id === questionId,
-                                        ).question
-                                    "
-                                >
-                                </v-list-item-subtitle>
+                                <v-list-item-title>{{
+                                    i + 1
+                                }}</v-list-item-title>
+                                <v-list-item-subtitle>{{
+                                    questions.find(
+                                        (question) =>
+                                            question.id === questionId,
+                                    ).question
+                                }}</v-list-item-subtitle>
                             </v-list-item-content>
 
                             <v-list-item-action>
