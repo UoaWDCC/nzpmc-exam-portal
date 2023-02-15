@@ -1,0 +1,41 @@
+{
+    "root": true,
+    "env": {
+        "node": true
+    },
+    "extends": [
+        "plugin:vue/essential",
+        "eslint:recommended",
+        "plugin:prettier-vue-scorpionknifes/recommended",
+        "prettier"
+    ],
+    "parserOptions": {
+        "parser": "@babel/eslint-parser"
+    },
+    "rules": {
+        "prettier-vue-scorpionknifes/prettier": [
+            "error",
+            {
+                "endOfLine": "auto"
+            }
+        ],
+        "comma-dangle": ["error", "always-multiline"],
+        "block-scoped-var": "error",
+        "indent": ["error", 4],
+        "eqeqeq": "error",
+        "eol-last": ["error", "always"],
+        "no-multiple-empty-lines": ["error"],
+        "no-new-symbol": "error",
+        "no-trailing-spaces": ["error"],
+        "no-var": "error",
+        "no-undef": ["error"],
+        "no-unused-vars": ["warn"],
+        "object-curly-spacing": ["error", "always"],
+        "object-shorthand": "error",
+        "quotes": ["error", "single"],
+        "semi": ["error", "never"],
+        "space-in-parens": ["error", "never"],
+        "prefer-const": "error",
+        "vue/multi-word-component-names": "off"
+    }
+}
