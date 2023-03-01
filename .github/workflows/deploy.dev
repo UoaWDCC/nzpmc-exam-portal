@@ -33,7 +33,7 @@ jobs:
         with:
         
           # Build path (path is excluded due to parent: false flag)
-          path: 'frontend/build'
+          path: 'exam-portal-frontend/build'
           parent: false
           
           # Bucket to add contents into
