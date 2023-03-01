@@ -37,7 +37,7 @@ jobs:
           parent: false
           
           # Bucket to add contents into
-          destination: 'vps-dev.wdcc.co.nz'
+          destination: 'nzpmc-dev.wdcc.co.nz'
 
   DeployBackend:
     runs-on: ubuntu-latest
