@@ -51,7 +51,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 14
-      
+      # Take a secret in base 64 format from github secrets, decode it and outputs toa file in private keys 
+      - name: Create private_keys directory 
+      - run: mkdir private_keys && echo${{ secrets.APP_GA_CREDENTIALS }} | base64 --decode > private_keys/wdcc-nzpmc-dev-ec6015222ba6.json
+  
       - name: Create env file
         run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > gae_env.yaml
       
@@ -61,11 +64,11 @@ jobs:
         with:
           
           # Credentials stored inside WDCC organisation secrets
-          credentials_json: '${{ secrets.VPS_GCP_DEPLOYMENT_SA_CREDENTIALS }}'
+          credentials_json: '${{ secrets.NZPMC_GCP_DEPLOYMENT_SA_CREDENTIALS }}'
 
       - id: 'app-engine-deploy'
         uses: 'google-github-actions/deploy-appengine@v0'
         with:
-          project_id: wdcc-vps-dev
-          working_directory: ./backend
+          project_id: wdcc-nzpmc-dev
+          working_directory: ./exam-portal-backend
       
