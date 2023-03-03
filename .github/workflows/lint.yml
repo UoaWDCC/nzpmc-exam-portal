@@ -6,6 +6,9 @@ jobs:
     run-linters:
         name: Run linters
         runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./exam-portal-frontend
 
         steps:
             - name: Check out Git repository
@@ -28,6 +31,7 @@ jobs:
             # ESLint and Prettier must be in `package.json`
             - name: Install Node.js dependencies
               run: npm ci --no-optional
+ 
             - name: Run linters
               uses: wearerequired/lint-action@v1
               with:
