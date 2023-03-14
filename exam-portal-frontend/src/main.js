@@ -11,11 +11,12 @@ import { getAnalytics } from 'firebase/analytics'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { createProvider } from './vue-apollo'
 import 'regenerator-runtime/runtime.js'
+import firebaseConfig from '../firebaseConfig.json'
 
 Vue.use(createPinia())
 
 // Initialize Firebase
-const app = initializeApp(JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG))
+const app = initializeApp(firebaseConfig)
 // Initialize Analytics and get a reference to the service
 const analytics = getAnalytics(app)
 // Initialize Firebase Authentication and get a reference to the service
