@@ -64,6 +64,8 @@ jobs:
       
       - run: npm install
 
+      - run: npm run build
+
       - uses: 'google-github-actions/auth@v0'
         with:
           

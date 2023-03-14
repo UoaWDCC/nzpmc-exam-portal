@@ -2,7 +2,7 @@
     "compilerOptions": {
         /* Docs: https://www.typescriptlang.org/tsconfig */ "target": "ES2022",
         "module": "commonjs",
-        "outDir": "bin",
+        "outDir": "dist",
         "strict": true,
         "noImplicitAny": false,
         "strictNullChecks": true,
