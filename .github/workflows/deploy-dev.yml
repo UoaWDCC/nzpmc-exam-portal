@@ -13,18 +13,20 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
       
       - run: npm install
-      - run: CI=false npm run build
 
       - name: Create env file
         run: echo ${{ secrets.FRONTEND_ENVFILE }} | base64 --decode > .env
   
       - name: Create firebaseConfig.json file
         run: echo ${{ secrets.FRONTEND_FIREBASE_CONFIG }} | base64 --decode > firebaseConfig.json
+
+      - run: CI=false npm run build
 
       - uses: 'google-github-actions/auth@v0'
         with:
