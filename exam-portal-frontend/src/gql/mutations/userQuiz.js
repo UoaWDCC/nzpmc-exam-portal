@@ -1,36 +1,26 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 import {
-    UserQuizFragment,
-    UserQuizQuestionFragment,
-    UserQuizOptionFragment,
-} from '../fragments/userQuiz'
-
-export const EditQuizMutation = gql`
-    mutation StartTimeMutation($input: EditUserQuizInput!) {
-        editUserQuiz(input: $input) {
-            ...UserQuizFragment
-        }
-    }
-    ${UserQuizFragment}
-`
+  UserQuizQuestionFragment,
+  UserQuizOptionFragment,
+} from "../fragments/userQuiz";
 
 export const UserQuizUpdateFlagMutation = gql`
-    mutation UserQuizUpdateFlagMutation($input: EditUserQuizQuestionInput!) {
-        editUserQuizQuestion(input: $input) {
-            ...UserQuizQuestionFragment
-        }
+  mutation UserQuizUpdateFlagMutation($input: EditUserQuizQuestionInput!) {
+    editUserQuizQuestion(input: $input) {
+      ...UserQuizQuestionFragment
     }
-    ${UserQuizQuestionFragment}
-`
+  }
+  ${UserQuizQuestionFragment}
+`;
 
 export const UserQuizUpdateAnswerMutation = gql`
-    mutation UserQuizUpdateAnswerMutation($input: EditUserQuizQuestionInput!) {
-        editUserQuizQuestion(input: $input) {
-            id
-            userAnswer {
-                ...UserQuizOptionFragment
-            }
-        }
+  mutation UserQuizUpdateAnswerMutation($input: EditUserQuizQuestionInput!) {
+    editUserQuizQuestion(input: $input) {
+      id
+      userAnswer {
+        ...UserQuizOptionFragment
+      }
     }
-    ${UserQuizOptionFragment}
-`
+  }
+  ${UserQuizOptionFragment}
+`;

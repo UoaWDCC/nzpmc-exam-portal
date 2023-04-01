@@ -1,8 +1,14 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useMainStore = defineStore('mainStore', {
-    state: () => ({
-        // App snackbar notifications
-        snackbarQueue: [],
-    }),
-})
+export const useMainStore = defineStore("mainStore", {
+  state: () => ({
+    routeLoading: false,
+
+    // Firebase Auth
+    user: null,
+    userLoading: true,
+
+    // App snackbar notifications
+    snackbarQueue: [],
+  }),
+});

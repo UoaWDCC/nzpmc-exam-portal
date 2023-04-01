@@ -1,41 +1,48 @@
 <template>
-    <v-app id="app">
-        <v-progress-linear
-            :active="$loading"
-            :indeterminate="$loading"
-            absolute
-            top
-            color="secondary darken-2"
-            style="z-index: 2"
-        ></v-progress-linear>
-        <router-view />
-    </v-app>
+  <v-app>
+    <v-progress-linear
+      v-if="routeLoading"
+      indeterminate
+      color="secondary"
+      style="z-index: 10; position: fixed"
+    ></v-progress-linear>
+
+    <router-view class="root" />
+  </v-app>
 </template>
 
-<style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+<script>
+import { mapState } from "pinia";
+import { useMainStore } from "@/stores/main";
 
-html {
-    overflow: auto !important;
+export default {
+  name: "App",
+
+  computed: {
+    // Get state from Pinia store
+    ...mapState(useMainStore, ["routeLoading"]),
+  },
+};
+</script>
+
+<style>
+.background--grey,
+.background--blue {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: repeat;
+  background-size: auto;
 }
-
-body {
-    background-image: url('./assets/background-colour.png');
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: repeat;
-    background-size: auto;
+.background--grey {
+  background-image: url("@/assets/background-grey.svg");
 }
-
-#app {
-    font-family: 'Nunito Sans', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    background: none;
+.background--blue {
+  background-image: url("@/assets/background-blue.svg");
 }
+</style>
 
-.v-application--wrap {
-    justify-content: center;
+<style scoped>
+.root {
+  min-height: 100vh;
 }
 </style>

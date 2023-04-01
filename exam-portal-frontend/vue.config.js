@@ -1,4 +1,4 @@
-module.exports = {
-    transpileDependencies: ['vuetify'],
-    pluginOptions: { apollo: { lintGQL: true } },
-}
+const { defineConfig } = require("@vue/cli-service");
+module.exports = defineConfig({
+  transpileDependencies: ["vuetify"],
+});
