@@ -10,6 +10,8 @@ Add a firebaseConfig.json file into the working directory. You can retreive the 
 
 https://console.firebase.google.com/u/0/project/nzpmc-backend/settings/general
 
+Make a copy of .env-template and rename to .env
+
 ### Compiles and hot-reloads for development
 
 ```
