@@ -7,7 +7,7 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "eslint .",
-        "lint:fix": "eslint --fix ."
+        "fix": "eslint --fix ."
     },
     "dependencies": {
         "core-js": "^3.25.0",
