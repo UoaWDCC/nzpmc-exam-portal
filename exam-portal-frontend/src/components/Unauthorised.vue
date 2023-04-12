@@ -1,41 +1,41 @@
 <template>
-  <div class="not-found">
-    <div class="message pa-4 red--text">
-      <h1 class="mb-4 text-h4">Unauthorised</h1>
+    <div class="not-found">
+        <div class="message pa-4 red--text">
+            <h1 class="mb-4 text-h4">Unauthorised</h1>
 
-      <p>You're not allowed to access this page. Sorry about that.</p>
+            <p>You're not allowed to access this page. Sorry about that.</p>
 
-      <v-btn color="white" outlined :to="{ name: 'Site' }">
-        <v-icon left>mdi-home</v-icon>
+            <v-btn color="white" outlined :to="{ name: 'Site' }">
+                <v-icon left>mdi-home</v-icon>
 
-        <span>Go Home</span>
-      </v-btn>
+                <span>Go Home</span>
+            </v-btn>
+        </div>
+
+        <v-img
+            width="100%"
+            height="100vh"
+            src="@/assets/logo-background.jpg"
+        ></v-img>
     </div>
-
-    <v-img
-      width="100%"
-      height="100vh"
-      src="@/assets/logo-background.jpg"
-    ></v-img>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "NotFound",
+    name: 'NotFound',
 
-  metaInfo: {
-    title: "Unauthorised - NZPMC",
-  },
-};
+    metaInfo: {
+        title: 'Unauthorised - NZPMC',
+    },
+}
 </script>
 
 <style scoped>
 .message {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  box-shadow: inset 0px 360px 240px -240px black;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    box-shadow: inset 0px 360px 240px -240px black;
 }
 </style>

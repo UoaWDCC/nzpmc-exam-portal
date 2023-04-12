@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
-export const useExamStore = defineStore("examStore", {
-  state: () => ({
-    // Promises still that still need to be resolved
-    unresolvedQuestionPromises: [],
-  }),
-});
+export const useExamStore = defineStore('examStore', {
+    state: () => ({
+        // Promises still that still need to be resolved
+        unresolvedQuestionPromises: [],
+    }),
+})

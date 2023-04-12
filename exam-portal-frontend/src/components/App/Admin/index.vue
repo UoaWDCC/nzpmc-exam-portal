@@ -1,13 +1,13 @@
 <template>
-  <div class="app-admin">Admin</div>
+    <div class="app-admin">Admin</div>
 </template>
 
 <script>
 export default {
-  name: "AppAdmin",
+    name: 'AppAdmin',
 
-  metaInfo: {
-    title: "Admin",
-  },
-};
+    metaInfo: {
+        title: 'Admin',
+    },
+}
 </script>
