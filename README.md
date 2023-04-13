@@ -15,6 +15,7 @@ Working versions include:
 
 ## Team Members
 - To Be Done
+- Benson Cho
 
 ## Wiki
 For all developer documentation (progress, commit conventions, architecture), refer to the GitHub wiki.
