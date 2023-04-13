@@ -5,12 +5,9 @@ export const UserQuizFragment = gql`
         id
         name
         description
-        score
         duration
         startTime
         endTime
-        created
-        modified
     }
 `
 

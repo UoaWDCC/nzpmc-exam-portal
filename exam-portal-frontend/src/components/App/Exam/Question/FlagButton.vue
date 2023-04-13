@@ -8,7 +8,9 @@
                 v-on="on"
                 @click="toggle"
             >
-                <v-icon>{{ currentFlagged ? 'flag' : 'flag_outline' }}</v-icon>
+                <v-icon>{{
+                    currentFlagged ? 'mdi-flag' : 'mdi-flag-outline'
+                }}</v-icon>
             </v-btn>
         </template>
 

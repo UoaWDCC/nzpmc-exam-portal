@@ -1,7 +1,6 @@
-# nzpmc_frontend
+# nzpmc
 
 ## Project setup
-
 ```
 npm install
 ```
@@ -13,23 +12,19 @@ https://console.firebase.google.com/u/0/project/nzpmc-backend/settings/general
 Make a copy of .env-template and rename to .env
 
 ### Compiles and hot-reloads for development
-
 ```
 npm run serve
 ```
 
 ### Compiles and minifies for production
-
 ```
 npm run build
 ```
 
 ### Lints and fixes files
-
 ```
 npm run lint
 ```
 
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Folder structure
+Every folder represents a different route that directs to ```index.vue```. Other files are general components, typically rendered by that folder's ```index.vue```.
