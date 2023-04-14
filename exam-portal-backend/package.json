@@ -7,7 +7,7 @@
         "dev": "nodemon src/index.ts",
         "login": "ts-node ./test/scripts/loginScript",
         "admin": "ts-node ./test/scripts/createAdminScript",
-        "jwt": "ts-node ./test/scripts/loginScript mdLy2GYwTMZovNtnkj121dWU2YP2",
+        "user": "ts-node ./test/scripts/removeAdminScript",
         "lint": "eslint . --ext .js,.ts",
         "fix": "eslint . --fix --ext .js,.ts",
         "build": "tsc",
