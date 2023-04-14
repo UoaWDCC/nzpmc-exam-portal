@@ -14,7 +14,7 @@ Working versions include:
 - Npm (8.1.2)
 
 ## Team Members
-- To Be Done
+- Benson Cho
 
 ## Wiki
 For all developer documentation (progress, commit conventions, architecture), refer to the GitHub wiki.
