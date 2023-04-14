@@ -18,10 +18,16 @@ admin.initializeApp({
 // Only applies after refreshing the token
 const addAdminClaim = async (uid) => {
     admin.auth().setCustomUserClaims(uid, { admin: true })
+    console.log("Claim added.")
 }
 
 const args = process.argv.slice(2)
 
-console.log('Create Admin Script:', args)
-
-addAdminClaim(args[0])
+if (args.length == 0)
+{
+    console.log('Adding admin claim for User ID:', process.env.USER_ID)
+    addAdminClaim(process.env.USER_ID)
+} else {
+    console.log('Adding admin claim for User ID:', args[0])
+    addAdminClaim(args[0])
+}

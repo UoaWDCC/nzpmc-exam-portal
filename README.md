@@ -14,6 +14,7 @@ Working versions include:
 - Npm (8.1.2)
 
 ## Team Members
+- Benson Cho
 - Kevin Cheung
 
 ## Wiki

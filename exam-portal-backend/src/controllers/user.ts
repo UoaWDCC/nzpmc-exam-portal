@@ -52,7 +52,7 @@ const getUsersPagination = async (
     }
 }
 
-const sortUsersList = (users: any, key: string, isDescending: boolean) => {
+const sortUsersList = (users: any, key: string, isDescending: boolean) => {   
     const sortedUsers = users.sort((user1: any, user2: any) => {
         user1[key].trim().localeCompare(user2[key].trim(), undefined, {
             sensitivity: 'accent',

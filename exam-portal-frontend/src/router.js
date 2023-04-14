@@ -64,7 +64,7 @@ const routes = [
     },
     {
         path: '/',
-        redirect: { name: 'Site' },
+        redirect: { name: 'App' },
     },
     {
         path: '*',
