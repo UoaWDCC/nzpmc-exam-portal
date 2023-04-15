@@ -15,6 +15,7 @@ Working versions include:
 
 ## Team Members
 - Benson Cho
+- Kevin Cheung
 
 ## Wiki
 For all developer documentation (progress, commit conventions, architecture), refer to the GitHub wiki.
