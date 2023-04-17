@@ -16,11 +16,13 @@
                     @click="toggle"
                     @keyup.enter="toggle"
                 >
-                    <div>
-                        <v-icon class="ml-4 my-4" v-if="active">
-                            check_circle
-                        </v-icon>
-                    </div>
+                    <v-icon class="ml-4 my-4">
+                        {{
+                            active
+                                ? 'mdi-check-circle-outline'
+                                : 'mdi-checkbox-blank-circle-outline'
+                        }}
+                    </v-icon>
 
                     <span
                         class="d-block pa-4"

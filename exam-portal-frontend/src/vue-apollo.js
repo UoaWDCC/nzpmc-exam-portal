@@ -1,10 +1,7 @@
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import {
-    createApolloClient,
-    restartWebsockets,
-} from 'vue-cli-plugin-apollo/graphql-client'
-import { getAuth } from '@firebase/auth'
+import { createApolloClient } from 'vue-cli-plugin-apollo/graphql-client'
+import { auth } from '@/firebase'
 
 // Install the vue plugin
 Vue.use(VueApollo)
@@ -14,13 +11,7 @@ const AUTH_TOKEN = 'apollo-token'
 
 // Http endpoint
 const httpEndpoint =
-    process.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:8112/graphql'
-// Files URL root
-export const filesRoot =
-    process.env.VUE_APP_FILES_ROOT ||
-    httpEndpoint.substr(0, httpEndpoint.indexOf('/graphql'))
-
-Vue.prototype.$filesRoot = filesRoot
+    process.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:4000/graphql'
 
 // Config
 const defaultOptions = {
@@ -60,7 +51,7 @@ const defaultOptions = {
             // Allows up to 10 second difference between server and client time
             localStorage.setItem(
                 tokenName,
-                await getAuth().currentUser.getIdToken(true),
+                await auth.currentUser.getIdToken(true),
             )
         }
 
@@ -106,8 +97,10 @@ export function createProvider(options = {}) {
 }
 
 // Manually call this when user log in
-export async function onLogin(apolloClient) {
-    if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+export async function onLogin(apolloClient, token) {
+    if (typeof localStorage !== 'undefined' && token)
+        localStorage.setItem(AUTH_TOKEN, token)
+
     try {
         await apolloClient.resetStore()
     } catch (e) {
@@ -122,7 +115,8 @@ export async function onLogin(apolloClient) {
 
 // Manually call this when user log out
 export async function onLogout(apolloClient) {
-    if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+    if (typeof localStorage !== 'undefined') localStorage.removeItem(AUTH_TOKEN)
+
     try {
         await apolloClient.resetStore()
     } catch (e) {

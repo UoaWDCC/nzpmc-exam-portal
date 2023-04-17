@@ -69,7 +69,7 @@ import { UserQuizFullQuestionQuery } from '@/gql/queries/userQuiz'
 import AppExamQuestionOptions from './Options'
 import AppExamQuestionFlagButton from './FlagButton'
 import AppExamQuestionLoader from './Loader'
-import DisplayText from '@/components/DisplayText'
+import DisplayText from '@/components/App/DisplayText'
 
 export default {
     name: 'AppExamQuestion',

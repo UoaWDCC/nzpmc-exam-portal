@@ -7,7 +7,6 @@
         class="app-exam"
     >
         <template #default="{ result: { data, error }, isLoading }">
-            <FinishedDialog v-if="error" :counter="0" />
             <v-scroll-y-reverse-transition>
                 <v-alert v-if="error" type="error" class="mx-3 my-6">
                     {{ $errorMessage }}
@@ -54,7 +53,6 @@
 </template>
 
 <script>
-import FinishedDialog from './FinishedDialog'
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamTopbarLoader from './TopbarLoader'
 import AppExamTopbar from './Topbar'
@@ -68,13 +66,18 @@ import { TOOLBAR_HEIGHT } from '@/helpers'
 export default {
     name: 'AppExam',
 
+    metaInfo() {
+        return {
+            title: this.name ?? 'Exam',
+        }
+    },
+
     components: {
         AppExamTopbarLoader,
         AppExamTopbar,
         AppExamSidebarLoader,
         AppExamQuestionLoader,
         AppExamSidebar,
-        FinishedDialog,
     },
 
     beforeRouteUpdate(to, from, next) {
@@ -82,8 +85,8 @@ export default {
         this.routeTransition =
             from.params.questionID === undefined
                 ? 'Transition'
-                : to.params.questionID > from.params.questionID // eslint-disable-next-line prettier-vue-scorpionknifes/prettier, indent
-                ? VSlideXReverseTransition // eslint-disable-next-line prettier-vue-scorpionknifes/prettier, indent
+                : to.params.questionID > from.params.questionID
+                ? VSlideXReverseTransition
                 : VSlideXTransition
         next()
     },

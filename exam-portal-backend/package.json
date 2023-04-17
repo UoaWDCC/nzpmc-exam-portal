@@ -4,8 +4,10 @@
     "description": "NZPMC Backend GraphQL API",
     "scripts": {
         "start": "ts-node src/index.ts",
-        "dev": "nodemon -e .js,.ts,.json --watch src .env --exec \"tsc --incremental && node bin/src/index.js\"",
-        "jwt": "ts-node ./test/scripts/loginScript mdLy2GYwTMZovNtnkj121dWU2YP2",
+        "dev": "nodemon src/index.ts",
+        "login": "ts-node ./test/scripts/loginScript",
+        "admin": "ts-node ./test/scripts/createAdminScript",
+        "user": "ts-node ./test/scripts/removeAdminScript",
         "lint": "eslint . --ext .js,.ts",
         "fix": "eslint . --fix --ext .js,.ts",
         "build": "tsc",

@@ -28,7 +28,8 @@ const createIdToken = async (uid) => {
             },
         )
 
-        console.log(res.data.idToken)
+        console.log("\nAuthorization Header:")
+        console.log("Bearer " + res.data.idToken)
 
         return res.data.idToken
     } catch (e) {
@@ -38,6 +39,12 @@ const createIdToken = async (uid) => {
 
 const args = process.argv.slice(2)
 
-console.log('Login Script:', args)
+if (args.length == 0)
+{
+    console.log('Login with User ID:', process.env.USER_ID)
+    createIdToken(process.env.USER_ID)
+} else {
+    console.log('Login with User ID:', args[0])
+    createIdToken(args[0])
+}
 
-createIdToken(args[0])
