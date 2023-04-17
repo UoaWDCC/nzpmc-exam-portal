@@ -17,6 +17,7 @@ Working versions include:
 - Benson Cho
 - Kevin Cheung
 - Alex Kim
+- Eugene Chua
 
 ## Wiki
 For all developer documentation (progress, commit conventions, architecture), refer to the GitHub wiki.
