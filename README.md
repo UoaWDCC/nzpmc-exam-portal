@@ -17,6 +17,7 @@ Working versions include:
 - Benson Cho
 - Kevin Cheung
 - Alex Kim
+- Eugene Chua
 - Aaron Rodrigues
 
 ## Wiki
