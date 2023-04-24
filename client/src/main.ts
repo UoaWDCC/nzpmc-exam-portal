@@ -35,7 +35,7 @@ const customTheme = {
 const vuetify = createVuetify({
   components: {
     VSkeletonLoader,
-    components
+    ...components
   },
   directives,
   theme: {
