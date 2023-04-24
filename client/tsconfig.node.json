@@ -2,8 +2,9 @@
   "extends": "@vue/tsconfig/tsconfig.node.json",
   "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*"],
   "compilerOptions": {
+    "allowJs": true,
     "composite": true,
     "ignoreDeprecations": "5.0",
-    "types": ["node"]
+    "types": ["node", "vuetify"]
   }
 }
