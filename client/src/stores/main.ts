@@ -5,7 +5,7 @@ export const useMainStore = defineStore('mainStore', {
         routeLoading: false,
 
         // Firebase Auth
-        user: null,
+        user: null as any,
         userLoading: true,
 
         // App snackbar notifications

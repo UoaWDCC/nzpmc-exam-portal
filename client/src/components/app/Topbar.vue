@@ -6,7 +6,7 @@ import iconSvg from '@/assets/icon.svg'
     <v-app-bar app color="primary" dark dense height="48px" class="app-topbar">
         <v-toolbar-title class="ma-n1 pa-1">
             <router-link
-                :to="{ name: 'Site' }"
+                :to="{ name: 'App' }"
                 class="align-center d-flex mr-2 text-decoration-none white--text"
             >
                 <v-img
@@ -24,14 +24,14 @@ import iconSvg from '@/assets/icon.svg'
         <v-spacer></v-spacer>
 
         <v-toolbar-items class="mr-1">
-            <v-btn text :to="{ name: 'AppExams' }">My Exams</v-btn>
+            <v-btn :to="{ name: 'AppExams' }">My Exams</v-btn>
 
-            <v-btn text :to="{ name: 'AppAdmin' }">Admin</v-btn>
+            <v-btn :to="{ name: 'AppAdmin' }">Admin</v-btn>
         </v-toolbar-items>
 
         <v-menu offset-y>
             <template #activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on">
+                <v-btn icon v-bind="attrs" v-if="on">
                     <v-icon>mdi-account</v-icon>
                 </v-btn>
             </template>

@@ -17,7 +17,7 @@
 
     <v-scroll-y-reverse-transition>
         <v-alert v-if="error" type="error" class="my-6">
-          {{ errorMessage }}
+          {{ error }}
         </v-alert>
       </v-scroll-y-reverse-transition>
 
