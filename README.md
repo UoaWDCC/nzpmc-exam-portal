@@ -20,6 +20,7 @@ Working versions include:
 - Alex Kim
 - Eugene Chua
 - Aaron Rodrigues
+- Erica Ngin
 
 ## Wiki
 For all developer documentation (progress, commit conventions, architecture), refer to the GitHub wiki.
