@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import AppExamTopbarSpinner from './TopbarSpinner'
-import AppExamTopbarTimer from './TopbarTimer'
+import AppExamTopbarSpinner from './TopbarSpinner.vue'
+import AppExamTopbarTimer from './TopbarTimer.vue'
 
 export default {
     name: 'AppExamTopbar',

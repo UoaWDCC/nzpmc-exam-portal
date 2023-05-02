@@ -64,7 +64,6 @@ export default {
         if (error) {
           this.error = error.message
         } else {
-			console.log(data)
 			if (data) this.userQuizzes = data.userQuizzes; 
         }
       },

@@ -1,12 +1,7 @@
 <template>
-    <ApolloQuery
-        :query="UserQuizQuery"
-        :update="(data) => data.userQuiz"
-        :variables="{ quizID: $route.params.quizID }"
-        fetch-policy="cache-first"
+    <div
         class="app-exam"
     >
-        <template #default="{ result: { data, error }, isLoading }">
             <v-scroll-y-reverse-transition>
                 <v-alert v-if="error" type="error" class="mx-3 my-6">
                     {{ $errorMessage }}
@@ -48,18 +43,17 @@
                     </component>
                 </div>
             </div>
-        </template>
-    </ApolloQuery>
+    </div>
 </template>
 
 <script>
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
-import AppExamTopbarLoader from './TopbarLoader'
-import AppExamTopbar from './Topbar'
-import AppExamSidebarLoader from './SidebarLoader'
-import AppExamQuestionLoader from './Question/Loader'
-import AppExamSidebar from './Sidebar'
-import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/lib'
+import AppExamTopbarLoader from './TopbarLoader.vue'
+import AppExamTopbar from './Topbar.vue'
+import AppExamSidebarLoader from './SidebarLoader.vue'
+import AppExamQuestionLoader from './Question/Loader.vue'
+import AppExamSidebar from './Sidebar.vue'
+import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
 
 import { TOOLBAR_HEIGHT } from '@/helpers'
 
@@ -95,8 +89,8 @@ export default {
         return {
             UserQuizQuery,
             TOOLBAR_HEIGHT,
-
             routeTransition: VSlideXTransition,
+			data : null,
         }
     },
 
@@ -107,7 +101,14 @@ export default {
                 return { quizID: this.$route.params.quizID }
             },
 
-            update: (data) => data.userQuiz?.name,
+		  result({ data, error, loading }) {
+			this.loading = loading
+			if (error) {
+			  this.error = error.message
+			} else {
+				if (data) this.data = data; 
+			}
+		  },
             fetchPolicy: 'cache-only',
         },
     },
