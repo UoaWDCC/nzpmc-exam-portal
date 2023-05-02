@@ -1,6 +1,6 @@
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js'
 import datetimeScalar from '../scalars/datetime'
-import { Resolvers } from './resolvers-types'
+import { Resolvers } from '@nzpmc-exam-portal/common/resolvers-types'
 import mutationResolvers from './mutationResolvers'
 import queryResolvers from './queryResolvers'
 import questionResolvers from './questionResolvers'

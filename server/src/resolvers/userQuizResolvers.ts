@@ -13,7 +13,7 @@ import {
     User,
     UserQuizQuestionArgs,
     UserQuizResolvers,
-} from './resolvers-types'
+} from '@nzpmc-exam-portal/common/resolvers-types'
 
 const userUserQuiz: Resolver<
     Maybe<ResolverTypeWrapper<User>>,

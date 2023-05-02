@@ -6,7 +6,7 @@ import {
     QuestionResolvers,
     Resolver,
     ResolverTypeWrapper,
-} from './resolvers-types'
+} from '@nzpmc-exam-portal/common/resolvers-types'
 
 const answerQuestion: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,

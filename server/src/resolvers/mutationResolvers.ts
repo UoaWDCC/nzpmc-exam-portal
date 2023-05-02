@@ -62,7 +62,7 @@ import {
     Resolver,
     ResolverTypeWrapper,
     User,
-} from './resolvers-types'
+} from '@nzpmc-exam-portal/common/resolvers-types'
 import { admin, user } from './helpers/auth'
 import { UserQuizQuestionModel } from './custom/userQuizQuestionModel'
 import { QuestionModel } from './custom/questionModel'
