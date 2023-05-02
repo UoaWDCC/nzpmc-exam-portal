@@ -59,14 +59,16 @@ export default {
   apollo: {
     userQuizzes: {
       query: UserQuizzesQuery,
-      result({ data, error, loading }) {
+      /*update({ data, error, loading }) {
         this.loading = loading
         if (error) {
           this.error = error.message
         } else {
-          this.userQuizzes = data.userQuizzes
+			console.log(data)
+			if (data) this.userQuizzes = data; 
         }
-      },
+      },*/
+		update: data => console.log(data),
       fetchPolicy: 'cache-and-network',
     },
   },
