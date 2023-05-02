@@ -1,5 +1,5 @@
 {
-    "name": "nzpmc-backend",
+    "name": "@nzpmc-exam-portal/server",
     "version": "0.0.3",
     "description": "NZPMC Backend GraphQL API",
     "scripts": {
@@ -24,6 +24,7 @@
         "node": ">=16.0.0"
     },
     "dependencies": {
+        "@nzpmc-exam-portal/common": "^0.0.0",
         "@graphql-codegen/cli": "^2.11.3",
         "@graphql-codegen/typescript-resolvers": "^2.7.2",
         "apollo-server-errors": "^3.3.1",

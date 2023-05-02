@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "workspaces": [
+        "server",
+        "client",
+        "common"
+    ],
+    "packageManager": "yarn@1.22.19"
+}
