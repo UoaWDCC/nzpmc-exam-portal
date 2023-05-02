@@ -21,7 +21,6 @@
         </v-alert>
       </v-scroll-y-reverse-transition>
 
-      <v-scroll-y-reverse-transition>
         <AppExamsList v-if="!loading && userQuizzes" :user-quizzes="userQuizzes" />
         <v-skeleton-loader
           v-if="loading"
@@ -30,7 +29,6 @@
           class="mb-3 mx-auto"
           type="list-item-two-line"
         ></v-skeleton-loader>
-      </v-scroll-y-reverse-transition>
     </v-container>
   </div>
 </template>
@@ -51,7 +49,7 @@ export default {
     return {
     	userQuizzes: null,
       	error: null,
-      	loading: false,
+      	loading: true,
 	}
 
   },
