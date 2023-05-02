@@ -9,7 +9,7 @@ import {
     RequireFields,
     Resolver,
     ResolverTypeWrapper,
-} from './resolvers-types'
+} from '@nzpmc-exam-portal/common/resolvers-types'
 
 const questionQuiz: Resolver<
     Maybe<ResolverTypeWrapper<QuestionModel>>,

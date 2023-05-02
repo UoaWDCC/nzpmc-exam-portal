@@ -1,5 +1,5 @@
 import { User } from '../models'
-import { User as SchemaUser } from '../resolvers/resolvers-types'
+import { User as SchemaUser } from '@nzpmc-exam-portal/common/resolvers-types'
 
 const packUser = (user: User): SchemaUser => {
     return {

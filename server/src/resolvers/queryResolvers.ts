@@ -25,7 +25,7 @@ import {
     Sort,
     User,
     UserPage,
-} from './resolvers-types'
+} from '@nzpmc-exam-portal/common/resolvers-types'
 
 const userQuery: Resolver<
     ResolverTypeWrapper<User>,

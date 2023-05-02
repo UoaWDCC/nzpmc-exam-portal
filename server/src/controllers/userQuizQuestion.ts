@@ -1,7 +1,7 @@
 import { Quiz, UserQuiz, UserQuizQuestion } from '../models'
 import { getUserQuiz, setUserQuizScore } from './userQuiz'
 import { runTransaction } from 'fireorm'
-import * as Schema from '../resolvers/resolvers-types'
+import * as Schema from '@nzpmc-exam-portal/common/resolvers-types'
 import { NotFoundError, UserQuizExpiredError } from '../utils/errors'
 import {
     PackQuizQuestion,
