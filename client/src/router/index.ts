@@ -7,7 +7,7 @@ const routes = [
         path: '/app',
         name: 'App',
         component: () =>
-            import(/* webpackChunkName: "AppChunk" */ '../components/App/index.vue'),
+            import(/* webpackChunkName: "AppChunk" */ '@/components/app/index.vue'),
         redirect: { name: 'AppExams' },
         children: [
             {
@@ -15,7 +15,7 @@ const routes = [
                 name: 'AppExams',
                 component: () =>
                     import(
-                        /* webpackChunkName: "AppExamsChunk" */ '../components/App/Exams/index.vue'
+                        /* webpackChunkName: "AppExamsChunk" */ '@/components/app/exams/index.vue'
                     ),
             },
             {
@@ -24,7 +24,7 @@ const routes = [
                 // Load in same chunk as the exams route for better reliability
                 component: () =>
                     import(
-                        /* webpackChunkName: "AppExamsChunk" */ '../components/App/Exam/index.vue'
+                        /* webpackChunkName: "AppExamsChunk" */ '@/components/app/exam/index.vue'
                     ),
                 children: [
                     {
@@ -32,7 +32,7 @@ const routes = [
                         name: 'AppExamQuestion',
                         component: () =>
                             import(
-                                /* webpackChunkName: "AppExamsChunk" */ '../components/App/Exam/Question/index.vue'
+                                /* webpackChunkName: "AppExamsChunk" */ '@/components/app/exam/Question/index.vue'
                             ),
                     },
                 ],
@@ -42,7 +42,7 @@ const routes = [
                 name: 'AppAdmin',
                 component: () =>
                     import(
-                        /* webpackChunkName: "AppAdminChunk" */ '../components/App/Admin/index.vue'
+                        /* webpackChunkName: "AppAdminChunk" */ '@/components/app/admin/index.vue'
                     ),
             },
         ],
@@ -51,13 +51,13 @@ const routes = [
         path: '/auth',
         name: 'Auth',
         component: () =>
-            import(/* webpackChunkName: "AuthChunk" */ '../components/Auth/index.vue'),
+            import(/* webpackChunkName: "AuthChunk" */ '@/components/auth/index.vue'),
     },
     {
         path: '/site',
         name: 'Site',
         component: () =>
-            import(/* webpackChunkName: "SiteChunk" */ '../components/Site/index.vue'),
+            import(/* webpackChunkName: "SiteChunk" */ '@/components/site/index.vue'),
     },
     {
         path: '/',

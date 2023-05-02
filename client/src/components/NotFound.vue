@@ -9,7 +9,7 @@ import logoBg from '@/assets/logo-background.jpg'
 
             <p>Sorry about that.</p>
 
-            <v-btn color="white" outlined :to="{ name: 'Site' }">
+            <v-btn color="white" outlined :to="{ name: 'AppExams' }">
                 <v-icon left>mdi-home</v-icon>
 
                 <span>Go Home</span>
