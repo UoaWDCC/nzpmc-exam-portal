@@ -26,7 +26,7 @@
     "dependencies": {
         "@nzpmc-exam-portal/common": "*",
         "@graphql-codegen/cli": "^2.11.3",
-        "@graphql-codegen/typescript-resolvers": "^2.7.2",
+        "@graphql-codegen/typescript-resolvers": "^3.2.1",
         "apollo-server-errors": "^3.3.1",
         "apollo-server-express": "^3.10.0",
         "axios": "^0.27.2",
