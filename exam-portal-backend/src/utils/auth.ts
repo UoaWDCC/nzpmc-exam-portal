@@ -9,4 +9,11 @@ const checkRole = async (userID: string) => {
     }
 }
 
-export default { checkRole }
+const isAdminInFirestore = async (userID: string) => {
+    const currentUser = await getUser(userID)
+    if (currentUser.role === 'admin') {
+        return true
+    }
+    return false
+}
+export { checkRole, isAdminInFirestore }

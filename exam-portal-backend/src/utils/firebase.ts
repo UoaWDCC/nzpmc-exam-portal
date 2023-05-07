@@ -2,6 +2,7 @@ import admin, { auth } from 'firebase-admin'
 import * as fireorm from 'fireorm'
 import axios from 'axios'
 import { ExpressContext } from 'apollo-server-express'
+import { isAdminInFirestore } from './auth'
 
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
@@ -20,8 +21,16 @@ const authCheck = async ({ req }: ExpressContext): Promise<UserContext> => {
     if (!token) return {}
 
     try {
+        const user = await admin.auth().verifyIdToken(token)
+        const uid = user.uid
+        const isAdmin = await isAdminInFirestore(uid)
+        if (isAdmin) {
+            addAdminClaim(uid)
+        } else {
+            removeAdminClaim(uid)
+        }
         return {
-            user: await admin.auth().verifyIdToken(token),
+            user,
         }
     } catch (e) {
         // Invalid token
@@ -33,6 +42,10 @@ const authCheck = async ({ req }: ExpressContext): Promise<UserContext> => {
 // Only applies after refreshing the token
 const addAdminClaim = async (uid: string): Promise<void> => {
     admin.auth().setCustomUserClaims(uid, { admin: true })
+}
+
+const removeAdminClaim = async (uid: string): Promise<void> => {
+    admin.auth().setCustomUserClaims(uid, { admin: false })
 }
 
 const addFirebaseUser = async (
