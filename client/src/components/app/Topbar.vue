@@ -27,27 +27,9 @@ import iconSvg from '@/assets/icon.svg'
             <v-btn :to="{ name: 'AppExams' }">My Exams</v-btn>
 
             <v-btn :to="{ name: 'AppAdmin' }">Admin</v-btn>
+			<v-btn @click="signOut(auth)">Log Out</v-btn>
         </v-toolbar-items>
 
-        <v-menu offset-y>
-            <template #activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-if="on">
-                    <v-icon>mdi-account</v-icon>
-                </v-btn>
-            </template>
-
-            <v-list dense>
-                <v-list-item link @click="signOut(auth)">
-                    <v-list-item-icon>
-                        <v-icon>mdi-logout</v-icon>
-                    </v-list-item-icon>
-
-                    <v-list-item-content>
-                        <v-list-item-title>Sign out</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list>
-        </v-menu>
     </v-app-bar>
 </template>
 
