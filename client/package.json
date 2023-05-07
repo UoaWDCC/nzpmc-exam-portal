@@ -13,7 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@nzpmc-exam-portal/common": "^0.0.0",
+    "@nzpmc-exam-portal/common": "*",
     "@apollo/client": "^3.7.12",
     "@vue/apollo-option": "^4.0.0-beta.4",
     "firebase": "^9.20.0",

@@ -1,12 +1,12 @@
 import { getOptionByID, getQuestionOptions } from '../controllers'
-import { QuestionModel } from './custom/questionModel'
 import {
+    QuestionModel,
     Maybe,
     Option,
     QuestionResolvers,
     Resolver,
     ResolverTypeWrapper,
-} from '@nzpmc-exam-portal/common/resolvers-types'
+} from '@nzpmc-exam-portal/common'
 
 const answerQuestion: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,

@@ -2,7 +2,6 @@
 Project established in 2021.
 
 ## Team Leadership
-
 - Nate Williamson (Project Manager)
 - John Chen (Tech Lead)
 

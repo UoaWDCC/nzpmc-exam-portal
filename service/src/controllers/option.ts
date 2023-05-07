@@ -2,7 +2,7 @@ import { getRepository } from 'fireorm'
 import { packOption, packOptions } from '../mappers/optionMapper'
 import { Option, Quiz } from '../models'
 import { NotFoundError } from '../utils/errors'
-import * as Schema from '@nzpmc-exam-portal/common/resolvers-types'
+import * as Schema from '@nzpmc-exam-portal/common'
 
 const QuizRepository = getRepository(Quiz)
 

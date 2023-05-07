@@ -2,7 +2,7 @@ import { getRepository, runTransaction } from 'fireorm'
 import { packQuestion, packQuestions } from '../mappers/questionMapper'
 import { Question, Quiz } from '../models'
 import Option from '../models/option'
-import { QuestionModel } from '../resolvers/custom/questionModel'
+import { QuestionModel } from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
 
 const QuizRepository = getRepository(Quiz)

@@ -1,7 +1,7 @@
 import { getQuestion, getQuestions } from '../controllers'
-import { QuestionModel } from './custom/questionModel'
 import { admin } from './helpers/auth'
 import {
+    QuestionModel,
     Maybe,
     Quiz,
     QuizQuestionArgs,
@@ -9,7 +9,7 @@ import {
     RequireFields,
     Resolver,
     ResolverTypeWrapper,
-} from '@nzpmc-exam-portal/common/resolvers-types'
+} from '@nzpmc-exam-portal/common'
 
 const questionQuiz: Resolver<
     Maybe<ResolverTypeWrapper<QuestionModel>>,

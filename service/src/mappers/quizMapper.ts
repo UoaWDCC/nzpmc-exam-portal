@@ -1,5 +1,5 @@
 import { Quiz } from '../models'
-import { Quiz as SchemaQuiz } from '@nzpmc-exam-portal/common/resolvers-types'
+import { Quiz as SchemaQuiz } from '@nzpmc-exam-portal/common'
 
 const packQuiz = (quiz: Quiz): SchemaQuiz => {
     return {

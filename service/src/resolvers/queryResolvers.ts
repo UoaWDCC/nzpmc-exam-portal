@@ -8,9 +8,9 @@ import {
 } from '../controllers'
 import { AuthenticationError } from '../utils/errors'
 import { bucket, UserContext } from '../utils/firebase'
-import { UserQuizModel } from './custom/userQuizModel'
 import { admin, user } from './helpers/auth'
 import {
+    UserQuizModel,
     Image,
     QueryImageArgs,
     QueryQuizArgs,
@@ -25,7 +25,7 @@ import {
     Sort,
     User,
     UserPage,
-} from '@nzpmc-exam-portal/common/resolvers-types'
+} from '@nzpmc-exam-portal/common'
 
 const userQuery: Resolver<
     ResolverTypeWrapper<User>,

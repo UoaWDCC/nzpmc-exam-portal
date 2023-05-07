@@ -1,5 +1,5 @@
 import { Option } from '../models'
-import { Option as SchemaOption } from '@nzpmc-exam-portal/common/resolvers-types'
+import { Option as SchemaOption } from '@nzpmc-exam-portal/common'
 
 const packOption = (option: Option): SchemaOption => {
     return {

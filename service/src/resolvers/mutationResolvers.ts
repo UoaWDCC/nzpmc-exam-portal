@@ -62,11 +62,11 @@ import {
     Resolver,
     ResolverTypeWrapper,
     User,
-} from '@nzpmc-exam-portal/common/resolvers-types'
+    UserQuizQuestionModel,
+    QuestionModel,
+    UserQuizModel
+} from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
-import { UserQuizQuestionModel } from './custom/userQuizQuestionModel'
-import { QuestionModel } from './custom/questionModel'
-import { UserQuizModel } from './custom/userQuizModel'
 
 const addOptionMutation: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,

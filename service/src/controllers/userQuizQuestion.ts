@@ -1,7 +1,7 @@
 import { Quiz, UserQuiz, UserQuizQuestion } from '../models'
 import { getUserQuiz, setUserQuizScore } from './userQuiz'
 import { runTransaction } from 'fireorm'
-import * as Schema from '@nzpmc-exam-portal/common/resolvers-types'
+import * as Schema from '@nzpmc-exam-portal/common'
 import { NotFoundError, UserQuizExpiredError } from '../utils/errors'
 import {
     PackQuizQuestion,
@@ -9,7 +9,7 @@ import {
     packUserQuizQuestions,
 } from '../mappers/userQuizQuestionMapper'
 import { packOption, packOptions } from '../mappers/optionMapper'
-import { UserQuizQuestionModel } from '../resolvers/custom/userQuizQuestionModel'
+import { UserQuizQuestionModel } from '@nzpmc-exam-portal/common'
 
 const getUserQuizQuestion = async (
     userQuizID: string,

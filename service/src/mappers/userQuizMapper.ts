@@ -1,5 +1,5 @@
 import { Quiz, UserQuiz } from '../models'
-import { UserQuizModel } from '../resolvers/custom/userQuizModel'
+import { UserQuizModel } from '@nzpmc-exam-portal/common'
 
 interface PackUserQuiz {
     userID: string

@@ -1,5 +1,5 @@
 import { Question } from '../models'
-import { QuestionModel } from '../resolvers/custom/questionModel'
+import { QuestionModel } from '@nzpmc-exam-portal/common'
 
 interface PackQuestion {
     quizID: string

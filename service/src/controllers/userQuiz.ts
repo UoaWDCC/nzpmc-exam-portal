@@ -6,7 +6,7 @@ import {
 } from '../mappers/userQuizMapper'
 import { Quiz, UserQuiz } from '../models'
 import { NotFoundError } from '../utils/errors'
-import { UserQuizModel } from '../resolvers/custom/userQuizModel'
+import { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { addUserQuizQuestion } from './userQuizQuestion'
 
 const UserQuizRepository = getRepository(UserQuiz)

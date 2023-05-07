@@ -1,7 +1,7 @@
 import { getRepository } from 'fireorm'
 import { packUser, packUsers } from '../mappers/userMapper'
 import { User } from '../models'
-import * as Schema from '@nzpmc-exam-portal/common/resolvers-types'
+import * as Schema from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
 
 const UserRepository = getRepository(User)

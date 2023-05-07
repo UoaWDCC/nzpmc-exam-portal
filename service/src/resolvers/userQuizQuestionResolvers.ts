@@ -3,14 +3,14 @@ import {
     getUserQuizQuestionOptions,
 } from '../controllers'
 import { user } from './helpers/auth'
-import { UserQuizQuestionModel } from './custom/userQuizQuestionModel'
 import {
+    UserQuizQuestionModel,
     Maybe,
     Option,
     Resolver,
     ResolverTypeWrapper,
     UserQuizQuestionResolvers,
-} from '@nzpmc-exam-portal/common/resolvers-types'
+} from '@nzpmc-exam-portal/common'
 
 const userAnswerUserQuizQuestion: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,

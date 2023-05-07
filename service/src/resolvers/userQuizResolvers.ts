@@ -3,9 +3,10 @@ import {
     getUserQuizQuestion,
     getUser,
 } from '../controllers'
-import { UserQuizModel } from './custom/userQuizModel'
-import { UserQuizQuestionModel } from './custom/userQuizQuestionModel'
+
 import {
+    UserQuizModel,
+    UserQuizQuestionModel,
     Maybe,
     RequireFields,
     Resolver,
@@ -13,7 +14,7 @@ import {
     User,
     UserQuizQuestionArgs,
     UserQuizResolvers,
-} from '@nzpmc-exam-portal/common/resolvers-types'
+} from '@nzpmc-exam-portal/common'
 
 const userUserQuiz: Resolver<
     Maybe<ResolverTypeWrapper<User>>,

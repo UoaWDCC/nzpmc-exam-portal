@@ -1,7 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { QuestionModel } from '../server/src/resolvers/custom/questionModel';
-import { UserQuizModel } from '../server/src/resolvers/custom/userQuizModel';
-import { UserQuizQuestionModel } from '../server/src/resolvers/custom/userQuizQuestionModel';
+import { QuestionModel } from './custom/questionModel';
+import { UserQuizModel } from './custom/userQuizModel';
+import { UserQuizQuestionModel } from './custom/userQuizQuestionModel';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
