@@ -34,7 +34,7 @@
         "cors": "^2.8.5",
         "dotenv": "^16.0.1",
         "express": "^4.18.1",
-        "firebase-admin": "^11.0.1",
+        "firebase-admin": "^11.8.0",
         "fireo": "^1.0.3",
         "fireorm": "^0.23.3",
         "graphql": "^16.5.0",
