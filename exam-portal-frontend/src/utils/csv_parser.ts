@@ -69,6 +69,7 @@ export function parseCsv(filename: string): Promise<Student[]> {
       while ((record = parser.read())) {
         // Take's in all the information from 1 record in CSV (Left to right)
         const {
+          // LHS are the CSV headers, RHS are the variables that will hold the values
           StudentFirstName: firstName,
           StudentMiddleName: middleName,
           StudentSurname: surname,
@@ -89,6 +90,11 @@ export function parseCsv(filename: string): Promise<Student[]> {
         // Check if the island was a valid ENUM! (Function can be replicated to check other attributes)
         if (!isValidIsland(toTitleCase(island))) {
           reject(new Error(`Invalid island value: ${island}`));
+          return;
+        }
+        // Check if the year level was valid
+        if (!isValidYearLevel(parseInt(yearLevel))) {
+          reject(new Error(`Invalid year level: ${yearLevel}`));
           return;
         }
         // Create the student object instance
@@ -131,6 +137,10 @@ export function parseCsv(filename: string): Promise<Student[]> {
 
 function isValidIsland(islandValue: string): boolean {
   return Object.values(Island).includes(islandValue as Island);
+}
+
+function isValidYearLevel(yearLevel: number): boolean {
+  return yearLevel >= 1 && yearLevel <= 13;
 }
 
 // This function will capitalise words if they were passed through in lowercase
