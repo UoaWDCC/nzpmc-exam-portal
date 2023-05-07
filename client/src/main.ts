@@ -62,7 +62,4 @@ app.use(router)
 app.use(vuetify)
 app.use(apolloProvider)
 
-// app.use(VueLaTeX2JS)
-//TODO:
-
 app.mount('#app')
