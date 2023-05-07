@@ -97,17 +97,28 @@ export function parseCsv(filename: string): Promise<Student[]> {
           reject(new Error(`Invalid year level: ${yearLevel}`));
           return;
         }
+        // Check if the email was valid
+        if (!isValidEmail(email)) {
+          reject(new Error(`Invalid email: ${email}`));
+          return;
+        }
+        // Check if the phone number was valid
+        if (!isValidPhoneNumber(phoneNumber)) {
+          reject(new Error(`Invalid phone number: ${phoneNumber}`));
+          return;
+        }
+
         // Create the student object instance
         const student = new Student(
-          firstName,
-          middleName,
-          surname,
+          toTitleCase(firstName),
+          toTitleCase(middleName),
+          toTitleCase(surname),
           email,
           parseInt(yearLevel),
           heardFrom,
           reasonForTaking,
           teacherCode,
-          teacherName,
+          toTitleCase(teacherName),
           teacherEmail,
           schoolName,
           schoolAddress,
@@ -135,12 +146,22 @@ export function parseCsv(filename: string): Promise<Student[]> {
   });
 }
 
+
+// Error checking functions
 function isValidIsland(islandValue: string): boolean {
   return Object.values(Island).includes(islandValue as Island);
 }
 
 function isValidYearLevel(yearLevel: number): boolean {
   return yearLevel >= 1 && yearLevel <= 13;
+}
+
+function isValidEmail(email: string): boolean {
+  return email.includes('@');
+}
+
+function isValidPhoneNumber(phoneNumber: string): boolean {
+  return phoneNumber.length === 10;
 }
 
 // This function will capitalise words if they were passed through in lowercase

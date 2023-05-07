@@ -1,4 +1,4 @@
 StudentFirstName,StudentMiddleName,StudentSurname,StudentEmail,StudentYearLevel,HeardFrom,ReasonForTaking,TeacherCode,TeacherName,TeacherEmail,SchoolName,SchoolAddress,PhoneNumber,TeacherCategory,Island,City
-John,Sebastian,Smith,12345@WDCC.school.nz,12,School,I love math,d134b8c316c3c3eb03e9cc86,George Orwell,george.orwell@WDCC.school.nz,WDCC,3 WDCC road,87654321,English Teacher,North Island,Auckland
-noah,sebastian,Smith,12345@WDCC.school.nz,12,School,I love math,d134b8c316c3c3eb03e9cc86,George Orwell,noah.orwell@WDCC.school.nz,WDCC,3 WDCC road,87654321,English Teacher,south island,Auckland
-noah,,Smith,12345@WDCC.school.nz,14,School,I love math,d134b8c316c3c3eb03e9cc86,George Orwell,noah.orwell@WDCC.school.nz,WDCC,3 WDCC road,87654321,English Teacher,south island,Auckland
+John,Sebastian,Smith,12345@WDCC.school.nz,12,School,I love math,d134b8c316c3c3eb03e9cc86,George Orwell,george.orwell@WDCC.school.nz,WDCC,3 WDCC road,8765400321,English Teacher,North Island,Auckland
+noah,sebastian,Smith,12345@WDCC.school.nz,12,School,I love math,d134b8c316c3c3eb03e9cc86,george Poll,noah.orwell@WDCC.school.nz,WDCC,3 WDCC road,8765004321,English Teacher,south island,Auckland
+noah,,Smith,12345@WDCC.school.nz,12,School,I love math,d134b8c316c3c3eb03e9cc86,grace lee,noah.orwell@WDCC.school.nz,WDCC,3 WDCC road,8765004321,English Teacher,south island,Auckland
