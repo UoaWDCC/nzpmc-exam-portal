@@ -1,5 +1,3 @@
-import { AdminAuthenticationError } from './errors'
-import { getUser } from '../controllers'
 import { firestore } from './firebase'
 
 const isAdminInFirestore = async (userID: string) => {

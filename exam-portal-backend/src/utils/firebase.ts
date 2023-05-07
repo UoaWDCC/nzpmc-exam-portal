@@ -25,9 +25,9 @@ const authCheck = async ({ req }: ExpressContext): Promise<UserContext> => {
         const uid = user.uid
         const isAdmin = await isAdminInFirestore(uid)
         if (isAdmin) {
-            addAdminClaim(uid)
+            await addAdminClaim(uid)
         } else {
-            removeAdminClaim(uid)
+            await removeAdminClaim(uid)
         }
         return {
             user,
@@ -41,11 +41,11 @@ const authCheck = async ({ req }: ExpressContext): Promise<UserContext> => {
 
 // Only applies after refreshing the token
 const addAdminClaim = async (uid: string): Promise<void> => {
-    admin.auth().setCustomUserClaims(uid, { admin: true })
+    await admin.auth().setCustomUserClaims(uid, { admin: true })
 }
 
 const removeAdminClaim = async (uid: string): Promise<void> => {
-    admin.auth().setCustomUserClaims(uid, { admin: false })
+    await admin.auth().setCustomUserClaims(uid, { admin: false })
 }
 
 const addFirebaseUser = async (
