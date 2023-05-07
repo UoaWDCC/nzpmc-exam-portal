@@ -26,21 +26,27 @@ const authCheck = async ({ req }: ExpressContext): Promise<UserContext> => {
     if (!token) return {}
 
     try {
-        let user = await admin.auth().verifyIdToken(token)
-        const uid = user.uid
+        let decodedIdToken = await admin.auth().verifyIdToken(token)
+        const uid = decodedIdToken.uid
+        const user = await admin.auth().getUser(uid)
+        const hasAdminClaim = user.customClaims?.admin
         const isAdmin = await isAdminInFirestore(uid)
-        if (isAdmin) {
-            await addAdminClaim(uid)
-        } else {
-            await removeAdminClaim(uid)
+
+        // hasAdminClaim XOR isAdmin - only create new tokens if claims don't match up
+        if ((hasAdminClaim && !isAdmin) || (!hasAdminClaim && isAdmin)) {
+            if (isAdmin) {
+                await addAdminClaim(uid)
+            } else {
+                await removeAdminClaim(uid)
+            }
+
+            const newToken = await generateNewToken(uid)
+
+            decodedIdToken = await admin.auth().verifyIdToken(newToken)
         }
 
-        const newToken = await generateNewToken(uid)
-
-        user = await admin.auth().verifyIdToken(newToken)
-
         return {
-            user,
+            user: decodedIdToken,
         }
     } catch (e) {
         // Invalid token
