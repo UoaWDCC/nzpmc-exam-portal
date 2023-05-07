@@ -1,0 +1,7 @@
+node_modules
+bin
+test
+firebase
+.env
+.github
+.vscode

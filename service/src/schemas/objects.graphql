@@ -1,0 +1,83 @@
+type User {
+    id: ID!
+    displayName: String
+    email: String
+    emailVerified: String
+    photoURL: String
+    firstName: String
+    lastName: String
+    yearLevel: String
+    role: String
+    created: DateTime
+    modified: DateTime
+}
+
+type Question {
+    id: ID!
+    question: String
+    imageURI: String
+    numOfAnswers: Int
+    topics: String # should be enum
+    answer: Option
+    options: [Option]
+    created: DateTime
+    modified: DateTime
+}
+
+type Option {
+    id: ID!
+    option: String
+    created: DateTime
+    modified: DateTime
+}
+
+type Quiz {
+    id: ID!
+    name: String
+    description: String
+    duration: Int
+    numOfQuestions: Int
+    question(id: ID!): Question
+    questions: [Question]
+    startTime: DateTime
+    endTime: DateTime
+    created: DateTime
+    modified: DateTime
+}
+
+type UserQuiz {
+    id: ID!
+    user: User
+    name: String
+    description: String
+    duration: Int
+    question(id: ID!): UserQuizQuestion
+    questions: [UserQuizQuestion]
+    score: Int
+    startTime: DateTime
+    endTime: DateTime
+    created: DateTime
+    modified: DateTime
+}
+
+type UserQuizQuestion {
+    id: ID!
+    question: String!
+    imageURI: String
+    options: [Option!]!
+    userAnswer: Option
+    flag: Boolean!
+    firstViewed: DateTime
+    lastAnswered: DateTime
+    created: DateTime
+    modified: DateTime
+}
+
+type Image {
+    imageURI: String!
+}
+
+type UserPage {
+    users: [User!]!
+    pages: Int!
+}

@@ -1,0 +1,3 @@
+**/node_modules/*
+src/resolvers/resolvers-types.ts
+bin
