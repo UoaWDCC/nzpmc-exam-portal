@@ -19,6 +19,5 @@
 ## Usage
 
 ```
-npm install
-npm run start
+yarn run start
 ```

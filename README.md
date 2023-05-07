@@ -10,6 +10,16 @@ This repository is split into three sub repositories: client, server and common.
 
 To install all node modules run `yarn` at root.
 
+Run service
+```sh
+yarn run service
+```
+
+Run client
+```sh
+yarn run client
+```
+
 ## Team Members
 - Sophie Lee
 - Benson Cho
