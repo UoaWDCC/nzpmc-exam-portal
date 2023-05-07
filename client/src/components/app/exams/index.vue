@@ -1,14 +1,14 @@
 
 <template>
   <div class="app-exams background--grey fill-height" style="overflow-y: auto">
-    <v-container class="py-0">
+    <v-container class="mt-10">
       <div class="my-6">
-        <h1 class="mb-6 text-h4">My Exams</h1>
-        <p class="mb-0">
+        <h1 class="mb-6 text-h4 text-uppercase font-weight-bold">My Exams</h1>
+        <p class="text-subtitle-1">
           Kia ora and welcome to the New Zealand Physics and Mathematics Competition.
           This is your chance to prove your skills and knowledge in the Physics and
           Mathematics subjects. You will be tested on your knowledge of the subjects,
-          and your ability to solve problems. Below you can see the exams available for
+          and your ability to solve problems.<br/>Below you can see the exams available for
           you to start, past exams, and ones that you're enrolled in for the future.
           If you can't see an exam that you think you should be enrolled in, contact us
           at <a href="mailto:contact.nzpmc@gmail.com">contact.nzpmc@gmail.com</a>.
