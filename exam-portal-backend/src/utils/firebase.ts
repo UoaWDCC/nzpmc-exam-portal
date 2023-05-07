@@ -24,12 +24,13 @@ const authCheck = async ({ req }: ExpressContext): Promise<UserContext> => {
         let user = await admin.auth().verifyIdToken(token)
         const uid = user.uid
         const isAdmin = await isAdminInFirestore(uid)
-        let newToken: string
         if (isAdmin) {
-            newToken = await addAdminClaim(uid)
+            await addAdminClaim(uid)
         } else {
-            newToken = await removeAdminClaim(uid)
+            await removeAdminClaim(uid)
         }
+
+        const newToken = await generateNewToken(uid)
 
         user = await admin.auth().verifyIdToken(newToken)
 
@@ -43,7 +44,7 @@ const authCheck = async ({ req }: ExpressContext): Promise<UserContext> => {
     }
 }
 
-const refreshToken = async (uid: string): Promise<string> => {
+const generateNewToken = async (uid: string): Promise<string> => {
     const customToken = await admin.auth().createCustomToken(uid)
     const res = await axios.post(
         `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${process.env.FIREBASE_API_KEY}`,
@@ -56,16 +57,12 @@ const refreshToken = async (uid: string): Promise<string> => {
     return newToken
 }
 // Only applies after refreshing the token
-const addAdminClaim = async (uid: string): Promise<string> => {
+const addAdminClaim = async (uid: string): Promise<void> => {
     await admin.auth().setCustomUserClaims(uid, { admin: true })
-    const newToken = refreshToken(uid)
-    return newToken
 }
 
-const removeAdminClaim = async (uid: string): Promise<string> => {
+const removeAdminClaim = async (uid: string): Promise<void> => {
     await admin.auth().setCustomUserClaims(uid, { admin: false })
-    const newToken = refreshToken(uid)
-    return newToken
 }
 
 const addFirebaseUser = async (
