@@ -2,16 +2,23 @@
 Project established in 2021.
 
 ## Team Leadership
-
 - Nate Williamson (Project Manager)
 - John Chen (Tech Lead)
 
 ## Structure
-This repository is split into two sub repositories, which require different node versions (so we cannot use a workspace).
+This repository is split into three sub repositories: client, service and common. We utilise a yarn workspace.
 
-Working versions include:
-- Node (16.13.1)
-- Npm (8.1.2)
+To install all node modules run `yarn` at root.
+
+Run service
+```sh
+yarn run service
+```
+
+Run client
+```sh
+yarn run client
+```
 
 ## Team Members
 - Sophie Lee

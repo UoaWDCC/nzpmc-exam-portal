@@ -2,6 +2,8 @@
 
 <!-- Explain why you're making the change you are, what is the problem this PR solves? -->
 
+Closes #[Replace with ticket number]
+
 **Solution**
 
 <!-- Help the reviewer out! List the changes you've made and potentially why. -->
