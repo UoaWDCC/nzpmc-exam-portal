@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {parse} from '../../node_modules/csv-parse';
+import {parse} from '../../../node_modules/csv-parse';
 
 // Island enums for error checking
 enum Island {
