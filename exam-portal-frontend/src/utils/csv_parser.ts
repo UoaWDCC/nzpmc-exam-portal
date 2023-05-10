@@ -55,7 +55,7 @@ export class Student {
 
 
 // Main Csv Parser (via Promise)
-export function parseCsv(filename: string): Promise<Student[]> {
+export async function parseCSV(filename: string): Promise<Student[]> {
   return new Promise((resolve, reject) => {
     // Does some parser voodoo via csv-parse module
     const parser = parse({
@@ -171,12 +171,4 @@ function toTitleCase(str: string): string {
   });
 }
 
- // Example
- parseCsv("csv_dummy_template.csv")
- .then((result) => {
-     return result;
- })
- .catch((error) => {
-     console.error
-  });
 
