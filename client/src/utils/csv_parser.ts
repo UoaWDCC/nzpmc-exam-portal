@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {parse} from '../../../node_modules/csv-parse';
+import { IsDataURI, IsEmail, IsOptional } from 'class-validator'
+
 
 // Island enums for error checking
 enum Island {
@@ -9,49 +11,24 @@ enum Island {
   }
 
 // Student object that can be accessed
-export class Student {
-  // Simple constructor that takes in all the CSV headers (taken from registration_5's headers)
-  constructor(
-    public firstName: string,
-    public middleName: string,
-    public surname: string,
-    public email: string,
-    public yearLevel: number,
-    public heardFrom: string,
-    public reasonForTaking: string,
-    public teacherCode: string,
-    public teacherName: string,
-    public teacherEmail: string,
-    public schoolName: string,
-    public schoolAddress: string,
-    public phoneNumber: string,
-    public teacherCategory: string,
-    public island: Island, // Use enum
-    public city: string,
-  ) {}
-  // Public method that can be used on an instance of a student object
-  public getAttributes() {
-    return [
-      this.firstName,
-      this.middleName,
-      this.surname,
-      this.email,
-      this.yearLevel,
-      this.heardFrom,
-      this.reasonForTaking,
-      this.teacherCode,
-      this.teacherName,
-      this.teacherEmail,
-      this.schoolName,
-      this.schoolAddress,
-      this.phoneNumber,
-      this.teacherCategory,
-      this.island,
-      this.city,
-    ];
-  }
-}
-// Create a students array that will hold student objects
+export type Student = {
+  firstName: string;
+  middleName: string;
+  surname: string;
+  email: string;
+  yearLevel: number;
+  heardFrom: string;
+  reasonForTaking: string;
+  teacherCode: string;
+  teacherName: string;
+  teacherEmail: string;
+  schoolName: string;
+  schoolAddress: string;
+  phoneNumber: string;
+  teacherCategory: string;
+  island: Island;
+  city: string;
+};
 
 
 // Main Csv Parser (via Promise)
@@ -62,6 +39,7 @@ export async function parseCSV(filename: string): Promise<Student[]> {
       columns: true,
       skip_empty_lines: true,
     });
+    // Create a students array that will hold student objects
     const students: Student[] = [];
 
     parser.on('readable', () => {
@@ -109,24 +87,24 @@ export async function parseCSV(filename: string): Promise<Student[]> {
         }
 
         // Create the student object instance
-        const student = new Student(
-          toTitleCase(firstName),
-          toTitleCase(middleName),
-          toTitleCase(surname),
-          email,
-          parseInt(yearLevel),
-          heardFrom,
-          reasonForTaking,
-          teacherCode,
-          toTitleCase(teacherName),
-          teacherEmail,
-          schoolName,
-          schoolAddress,
-          phoneNumber, //<--- Could this be formatted?
-          teacherCategory,
-          toTitleCase(island) as Island,
-          city,
-        );
+        const student: Student = {
+          firstName: record.StudentFirstName,
+          middleName: record.StudentMiddleName,
+          surname: record.StudentSurname,
+          email: record.StudentEmail,
+          yearLevel: parseInt(record.StudentYearLevel),
+          heardFrom: record.HeardFrom,
+          reasonForTaking: record.ReasonForTaking,
+          teacherCode: record.TeacherCode,
+          teacherName: record.TeacherName,
+          teacherEmail: record.TeacherEmail,
+          schoolName: record.SchoolName,
+          schoolAddress: record.SchoolAddress,
+          phoneNumber: record.PhoneNumber,
+          teacherCategory: record.TeacherCategory,
+          island: record.Island as Island,
+          city: record.City,
+        };
         // Push the student object into the students array
         students.push(student);
       }
@@ -157,7 +135,8 @@ function isValidYearLevel(yearLevel: number): boolean {
 }
 
 function isValidEmail(email: string): boolean {
-  return email.includes('@');
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
 
 function isValidPhoneNumber(phoneNumber: string): boolean {
@@ -170,5 +149,6 @@ function toTitleCase(str: string): string {
     return match.toUpperCase();
   });
 }
+
 
 
