@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {parse} from '../../../node_modules/csv-parse';
-import { IsDataURI, IsEmail, IsOptional } from 'class-validator'
 
 
 // Island enums for error checking
@@ -75,9 +74,14 @@ export async function parseCSV(filename: string): Promise<Student[]> {
           reject(new Error(`Invalid year level: ${yearLevel}`));
           return;
         }
-        // Check if the email was valid
+        // Check if the student email was valid
         if (!isValidEmail(email)) {
-          reject(new Error(`Invalid email: ${email}`));
+          reject(new Error(`Invalid student email: ${email}`));
+          return;
+        }
+        // Check if the teacher email was valid
+        if (!isValidEmail(teacherEmail)) {
+          reject(new Error(`Invalid teacher email: ${teacherEmail}`));
           return;
         }
         // Check if the phone number was valid
@@ -88,22 +92,22 @@ export async function parseCSV(filename: string): Promise<Student[]> {
 
         // Create the student object instance
         const student: Student = {
-          firstName: record.StudentFirstName,
-          middleName: record.StudentMiddleName,
-          surname: record.StudentSurname,
+          firstName: toTitleCase(record.StudentFirstName),
+          middleName: toTitleCase(record.StudentMiddleName),
+          surname: toTitleCase(record.StudentSurname),
           email: record.StudentEmail,
           yearLevel: parseInt(record.StudentYearLevel),
           heardFrom: record.HeardFrom,
           reasonForTaking: record.ReasonForTaking,
           teacherCode: record.TeacherCode,
-          teacherName: record.TeacherName,
+          teacherName: toTitleCase(record.TeacherName),
           teacherEmail: record.TeacherEmail,
-          schoolName: record.SchoolName,
+          schoolName: toTitleCase(record.SchoolName),
           schoolAddress: record.SchoolAddress,
           phoneNumber: record.PhoneNumber,
-          teacherCategory: record.TeacherCategory,
-          island: record.Island as Island,
-          city: record.City,
+          teacherCategory: toTitleCase(record.TeacherCategory),
+          island: toTitleCase(record.Island) as Island,
+          city: toTitleCase(record.City),
         };
         // Push the student object into the students array
         students.push(student);
