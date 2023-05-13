@@ -1,0 +1,13 @@
+{
+    "private": true,
+    "workspaces": [
+        "service",
+        "client",
+        "common"
+    ],
+    "scripts": {
+        "service": "cd service && yarn run dev",
+        "client": "cd client && yarn run dev"
+    },
+    "packageManager": "yarn@1.22.19"
+}
