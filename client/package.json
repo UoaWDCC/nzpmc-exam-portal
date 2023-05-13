@@ -13,9 +13,10 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@nzpmc-exam-portal/common": "*",
     "@apollo/client": "^3.7.12",
+    "@nzpmc-exam-portal/common": "*",
     "@vue/apollo-option": "^4.0.0-beta.4",
+    "csv-parse": "^5.3.10",
     "firebase": "^9.20.0",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
