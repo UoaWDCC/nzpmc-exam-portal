@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {parse} from '../../../node_modules/csv-parse';
+import {parse} from 'csv-parse';
 
 
 // Island enums for error checking
@@ -9,7 +9,7 @@ enum Island {
     SOUTH_ISLAND = 'South Island'
   }
 
-// Student object that can be accessed
+// TODO: This type will eventually be replaced by a DTO class as defined in common
 export type Student = {
   firstName: string;
   middleName: string;
