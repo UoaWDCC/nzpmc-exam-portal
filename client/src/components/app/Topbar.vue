@@ -38,8 +38,9 @@ import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
     name: 'AppTopbar',
 
     computed: {
@@ -55,5 +56,5 @@ export default {
             })
         },
     },
-}
+})
 </script>
