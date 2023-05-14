@@ -1,4 +1,4 @@
-import { parseCSV, Student} from './csv_parser';
+import { parseCSV, type Student} from './csv_parser';
 
 async function main() {
   try {

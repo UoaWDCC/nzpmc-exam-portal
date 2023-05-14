@@ -3,8 +3,6 @@
   "exclude": [],
   "compilerOptions": {
     "allowJs": true,
-    "preserveValueImports": false,
-    "importsNotUsedAsValues": "preserve",
     "ignoreDeprecations": "5.0",
     "composite": true,
     "lib": [],
