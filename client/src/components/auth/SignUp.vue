@@ -31,8 +31,8 @@
                 autocomplete="new-password"
                 label="Password"
                 :rules="[
-                    (v) => !!v || 'This is required',
-                    (v) => v.length >= 6 || 'At least 6 characters',
+                    (v: string) => !!v || 'This is required',
+                    (v: string) => v.length >= 6 || 'At least 6 characters',
                 ]"
                 required
                 class="mb-4"
@@ -48,7 +48,7 @@
                 type="password"
                 autocomplete="new-password"
                 label="Confirm password"
-                :rules="[(v) => v === password || 'Passwords do not match']"
+                :rules="[(v: string) => v === password || 'Passwords do not match']"
                 hide-details="auto"
             ></v-text-field>
         </div>
@@ -80,10 +80,21 @@
     </v-form>
 </template>
 
-<script>
+<script lang="ts">
+
 import { auth } from '@/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import AuthHeader from './Header.vue'
+
+export interface IData {
+    valid: boolean
+    loading: boolean
+    error: string | null
+    success: string | null
+    password: string
+    showPassword: boolean
+    confirmPassword: string
+}
 
 export default {
     name: 'AuthSignUp',
@@ -101,7 +112,11 @@ export default {
         },
     },
 
-    data() {
+    $refs: {
+        form: HTMLFormElement
+    },
+
+    data(): IData {
         return {
             // Form
             valid: true,
@@ -118,11 +133,11 @@ export default {
     methods: {
         // If the password is changed, confirm password field needs to be revalidated
         passwordChange() {
-            this.$refs.form.validate()
+            (this.$refs["form"] as HTMLFormElement).validate()
         },
 
         // Submit the sign up form
-        signUp(e) {
+        signUp(e: Event) {
             e.preventDefault()
 
             // Determine if account exists
@@ -145,7 +160,8 @@ export default {
                             this.error = 'The password is not strong enough.'
                             break
                         default:
-                            this.error = this.$errorMessage
+                            this.error = "default error message"
+                            // this.$errorMessage
                     }
                 })
                 .finally(() => {
