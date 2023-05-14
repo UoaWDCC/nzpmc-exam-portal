@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import iconSvg from '@/assets/icon.svg'
 </script>
 
@@ -33,7 +33,7 @@ import iconSvg from '@/assets/icon.svg'
     </v-app-bar>
 </template>
 
-<script>
+<script lang="ts">
 import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
 import { mapWritableState } from 'pinia'
