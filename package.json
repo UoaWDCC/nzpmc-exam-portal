@@ -9,5 +9,8 @@
         "service": "cd service && yarn run dev",
         "client": "cd client && yarn run dev"
     },
-    "packageManager": "yarn@1.22.19"
+    "packageManager": "yarn@1.22.19",
+    "dependencies": {
+        "csv-writer": "^1.6.0"
+    }
 }
