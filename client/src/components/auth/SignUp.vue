@@ -133,6 +133,7 @@ export default {
     methods: {
         // If the password is changed, confirm password field needs to be revalidated
         passwordChange() {
+            // this.$refs.form.validate()
             (this.$refs["form"] as HTMLFormElement).validate()
         },
 
