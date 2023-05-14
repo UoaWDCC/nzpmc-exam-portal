@@ -10,6 +10,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "preserveValueImports": false,
+    "importsNotUsedAsValues": "preserve",
     "types": [
       "vuetify"
     ] 
