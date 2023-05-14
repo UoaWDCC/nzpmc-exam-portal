@@ -16,15 +16,11 @@ import logoBg from '@/assets/logo-background.jpg'
             </v-btn>
         </div>
 
-        <v-img
-            width="100%"
-            height="100vh"
-            :src="logoBg"
-        ></v-img>
+        <v-img width="100%" height="100vh" :src="logoBg"></v-img>
     </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     name: 'NotFound',
 
