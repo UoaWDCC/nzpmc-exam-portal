@@ -33,11 +33,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
 import AppExamsList from './List.vue'
 import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
 
-export default defineComponent({
+export default {
   name: 'AppExams',
 
   metaInfo: {
@@ -51,8 +50,7 @@ export default defineComponent({
     	userQuizzes: null,
       error: "",
       loading: true,
-	}
-
+	  }
   },
 
   apollo: {
@@ -69,5 +67,5 @@ export default defineComponent({
       fetchPolicy: 'cache-and-network',
     },
   },
-})
+}
 </script>
