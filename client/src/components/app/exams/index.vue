@@ -32,15 +32,16 @@
     </v-container>
   </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
 import AppExamsList from './List.vue'
 import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
 
-export default {
+export default defineComponent({
   name: 'AppExams',
 
   metaInfo: {
-    title: 'My Exams',
+    title: 'My Exams' as string,
   },
 
   components: { AppExamsList },
@@ -48,8 +49,8 @@ export default {
   data() {
     return {
     	userQuizzes: null,
-      	error: null,
-      	loading: true,
+      error: "",
+      loading: true,
 	}
 
   },
@@ -68,5 +69,5 @@ export default {
       fetchPolicy: 'cache-and-network',
     },
   },
-}
+})
 </script>
