@@ -1,13 +1,6 @@
 <template>
     <div class="align-center auth-header d-flex">
-        <v-btn
-            v-if="showBack"
-            icon
-            color="primary"
-            class="ml-4"
-            large
-            @click="$emit('back')"
-        >
+        <v-btn v-if="showBack" icon color="primary" class="ml-4" large @click="$emit('back')">
             <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
 
@@ -19,7 +12,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     name: 'AuthHeader',
 
