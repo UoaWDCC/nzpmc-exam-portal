@@ -9,6 +9,6 @@ export const useMainStore = defineStore('mainStore', {
         userLoading: true,
 
         // App snackbar notifications
-        snackbarQueue: [],
+        snackbarQueue: [] as string[],
     }),
 })
