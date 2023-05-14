@@ -3,31 +3,18 @@
         <h2 class="mb-3 text-h5" style="line-height: 1.5">Options</h2>
 
         <v-item-group v-model="selected" class="mb-n3">
-            <v-item
-                v-for="option in sortedOptions"
-                v-slot="{ active, toggle }"
-                :key="option.id"
-            >
-                <v-card
-                    elevation="1"
-                    :dark="active"
-                    :color="active ? '#03a9f5' : 'white'"
-                    class="align-center d-flex mb-3"
-                    @click="toggle"
-                    @keyup.enter="toggle"
-                >
+            <v-item v-for="option in sortedOptions" v-slot="{ active, toggle }" :key="option.id">
+                <v-card elevation="1" :dark="active" :color="active ? '#03a9f5' : 'white'" class="align-center d-flex mb-3"
+                    @click="toggle" @keyup.enter="toggle">
                     <v-icon class="ml-4 my-4">
                         {{
                             active
-                                ? 'mdi-check-circle-outline'
-                                : 'mdi-checkbox-blank-circle-outline'
+                            ? 'mdi-check-circle-outline'
+                            : 'mdi-checkbox-blank-circle-outline'
                         }}
                     </v-icon>
 
-                    <span
-                        class="d-block pa-4"
-                        style="width: calc(100% - 3.5rem)"
-                    >
+                    <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
                         {{ option.option }}
                     </span>
                 </v-card>
@@ -38,7 +25,7 @@
 
 <script>
 import { mapWritableState } from 'pinia'
-import { useExamStore } from '@/components/App/Exam/examStore'
+import { useExamStore } from '@/components/app/exam/examStore'
 import { useMainStore } from '@/stores/main'
 import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 
