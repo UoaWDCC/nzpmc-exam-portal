@@ -14,7 +14,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 import AppLoadingScreen from './LoadingScreen.vue'
