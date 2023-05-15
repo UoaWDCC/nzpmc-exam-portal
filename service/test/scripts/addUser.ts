@@ -13,6 +13,8 @@ const addUserDocument = async (uid: string) => {
     const user = new User();
     const UserRepository = getRepository(User)
 
+    await UserRepository.delete(uid);
+
     user.id = uid
     user.displayName = "John Chen"
     user.email = "jche428@aucklanduni.ac.nz"
