@@ -4,8 +4,8 @@
 
         <div v-else>
             <AppTopbar />
-
-            <v-main style="height: 100vh; overflow: hidden">
+			<!--Hack solution for broken exam page -->
+            <v-main style="padding-left: 0; padding-top: 33px; height: 100vh; overflow: hidden">
                 <router-view />
             </v-main>
         </div>

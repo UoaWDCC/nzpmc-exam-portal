@@ -19,6 +19,7 @@
             >
                 <div class="flex-shrink-0" style="overflow-y: auto">
                     <v-navigation-drawer
+							absolute
                         permanent
                         class="background--grey grey lighten-5"
                         style="width: unset; min-width: 56px"
@@ -46,7 +47,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamTopbarLoader from './TopbarLoader.vue'
 import AppExamTopbar from './Topbar.vue'
@@ -54,10 +55,12 @@ import AppExamSidebarLoader from './SidebarLoader.vue'
 import AppExamQuestionLoader from './Question/Loader.vue'
 import AppExamSidebar from './Sidebar.vue'
 import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
+import { defineComponent } from 'vue'
 
 import { TOOLBAR_HEIGHT } from '@/helpers'
+import type {UserQuizModel} from '@nzpmc-exam-portal/common'
 
-export default {
+export default defineComponent ({
     name: 'AppExam',
 
     metaInfo() {
@@ -85,7 +88,9 @@ export default {
         next()
     },
 
-    data() {
+	data() : {
+		data: UserQuizModel | undefined,
+	} {
         return {
             UserQuizQuery,
             TOOLBAR_HEIGHT,
@@ -101,7 +106,7 @@ export default {
                 return { quizID: this.$route.params.quizID }
             },
 
-		  result({ data, error, loading }) {
+		  result({ data , error, loading }) {
 			this.loading = loading
 			if (error) {
 			  this.error = error.message
@@ -112,7 +117,7 @@ export default {
             fetchPolicy: 'cache-only',
         },
     },
-}
+})
 </script>
 
 <style>
