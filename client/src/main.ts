@@ -45,25 +45,26 @@ const vuetify = createVuetify({
 const apolloProvider = createProvider()
 // Track user state in store
 onAuthStateChanged(auth, async (user) => {
-  let userIsAdmin = false
-  // Update Apollo auth status
-  if (user) {
-    onLogin(apolloProvider.defaultClient, await user.getIdToken(true))
-    const currentUserIdToken = await user.getIdTokenResult()
-    console.log(currentUserIdToken)
-    if (currentUserIdToken.claims.admin === true) {
-      userIsAdmin = true
-    } else {
-      userIsAdmin = false
-    }
-  } else onLogout(apolloProvider.defaultClient)
-
-  // Let app know user state finalised
+  // Let app know user state finalized
   const store = useMainStore()
+
+  if (user) {
+    onLogin(apolloProvider.defaultClient, await user.getIdToken(true)).then(async () => {
+      const currentUserIdToken = await user.getIdTokenResult()
+      const userIsAdmin = currentUserIdToken.claims.admin === true
+      updateUserState(store, user, userIsAdmin)
+    })
+  } else {
+    onLogout(apolloProvider.defaultClient)
+    updateUserState(store, null, false)
+  }
+})
+
+function updateUserState(store, user, userIsAdmin) {
   store.user = user
   store.userIsAdmin = userIsAdmin
   store.userLoading = false
-})
+}
 const app = createApp(App)
 
 app.use(createPinia())
