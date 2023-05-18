@@ -45,14 +45,23 @@ const vuetify = createVuetify({
 const apolloProvider = createProvider()
 // Track user state in store
 onAuthStateChanged(auth, async (user) => {
+  let userIsAdmin = false
   // Update Apollo auth status
   if (user) {
     onLogin(apolloProvider.defaultClient, await user.getIdToken(true))
+    const currentUserIdToken = await user.getIdTokenResult()
+    console.log(currentUserIdToken)
+    if (currentUserIdToken.claims.admin === true) {
+      userIsAdmin = true
+    } else {
+      userIsAdmin = false
+    }
   } else onLogout(apolloProvider.defaultClient)
 
   // Let app know user state finalised
   const store = useMainStore()
   store.user = user
+  store.userIsAdmin = userIsAdmin
   store.userLoading = false
 })
 const app = createApp(App)
