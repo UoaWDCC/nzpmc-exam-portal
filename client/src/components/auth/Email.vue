@@ -5,8 +5,8 @@
         <div class="pb-4 px-4">
             <v-text-field v-model="currentEmail" label="Email" placeholder="john.smith@example.com" type="email"
                 autocomplete="username" hide-details="auto" :rules="[
-                    (v) => !!v || 'This is required',
-                    (v) =>
+                    (v: string) => !!v || 'This is required',
+                    (v: string) =>
                         emailRegex.test(v) ||
                         'Please enter a valid email address',
                 ]" required autofocus></v-text-field>
@@ -30,10 +30,19 @@
     </v-form>
 </template>
 
-<script>
+<script lang="ts">
 import { auth } from '@/firebase'
 import { fetchSignInMethodsForEmail } from 'firebase/auth'
 import AuthHeader from './Header.vue'
+
+export interface IData {
+    valid: boolean | null
+    loading: boolean
+    error: string | null
+
+    currentEmail: string
+    emailRegex: RegExp
+}
 
 export default {
     name: 'AuthEmail',
@@ -47,7 +56,7 @@ export default {
         },
     },
 
-    data() {
+    data(): IData {
         return {
             // Form
             valid: null,
@@ -68,7 +77,7 @@ export default {
     mounted() {
         // Automatically go to sign in or sign up page if email given in params
         this.$nextTick(() => {
-            if (this.$route.query.email && this.$refs.form.validate()) {
+            if (this.$route.query.email && (this.$refs["form"] as HTMLFormElement).validate()) {
                 this.nextPanel()
                 this.$router.replace({
                     query: { ...this.$route.query, email: undefined },
@@ -79,9 +88,7 @@ export default {
 
     methods: {
         // Show the sign up or sign in form
-        nextPanel(e) {
-            if (e) e.preventDefault()
-
+        nextPanel() {
             // Determine if account exists
             this.loading = true
             this.error = null
@@ -102,7 +109,7 @@ export default {
                             this.error = 'The email address is not valid.'
                             break
                         default:
-                            this.error = this.$errorMessage
+                            this.error = "This is an error message"
                     }
                 })
                 .finally(() => {
