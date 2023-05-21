@@ -139,18 +139,21 @@ function isValidYearLevel(yearLevel: number): boolean {
 }
 
 function isValidEmail(email: string): boolean {
+  // Trim email
+  email = email.trim();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
 function isValidPhoneNumber(phoneNumber: string): boolean {
-
+  // Trim PhoneNumber
+  phoneNumber = phoneNumber.trim();
   // Check if phone number has +64 at the start, replace it with 0
   if (phoneNumber.startsWith('+64')) {
     phoneNumber = phoneNumber.replace('+64', '0');
   }
 
-  if (phoneNumber.length >= 9 && phoneNumber.length <= 11) {
+  if (phoneNumber.length >= 9 && phoneNumber.length <= 14) {
     return true;
   }
   return false;
