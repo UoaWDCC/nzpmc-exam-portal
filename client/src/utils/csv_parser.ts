@@ -144,7 +144,16 @@ function isValidEmail(email: string): boolean {
 }
 
 function isValidPhoneNumber(phoneNumber: string): boolean {
-  return phoneNumber.length === 10;
+
+  // Check if phone number has +64 at the start, replace it with 0
+  if (phoneNumber.startsWith('+64')) {
+    phoneNumber = phoneNumber.replace('+64', '0');
+  }
+
+  if (phoneNumber.length >= 9 && phoneNumber.length <= 11) {
+    return true;
+  }
+  return false;
 }
 
 // This function will capitalise words if they were passed through in lowercase
