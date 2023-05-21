@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import logoWhiteSvg from '@/assets/logo-white.svg'
 </script>
 
@@ -26,7 +26,7 @@ import logoWhiteSvg from '@/assets/logo-white.svg'
     </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     name: 'AppLoadingScreen',
 

@@ -2,7 +2,7 @@
     <div class="app-admin">Admin</div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     name: 'AppAdmin',
 
@@ -11,3 +11,4 @@ export default {
     },
 }
 </script>
+    

@@ -1,40 +1,15 @@
 <template>
-    <v-form
-        v-model="valid"
-        class="auth-sign-in"
-        :disabled="loading || !!success"
-        @submit="signIn"
-    >
-        <AuthHeader
-            title="Sign In"
-            :text="`Hello, ${email}.`"
-            show-back
-            @back="$emit('go', 'Email')"
-        />
+    <v-form v-model="valid" class="auth-sign-in" :disabled="loading || !!success" @submit="signIn">
+        <AuthHeader title="Sign In" :text="`Hello, ${email}.`" show-back @back="$emit('go', 'Email')" />
 
         <div class="pb-4 px-4">
-            <v-text-field
-                label="Email"
-                :value="email"
-                type="email"
-                autocomplete="username"
-                hide-details="auto"
-                class="mb-4"
-                disabled
-            ></v-text-field>
+            <v-text-field label="Email" :value="email" type="email" autocomplete="username" hide-details="auto" class="mb-4"
+                disabled></v-text-field>
 
-            <v-text-field
-                v-model="password"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                autocomplete="current-password"
-                label="Password"
-                :rules="[(v) => !!v || 'This is required']"
-                required
-                autofocus
-                hide-details="auto"
-                @click:append="showPassword = !showPassword"
-            ></v-text-field>
+            <v-text-field v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'" autocomplete="current-password" label="Password"
+                :rules="[(v) => !!v || 'This is required']" required autofocus hide-details="auto"
+                @click:append="showPassword = !showPassword"></v-text-field>
         </div>
 
         <v-expand-transition>
@@ -50,21 +25,11 @@
         </v-expand-transition>
 
         <div class="align-center d-flex justify-space-between pb-4 px-4">
-            <v-btn
-                small
-                text
-                :disabled="!!success"
-                @click="$emit('go', 'ForgotPassword')"
-            >
+            <v-btn small :disabled="!!success" @click="$emit('go', 'ForgotPassword')">
                 Forgot password?
             </v-btn>
 
-            <v-btn
-                color="primary"
-                type="submit"
-                :disabled="!valid || loading || !!success"
-                :loading="loading"
-            >
+            <v-btn color="primary" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
                 <v-icon left dark>mdi-login</v-icon>
 
                 Sign In
@@ -73,10 +38,20 @@
     </v-form>
 </template>
 
-<script>
+<script lang="ts">
 import { auth } from '@/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import AuthHeader from './Header.vue'
+
+export interface IData {
+    valid: boolean
+    loading: boolean
+    error: string | null
+    success: string | null
+
+    password: string
+    showPassword: boolean
+}
 
 export default {
     name: 'AuthSignIn',
@@ -94,7 +69,7 @@ export default {
         },
     },
 
-    data() {
+    data(): IData {
         return {
             // Form
             valid: true,
@@ -109,7 +84,7 @@ export default {
 
     methods: {
         // Submit the sign in form
-        signIn(e) {
+        signIn(e: Event) {
             e.preventDefault()
 
             // Determine if account exists
@@ -135,7 +110,8 @@ export default {
                             this.error = 'The password is incorrect.'
                             break
                         default:
-                            this.error = this.$errorMessage
+                            // this.$errorMessage
+                            this.error = 'Default error.'
                     }
                 })
                 .finally(() => {
