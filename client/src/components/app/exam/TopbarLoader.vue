@@ -2,11 +2,10 @@
     <ApolloQuery
         :query="UserQuizzesQuery"
         :update="
-            (data) =>
+            (data: Query) =>
                 data.userQuizzes.find(
                     (quiz) => quiz.id === $route.params.quizID,
-                )
-        "
+                )"
         fetch-policy="cache-only"
     >
         <template #default="{ result: { data } }">
@@ -38,8 +37,9 @@
     </ApolloQuery>
 </template>
 
-<script>
+<script lang="ts">
 import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
+import type { Query } from '@nzpmc-exam-portal/common';
 
 export default {
     name: 'AppExamTopbarLoader',

@@ -7,7 +7,7 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import {useMainStore} from '@/stores/main';
 
 export default {
@@ -24,3 +24,4 @@ export default {
     },
 }
 </script>
+    

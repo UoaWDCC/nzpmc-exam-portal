@@ -18,8 +18,10 @@
     </v-list>
 </template>
 
-<script>
+<script lang="ts">
 import AppExamSidebarLink from './SidebarLink.vue'
+import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
+import type { PropType } from 'vue'
 const SIDEBAR_WIDTH = 56
 
 export default {
@@ -29,9 +31,9 @@ export default {
 
     props: {
         questions: {
-            type: Array,
+            type: Object as PropType<UserQuizQuestion[]>,
             required: true,
-            validator(v) {
+            validator(v: UserQuizQuestion[]) {
                 return v.every(
                     (question) =>
                         'id' in question &&

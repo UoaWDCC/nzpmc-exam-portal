@@ -1,14 +1,8 @@
 <template>
-    <ApolloQuery
-        :query="UserQuizFullQuestionQuery"
-        :update="(data) => data.userQuiz.question"
-        :variables="{
-            quizID: $route.params.quizID,
-            questionID: $route.params.questionID,
-        }"
-        fetch-policy="cache-first"
-        class="app-exam-question fill-height"
-    >
+    <ApolloQuery :query="UserQuizFullQuestionQuery" :update="(data) => data.userQuiz.question" :variables="{
+        quizID: $route.params.quizID,
+        questionID: $route.params.questionID,
+    }" fetch-policy="cache-first" class="app-exam-question fill-height">
         <template #default="{ result: { data, error }, isLoading }">
             <AppExamQuestionLoader v-if="isLoading" />
 
@@ -19,41 +13,26 @@
             </v-scroll-y-reverse-transition>
 
             <v-scroll-y-reverse-transition>
-                <div
-                    v-if="data"
-                    class="fill-height flex-grow-1"
-                    style="overflow-y: auto"
-                >
+                <div v-if="data" class="fill-height flex-grow-1" style="overflow-y: auto">
                     <v-container fluid>
                         <v-row>
                             <v-col cols="12" md="6" class="mb-n3">
                                 <div class="align-center d-flex mb-3">
-                                    <h2
-                                        class="flex-grow-1 text-h5"
-                                        style="line-height: 1"
-                                    >
+                                    <h2 class="flex-grow-1 text-h5" style="line-height: 1">
                                         Question {{ questionNumber }}
                                     </h2>
 
-                                    <AppExamQuestionFlagButton
-                                        :flagged="data.flag"
-                                        :question-number="questionNumber"
-                                    />
+                                    <AppExamQuestionFlagButton :flagged="data.flag" :question-number="questionNumber" />
                                 </div>
 
                                 <DisplayText :text="data.question" />
                             </v-col>
 
                             <v-col cols="12" md="6">
-                                <AppExamQuestionOptions
-                                    :options="data.options"
-                                    :answer="
-                                        data.userAnswer
-                                            ? data.userAnswer.id
-                                            : null
-                                    "
-                                    :question-number="questionNumber"
-                                />
+                                <AppExamQuestionOptions :options="data.options" :answer="data.userAnswer
+                                    ? data.userAnswer.id
+                                    : null
+                                    " :question-number="questionNumber" />
                             </v-col>
                         </v-row>
                     </v-container>
@@ -63,13 +42,13 @@
     </ApolloQuery>
 </template>
 
-<script>
+<script lang="ts">
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import { UserQuizFullQuestionQuery } from '@/gql/queries/userQuiz'
-import AppExamQuestionOptions from './Options'
-import AppExamQuestionFlagButton from './FlagButton'
-import AppExamQuestionLoader from './Loader'
-import DisplayText from '@/components/App/DisplayText'
+import AppExamQuestionOptions from './Options.vue'
+import AppExamQuestionFlagButton from './FlagButton.vue'
+import AppExamQuestionLoader from './Loader.vue'
+import DisplayText from '@/components/app/DisplayText.vue'
 
 export default {
     name: 'AppExamQuestion',

@@ -17,7 +17,7 @@
     </v-toolbar>
 </template>
 
-<script>
+<script lang="ts">
 import AppExamTopbarSpinner from './TopbarSpinner.vue'
 import AppExamTopbarTimer from './TopbarTimer.vue'
 
