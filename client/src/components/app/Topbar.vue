@@ -17,8 +17,9 @@ import iconSvg from '@/assets/icon.svg'
         <v-toolbar-items class="mr-1">
             <v-btn :to="{ name: 'AppExams' }">My Exams</v-btn>
 
-            <v-btn :to="{ name: 'AppAdmin' }">Admin</v-btn>
-            <v-btn @click="signOut(auth)">Log Out</v-btn>
+            <v-btn v-if="store.userIsAdmin" :to="{ name: 'AppAdmin' }">Admin</v-btn>
+			<v-btn @click="signOut(auth)">Log Out</v-btn>
+
         </v-toolbar-items>
 
     </v-app-bar>
@@ -30,6 +31,7 @@ import { signOut } from 'firebase/auth'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 
+
 export default {
     name: 'AppTopbar',
 
@@ -37,6 +39,12 @@ export default {
         // Get state from Pinia store
         ...mapWritableState(useMainStore, ['snackbarQueue']),
     },
+
+	data(){
+		return {
+			store: useMainStore()
+		}
+	},
 
     methods: {
         signOut() {
