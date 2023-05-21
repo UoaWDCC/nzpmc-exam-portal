@@ -1,4 +1,4 @@
-<script setup>
+<script lang='ts' setup>
 import logoSvg from '@/assets/logo.svg'
 </script>
 
