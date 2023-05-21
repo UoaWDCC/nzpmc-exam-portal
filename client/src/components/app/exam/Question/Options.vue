@@ -23,11 +23,13 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapWritableState } from 'pinia'
 import { useExamStore } from '@/components/app/exam/examStore'
 import { useMainStore } from '@/stores/main'
 import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
+import type { Option } from '@nzpmc-exam-portal/common'
+import type { PropType } from 'vue'
 
 export default {
     name: 'AppExamQuestionOptions',
@@ -35,11 +37,11 @@ export default {
     props: {
         // Unselected answers
         options: {
-            type: Array,
+            type: Object as PropType<Option[]>,
             required: true,
-            validator(v) {
+            validator(v: Option[]) {
                 return v.every(
-                    (option) =>
+                    (option: Option) =>
                         'id' in option &&
                         typeof option.id === 'string' &&
                         'option' in option &&
@@ -51,7 +53,7 @@ export default {
         // ID of the user's current answer
         answer: {
             required: true,
-            validator(v) {
+            validator(v: String | null) {
                 return typeof v === 'string' || v === null
             },
         },
@@ -61,7 +63,7 @@ export default {
 
     data() {
         return {
-            selected: null,
+            selected: null as any,
         }
     },
 
@@ -71,7 +73,7 @@ export default {
         ...mapWritableState(useMainStore, ['snackbarQueue']),
 
         // Sorted options and answer
-        sortedOptions() {
+        sortedOptions(): Option[] {
             return [...this.options].sort((a, b) => (a.id > b.id ? 1 : -1))
         },
     },
@@ -120,7 +122,7 @@ export default {
 
     methods: {
         // Ensure the selected state is synced with the server
-        setSelected(answerID) {
+        setSelected(answerID: any) {
             this.selected = this.sortedOptions.findIndex(
                 (option) => option.id === answerID,
             )
