@@ -52,16 +52,22 @@ import logoSvg from '@/assets/logo.svg'
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 import AuthEmail from './Email.vue'
 import AuthSignIn from './SignIn.vue'
 import AuthSignUp from './SignUp.vue'
 import AuthForgotPassword from './ForgotPassword.vue'
+import { defineComponent } from 'vue'
 
-export default {
-    name: 'Auth',
+export interface IData {
+    email: string
+    panel: string
+}
+
+export default defineComponent({
+    name: 'AuthPage',
 
     metaInfo: {
         title: 'Authenticate',
@@ -104,5 +110,5 @@ export default {
             this.panel = panel
         },
     },
-}
+})
 </script>

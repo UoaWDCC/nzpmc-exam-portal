@@ -16,11 +16,11 @@ const addUserDocument = async (uid: string) => {
     await UserRepository.delete(uid);
 
     user.id = uid
-    user.displayName = "John Chen"
-    user.email = "jche428@aucklanduni.ac.nz"
-    user.photoURL = "temp"
-    user.firstName = "John"
-    user.lastName = "Chen"
+    user.displayName = "Test User"
+    user.email = "test.user@gmail.com" //should match email used for auth in Firebase
+    user.photoURL = "placeholder.png"
+    user.firstName = "Test"
+    user.lastName = "User"
     user.yearLevel = "13"
     user.role = "admin"
 

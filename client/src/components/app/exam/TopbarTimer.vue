@@ -8,15 +8,14 @@
     </v-sheet>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     name: 'AppExamTopbarTimer',
 
     data() {
         return {
             secondsRemaining: 20,
-
-            timer: null,
+            timer: null as unknown as ReturnType<typeof setInterval>,
         }
     },
 
@@ -32,7 +31,7 @@ export default {
         this.startTimer()
     },
 
-    beforeDestroy() {
+    beforeUnmount() {
         this.stopTimer()
     },
 

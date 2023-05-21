@@ -1,41 +1,17 @@
 <template>
-    <v-form
-        ref="form"
-        v-model="valid"
-        :disabled="loading"
-        class="auth-email"
-        @submit="nextPanel"
-    >
-        <AuthHeader
-            title="Authenticate"
-            text="Please sign in or sign up to continue."
-        />
+    <v-form ref="form" v-model="valid" :disabled="loading" class="auth-email" @submit="nextPanel">
+        <AuthHeader title="Authenticate" text="Please sign in or sign up to continue." />
 
         <div class="pb-4 px-4">
-            <v-text-field
-                v-model="currentEmail"
-                label="Email"
-                placeholder="john.smith@example.com"
-                type="email"
-                autocomplete="username"
-                hide-details="auto"
-                :rules="[
-                    (v) => !!v || 'This is required',
-                    (v) =>
+            <v-text-field v-model="currentEmail" label="Email" placeholder="john.smith@example.com" type="email"
+                autocomplete="username" hide-details="auto" :rules="[
+                    (v: string) => !!v || 'This is required',
+                    (v: string) =>
                         emailRegex.test(v) ||
                         'Please enter a valid email address',
-                ]"
-                required
-                autofocus
-            ></v-text-field>
+                ]" required autofocus></v-text-field>
 
-            <input
-                type="password"
-                autocomplete="current-password"
-                label="Password"
-                style="height: 0"
-                tabindex="-1"
-            />
+            <input type="password" autocomplete="current-password" label="Password" style="height: 0" tabindex="-1" />
         </div>
 
         <v-expand-transition>
@@ -45,13 +21,7 @@
         </v-expand-transition>
 
         <div class="d-flex justify-end pb-4 px-4">
-            <v-btn
-                color="primary"
-                type="submit"
-                :disabled="!valid || loading"
-                :loading="loading"
-                text
-            >
+            <v-btn color="primary" type="submit" :disabled="!valid || loading" :loading="loading" text>
                 Continue
 
                 <v-icon right dark>mdi-arrow-right</v-icon>
@@ -60,10 +30,19 @@
     </v-form>
 </template>
 
-<script>
+<script lang="ts">
 import { auth } from '@/firebase'
 import { fetchSignInMethodsForEmail } from 'firebase/auth'
 import AuthHeader from './Header.vue'
+
+export interface IData {
+    valid: boolean | null
+    loading: boolean
+    error: string | null
+
+    currentEmail: string
+    emailRegex: RegExp
+}
 
 export default {
     name: 'AuthEmail',
@@ -77,7 +56,7 @@ export default {
         },
     },
 
-    data() {
+    data(): IData {
         return {
             // Form
             valid: null,
@@ -85,8 +64,7 @@ export default {
             error: null,
 
             currentEmail: this.email,
-            emailRegex:
-                /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
+            emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         }
     },
 
@@ -99,7 +77,7 @@ export default {
     mounted() {
         // Automatically go to sign in or sign up page if email given in params
         this.$nextTick(() => {
-            if (this.$route.query.email && this.$refs.form.validate()) {
+            if (this.$route.query.email && (this.$refs["form"] as HTMLFormElement).validate()) {
                 this.nextPanel()
                 this.$router.replace({
                     query: { ...this.$route.query, email: undefined },
@@ -110,9 +88,7 @@ export default {
 
     methods: {
         // Show the sign up or sign in form
-        nextPanel(e) {
-            if (e) e.preventDefault()
-
+        nextPanel() {
             // Determine if account exists
             this.loading = true
             this.error = null
@@ -133,7 +109,7 @@ export default {
                             this.error = 'The email address is not valid.'
                             break
                         default:
-                            this.error = this.$errorMessage
+                            this.error = "This is an error message"
                     }
                 })
                 .finally(() => {
