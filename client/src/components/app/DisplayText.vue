@@ -2,8 +2,8 @@
     <latex :content="parsed" style="margin-bottom: -16px" />
 </template>
 
-<script>
-import showdown from 'showdown'
+<script lang="ts">
+var showdown = require('showdown')
 
 export default {
     name: 'AppDisplayText',

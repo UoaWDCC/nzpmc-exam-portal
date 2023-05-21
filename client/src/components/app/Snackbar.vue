@@ -15,7 +15,7 @@
     </v-snackbar>
 </template>
 
-<script>
+<script lang="ts">
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 

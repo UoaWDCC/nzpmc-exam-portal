@@ -23,6 +23,7 @@
     "graphql-tag": "^2.12.6",
     "latex2vue": "^2.2.2",
     "pinia": "^2.0.32",
+    "showdown": "^2.1.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "vuetify": "^3.1.15"

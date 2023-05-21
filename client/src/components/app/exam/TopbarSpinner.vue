@@ -19,16 +19,16 @@
     </v-tooltip>
 </template>
 
-<script>
+<script lang="ts">
 import { mapWritableState } from 'pinia'
-import { useExamStore } from '@/components/App/Exam/examStore'
+import { useExamStore } from './examStore'
 
 export default {
     name: 'AppExamTopbarSpinner',
 
     data() {
         return {
-            currentPromises: [],
+            currentPromises: [] as Promise<any>[],
         }
     },
 
@@ -44,7 +44,7 @@ export default {
     watch: {
         unresolvedQuestionPromises: {
             handler(v) {
-                v.forEach((promise) => {
+                v.forEach((promise: Promise<any>) => {
                     // Move promise from store to local state
                     this.currentPromises.push(promise)
 

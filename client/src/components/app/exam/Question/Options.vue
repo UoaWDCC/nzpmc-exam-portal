@@ -3,31 +3,18 @@
         <h2 class="mb-3 text-h5" style="line-height: 1.5">Options</h2>
 
         <v-item-group v-model="selected" class="mb-n3">
-            <v-item
-                v-for="option in sortedOptions"
-                v-slot="{ active, toggle }"
-                :key="option.id"
-            >
-                <v-card
-                    elevation="1"
-                    :dark="active"
-                    :color="active ? '#03a9f5' : 'white'"
-                    class="align-center d-flex mb-3"
-                    @click="toggle"
-                    @keyup.enter="toggle"
-                >
+            <v-item v-for="option in sortedOptions" v-slot="{ active, toggle }" :key="option.id">
+                <v-card elevation="1" :dark="active" :color="active ? '#03a9f5' : 'white'" class="align-center d-flex mb-3"
+                    @click="toggle" @keyup.enter="toggle">
                     <v-icon class="ml-4 my-4">
                         {{
                             active
-                                ? 'mdi-check-circle-outline'
-                                : 'mdi-checkbox-blank-circle-outline'
+                            ? 'mdi-check-circle-outline'
+                            : 'mdi-checkbox-blank-circle-outline'
                         }}
                     </v-icon>
 
-                    <span
-                        class="d-block pa-4"
-                        style="width: calc(100% - 3.5rem)"
-                    >
+                    <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
                         {{ option.option }}
                     </span>
                 </v-card>
@@ -36,11 +23,13 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapWritableState } from 'pinia'
-import { useExamStore } from '@/components/App/Exam/examStore'
+import { useExamStore } from '@/components/app/exam/examStore'
 import { useMainStore } from '@/stores/main'
 import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
+import type { Option } from '@nzpmc-exam-portal/common'
+import type { PropType } from 'vue'
 
 export default {
     name: 'AppExamQuestionOptions',
@@ -48,11 +37,11 @@ export default {
     props: {
         // Unselected answers
         options: {
-            type: Array,
+            type: Object as PropType<Option[]>,
             required: true,
-            validator(v) {
+            validator(v: Option[]) {
                 return v.every(
-                    (option) =>
+                    (option: Option) =>
                         'id' in option &&
                         typeof option.id === 'string' &&
                         'option' in option &&
@@ -64,7 +53,7 @@ export default {
         // ID of the user's current answer
         answer: {
             required: true,
-            validator(v) {
+            validator(v: String | null) {
                 return typeof v === 'string' || v === null
             },
         },
@@ -74,7 +63,7 @@ export default {
 
     data() {
         return {
-            selected: null,
+            selected: null as any,
         }
     },
 
@@ -84,7 +73,7 @@ export default {
         ...mapWritableState(useMainStore, ['snackbarQueue']),
 
         // Sorted options and answer
-        sortedOptions() {
+        sortedOptions(): Option[] {
             return [...this.options].sort((a, b) => (a.id > b.id ? 1 : -1))
         },
     },
@@ -133,7 +122,7 @@ export default {
 
     methods: {
         // Ensure the selected state is synced with the server
-        setSelected(answerID) {
+        setSelected(answerID: any) {
             this.selected = this.sortedOptions.findIndex(
                 (option) => option.id === answerID,
             )

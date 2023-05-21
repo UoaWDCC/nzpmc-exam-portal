@@ -11,7 +11,7 @@
     </v-sheet>
 </template>
 
-<script>
+<script lang="ts">
 import { generateDateString, generateDurationString } from '@/helpers'
 
 export default {
