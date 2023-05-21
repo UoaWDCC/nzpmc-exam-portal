@@ -95,7 +95,7 @@ export default defineComponent ({
             UserQuizQuery,
             TOOLBAR_HEIGHT,
             routeTransition: VSlideXTransition,
-			data : null,
+			data: null,
         }
     },
 

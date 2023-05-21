@@ -42,7 +42,7 @@
     </ApolloQuery>
 </template>
 
-<script>
+<script lang="ts">
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import { UserQuizFullQuestionQuery } from '@/gql/queries/userQuiz'
 import AppExamQuestionOptions from './Options.vue'
