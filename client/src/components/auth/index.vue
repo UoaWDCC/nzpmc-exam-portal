@@ -78,7 +78,7 @@ export default defineComponent({
 
     data() {
         return {
-            email: this.$route.query.email ?? '',
+            email: this.$route.query.email as string ?? '',
 
             // Panel to display
             panel: 'Email',
@@ -96,7 +96,7 @@ export default defineComponent({
             handler(v) {
                 if (v)
                     this.$router.push(
-                        this.$route.query.redirect ?? { name: 'App' },
+                        this.$route.query.redirect as string ?? { name: 'App' },
                     )
             },
 
@@ -106,7 +106,7 @@ export default defineComponent({
 
     methods: {
         // Change panel
-        go(panel) {
+        go(panel:string) {
             this.panel = panel
         },
     },
