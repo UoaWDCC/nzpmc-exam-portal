@@ -3,7 +3,7 @@ import logoBg from '@/assets/logo-background.jpg'
 </script>
 
 <template>
-    <div class="not-found hide-for-desktop">
+    <div class="hide-for-desktop">
         <div class="message pa-4 red--text">
             <h1 class="mb-4 text-h4">Page Not Found</h1>
 
@@ -15,20 +15,8 @@ import logoBg from '@/assets/logo-background.jpg'
                 <span>Go Home</span>
             </v-btn>
         </div>
-
-        <v-img width="100%" height="100vh" :src="logoBg"></v-img>
     </div>
 </template>
-
-<script lang="ts">
-export default {
-    name: 'Mobile',
-
-    metaInfo: {
-        title: 'Mobile Unsupported - NZPMC',
-    },
-}
-</script>
 
 <style scoped>
 .message {
