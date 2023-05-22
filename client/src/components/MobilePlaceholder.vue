@@ -3,27 +3,29 @@ import logoBg from '@/assets/logo-background.jpg'
 </script>
 
 <template>
-    <div class="hide-for-desktop">
-        <div class="message pa-4 red--text">
-            <h1 class="mb-4 text-h4">Page Not Found</h1>
+  <div class="hide-for-desktop">
+    <div class="mobile">
+      <div class="mobile__title">{{ 'SORRY :(' }}</div>
 
-            <p>Sorry about that.</p>
-
-            <v-btn color="white" outlined :to="{ name: 'AppExams' }">
-                <v-icon left>mdi-home</v-icon>
-
-                <span>Go Home</span>
-            </v-btn>
-        </div>
+      <p>Sorry about that.</p>
     </div>
+  </div>
 </template>
 
-<style scoped>
-.message {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    box-shadow: inset 0px 360px 240px -240px black;
+<style scoped lang="scss">
+.mobile {
+  background-color: orangered;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__title {
+    font-size: 4rem;
+    letter-spacing: 0.3rem;
+    color: $white;
+  }
 }
 </style>
