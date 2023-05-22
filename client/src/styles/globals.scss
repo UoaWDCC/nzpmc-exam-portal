@@ -1,0 +1,42 @@
+@import "variables";
+@import "mixins";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+  font-family: "Inter";
+
+  line-height: 1.5;
+  font-weight: 400;
+  color: $black;
+  background-color: $white;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+//Visibility
+.hide-for-mobile {
+  //hide for tablet and mobile
+  @include breakpoint-down(medium) {
+    display: none;
+  }
+}
+
+.hide-for-desktop {
+  //hide for desktop viewport widths
+  @include breakpoint-up(large) {
+    display: none;
+  }
+}

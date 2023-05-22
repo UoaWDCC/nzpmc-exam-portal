@@ -3,8 +3,9 @@ import logoSvg from '@/assets/logo.svg'
 </script>
 
 <template>
+    <MobilePlaceHolder/>
     <div
-        class="align-center auth background--blue d-flex justify-center primary"
+        class="align-center auth background--blue d-flex justify-center primary hide-for-mobile"
     >
         <v-sheet rounded elevation="2" max-width="100%" width="25rem">
             <router-link :to="{ path: 'Site' }" class="d-flex pa-4">
@@ -59,6 +60,7 @@ import AuthEmail from './Email.vue'
 import AuthSignIn from './SignIn.vue'
 import AuthSignUp from './SignUp.vue'
 import AuthForgotPassword from './ForgotPassword.vue'
+import MobilePlaceHolder from '../MobilePlaceholder.vue'
 import { defineComponent } from 'vue'
 
 export interface IData {
@@ -74,11 +76,11 @@ export default defineComponent({
         titleTemplate: '%s - NZPMC',
     },
 
-    components: { AuthEmail, AuthSignIn, AuthSignUp, AuthForgotPassword },
+    components: { AuthEmail, AuthSignIn, AuthSignUp, AuthForgotPassword, MobilePlaceHolder },
 
     data() {
         return {
-            email: this.$route.query.email as string ?? '',
+            email: this.$route.query.email ?? '',
 
             // Panel to display
             panel: 'Email',
@@ -96,7 +98,7 @@ export default defineComponent({
             handler(v) {
                 if (v)
                     this.$router.push(
-                        this.$route.query.redirect as string ?? { name: 'App' },
+                        this.$route.query.redirect ?? { name: 'App' },
                     )
             },
 
@@ -106,7 +108,7 @@ export default defineComponent({
 
     methods: {
         // Change panel
-        go(panel:string) {
+        go(panel) {
             this.panel = panel
         },
     },

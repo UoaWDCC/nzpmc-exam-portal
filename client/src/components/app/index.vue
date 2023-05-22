@@ -1,5 +1,5 @@
 <template>
-    <div class="app grey lighten-5">
+    <div class="app grey lighten-5 hide-for-mobile">
         <AppLoadingScreen v-if="loadingMessage" :message="loadingMessage" />
 
         <div v-else>
