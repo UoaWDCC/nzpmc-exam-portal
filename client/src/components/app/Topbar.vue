@@ -5,6 +5,7 @@ import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 <style scoped lang="scss">
 .app-topbar{
 	background-color: $primary;
+	color: $white;
 }
 
 .logo-container {
@@ -32,10 +33,13 @@ import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
         <v-spacer></v-spacer>
 
         <v-toolbar-items class="mr-1">
-            <v-btn :to="{ name: 'AppExams' }">My Exams</v-btn>
 
             <v-btn v-if="store.userIsAdmin" :to="{ name: 'AppAdmin' }">Admin</v-btn>
 			<v-btn @click="signOut(auth)">Log Out</v-btn>
+			<v-btn :to="{ name: 'AppExams' }">My Exams</v-btn>
+			<v-btn>
+				<Icon icon="healthicons:ui-user-profile" style="font-size: 35px" />
+			</v-btn>
 
         </v-toolbar-items>
 
@@ -47,7 +51,7 @@ import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
-
+import {Icon} from '@iconify/vue'
 
 export default {
     name: 'AppTopbar',
