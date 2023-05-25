@@ -6,10 +6,15 @@ import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 .app-topbar{
 	background-color: $primary;
 }
+
+.logo-container {
+	margin: 1rem;
+}
 .home-link{
 	height: 100%;
 	&__logo{
-		max-height: 1rem;
+		max-height: 2rem;
+		width: 200px;
 		padding: 1rem;
 	}
 }
@@ -18,11 +23,9 @@ import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 
 <template>
     <v-app-bar class="app-topbar">
-        <v-toolbar-title class="ma-n1 pa-1">
+        <v-toolbar-title class="logo-container">
             <router-link :to="{ name: 'App' }" class="home-link">
-				<div >
-					<v-img cover class="home-link__logo" :src="topbar_nzpmc_logo" aspect-ratio="1"   />
-				</div>
+					<v-img contain class="home-link__logo" :src="topbar_nzpmc_logo" aspect-ratio="1"   />
             </router-link>
         </v-toolbar-title>
 
