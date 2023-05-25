@@ -1,5 +1,5 @@
 <template>
-  <MobilePlaceHolder />
+  <MobilePlaceholder />
   <div class="hide-for-mobile">
     <div class="app grey lighten-5">
       <AppLoadingScreen v-if="loadingMessage" :message="loadingMessage" />
@@ -44,8 +44,8 @@ export default {
       return this.userLoading
         ? 'Loading authentication service...'
         : this.user === null
-        ? 'Redirecting to the authentication page...'
-        : null
+          ? 'Redirecting to the authentication page...'
+          : null
     }
   },
 
