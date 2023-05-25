@@ -2,11 +2,18 @@
 import iconSvg from '@/assets/icon.svg'
 </script>
 
+<style scoped lang="scss">
+.app-topbar{
+	background-color: $primary;
+}
+
+</style>
+
 <template>
-    <v-app-bar app color="primary" dark dense height="48px" class="app-topbar">
+    <v-app-bar class="app-topbar">
         <v-toolbar-title class="ma-n1 pa-1">
             <router-link :to="{ name: 'App' }" class="align-center d-flex mr-2 text-decoration-none white--text">
-                <v-img :src="iconSvg" width="32px" aspect-ratio="1" contain class="flex-grow-0 mr-2" />
+                <v-img src="topbar_nzpmc_logo.png" width="32px" aspect-ratio="1" contain class="flex-grow-0 mr-2" />
 
                 <div class="text-truncate">NZPMC</div>
             </router-link>
