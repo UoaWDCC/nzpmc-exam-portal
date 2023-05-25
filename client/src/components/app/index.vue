@@ -1,4 +1,5 @@
 <template>
+  <MobilePlaceholder />
   <div class="hide-for-mobile">
     <div class="app grey lighten-5">
       <AppLoadingScreen v-if="loadingMessage" :message="loadingMessage" />
@@ -22,6 +23,7 @@ import { useMainStore } from '@/stores/main'
 import AppLoadingScreen from './LoadingScreen.vue'
 import AppTopbar from './Topbar.vue'
 import AppSnackbar from './Snackbar.vue'
+import MobilePlaceholder from '../MobilePlaceholder.vue'
 
 export default {
   name: 'App',
@@ -31,7 +33,7 @@ export default {
     titleTemplate: '%s - NZPMC'
   },
 
-  components: { AppLoadingScreen, AppTopbar, AppSnackbar },
+  components: { AppLoadingScreen, AppTopbar, AppSnackbar, MobilePlaceholder },
 
   computed: {
     // Get state from Pinia store
@@ -42,8 +44,8 @@ export default {
       return this.userLoading
         ? 'Loading authentication service...'
         : this.user === null
-        ? 'Redirecting to the authentication page...'
-        : null
+          ? 'Redirecting to the authentication page...'
+          : null
     }
   },
 
