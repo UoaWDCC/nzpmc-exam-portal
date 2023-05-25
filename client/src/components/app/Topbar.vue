@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import iconSvg from '@/assets/icon.svg'
+import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 </script>
 
 <style scoped lang="scss">
 .app-topbar{
 	background-color: $primary;
+}
+.home-link{
+	height: 100%;
+	&__logo{
+		max-height: 1rem;
+		padding: 1rem;
+	}
 }
 
 </style>
@@ -12,10 +19,10 @@ import iconSvg from '@/assets/icon.svg'
 <template>
     <v-app-bar class="app-topbar">
         <v-toolbar-title class="ma-n1 pa-1">
-            <router-link :to="{ name: 'App' }" class="align-center d-flex mr-2 text-decoration-none white--text">
-                <v-img src="topbar_nzpmc_logo.png" width="32px" aspect-ratio="1" contain class="flex-grow-0 mr-2" />
-
-                <div class="text-truncate">NZPMC</div>
+            <router-link :to="{ name: 'App' }" class="home-link">
+				<div >
+					<v-img cover class="home-link__logo" :src="topbar_nzpmc_logo" aspect-ratio="1"   />
+				</div>
             </router-link>
         </v-toolbar-title>
 
