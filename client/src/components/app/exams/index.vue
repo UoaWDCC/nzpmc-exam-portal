@@ -1,5 +1,6 @@
 
 <template>
+	<MobilePlaceholder />
   <div class="app-exams background--grey fill-height" style="overflow-y: auto">
     <v-container class="mt-10">
       <div class="my-6">
@@ -43,7 +44,7 @@ export default {
     title: 'My Exams' as string,
   },
 
-  components: { AppExamsList },
+  components: { AppExamsList},
 
   data() {
     return {

@@ -1,24 +1,45 @@
 <script setup lang="ts">
-import iconSvg from '@/assets/icon.svg'
+import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 </script>
 
-<template>
-    <v-app-bar app color="primary" dark dense height="48px" class="app-topbar">
-        <v-toolbar-title class="ma-n1 pa-1">
-            <router-link :to="{ name: 'App' }" class="align-center d-flex mr-2 text-decoration-none white--text">
-                <v-img :src="iconSvg" width="32px" aspect-ratio="1" contain class="flex-grow-0 mr-2" />
+<style scoped lang="scss">
+.app-topbar{
+	background-color: $primary;
+	color: $white;
+}
 
-                <div class="text-truncate">NZPMC</div>
+.logo-container {
+	margin: 1rem;
+}
+.home-link{
+	height: 100%;
+	&__logo{
+		max-height: 2rem;
+		width: 200px;
+		padding: 1rem;
+	}
+}
+
+</style>
+
+<template>
+    <v-app-bar class="app-topbar">
+        <v-toolbar-title class="logo-container">
+            <router-link :to="{ name: 'App' }" class="home-link">
+					<v-img contain class="home-link__logo" :src="topbar_nzpmc_logo" aspect-ratio="1"   />
             </router-link>
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
 
         <v-toolbar-items class="mr-1">
-            <v-btn :to="{ name: 'AppExams' }">My Exams</v-btn>
 
             <v-btn v-if="store.userIsAdmin" :to="{ name: 'AppAdmin' }">Admin</v-btn>
 			<v-btn @click="signOut(auth)">Log Out</v-btn>
+			<v-btn :to="{ name: 'AppExams' }">My Exams</v-btn>
+			<v-btn>
+				<Icon icon="healthicons:ui-user-profile" style="font-size: 35px" />
+			</v-btn>
 
         </v-toolbar-items>
 
@@ -30,7 +51,7 @@ import { auth } from '@/firebase'
 import { signOut } from 'firebase/auth'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
-
+import {Icon} from '@iconify/vue'
 
 export default {
     name: 'AppTopbar',

@@ -88,7 +88,8 @@ export default {
 
     methods: {
         // Show the sign up or sign in form
-        nextPanel() {
+        nextPanel(e) {
+			if (e) e.preventDefault()
             // Determine if account exists
             this.loading = true
             this.error = null

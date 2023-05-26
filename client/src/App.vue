@@ -10,6 +10,7 @@
 <script lang="ts">
 import { mapState } from 'pinia'
 import { useMainStore } from '@/stores/main'
+import "@/styles/globals.scss"
 
 export default {
   name: 'App',
@@ -20,27 +21,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.background--grey,
-.background--blue {
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: repeat;
-  background-size: auto;
-}
-
-.background--grey {
-  background-image: url('@/assets/background-grey.svg');
-}
-
-.background--blue {
-  background-image: url('@/assets/background-blue.svg');
-}
-</style>
-
-<style scoped>
-.root {
-  min-height: 100vh;
-}
-</style>
