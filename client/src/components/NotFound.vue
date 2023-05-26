@@ -4,22 +4,6 @@ import nzpmcLogo from '@/assets/nzpmc_logo_2.png'
 </script>
 
 <template>
-    <!-- <div class="not-found">
-        <div class="message pa-4 red--text">
-            <h1 class="mb-4 text-h4">Page Not Found</h1>
-
-            <p>Sorry about that.</p>
-
-            <v-btn color="white" outlined :to="{ name: 'AppExams' }">
-                <v-icon left>mdi-home</v-icon>
-
-                <span>Go Home</span>
-            </v-btn>
-        </div>
-
-        <v-img width="100%" height="100vh" :src="logoBg"></v-img>
-    </div> -->
-
     <div id="background">
         <img :src='nzpmcLogo' id="logo"/>
 
