@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import logoBg from '@/assets/logo-background.jpg'
+import logoBg from '@/assets/background_unsplash_1.png'
+import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 </script>
 
 <template>
