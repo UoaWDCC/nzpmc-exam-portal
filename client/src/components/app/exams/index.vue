@@ -72,7 +72,7 @@ export default {
 <style scoped lang="scss">
 .heading {
   font-size: 2.5rem;
-  letter-spacing: 1vw;
+  letter-spacing: 0.8rem;
 }
 
 .intro {
