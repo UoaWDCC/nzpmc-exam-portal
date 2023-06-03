@@ -20,6 +20,12 @@ import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 	}
 }
 
+.account-menu{
+	.v-list {
+		border-radius: 0;
+	}
+}
+
 </style>
 
 <template>
@@ -36,17 +42,17 @@ import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 
             <v-btn v-if="store.userIsAdmin" :to="{ name: 'AppAdmin' }">Admin</v-btn>
 			<v-btn :to="{ name: 'AppExams' }">My Exams</v-btn>
-			<v-menu>
+			<v-menu class="account-menu">
 				<template v-slot:activator="{props}">
 					<v-btn v-bind="props">
 						<Icon icon="healthicons:ui-user-profile" style="font-size: 35px" />
 					</v-btn>
 				</template>
-					<v-list>
-						<v-list-item>
-							<v-btn @click="signOut(auth)">Log Out</v-btn>
-						</v-list-item>
-					</v-list>
+				<v-list >
+					<v-list-item >
+						<v-btn @click="signOut(auth)">Log Out</v-btn>
+					</v-list-item>
+				</v-list>
 			</v-menu>
 
         </v-toolbar-items>
