@@ -5,8 +5,6 @@
         </v-alert>
 
         <div v-if="currentExams.length" class="my-6">
-            <h2 class="mb-6 text-h5">Current Exams</h2>
-
             <AppExamsLinkCard
                 v-for="exam in currentExams"
                 :key="exam.id"

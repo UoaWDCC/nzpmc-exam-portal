@@ -5,12 +5,13 @@
     <v-container class="mt-10">
       <div class="my-6">
         <h1 class="mb-6 text-h4 text-uppercase font-weight-bold">My Exams</h1>
-        <p class="text-subtitle-1">
+        <p>
           Kia ora and welcome to the New Zealand Physics and Mathematics Competition.
-          This is your chance to prove your skills and knowledge in the Physics and
-          Mathematics subjects. You will be tested on your knowledge of the subjects,
-          and your ability to solve problems.<br/>Below you can see the exams available for
-          you to start, past exams, and ones that you're enrolled in for the future.
+		  <br/>This is your chance to prove your skills and knowledge in the <strong>Physics</strong> and
+		  <strong>Mathematics</strong>.<br/><br/>
+
+		  Below you will find, <strong>past exams</strong>, <strong>exams available for you to start</strong>, and <strong>upcoming exams</strong>.
+		  <br/>
           If you can't see an exam that you think you should be enrolled in, contact us
           at <a href="mailto:contact.nzpmc@gmail.com">contact.nzpmc@gmail.com</a>.
         </p>
