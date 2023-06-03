@@ -1,36 +1,33 @@
 
 <template>
-	<MobilePlaceholder />
+  <MobilePlaceholder />
   <div class="app-exams background--grey fill-height" style="overflow-y: auto">
     <v-container class="mt-10">
       <div class="my-6">
-        <h1 class="mb-6 text-h4 text-uppercase font-weight-bold">My Exams</h1>
-        <p>
-          Kia ora and welcome to the New Zealand Physics and Mathematics Competition.
-		  <br/>This is your chance to prove your skills and knowledge in the <strong>Physics</strong> and
-		  <strong>Mathematics</strong>.<br/><br/>
+        <h1 class="heading mb-6 text-uppercase font-weight-bold">My Exams</h1>
+        <p class="intro">
+          Kia Ora, welcome to the <strong>New Zealand Physics and Mathematics Competition!</strong><br />
 
-		  Below you will find, <strong>past exams</strong>, <strong>exams available for you to start</strong>, and <strong>upcoming exams</strong>.
-		  <br/>
+          This is your chance to prove your skills and knowledge in <strong>Physics</strong> and
+          <strong>Mathematics</strong>.<br /><br />
+
+          Below you will find <strong>past exams</strong>, <strong>exams available for you to start</strong>, and
+          <strong>upcoming exams</strong>.<br />
+
           If you can't see an exam that you think you should be enrolled in, contact us
-          at <a href="mailto:contact.nzpmc@gmail.com">contact.nzpmc@gmail.com</a>.
+          at <strong><a href="mailto:contact.nzpmc@gmail.com">contact.nzpmc@gmail.com</a></strong>.
         </p>
       </div>
 
-    <v-scroll-y-reverse-transition>
+      <v-scroll-y-reverse-transition>
         <v-alert v-if="error" type="error" class="my-6">
           {{ error }}
         </v-alert>
       </v-scroll-y-reverse-transition>
 
-        <AppExamsList v-if="!loading && userQuizzes" :user-quizzes="userQuizzes" />
-        <v-skeleton-loader
-          v-if="loading"
-          v-for="i in 3"
-          :key="i"
-          class="mb-3 mx-auto"
-          type="list-item-two-line"
-        ></v-skeleton-loader>
+      <AppExamsList v-if="!loading && userQuizzes" :user-quizzes="userQuizzes" />
+      <v-skeleton-loader v-if="loading" v-for="i in 3" :key="i" class="mb-3 mx-auto"
+        type="list-item-two-line"></v-skeleton-loader>
     </v-container>
   </div>
 </template>
@@ -45,14 +42,14 @@ export default {
     title: 'My Exams' as string,
   },
 
-  components: { AppExamsList},
+  components: { AppExamsList },
 
   data() {
     return {
-    	userQuizzes: null,
+      userQuizzes: null,
       error: "",
       loading: true,
-	  }
+    }
   },
 
   apollo: {
@@ -63,7 +60,7 @@ export default {
         if (error) {
           this.error = error.message
         } else {
-			if (data) this.userQuizzes = data.userQuizzes; 
+          if (data) this.userQuizzes = data.userQuizzes;
         }
       },
       fetchPolicy: 'cache-and-network',
@@ -71,3 +68,14 @@ export default {
   },
 }
 </script>
+
+<style scoped lang="scss">
+.heading {
+  font-size: 2.5rem;
+  letter-spacing: 1vw;
+}
+
+.intro {
+  font-size: 1.1rem;
+}
+</style>
