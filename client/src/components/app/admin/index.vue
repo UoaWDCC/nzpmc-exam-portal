@@ -1,10 +1,24 @@
+<style scoped lang="scss">
+.app-admin{
+	padding-top: 64px;
+	display:flex;
+	flex-direction:column;
+	max-width: 1400px;
+	align-items: center;
+
+}
+</style>
+
 <template>
-    <div class="app-admin">
-		<div v-if="store.userIsAdmin">
-			Admin
-		</div>
-		<div v-else>Not Admin</div>
-	</div>
+    <v-container class="app-admin">
+		<v-container v-if="store.userIsAdmin">
+			<h1>Admin</h1>
+			<v-btn>Add users with csv</v-btn>
+			<v-btn>Delete users with emails</v-btn>
+			<v-btn>Download CSV of users</v-btn>
+		</v-container>
+		<v-container v-else>Not Admin</v-container>
+	</v-container>
 </template>
 
 <script lang="ts">
