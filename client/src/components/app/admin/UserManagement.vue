@@ -2,6 +2,8 @@
 <template>
 <v-file-input 
  prepend-icon=""
+ ref="csvUpload"
+ @change="handleCsvUpload"
 accept=".csv"
 label="Upload CSV"></v-file-input>
 <v-btn>Add users using CSV</v-btn>
@@ -26,6 +28,14 @@ export default {
     },
 
     methods: {
+		handleCsvUpload(event: Event){
+			const input = event.target as FileInput;
+			const file = input.files?.[0];
+
+			if(file){
+				console.log("uploaded")
+			}
+		}
     },
 }
 </script>
