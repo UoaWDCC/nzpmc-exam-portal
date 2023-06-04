@@ -6,9 +6,9 @@
  @change="handleCsvUpload"
 accept=".csv"
 label="Upload CSV"></v-file-input>
-<v-btn>Add users using CSV</v-btn>
-<v-btn>Delete users with emails</v-btn>
-<v-btn>Download CSV of users</v-btn>
+<v-btn @click="addUsersWithCsv()">Add users using CSV</v-btn>
+<v-btn @click="deleteUsers()">Delete users with emails</v-btn>
+<v-btn @click="downloadUsersCsv()">Download CSV of users</v-btn>
 </template>
 
 <script lang="ts">
@@ -24,6 +24,7 @@ export default {
 
     data() {
         return {
+			currentCsv: File,
         }
     },
 
@@ -34,7 +35,19 @@ export default {
 
 			if(file){
 				console.log("uploaded")
+				this.currentCsv = file;
+			} else {
+				this.currentCsv = undefined;
 			}
+		},
+		addUsersWithCsv(){
+			throw new Error("Not Implemented");
+		},
+		deleteUsers(){
+			throw new Error("Not Implemented");
+		},
+		downloadUsersCsv(){
+			throw new Error("Not Implemented");
 		}
     },
 }
