@@ -12,6 +12,7 @@ label="Upload CSV"></v-file-input>
 </template>
 
 <script lang="ts">
+import {deleteUsers, addUsersWithCsv, downloadUsersCsv} from '../../../utils/userManagement';
 
 export default {
     name: 'UserManagement',
@@ -40,15 +41,9 @@ export default {
 				this.currentCsv = undefined;
 			}
 		},
-		addUsersWithCsv(){
-			throw new Error("Not Implemented");
-		},
-		deleteUsers(){
-			throw new Error("Not Implemented");
-		},
-		downloadUsersCsv(){
-			throw new Error("Not Implemented");
-		}
+		addUsersWithCsv,
+		deleteUsers,
+		downloadUsersCsv
     },
 }
 </script>
