@@ -13,9 +13,7 @@
     <v-container class="app-admin">
 		<v-container v-if="store.userIsAdmin">
 			<h1>Admin</h1>
-			<v-btn>Add users with csv</v-btn>
-			<v-btn>Delete users with emails</v-btn>
-			<v-btn>Download CSV of users</v-btn>
+			<UserManagement />
 		</v-container>
 		<v-container v-else>Not Admin</v-container>
 	</v-container>
@@ -23,9 +21,14 @@
 
 <script lang="ts">
 import {useMainStore} from '@/stores/main';
+import UserManagement from './UserManagement.vue'
 
 export default {
     name: 'AppAdmin',
+
+	components: {
+		UserManagement,
+	},
 
 	data() {
 		return {

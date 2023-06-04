@@ -1,0 +1,31 @@
+
+<template>
+<v-file-input 
+ prepend-icon=""
+accept=".csv"
+label="Upload CSV"></v-file-input>
+<v-btn>Add users using CSV</v-btn>
+<v-btn>Delete users with emails</v-btn>
+<v-btn>Download CSV of users</v-btn>
+</template>
+
+<script lang="ts">
+
+export default {
+    name: 'UserManagement',
+
+    metaInfo: {
+    },
+
+    components: {  },
+
+
+    data() {
+        return {
+        }
+    },
+
+    methods: {
+    },
+}
+</script>
