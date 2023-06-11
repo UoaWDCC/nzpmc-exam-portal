@@ -12,7 +12,19 @@
 </template>
 
 <script lang="ts">
-import { deleteUsers, addUsersWithCsv, downloadUsersCsv } from '../../../utils/userManagement'
+import { deleteUsers, addUserMutation, downloadUsersCsv } from '../../../utils/userManagement'
+import { parseCSVPapaparse } from '@/utils/csv_parser'
+import { parse } from 'papaparse'
+
+type User = {
+  displayName: string
+  email: string
+  photoURL: string
+  firstName: string
+  lastName: string
+  yearLevel: string
+  role: string
+}
 
 export default {
   name: 'UserManagement',
@@ -39,7 +51,33 @@ export default {
         this.currentCsv = undefined
       }
     },
-    addUsersWithCsv,
+    async addUsersWithCsv() {
+      //TODO refactor out
+      //TODO debounce
+      if (this.currentCsv) {
+        const students = await parseCSVPapaparse(this.currentCsv)
+        students.map(async (student) => {
+          //TODO fix "surname"
+          const success = await addUserMutation(
+            this.$apollo,
+            student.email,
+            student.firstName,
+            student.surname
+          )
+          console.log(`added ${student.firstName}: ${success}`)
+        })
+      }
+      //TODO add the users
+      /*
+      const { email, firstName, lastName, photoURL, yearLevel } = currentUser
+      const success = addUserMutation(this.$apollo, email, firstName, lastName, photoURL, yearLevel)
+	  */
+    },
+    parseCSV(csvData) {
+      const parsedData = parse(csvData, { header: true }).data
+      console.log(parsedData)
+      // Do something with the parsed data
+    },
     deleteUsers,
     downloadUsersCsv
   }

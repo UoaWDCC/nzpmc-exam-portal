@@ -64,15 +64,17 @@ const addFirebaseUser = async (
     password: string,
 ): Promise<auth.UserRecord> => {
     // Check DisplayName
-    let profileImgName
+    let profileImgName: string
     if (!displayName) {
         displayName = `${firstName} ${lastName}`
         profileImgName = `${firstName}+${lastName}`
     } else {
         profileImgName = displayName
     }
+    //replace all spaces
+    profileImgName = profileImgName.replace(/ /g, '+')
 
-    if (!photoURL) {
+    if (!photoURL || photoURL.trim() === '') {
         // Generate random dark color for profile background
         let randomDarkColor = ''
         for (let i = 0; i < 6; i++) {
@@ -81,6 +83,7 @@ const addFirebaseUser = async (
 
         photoURL = `https://ui-avatars.com/api/?background=${randomDarkColor}&color=ffffff&name=${profileImgName}`
     }
+    console.log(photoURL)
 
     // Generate random password for user if password is not set
     if (!password) {
@@ -99,6 +102,7 @@ const addFirebaseUser = async (
         password = pass
     }
 
+    console.log(photoURL)
     const userRecord = await admin.auth().createUser({
         email,
         emailVerified: false,

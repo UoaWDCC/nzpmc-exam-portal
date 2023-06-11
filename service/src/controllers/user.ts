@@ -7,7 +7,8 @@ import { NotFoundError } from '../utils/errors'
 const UserRepository = getRepository(User)
 
 const getUser = async (id: string): Promise<Schema.User> => {
-    return packUser(await UserRepository.findById(id))
+    const user = await UserRepository.findById(id)
+    return packUser(user)
 }
 
 const getAllUsers = async (): Promise<Schema.User[]> => {
@@ -52,7 +53,7 @@ const getUsersPagination = async (
     }
 }
 
-const sortUsersList = (users: any, key: string, isDescending: boolean) => {   
+const sortUsersList = (users: any, key: string, isDescending: boolean) => {
     const sortedUsers = users.sort((user1: any, user2: any) => {
         user1[key].trim().localeCompare(user2[key].trim(), undefined, {
             sensitivity: 'accent',
