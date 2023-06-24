@@ -113,7 +113,8 @@ export async function parseCSVPapaparse(file) {
       resolve(students)
     }
 
-    reader.onerror = () => {
+    reader.onerror = (e) => {
+      console.error(e)
       reject(new Error('Failed to read the file.'))
     }
 

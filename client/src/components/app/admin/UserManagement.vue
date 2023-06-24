@@ -12,11 +12,12 @@
 </template>
 
 <script lang="ts">
-import { deleteUsers, addUserMutation, downloadUsersCsv } from '../../../utils/userManagement'
+import { deleteUsers, addUserMutation, downloadUsersCsvQuery } from '../../../utils/userManagement'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
 import { parse } from 'papaparse'
 
-type User = {
+export type User = {
+  id: int
   displayName: string
   email: string
   photoURL: string
@@ -78,8 +79,19 @@ export default {
       console.log(parsedData)
       // Do something with the parsed data
     },
+    // TODO: add delete users
     deleteUsers,
-    downloadUsersCsv
+    async downloadUsersCsv() {
+      try {
+        const data = downloadUsersCsvQuery(this.$apollo)
+        console.log("downloaded users csv")
+        
+    }
+    catch (error) {
+        console.log(error)
+        console.log("failed to download users csv")
+    }
+    }
   }
 }
 </script>
