@@ -7,6 +7,7 @@ import {
     addUserQuiz,
     editQuestionOption,
     deleteQuestionOption,
+    deleteUser,
     getQuestion,
     editQuestion,
     editQuiz,
@@ -40,6 +41,7 @@ import {
     MutationAddQuizArgs,
     MutationAddUserArgs,
     MutationAddUserQuizArgs,
+    MutationDeleteUserArgs,
     MutationDeleteQuestionArgs,
     MutationDeleteQuizArgs,
     MutationDeleteOptionArgs,
@@ -300,6 +302,19 @@ const editSelfMutation: Resolver<
     return user
 }
 
+const deleteUserMutation: Resolver<
+    Maybe<ResolverTypeWrapper<User>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationDeleteUserArgs, 'id'>
+    > = async (_parent, { id }, _context) => {
+    const user = await deleteUser(id)
+    
+    return user;
+}
+        
+
+
 const editUserMutation: Resolver<
     Maybe<ResolverTypeWrapper<User>>,
     unknown,
@@ -508,6 +523,7 @@ const mutationResolvers: MutationResolvers = {
     deleteQuestion: admin(deleteQuestionMutation),
     deleteQuiz: admin(deleteQuizMutation),
     deleteOption: admin(deleteOptionMutation),
+    deleteUser: admin(deleteUserMutation),
     editAnswer: admin(editAnswerMutation),
     editOption: admin(editOptionMutation),
     editOrderQuestion: admin(editOrderQuestionMutation),

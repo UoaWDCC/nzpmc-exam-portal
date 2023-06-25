@@ -10,7 +10,11 @@ type Query {
     """
     Admin
     """
-    user(userID: ID!): User!
+    user(
+        userID: ID
+        userEmail: String
+    ): User!
+
     users(
         page: Int
         limit: Int

@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { deleteUsers, addUserMutation, downloadUsersCsvQuery } from '../../../utils/userManagement'
+import { deleteUsersMutation, addUserMutation, downloadUsersCsvQuery } from '../../../utils/userManagement'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
 import { parse } from 'papaparse'
 
@@ -55,7 +55,7 @@ export default {
     async addUsersWithCsv() {
       //TODO refactor out
       //TODO debounce
-      if (this.currentCsv) {
+      if (this.currentCsv.size > 0) {
         const students = await parseCSVPapaparse(this.currentCsv)
         students.map(async (student) => {
           //TODO fix "surname"
@@ -68,6 +68,9 @@ export default {
           console.log(`added ${student.firstName}: ${success}`)
         })
       }
+      else {
+        alert("no csv uploaded")
+      }
       //TODO add the users
       /*
       const { email, firstName, lastName, photoURL, yearLevel } = currentUser
@@ -79,8 +82,21 @@ export default {
       console.log(parsedData)
       // Do something with the parsed data
     },
-    // TODO: add delete users
-    deleteUsers,
+    // TODO: add delete users by emails
+    async deleteUsers() {
+      try {
+        const data = deleteUsersMutation(this.$apollo)
+        console.log("deleted users")
+        
+    }
+    catch (error) {
+        console.log(error)
+        console.log("failed to delete users")
+
+    }
+  },
+
+
     async downloadUsersCsv() {
       try {
         const data = downloadUsersCsvQuery(this.$apollo)

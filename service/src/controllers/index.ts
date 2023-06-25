@@ -19,6 +19,7 @@ import {
     getAllUsers,
     addUser,
     editUser,
+    deleteUser,
     getUsersPagination,
 } from './user'
 import {
@@ -58,6 +59,7 @@ export {
     getAllUsers,
     addUser,
     editUser,
+    deleteUser,
     getUserQuizQuestion,
     getUserQuizQuestions,
     addUserQuizQuestion,

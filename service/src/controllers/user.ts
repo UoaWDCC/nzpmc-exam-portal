@@ -6,10 +6,26 @@ import { NotFoundError } from '../utils/errors'
 
 const UserRepository = getRepository(User)
 
-const getUser = async (id: string): Promise<Schema.User> => {
-    const user = await UserRepository.findById(id)
-    return packUser(user)
-}
+const getUser = async (id?: string | null, email?: string | null): Promise<Schema.User> => {
+    let user: User | null = null;
+
+  if (id) {
+    try {
+      user = await UserRepository.findById(id);
+      return packUser(user);
+    } catch (e) {}
+  }
+
+  if (email) {
+    user = await UserRepository.whereEqualTo('email', email).findOne();
+  }
+
+  if (!user) {
+    throw new NotFoundError();
+  }
+
+  return packUser(user);
+};
 
 const getAllUsers = async (): Promise<Schema.User[]> => {
     return packUsers(await UserRepository.find())
@@ -31,15 +47,17 @@ const getUsersPagination = async (
     const users = await UserRepository.find()
 
     const sortedUsers = caseInsensitiveSort(orderBy, users)
-
+    // This is dependent that the user has a display name, first name, last name, or email
+    // For testing purposes this may not always be the case.
     const finalUsers = sortedUsers.filter(
-        (user: any) =>
+        (user: any) => 
             user.displayName
                 .trim()
                 .toLowerCase()
                 .includes(term.toLowerCase()) ||
             user.firstName.trim().toLowerCase().includes(term.toLowerCase()) ||
-            user.lastName.trim().toLowerCase().includes(term.toLowerCase()),
+            user.lastName.trim().toLowerCase().includes(term.toLowerCase()) ||
+            user.email.trim().toLowerCase().includes(term.toLowerCase()),
     )
 
     finalUsers.slice((page - 1) * limit, page * limit)
@@ -54,10 +72,11 @@ const getUsersPagination = async (
 }
 
 const sortUsersList = (users: any, key: string, isDescending: boolean) => {
+    // This is sorting on a key. The key may not exist for all users. (Though it should)
     const sortedUsers = users.sort((user1: any, user2: any) => {
-        user1[key].trim().localeCompare(user2[key].trim(), undefined, {
-            sensitivity: 'accent',
-        })
+            user1[key].trim().localeCompare(user2[key].trim(), undefined, {
+                sensitivity: 'accent',
+            })
     })
     if (isDescending) {
         return sortedUsers.reverse()
@@ -156,6 +175,23 @@ const addUser = async (
     return await getUser(newUser.id)
 }
 
+const deleteUser = async (
+    id: string
+) => {
+    return UserRepository.runTransaction(async (tran) => {
+        const user = await tran.findById(id)
+
+        if (user === null) {
+            throw new NotFoundError()
+        }
+        console.log("deleting user id: ", id, " from db")
+        await tran.delete(id)
+
+        return user
+    })
+}
+
+
 const editUser = async (
     id: string,
     displayName?: string,
@@ -188,4 +224,4 @@ const editUser = async (
     })
 }
 
-export { getUser, getAllUsers, getUsersPagination, addUser, editUser }
+export { getUser, getAllUsers, getUsersPagination, addUser, editUser, deleteUser}
