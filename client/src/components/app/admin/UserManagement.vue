@@ -1,7 +1,12 @@
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.container .v-divider {
+  margin-top: 2rem;
+}
+</style>
 
 <template>
   <v-container class="container add-users">
+    <h2>Adding Users</h2>
     <v-file-input
       prepend-icon=""
       ref="csvUpload"
@@ -10,12 +15,17 @@
       label="Upload CSV"
     ></v-file-input>
     <v-btn @click="addUsersWithCsv()">Add users using CSV</v-btn>
+    <v-divider />
   </v-container>
   <v-container class="container delete-users">
+    <h2>Deleting Users</h2>
     <v-btn @click="deleteUsers()">Delete users with emails</v-btn>
+    <v-divider />
   </v-container>
   <v-container class="container download-users-csv">
+    <h2>Get User data</h2>
     <v-btn @click="downloadUsersCsv()">Download CSV of users</v-btn>
+    <v-divider />
   </v-container>
 </template>
 
