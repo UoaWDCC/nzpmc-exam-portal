@@ -150,6 +150,7 @@ export type Mutation = {
   deleteOption?: Maybe<Option>;
   deleteQuestion?: Maybe<Question>;
   deleteQuiz?: Maybe<Quiz>;
+  deleteUser?: Maybe<User>;
   editAnswer?: Maybe<Option>;
   editOption?: Maybe<Option>;
   editOrderQuestion?: Maybe<Quiz>;
@@ -206,6 +207,11 @@ export type MutationDeleteQuestionArgs = {
 
 
 export type MutationDeleteQuizArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
 };
 
@@ -308,7 +314,8 @@ export type QueryQuizArgs = {
 
 
 export type QueryUserArgs = {
-  userID: Scalars['ID'];
+  userEmail?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -590,6 +597,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteOption?: Resolver<Maybe<ResolversTypes['Option']>, ParentType, ContextType, RequireFields<MutationDeleteOptionArgs, 'id' | 'optionID' | 'quizID'>>;
   deleteQuestion?: Resolver<Maybe<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<MutationDeleteQuestionArgs, 'id' | 'quizID'>>;
   deleteQuiz?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationDeleteQuizArgs, 'id'>>;
+  deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   editAnswer?: Resolver<Maybe<ResolversTypes['Option']>, ParentType, ContextType, RequireFields<MutationEditAnswerArgs, 'input'>>;
   editOption?: Resolver<Maybe<ResolversTypes['Option']>, ParentType, ContextType, RequireFields<MutationEditOptionArgs, 'input'>>;
   editOrderQuestion?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationEditOrderQuestionArgs, 'input'>>;
@@ -618,7 +626,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   quiz?: Resolver<ResolversTypes['Quiz'], ParentType, ContextType, RequireFields<QueryQuizArgs, 'quizID'>>;
   quizzes?: Resolver<Array<ResolversTypes['Quiz']>, ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'userID'>>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<QueryUserArgs>>;
   userQuiz?: Resolver<ResolversTypes['UserQuiz'], ParentType, ContextType, RequireFields<QueryUserQuizArgs, 'quizID'>>;
   userQuizzes?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType>;
   users?: Resolver<ResolversTypes['UserPage'], ParentType, ContextType, Partial<QueryUsersArgs>>;

@@ -1,18 +1,30 @@
+<style scoped lang="scss"></style>
+
 <template>
-  <v-file-input
-    prepend-icon=""
-    ref="csvUpload"
-    @change="handleCsvUpload"
-    accept=".csv"
-    label="Upload CSV"
-  ></v-file-input>
-  <v-btn @click="addUsersWithCsv()">Add users using CSV</v-btn>
-  <v-btn @click="deleteUsers()">Delete users with emails</v-btn>
-  <v-btn @click="downloadUsersCsv()">Download CSV of users</v-btn>
+  <v-container class="container add-users">
+    <v-file-input
+      prepend-icon=""
+      ref="csvUpload"
+      @change="handleCsvUpload"
+      accept=".csv"
+      label="Upload CSV"
+    ></v-file-input>
+    <v-btn @click="addUsersWithCsv()">Add users using CSV</v-btn>
+  </v-container>
+  <v-container class="container delete-users">
+    <v-btn @click="deleteUsers()">Delete users with emails</v-btn>
+  </v-container>
+  <v-container class="container download-users-csv">
+    <v-btn @click="downloadUsersCsv()">Download CSV of users</v-btn>
+  </v-container>
 </template>
 
 <script lang="ts">
-import { deleteUsersMutation, addUserMutation, downloadUsersCsvQuery } from '../../../utils/userManagement'
+import {
+  deleteUsersMutation,
+  addUserMutation,
+  downloadUsersCsvQuery
+} from '../../../utils/userManagement'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
 import { parse } from 'papaparse'
 
@@ -67,9 +79,8 @@ export default {
           )
           console.log(`added ${student.firstName}: ${success}`)
         })
-      }
-      else {
-        alert("no csv uploaded")
+      } else {
+        alert('no csv uploaded')
       }
       //TODO add the users
       /*
@@ -86,27 +97,21 @@ export default {
     async deleteUsers() {
       try {
         const data = deleteUsersMutation(this.$apollo)
-        console.log("deleted users")
-        
-    }
-    catch (error) {
+        console.log('deleted users')
+      } catch (error) {
         console.log(error)
-        console.log("failed to delete users")
-
-    }
-  },
-
+        console.log('failed to delete users')
+      }
+    },
 
     async downloadUsersCsv() {
       try {
         const data = downloadUsersCsvQuery(this.$apollo)
-        console.log("downloaded users csv")
-        
-    }
-    catch (error) {
+        console.log('downloaded users csv')
+      } catch (error) {
         console.log(error)
-        console.log("failed to download users csv")
-    }
+        console.log('failed to download users csv')
+      }
     }
   }
 }
