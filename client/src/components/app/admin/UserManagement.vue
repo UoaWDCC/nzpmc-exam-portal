@@ -26,7 +26,9 @@
     <v-text-field label="Enter Emails" ref="emailsToDelete" @input="handleEmailInputChange">
       <template v-slot:prepend-inner>
         <div v-for="(email, index) in currentEmails" :key="index">
-          <v-chip color="black" label closable class="ma-1">{{ email }}</v-chip>
+          <v-chip label closable @click:close="removeEmailFromList(index)" class="ma-1">{{
+            email
+          }}</v-chip>
         </div>
       </template>
     </v-text-field>
@@ -79,6 +81,9 @@ export default {
   },
 
   methods: {
+    removeEmailFromList(index: number) {
+      this.currentEmails.splice(index, 1)
+    },
     handleEmailInputChange(event: Event) {
       //TODO: Implement debounce
       const currentValue: string = event.target.value
