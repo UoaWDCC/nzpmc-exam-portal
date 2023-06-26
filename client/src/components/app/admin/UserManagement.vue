@@ -4,9 +4,9 @@
 }
 .container .emails {
   display: flex;
-  max-width: 900px;
-  gap: 0.5rem;
+  max-width: 100%;
   flex-wrap: wrap;
+  gap: 0.5rem;
 }
 </style>
 
@@ -39,7 +39,10 @@
         <p>{{ deleteMessage }}</p>
       </template>
     </v-text-field>
-    <h3>To delete:</h3>
+    <span style="display: flex; align-items: center; justify-content: space-between">
+      <h3>To delete:</h3>
+      <v-btn color="red" variant="outlined" @click="removeAllEmailsFromList()">Clear</v-btn>
+    </span>
     <v-container class="emails">
       <div v-for="(email, index) in currentEmails" :key="index">
         <v-chip label closable @click:close="removeEmailFromList(index)">{{ email }}</v-chip>
@@ -98,6 +101,9 @@ export default {
   },
 
   methods: {
+    removeAllEmailsFromList() {
+      this.currentEmails = []
+    },
     removeEmailFromList(index: number) {
       this.currentEmails.splice(index, 1)
     },
