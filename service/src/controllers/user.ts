@@ -3,7 +3,7 @@ import { packUser, packUsers } from '../mappers/userMapper'
 import { User } from '../models'
 import * as Schema from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
-import { firestore } from '../utils/firebase'
+import { admin, firestore } from '../utils/firebase'
 
 const UserRepository = getRepository(User)
 
@@ -188,6 +188,7 @@ const deleteUser = async (id: string) => {
         }
         console.log('deleting user id: ', id, ' from db')
         await tran.delete(id)
+        await admin.auth().deleteUser(id)
 
         return user
     })
