@@ -21,7 +21,10 @@ const getUser = async (
     }
 
     if (email) {
-        user = await UserRepository.whereEqualTo('email', email).findOne()
+        user = await UserRepository.whereEqualTo(
+            'email',
+            email.toLowerCase(),
+        ).findOne()
     }
 
     if (!user) {
