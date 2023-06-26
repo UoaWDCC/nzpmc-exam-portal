@@ -12,7 +12,6 @@ const getUser = async (
     email?: string | null,
 ): Promise<Schema.User> => {
     let user: User | null = null
-
     if (id) {
         try {
             user = await UserRepository.findById(id)
@@ -182,19 +181,31 @@ const addUser = async (
     return await getUser(newUser.id)
 }
 
-const deleteUser = async (id: string) => {
-    return UserRepository.runTransaction(async (tran) => {
-        const user = await tran.findById(id)
+const deleteUser = async (id?: string | null, email?: string | null) => {
+    try {
+        return UserRepository.runTransaction(async (tran) => {
+            let user: Schema.User | null = null
+            if (id !== null && id !== undefined) {
+                user = await tran.findById(id)
+            }
 
-        if (user === null) {
-            throw new NotFoundError()
-        }
-        console.log('deleting user id: ', id, ' from db')
-        await tran.delete(id)
-        await admin.auth().deleteUser(id)
+            else if (email !== null && email !== undefined) {
+                user = await getUser(null, email) 
+            }
+            
+            if (user === null) {
+                throw new NotFoundError()
+            }
+            console.log('deleting user email: ', email, ' from db')
+            await tran.delete(user.id)
+            await admin.auth().deleteUser(user.id)
 
-        return user
+            return user
     })
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
 }
 
 const editUser = async (

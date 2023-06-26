@@ -4,7 +4,7 @@ type Mutation {
     """
     addUser(input: AddUserInput!): User
     editUser(input: EditUserInput!): User
-    deleteUser(id: ID!): User
+    deleteUser(id: ID, email: String): User
 
     addQuiz(input: AddQuizInput!): Quiz
     editQuiz(input: EditQuizInput!): Quiz

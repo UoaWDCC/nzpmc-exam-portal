@@ -306,9 +306,9 @@ const deleteUserMutation: Resolver<
     Maybe<ResolverTypeWrapper<User>>,
     unknown,
     UserContext,
-    RequireFields<MutationDeleteUserArgs, 'id'>
-    > = async (_parent, { id }, _context) => {
-    const user = await deleteUser(id)
+    Partial<MutationDeleteUserArgs>
+    > = async (_parent, { id, email }, _context) => {
+    const user = await deleteUser(id, email)
     
     return user;
 }

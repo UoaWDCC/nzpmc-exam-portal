@@ -39,31 +39,22 @@ export const addUserMutation = async (
 export const deleteUsersMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   email: string
-): Promise<boolean> => {
-  try {
-    // TODO: Implement this function
-    // Start with get user from email query
-    const query = await apollo.query({
-      query: GetUserWithEmailQuery,
-      variables: {
-        userEmail: email
-      }
-    })
-    const userId = query.data.user.id
-    console.log(`id for ${email}: ${userId}`)
-    const mutation = await apollo.mutate({
-      mutation: DeleteUserMutation,
-      variables: {
-        deleteUserId: userId
-      }
-    })
-    const deletedId = mutation.data.deleteUser.id
-    console.log(deletedId)
-    return deletedId === userId
-  } catch (e) {
-    console.error(e)
-    return false
-  }
+  ): Promise<boolean> => {
+    try {
+      const mutation = await apollo.mutate({
+        mutation: DeleteUserMutation,
+        variables: {
+          deleteUserEmail: email
+        }
+      })
+      const deletedEmail = mutation.data.deleteUser.email
+      console.log(deletedEmail)
+      return deletedEmail === email
+    } 
+    catch (e) {
+      console.error(e)
+      return false
+    }
 }
 
 export const successMessage = (successfulEmails: string[]): string => {
