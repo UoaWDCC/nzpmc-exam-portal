@@ -27,6 +27,7 @@
       label="Enter Emails (separate with ',')"
       ref="emailsToDelete"
       @input="handleEmailInputChange"
+      @change="handleEmailInputChange"
     >
       <template v-slot:prepend-inner>
         <div v-for="(email, index) in currentEmails" :key="index">
@@ -91,7 +92,7 @@ export default {
     handleEmailInputChange(event: Event) {
       //TODO: Implement debounce
       const currentValue: string = event.target.value
-      if (currentValue.includes(',')) {
+      if (currentValue.includes(',') || event.type === 'change') {
         const addedEmails = currentValue.split(',')
         addedEmails.map((email: string) => {
           //TODO: verify email properly
