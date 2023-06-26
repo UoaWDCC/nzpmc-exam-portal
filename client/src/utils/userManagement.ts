@@ -66,6 +66,14 @@ export const deleteUsersMutation = async (
   }
 }
 
+export const successMessage = (successfulEmails: string[]): string => {
+  let res = ''
+  successfulEmails.map((email: string) => {
+    res += email + ' '
+  })
+  return `Deleted Successfully: ${res.trim()}`
+}
+
 //potential bug where after deletion of a user, it is not updated in the csv download
 export const downloadUsersCsvQuery = async (
   apollo: ApolloClient<NormalizedCacheObject>

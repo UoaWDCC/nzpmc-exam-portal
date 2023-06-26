@@ -29,12 +29,13 @@
       @input="handleEmailInputChange"
       @change="handleEmailInputChange"
     >
-      <template v-slot:prepend-inner>
+      <template v-slot:append-inner>
         <div v-for="(email, index) in currentEmails" :key="index">
-          <v-chip label closable @click:close="removeEmailFromList(index)" class="ma-1">{{
-            email
-          }}</v-chip>
+          <v-chip label closable @click:close="removeEmailFromList(index)">{{ email }}</v-chip>
         </div>
+      </template>
+      <template v-slot:details>
+        <p>{{ deleteMessage }}</p>
       </template>
     </v-text-field>
     <v-btn @click="deleteUsers()">Delete users with emails</v-btn>
@@ -51,7 +52,8 @@
 import {
   deleteUsersMutation,
   addUserMutation,
-  downloadUsersCsvQuery
+  downloadUsersCsvQuery,
+  successMessage
 } from '../../../utils/userManagement'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
 import { parse } from 'papaparse'
@@ -69,6 +71,7 @@ export type User = {
 export interface IData {
   currentCsv: any
   currentEmails: string[]
+  deleteMessage: string
 }
 
 export default {
@@ -81,7 +84,8 @@ export default {
   data(): IData {
     return {
       currentCsv: File,
-      currentEmails: []
+      currentEmails: [],
+      deleteMessage: ''
     }
   },
 
@@ -146,14 +150,20 @@ export default {
     },
     // TODO: add delete users by emails
     async deleteUsers() {
+      let successfullyDeleted: string[] = []
       try {
         this.currentEmails.map(async (email: string) => {
           const success = await deleteUsersMutation(this.$apollo, email)
+          if (success) {
+            successfullyDeleted.push(email)
+            this.deleteMessage = successMessage(successfullyDeleted)
+          }
           console.log(`Delete success: ${success} for ${email}`)
         })
       } catch (error) {
         console.log(error)
         console.log('failed to delete users')
+      } finally {
       }
     },
 
