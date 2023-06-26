@@ -149,9 +149,8 @@ export default {
       try {
         this.currentEmails.map(async (email: string) => {
           const success = await deleteUsersMutation(this.$apollo, email)
-          console.log(`Success: ${success} for ${email}`)
+          console.log(`Delete success: ${success} for ${email}`)
         })
-        console.log('deleted users')
       } catch (error) {
         console.log(error)
         console.log('failed to delete users')

@@ -3,6 +3,7 @@ import { packUser, packUsers } from '../mappers/userMapper'
 import { User } from '../models'
 import * as Schema from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
+import { firestore } from '../utils/firebase'
 
 const UserRepository = getRepository(User)
 
@@ -166,7 +167,7 @@ const addUser = async (
 
     user.id = id
     user.displayName = displayName
-    user.email = email
+    user.email = email.toLowerCase()
     user.photoURL = photoURL
     user.firstName = firstName
     user.lastName = lastName
