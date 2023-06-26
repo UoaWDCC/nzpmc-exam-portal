@@ -2,6 +2,10 @@
 .container .v-divider {
   margin-top: 2rem;
 }
+
+.container.delete-users .email-chip-container {
+  position: absolute;
+}
 </style>
 
 <template>
@@ -19,7 +23,13 @@
   </v-container>
   <v-container class="container delete-users">
     <h2>Deleting Users</h2>
-    <v-text-field label="Enter Emails"></v-text-field>
+    <v-text-field label="Enter Emails" ref="emailsToDelete" @input="handleEmailInputChange">
+      <template v-slot:prepend-inner>
+        <div v-for="(email, index) in currentEmails" :key="index">
+          <v-chip color="black" label closable class="ma-1">{{ email }}</v-chip>
+        </div>
+      </template>
+    </v-text-field>
     <v-btn @click="deleteUsers()">Delete users with emails</v-btn>
     <v-divider />
   </v-container>
@@ -49,6 +59,10 @@ export type User = {
   yearLevel: string
   role: string
 }
+export interface IData {
+  currentCsv: any
+  currentEmails: string[]
+}
 
 export default {
   name: 'UserManagement',
@@ -57,7 +71,7 @@ export default {
 
   components: {},
 
-  data() {
+  data(): IData {
     return {
       currentCsv: File,
       currentEmails: []
@@ -65,6 +79,21 @@ export default {
   },
 
   methods: {
+    handleEmailInputChange(event: Event) {
+      //TODO: Implement debounce
+      const currentValue: string = event.target.value
+      if (currentValue.includes(',')) {
+        const addedEmails = currentValue.split(',')
+        addedEmails.map((email: string) => {
+          //TODO: verify email properly
+          if (email.length !== 0 && !this.currentEmails.includes(email)) {
+            this.currentEmails.push(email.trim())
+          }
+        })
+        this.$refs.emailsToDelete.reset()
+        console.log(this.currentEmails)
+      }
+    },
     handleCsvUpload(event: Event) {
       const input = event.target as FileInput
       const file = input.files?.[0]
