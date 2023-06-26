@@ -2,10 +2,6 @@
 .container .v-divider {
   margin-top: 2rem;
 }
-
-.container.delete-users .email-chip-container {
-  position: absolute;
-}
 </style>
 
 <template>
@@ -38,7 +34,8 @@
         <p>{{ deleteMessage }}</p>
       </template>
     </v-text-field>
-    <v-btn @click="deleteUsers()">Delete users with emails</v-btn>
+    <v-btn @click="deleteUsersUsingInput()">Delete users with emails</v-btn>
+    <v-btn @click="deleteUsersUsingCSV()">Delete users with CSV</v-btn>
     <v-divider />
   </v-container>
   <v-container class="container download-users-csv">
@@ -149,7 +146,7 @@ export default {
       // Do something with the parsed data
     },
     // TODO: add delete users by emails
-    async deleteUsers() {
+    async deleteUsersUsingInput() {
       let successfullyDeleted: string[] = []
       try {
         this.currentEmails.map(async (email: string) => {
@@ -165,6 +162,10 @@ export default {
         console.log('failed to delete users')
       } finally {
       }
+    },
+    async deleteUsersUsingCSV() {
+      //TODO
+      throw new Error('Not Implemented')
     },
 
     async downloadUsersCsv() {
