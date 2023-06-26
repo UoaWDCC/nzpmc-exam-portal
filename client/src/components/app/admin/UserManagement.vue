@@ -2,11 +2,17 @@
 .container .v-divider {
   margin-top: 2rem;
 }
+.container .emails {
+  display: flex;
+  max-width: 900px;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 </style>
 
 <template>
-  <v-container class="container add-users">
-    <h2>Adding Users</h2>
+  <v-container class="container upload-csv">
+    <h2>Upload CSV</h2>
     <v-file-input
       prepend-icon=""
       ref="csvUpload"
@@ -14,6 +20,10 @@
       accept=".csv"
       label="Upload CSV"
     ></v-file-input>
+    <v-divider />
+  </v-container>
+  <v-container class="container add-users">
+    <h2>Adding Users</h2>
     <v-btn @click="addUsersWithCsv()">Add users using CSV</v-btn>
     <v-divider />
   </v-container>
@@ -25,15 +35,16 @@
       @input="handleEmailInputChange"
       @change="handleEmailInputChange"
     >
-      <template v-slot:append-inner>
-        <div v-for="(email, index) in currentEmails" :key="index">
-          <v-chip label closable @click:close="removeEmailFromList(index)">{{ email }}</v-chip>
-        </div>
-      </template>
       <template v-slot:details>
         <p>{{ deleteMessage }}</p>
       </template>
     </v-text-field>
+    <h3>To delete:</h3>
+    <v-container class="emails">
+      <div v-for="(email, index) in currentEmails" :key="index">
+        <v-chip label closable @click:close="removeEmailFromList(index)">{{ email }}</v-chip>
+      </div>
+    </v-container>
     <v-btn @click="deleteUsersUsingInput()">Delete users with emails</v-btn>
     <v-btn @click="deleteUsersUsingCSV()">Delete users with CSV</v-btn>
     <v-divider />
