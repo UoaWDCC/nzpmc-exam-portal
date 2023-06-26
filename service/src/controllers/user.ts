@@ -6,26 +6,29 @@ import { NotFoundError } from '../utils/errors'
 
 const UserRepository = getRepository(User)
 
-const getUser = async (id?: string | null, email?: string | null): Promise<Schema.User> => {
-    let user: User | null = null;
+const getUser = async (
+    id?: string | null,
+    email?: string | null,
+): Promise<Schema.User> => {
+    let user: User | null = null
 
-  if (id) {
-    try {
-      user = await UserRepository.findById(id);
-      return packUser(user);
-    } catch (e) {}
-  }
+    if (id) {
+        try {
+            user = await UserRepository.findById(id)
+            return packUser(user)
+        } catch (e) {}
+    }
 
-  if (email) {
-    user = await UserRepository.whereEqualTo('email', email).findOne();
-  }
+    if (email) {
+        user = await UserRepository.whereEqualTo('email', email).findOne()
+    }
 
-  if (!user) {
-    throw new NotFoundError();
-  }
+    if (!user) {
+        throw new NotFoundError()
+    }
 
-  return packUser(user);
-};
+    return packUser(user)
+}
 
 const getAllUsers = async (): Promise<Schema.User[]> => {
     return packUsers(await UserRepository.find())
@@ -50,7 +53,7 @@ const getUsersPagination = async (
     // This is dependent that the user has a display name, first name, last name, or email
     // For testing purposes this may not always be the case.
     const finalUsers = sortedUsers.filter(
-        (user: any) => 
+        (user: any) =>
             user.displayName
                 .trim()
                 .toLowerCase()
@@ -74,9 +77,9 @@ const getUsersPagination = async (
 const sortUsersList = (users: any, key: string, isDescending: boolean) => {
     // This is sorting on a key. The key may not exist for all users. (Though it should)
     const sortedUsers = users.sort((user1: any, user2: any) => {
-            user1[key].trim().localeCompare(user2[key].trim(), undefined, {
-                sensitivity: 'accent',
-            })
+        user1[key].trim().localeCompare(user2[key].trim(), undefined, {
+            sensitivity: 'accent',
+        })
     })
     if (isDescending) {
         return sortedUsers.reverse()
@@ -175,22 +178,19 @@ const addUser = async (
     return await getUser(newUser.id)
 }
 
-const deleteUser = async (
-    id: string
-) => {
+const deleteUser = async (id: string) => {
     return UserRepository.runTransaction(async (tran) => {
         const user = await tran.findById(id)
 
         if (user === null) {
             throw new NotFoundError()
         }
-        console.log("deleting user id: ", id, " from db")
+        console.log('deleting user id: ', id, ' from db')
         await tran.delete(id)
 
         return user
     })
 }
-
 
 const editUser = async (
     id: string,
@@ -224,4 +224,11 @@ const editUser = async (
     })
 }
 
-export { getUser, getAllUsers, getUsersPagination, addUser, editUser, deleteUser}
+export {
+    getUser,
+    getAllUsers,
+    getUsersPagination,
+    addUser,
+    editUser,
+    deleteUser,
+}

@@ -43,9 +43,6 @@ export const deleteUsersMutation = async (
     // TODO: Implement this function
     // Start with get user from email query
 
-
-
-
     throw new Error('Not finished')
 
     // const mutation = await apollo.mutate({
@@ -58,8 +55,7 @@ export const deleteUsersMutation = async (
     // })
     // console.log(mutation.data)
     return true
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e)
     return false
   }
@@ -71,49 +67,45 @@ export const downloadUsersCsvQuery = async (
 ): Promise<boolean> => {
   try {
     const query = await apollo.query({
-      query: GetUserListQuery,
+      query: GetUserListQuery
       // Add any necessary variables for the query
     })
 
-    const userList:User[] = query.data.users.users; // Assuming the response contains an array of user objects
+    const userList: User[] = query.data.users.users // Assuming the response contains an array of user objects
     //console.log(userList) // debug print
 
     // TODO: Test edge case (no users in the database)
-    
+
     // Generate column headers from the User type properties
     const headers = Object.keys(userList[0])
-      .filter(key => key !== '__typename')
-      .join(',');
+      .filter((key) => key !== '__typename')
+      .join(',')
 
     // Convert user data to CSV format
     let csvContent = `${headers}\n${userList
       .map((user: User) => {
-        const values = Object.values(user);
-        return values
-          .filter((_, index) => Object.keys(user)[index] !== '__typename')
-          .join(',');
+        const values = Object.values(user)
+        return values.filter((_, index) => Object.keys(user)[index] !== '__typename').join(',')
       })
-      .join('\n')}`;
-
+      .join('\n')}`
 
     // Create a Blob with the CSV content
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
 
     // Create a temporary link element
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'users.csv';
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = 'users.csv'
 
     // Programmatically click the link to trigger the download
-    link.click();
+    link.click()
 
     // Clean up the temporary link
-    URL.revokeObjectURL(link.href);
-    link.remove();
-    return true;
-
+    URL.revokeObjectURL(link.href)
+    link.remove()
+    return true
   } catch (error) {
-    console.error('Failed to download users as CSV:', error);
-    return false;
+    console.error('Failed to download users as CSV:', error)
+    return false
   }
-};
+}

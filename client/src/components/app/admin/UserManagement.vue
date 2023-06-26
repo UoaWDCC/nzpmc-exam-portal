@@ -19,6 +19,7 @@
   </v-container>
   <v-container class="container delete-users">
     <h2>Deleting Users</h2>
+    <v-text-field label="Enter Emails"></v-text-field>
     <v-btn @click="deleteUsers()">Delete users with emails</v-btn>
     <v-divider />
   </v-container>
@@ -39,7 +40,7 @@ import { parseCSVPapaparse } from '@/utils/csv_parser'
 import { parse } from 'papaparse'
 
 export type User = {
-  id: int
+  id: string
   displayName: string
   email: string
   photoURL: string
@@ -58,7 +59,8 @@ export default {
 
   data() {
     return {
-      currentCsv: File
+      currentCsv: File,
+      currentEmails: []
     }
   },
 
