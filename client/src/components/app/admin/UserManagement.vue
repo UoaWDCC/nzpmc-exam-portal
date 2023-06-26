@@ -23,7 +23,11 @@
   </v-container>
   <v-container class="container delete-users">
     <h2>Deleting Users</h2>
-    <v-text-field label="Enter Emails" ref="emailsToDelete" @input="handleEmailInputChange">
+    <v-text-field
+      label="Enter Emails (separate with ',')"
+      ref="emailsToDelete"
+      @input="handleEmailInputChange"
+    >
       <template v-slot:prepend-inner>
         <div v-for="(email, index) in currentEmails" :key="index">
           <v-chip label closable @click:close="removeEmailFromList(index)" class="ma-1">{{

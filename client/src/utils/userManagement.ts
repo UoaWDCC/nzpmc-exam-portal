@@ -49,18 +49,17 @@ export const deleteUsersMutation = async (
         userEmail: email
       }
     })
-    console.log(query.data)
-
-    // const mutation = await apollo.mutate({
-    //   mutation: DeleteUserMutation,
-    //   variables: {
-    //     input: {
-    //       id: id
-    //     }
-    //   }
-    // })
-    // console.log(mutation.data)
-    return true
+    const userId = query.data.user.id
+    console.log(`id for ${email}: ${userId}`)
+    const mutation = await apollo.mutate({
+      mutation: DeleteUserMutation,
+      variables: {
+        deleteUserId: userId
+      }
+    })
+    const deletedId = mutation.data.deleteUser.id
+    console.log(deletedId)
+    return deletedId === userId
   } catch (e) {
     console.error(e)
     return false
