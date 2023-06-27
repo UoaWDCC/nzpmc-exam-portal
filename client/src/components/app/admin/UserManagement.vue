@@ -67,6 +67,7 @@ import {
   successMessage
 } from '../../../utils/userManagement'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
+import type { Student } from '@/utils/csv_parser'
 import { parse } from 'papaparse'
 
 export type User = {
@@ -134,55 +135,88 @@ export default {
       }
     },
     async addUsersWithCsv() {
-      //TODO refactor out
-      //TODO debounce
       if (this.currentCsv.size > 0) {
-        const students = await parseCSVPapaparse(this.currentCsv)
-        students.map(async (student) => {
-          //TODO fix "surname"
-          const success = await addUserMutation(
-            this.$apollo,
-            student.email,
-            student.firstName,
-            student.surname
-          )
-          console.log(`added ${student.firstName}: ${success}`)
-        })
+        try {
+          const students: Student[] = await parseCSVPapaparse(this.currentCsv);
+
+          const addUserPromises = students.map(async (student) => {
+            // TODO: fix "surname"
+            const success = await addUserMutation(
+              this.$apollo,
+              student.email,
+              student.firstName,
+              student.surname
+            );
+            console.log(`added ${student.firstName}: ${success}`);
+            return success;
+          });
+
+          const results = await Promise.all(addUserPromises);
+          const successfulAdditions = results.filter((success) => success).length;
+
+          alert(`Successfully added ${successfulAdditions} / ${students.length} members`);
+        } catch (error) {
+          console.log(error);
+          console.log('Failed to add users');
+        }
       } else {
-        alert('no csv uploaded')
+        alert('No CSV uploaded');
       }
-      //TODO add the users
-      /*
-      const { email, firstName, lastName, photoURL, yearLevel } = currentUser
-      const success = addUserMutation(this.$apollo, email, firstName, lastName, photoURL, yearLevel)
-	  */
     },
-    parseCSV(csvData) {
+
+    parseCSV(csvData: any) {
       const parsedData = parse(csvData, { header: true }).data
       console.log(parsedData)
       // Do something with the parsed data
     },
     // TODO: add delete users by emails
     async deleteUsersUsingInput() {
-      let successfullyDeleted: string[] = []
+      let successfullyDeleted: string[] = [];
+
       try {
-        this.currentEmails.map(async (email: string) => {
-          const success = await deleteUsersMutation(this.$apollo, email)
+        const deletionPromises = this.currentEmails.map(async (email: string) => {
+          const success = await deleteUsersMutation(this.$apollo, email);
+          console.log(`Delete success: ${success} for ${email}`);
+
           if (success) {
-            successfullyDeleted.push(email)
-            this.deleteMessage = successMessage(successfullyDeleted)
+            successfullyDeleted.push(email);
           }
-          console.log(`Delete success: ${success} for ${email}`)
-        })
+        });
+
+        await Promise.all(deletionPromises);
+
+        this.deleteMessage = successMessage(successfullyDeleted);
+        alert(`Successfully deleted ${successfullyDeleted.length} / ${this.currentEmails.length} users`);
       } catch (error) {
-        console.log(error)
-        console.log('failed to delete users')
+        console.log(error);
+        console.log('Failed to delete users');
       } finally {
+        this.currentEmails = [];
+        successfullyDeleted = [];
       }
     },
     async deleteUsersUsingCSV() {
-      //TODO
-      throw new Error('Not Implemented')
+      if (this.currentCsv.size > 0) {
+        try {
+          const students: Student[] = await parseCSVPapaparse(this.currentCsv);
+
+          const deletionPromises = students.map(async (student) => {
+            const success = await deleteUsersMutation(this.$apollo, student.email);
+            console.log(`Delete success: ${success} for ${student.email}`);
+            return success;
+          });
+
+          const deletionResults = await Promise.all(deletionPromises);
+          const successfulDeletions = deletionResults.filter((success) => success).length;
+
+          alert(`Successfully deleted ${successfulDeletions} / ${students.length} users`);
+        } catch (error) {
+          console.log(error);
+          console.log('Failed to delete users');
+        }
+      } else {
+        alert('No CSV uploaded');
+      }
     },
 
     async downloadUsersCsv() {

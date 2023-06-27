@@ -48,8 +48,7 @@ export const deleteUsersMutation = async (
         }
       })
       const deletedEmail = mutation.data.deleteUser.email
-      console.log(deletedEmail)
-      return deletedEmail === email
+      return deletedEmail === email.toLowerCase()
     } 
     catch (e) {
       console.error(e)

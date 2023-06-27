@@ -29,7 +29,7 @@ export type Student = {
 }
 
 export async function parseCSVPapaparse(file) {
-  return new Promise((resolve, reject) => {
+  return new Promise<Student[]>((resolve, reject) => {
     const students: Student[] = []
 
     const reader = new FileReader()
