@@ -13,7 +13,8 @@ export const addUserMutation = async (
   firstName?: string,
   lastName?: string,
   photoURL?: string,
-  yearLevel?: string
+  yearLevel?: string,
+  role?: string
 ): Promise<boolean> => {
   try {
     const mutation = await apollo.mutate({
@@ -24,7 +25,8 @@ export const addUserMutation = async (
           firstName: firstName,
           lastName: lastName,
           photoURL: photoURL,
-          yearLevel: yearLevel
+          yearLevel: yearLevel?.toString(),
+          role: role
         }
       }
     })

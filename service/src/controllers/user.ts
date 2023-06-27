@@ -196,6 +196,9 @@ const deleteUser = async (id?: string | null, email?: string | null) => {
             if (user === null) {
                 throw new NotFoundError()
             }
+            if (user.role === 'admin') {
+                throw new Error(`Cannot delete admin user: ${user.email}`)
+            }
             console.log('deleting user email: ', email, ' from db')
             await tran.delete(user.id)
             await admin.auth().deleteUser(user.id)

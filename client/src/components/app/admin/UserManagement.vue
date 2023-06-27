@@ -141,11 +141,15 @@ export default {
 
           const addUserPromises = students.map(async (student) => {
             // TODO: fix "surname"
+
             const success = await addUserMutation(
               this.$apollo,
               student.email,
               student.firstName,
-              student.surname
+              student.surname,
+              null,
+              student.yearLevel,
+              'student'
             );
             console.log(`added ${student.firstName}: ${success}`);
             return success;
