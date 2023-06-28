@@ -8,9 +8,36 @@
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+.popup-dialog {
+  width: 600px;
+  max-width: 100%;
+}
+.popup-headline {
+  text-align: center;
+}
+.popup-text {
+  font-size: 1.5rem;
+  text-align: center;
+}
+.popup-button {
+  margin: 0 auto;
+  display: block;
+}
 </style>
 
 <template>
+  <v-dialog v-model="popUpDialog" class="popup-dialog">
+    <v-card>
+      <v-card-title class="popup-headline">NZPMC Admin</v-card-title>
+      <v-card-text class="popup-text">
+        {{popUpMessage}}
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="popUpDialog = false" class = "popup-button">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <v-container class="container upload-csv">
     <h2>Upload CSV</h2>
     <v-file-input
@@ -83,7 +110,13 @@ export type User = {
 export interface IData {
   currentCsv: any
   currentEmails: string[]
-  deleteMessage: string
+  deleteMessage: string,
+  popUpDialog: boolean,
+  popUpMessage: string,
+  successAction: string,
+  successfulUsers: number,
+  students: Student[]
+  totalUsers: number
 }
 
 export default {
@@ -97,7 +130,13 @@ export default {
     return {
       currentCsv: File,
       currentEmails: [],
-      deleteMessage: ''
+      deleteMessage: '',
+      popUpDialog: false,
+      popUpMessage: '',
+      successAction: '',
+      successfulUsers: 0,
+      students: [] as Student[],
+      totalUsers: 0
     }
   },
 
@@ -137,9 +176,9 @@ export default {
     async addUsersWithCsv() {
       if (this.currentCsv.size > 0) {
         try {
-          const students: Student[] = await parseCSVPapaparse(this.currentCsv);
+          this.students = await parseCSVPapaparse(this.currentCsv);
 
-          const addUserPromises = students.map(async (student) => {
+          const addUserPromises = this.students.map(async (student) => {
             // TODO: fix "surname"
 
             const success = await addUserMutation(
@@ -156,15 +195,22 @@ export default {
           });
 
           const results = await Promise.all(addUserPromises);
-          const successfulAdditions = results.filter((success) => success).length;
-
-          alert(`Successfully added ${successfulAdditions} / ${students.length} members`);
+          this.successfulUsers = results.filter((success) => success).length;
+          this.totalUsers = this.students.length
+          this.successAction = 'added';
+          if (this.successfulUsers === 0) {
+            this.popUpMessage = 'No users added';
+          } else {
+            this.popUpMessage = `Successfully ${this.successAction} ${this.successfulUsers} / ${this.totalUsers} users`
+          }
+          this.popUpDialog = true; // Show the success dialog
         } catch (error) {
           console.log(error);
           console.log('Failed to add users');
         }
       } else {
-        alert('No CSV uploaded');
+        this.popUpMessage = 'No CSV file selected';
+        this.popUpDialog = true;
       }
     },
 
@@ -190,7 +236,17 @@ export default {
         await Promise.all(deletionPromises);
 
         this.deleteMessage = successMessage(successfullyDeleted);
-        alert(`Successfully deleted ${successfullyDeleted.length} / ${this.currentEmails.length} users`);
+        this.successfulUsers = successfullyDeleted.length;
+        this.totalUsers = this.currentEmails.length;
+        this.successAction = 'deleted';
+        if (this.successfulUsers === 0) {
+          this.popUpMessage = `No users were ${this.successAction}`
+        } else if (this.successfulUsers === this.totalUsers) {
+          this.popUpMessage = `Successfully ${this.successAction} all ${this.successfulUsers} users`
+        } else if (this.successfulUsers < this.totalUsers) {
+          this.popUpMessage = `Successfully ${this.successAction} ${this.successfulUsers} / ${this.totalUsers} users`
+        }
+        this.popUpDialog = true; // Show the success dialog
       } catch (error) {
         console.log(error);
         console.log('Failed to delete users');
@@ -202,24 +258,34 @@ export default {
     async deleteUsersUsingCSV() {
       if (this.currentCsv.size > 0) {
         try {
-          const students: Student[] = await parseCSVPapaparse(this.currentCsv);
+          this.students = await parseCSVPapaparse(this.currentCsv);
 
-          const deletionPromises = students.map(async (student) => {
+          const deletionPromises = this.students.map(async (student) => {
             const success = await deleteUsersMutation(this.$apollo, student.email);
             console.log(`Delete success: ${success} for ${student.email}`);
             return success;
           });
 
           const deletionResults = await Promise.all(deletionPromises);
-          const successfulDeletions = deletionResults.filter((success) => success).length;
 
-          alert(`Successfully deleted ${successfulDeletions} / ${students.length} users`);
+          this.successAction = 'deleted';
+          this.successfulUsers =  deletionResults.filter((success) => success).length;
+          this.totalUsers = this.students.length;
+          if (this.successfulUsers === 0) {
+            this.popUpMessage = `No users were ${this.successAction}`
+          } else if (this.successfulUsers === this.totalUsers) {
+            this.popUpMessage = `Successfully ${this.successAction} all ${this.successfulUsers} users`
+          } else if (this.successfulUsers < this.totalUsers) {
+            this.popUpMessage = `Successfully ${this.successAction} ${this.successfulUsers} / ${this.totalUsers} users`
+          }
+          this.popUpDialog = true; // Show the success dialog
         } catch (error) {
           console.log(error);
           console.log('Failed to delete users');
         }
       } else {
-        alert('No CSV uploaded');
+        this.popUpMessage = 'No CSV file selected';
+        this.popUpDialog = true;
       }
     },
 
@@ -227,9 +293,13 @@ export default {
       try {
         const data = downloadUsersCsvQuery(this.$apollo)
         console.log('downloaded users csv')
+        this.popUpMessage = 'Downloaded users csv'
+        this.popUpDialog = true
       } catch (error) {
         console.log(error)
         console.log('failed to download users csv')
+        this.popUpMessage = 'Failed to download users csv'
+        this.popUpDialog = true
       }
     }
   }
