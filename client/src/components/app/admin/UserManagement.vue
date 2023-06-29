@@ -31,7 +31,20 @@
     <v-card>
       <v-card-title class="popup-headline">NZPMC Admin</v-card-title>
       <v-card-text class="popup-text">
-        {{popUpMessage}}
+        <div class="custom-progress">
+          <v-progress-circular
+            v-if="loading"
+            :size="100"
+            :width="15"
+            color="primary"
+            indeterminate
+          ></v-progress-circular>
+        <!-- <temp> -->
+        
+        <template v-else>
+          {{popUpMessage}}
+        </template>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-btn color="primary" @click="popUpDialog = false" class = "popup-button">Close</v-btn>
@@ -111,8 +124,10 @@ export interface IData {
   currentCsv: any
   currentEmails: string[]
   deleteMessage: string,
+  loading: boolean,
   popUpDialog: boolean,
   popUpMessage: string,
+  progress: number,
   successAction: string,
   successfulUsers: number,
   students: Student[]
@@ -131,8 +146,10 @@ export default {
       currentCsv: File,
       currentEmails: [],
       deleteMessage: '',
+      loading: false,
       popUpDialog: false,
       popUpMessage: '',
+      progress: 0,
       successAction: '',
       successfulUsers: 0,
       students: [] as Student[],
@@ -176,8 +193,11 @@ export default {
     async addUsersWithCsv() {
       if (this.currentCsv.size > 0) {
         try {
-          this.students = await parseCSVPapaparse(this.currentCsv);
+          this.loading = true; // Show the loading bar
+          this.popUpDialog = true;
 
+          this.students = await parseCSVPapaparse(this.currentCsv);
+          let addedUsers = 0
           const addUserPromises = this.students.map(async (student) => {
             // TODO: fix "surname"
 
@@ -191,6 +211,13 @@ export default {
               'student'
             );
             console.log(`added ${student.firstName}: ${success}`);
+            if (success) {
+              addedUsers++;
+              this.progress = (addedUsers / this.students.length) * 100
+              
+            }
+            await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay of 1 second
+
             return success;
           });
 
@@ -203,10 +230,16 @@ export default {
           } else {
             this.popUpMessage = `Successfully ${this.successAction} ${this.successfulUsers} / ${this.totalUsers} users`
           }
+          console.log(this.progress)
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           this.popUpDialog = true; // Show the success dialog
         } catch (error) {
           console.log(error);
           console.log('Failed to add users');
+        }
+        finally {
+          this.loading = false; // Hide the loading bar
+          this.progress = 0;
         }
       } else {
         this.popUpMessage = 'No CSV file selected';
@@ -224,7 +257,9 @@ export default {
       let successfullyDeleted: string[] = [];
 
       try {
-        const deletionPromises = this.currentEmails.map(async (email: string) => {
+          this.loading = true; // Show the loading bar
+          this.popUpDialog = true;
+          const deletionPromises = this.currentEmails.map(async (email: string) => {
           const success = await deleteUsersMutation(this.$apollo, email);
           console.log(`Delete success: ${success} for ${email}`);
 
@@ -246,18 +281,20 @@ export default {
         } else if (this.successfulUsers < this.totalUsers) {
           this.popUpMessage = `Successfully ${this.successAction} ${this.successfulUsers} / ${this.totalUsers} users`
         }
-        this.popUpDialog = true; // Show the success dialog
       } catch (error) {
         console.log(error);
         console.log('Failed to delete users');
       } finally {
         this.currentEmails = [];
         successfullyDeleted = [];
+        this.loading = false; // Hide the loading bar
       }
     },
     async deleteUsersUsingCSV() {
       if (this.currentCsv.size > 0) {
         try {
+          this.loading = true; // Show the loading bar
+          this.popUpDialog = true; // Show the success dialog
           this.students = await parseCSVPapaparse(this.currentCsv);
 
           const deletionPromises = this.students.map(async (student) => {
@@ -278,10 +315,12 @@ export default {
           } else if (this.successfulUsers < this.totalUsers) {
             this.popUpMessage = `Successfully ${this.successAction} ${this.successfulUsers} / ${this.totalUsers} users`
           }
-          this.popUpDialog = true; // Show the success dialog
         } catch (error) {
           console.log(error);
           console.log('Failed to delete users');
+        }
+        finally {
+          this.loading = false; // Hide the loading bar
         }
       } else {
         this.popUpMessage = 'No CSV file selected';
