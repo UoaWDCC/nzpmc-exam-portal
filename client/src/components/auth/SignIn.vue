@@ -29,10 +29,10 @@
                 Forgot password?
             </v-btn>
 
-            <v-btn color="primary" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
+            <v-btn id="sign-in-button" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
                 <v-icon left dark>mdi-login</v-icon>
 
-                Sign In
+                <span>Sign In</span>
             </v-btn>
         </div>
     </v-form>
@@ -122,3 +122,16 @@ export default {
     },
 }
 </script>
+
+<style scoped lang="scss">
+@import '@/styles/globals.scss';
+
+#sign-in-button {
+    background-color: $secondary;
+}
+
+#sign-in-button span {
+    color: $white;
+}
+
+</style>

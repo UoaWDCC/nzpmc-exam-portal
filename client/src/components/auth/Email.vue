@@ -1,6 +1,6 @@
 <template>
     <v-form ref="form" v-model="valid" :disabled="loading" class="auth-email" @submit="nextPanel">
-        <AuthHeader title="Authenticate" text="Please sign in or sign up to continue." />
+        <AuthHeader title="Authenticate" text="Enter your email to sign in or sign up" />
 
         <div class="pb-4 px-4">
             <v-text-field v-model="currentEmail" label="Email" placeholder="john.smith@example.com" type="email"
@@ -21,8 +21,8 @@
         </v-expand-transition>
 
         <div class="d-flex justify-end pb-4 px-4">
-            <v-btn color="primary" type="submit" :disabled="!valid || loading" :loading="loading" text>
-                Continue
+            <v-btn id="continue-button" type="submit" :disabled="!valid || loading" :loading="loading">
+                <span>Continue</span>
 
                 <v-icon right dark>mdi-arrow-right</v-icon>
             </v-btn>
@@ -121,3 +121,16 @@ export default {
     },
 }
 </script>
+
+<style scoped lang="scss">
+@import '@/styles/globals.scss';
+
+#continue-button {
+    background-color: $secondary;
+}
+
+#continue-button span {
+    color: $white;
+}
+
+</style>
