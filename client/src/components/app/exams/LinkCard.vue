@@ -1,3 +1,14 @@
+<style scoped lang="scss">
+.container {
+	background-color: $primary;
+	color: white;
+	padding: 1rem;
+	display: flex;
+}
+.container:hover{
+	opacity: 0.96;
+}
+</style>
 <template>
     <router-link
         class="app-exams-link-card d-block mb-3 text-decoration-none"
@@ -5,15 +16,13 @@
     >
         <v-sheet
             v-ripple
-            color="white"
-            class="d-flex pa-4"
+            class="container"
             elevation="1"
-            rounded
         >
             <div class="flex-grow-1">
-                <h3 class="text-h6">{{ title }}</h3>
+                <h3 >{{ title }}</h3>
 
-                <span class="text--secondary text-subtitle-2">
+                <span >
                     {{ description }} &middot;
                     {{ generateDurationString(duration) }} &middot;
                     {{ generateDateString(startTime) }} until
@@ -26,7 +35,7 @@
     </router-link>
 </template>
 
-<script>
+<script lang="ts">
 import { generateDateString, generateDurationString } from '@/helpers'
 
 export default {

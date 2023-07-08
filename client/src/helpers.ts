@@ -2,7 +2,7 @@
 export const TOOLBAR_HEIGHT = 48
 
 // Convert an unparsed date string into a pretty one
-export function generateDateString(unparsedDate) {
+export function generateDateString(unparsedDate: string) {
     const dateObj = new Date(unparsedDate)
     const time = dateObj.toLocaleTimeString('en-NZ', {
         hour: 'numeric',
@@ -14,7 +14,7 @@ export function generateDateString(unparsedDate) {
 }
 
 // Convert seconds to a human readable string
-export function generateDurationString(seconds) {
+export function generateDurationString(seconds: number) {
     const parts = []
 
     const hours = Math.floor(seconds / 3600)

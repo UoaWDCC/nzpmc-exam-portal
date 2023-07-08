@@ -2,6 +2,12 @@ import admin, { auth } from 'firebase-admin'
 import * as fireorm from 'fireorm'
 import axios from 'axios'
 import { ExpressContext } from 'apollo-server-express'
+import {
+    isAdminInFirestore,
+    addAdminClaim,
+    removeAdminClaim,
+    generateNewToken,
+} from './auth'
 
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
@@ -20,19 +26,33 @@ const authCheck = async ({ req }: ExpressContext): Promise<UserContext> => {
     if (!token) return {}
 
     try {
+        let decodedIdToken = await admin.auth().verifyIdToken(token)
+        const uid = decodedIdToken.uid
+        const user = await admin.auth().getUser(uid)
+        const hasAdminClaim = user.customClaims?.admin
+        const isAdmin = await isAdminInFirestore(uid)
+
+        // hasAdminClaim XOR isAdmin - only create new tokens if claims don't match up
+        if ((hasAdminClaim && !isAdmin) || (!hasAdminClaim && isAdmin)) {
+            if (isAdmin) {
+                await addAdminClaim(uid)
+            } else {
+                await removeAdminClaim(uid)
+            }
+
+            const newToken = await generateNewToken(uid)
+
+            decodedIdToken = await admin.auth().verifyIdToken(newToken)
+        }
+
         return {
-            user: await admin.auth().verifyIdToken(token),
+            user: decodedIdToken,
         }
     } catch (e) {
         // Invalid token
         console.log(e)
         return {}
     }
-}
-
-// Only applies after refreshing the token
-const addAdminClaim = async (uid: string): Promise<void> => {
-    admin.auth().setCustomUserClaims(uid, { admin: true })
 }
 
 const addFirebaseUser = async (

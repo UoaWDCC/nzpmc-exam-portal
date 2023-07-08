@@ -5,8 +5,6 @@
         </v-alert>
 
         <div v-if="currentExams.length" class="my-6">
-            <h2 class="mb-6 text-h5">Current Exams</h2>
-
             <AppExamsLinkCard
                 v-for="exam in currentExams"
                 :key="exam.id"
@@ -63,9 +61,11 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import AppExamsLinkCard from './LinkCard.vue'
 import AppExamsInfoCard from './InfoCard.vue'
+import type { UserQuiz } from '@nzpmc-exam-portal/common'
+import type { PropType } from 'vue'
 
 export default {
     name: 'AppExamsList',
@@ -75,9 +75,9 @@ export default {
     props: {
         // An array of objects, each representing a quiz the user is enrolled in
         userQuizzes: {
-            type: Array,
+            type: Object as PropType<UserQuiz[]>,
             required: true,
-            validator(v) {
+            validator(v: UserQuiz[]) {
                 return v.every(
                     (quiz) =>
                         'description' in quiz &&

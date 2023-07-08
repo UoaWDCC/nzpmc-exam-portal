@@ -49,10 +49,16 @@
     </v-form>
 </template>
 
-<script>
+<script lang="ts">
 import { auth } from '@/firebase'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import AuthHeader from './Header.vue'
+
+export interface IData {
+    loading: boolean
+    error: string | null
+    success: string | null
+}
 
 export default {
     name: 'AuthForgotPassword',
@@ -70,7 +76,7 @@ export default {
         },
     },
 
-    data() {
+    data(): IData {
         return {
             loading: false,
             error: null,
@@ -80,7 +86,7 @@ export default {
 
     methods: {
         // Submit the sign up form
-        forgotPassword(e) {
+        forgotPassword(e: Event) {
             e.preventDefault()
 
             // Determine if account exists
@@ -100,7 +106,7 @@ export default {
                                 'No account with this email address exists.'
                             break
                         default:
-                            this.error = this.$errorMessage
+                            this.error = "this is an error message"
                     }
                 })
                 .finally(() => {
