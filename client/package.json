@@ -10,9 +10,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/",
-    "csv-parse": "ts-node src/utils/csv_parser_test_script.ts",
-    "csv-write": "ts-node src/utils/csv_writer_test_script.ts"
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
