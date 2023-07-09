@@ -3,6 +3,7 @@ import logoSvg from '@/assets/logo.svg'
 </script>
 
 <template>
+  <div id="background">
   <MobilePlaceHolder />
   <div class="hide-for-mobile">
     <div class="align-center auth background--blue d-flex justify-center primary">
@@ -39,6 +40,7 @@ import logoSvg from '@/assets/logo.svg'
         </div>
       </v-sheet>
     </div>
+  </div>
   </div>
 </template>
 
@@ -100,3 +102,22 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped lang="scss">
+@import '@/styles/globals.scss';
+
+#background {
+    background-image: url(@/assets/background_unsplash_1.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+</style>
+
