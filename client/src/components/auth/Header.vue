@@ -1,13 +1,12 @@
 <template>
-    <div class="align-center auth-header d-flex">
+    <div class="align-center auth-header d-flex header">
         <v-btn v-if="showBack" icon color="primary" class="ml-4" large @click="$emit('back')">
             <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
 
-        <div>
-            <v-card-title>{{ title }}</v-card-title>
-
-            <v-card-subtitle>{{ text }}</v-card-subtitle>
+        <div class="header__text">
+            <div class="header__text__title">{{ title }}</div>
+            <div class="header__text__caption">{{ text }}</div>
         </div>
     </div>
 </template>
@@ -23,3 +22,30 @@ export default {
     },
 }
 </script>
+
+<style scoped lang="scss">
+@import '@/styles/globals.scss';
+
+.header {
+    margin-top: 10px;
+    margin-bottom: 20px;
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        color: $primary;
+
+        &__title {
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+        &__caption {
+            font-size: 12px;
+        }
+    }
+}
+
+</style>
