@@ -22,8 +22,8 @@ import phone from '@/assets/phone.png'
 
 <style scoped lang="scss">
 .mobile {
-  height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  width: 100dvw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,8 +31,8 @@ import phone from '@/assets/phone.png'
   position: relative;
 
   &__overlay {
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh;
+    width: 100dvw;
     background-color: black;
     opacity: 0.4;
   }
@@ -49,8 +49,8 @@ import phone from '@/assets/phone.png'
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh;
+    width: 100dvw;
     z-index: 1;
     position: absolute;
     color: $white;
