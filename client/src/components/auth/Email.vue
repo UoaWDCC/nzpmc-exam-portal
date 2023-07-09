@@ -22,7 +22,7 @@
 
         <div class="d-flex justify-end pb-4 px-4">
             <v-btn id="continue-button" type="submit" :disabled="!valid || loading" :loading="loading">
-                <span>C o n t i n u e →</span>
+                <span>Continue</span>
 
                 <v-icon right dark>mdi-arrow-right</v-icon>
             </v-btn>
@@ -128,8 +128,9 @@ export default {
 #continue-button {
     background-color: $secondary;
     width: max(25vw, 20vh);
-    height: 7vh;
-    margin: 3vh 10 3vh 0;
+    height: 6vh;
+    border-radius: 18px;
+    letter-spacing: 6px;
 }
 
 #continue-button span {
