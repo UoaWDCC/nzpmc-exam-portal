@@ -150,4 +150,10 @@ export default {
   color: $white;
   font-size: medium;
 }
+
+// .v-text-field {
+//     background-color: $white;
+//     border: 2px solid red;
+//     border-radius: 15px;
+// }
 </style>

@@ -1,12 +1,11 @@
 <template>
     <v-form v-model="valid" class="auth-sign-in" :disabled="loading || !!success" @submit="signIn">
-        <AuthHeader title="Sign In" :text="`Hello, ${email}.`" show-back @back="$emit('go', 'Email')" />
+        <!-- TODO: style showing back -->
+        <AuthHeader title="Sign In" :text="`Hello, ${email}.`" @back="$emit('go', 'Email')" />
 
-        <div class="pb-4 px-4">
-            <v-text-field label="Email" :value="email" type="email" autocomplete="username" hide-details="auto" class="mb-4"
-                disabled></v-text-field>
-
-            <v-text-field v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        <div class="pb-4 px-4 fields">
+            <!-- TODO: toggle pwd visibility ( :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'") -->
+            <v-text-field v-model="password"
                 :type="showPassword ? 'text' : 'password'" autocomplete="current-password" label="Password"
                 :rules="[(v) => !!v || 'This is required']" required autofocus hide-details="auto"
                 @click:append="showPassword = !showPassword"></v-text-field>
@@ -18,11 +17,11 @@
             </v-alert>
         </v-expand-transition>
 
-        <v-expand-transition>
+        <!-- <v-expand-transition>
             <v-alert v-if="success" type="success" class="mx-4">
                 {{ success }}
             </v-alert>
-        </v-expand-transition>
+        </v-expand-transition> -->
 
         <div class="align-center d-flex justify-space-between pb-4 px-4">
             <v-btn small :disabled="!!success" @click="$emit('go', 'ForgotPassword')">
@@ -30,7 +29,7 @@
             </v-btn>
 
             <v-btn id="sign-in-button" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
-                <v-icon left dark>mdi-login</v-icon>
+                <!-- <v-icon left dark>mdi-login</v-icon> -->
 
                 <span>Sign In</span>
             </v-btn>
@@ -134,4 +133,14 @@ export default {
     color: $white;
 }
 
+.fields {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+
+    > div {
+        width: 100%;
+    }
+}
 </style>
