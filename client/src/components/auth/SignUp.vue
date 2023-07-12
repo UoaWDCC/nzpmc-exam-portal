@@ -67,14 +67,14 @@
 
         <div class="d-flex justify-end pb-4 px-4">
             <v-btn
-                color="primary"
+                color="secondary"  
                 type="submit"
                 :disabled="!valid || loading || !!success"
                 :loading="loading"
             >
                 <v-icon left dark>mdi-account-plus</v-icon>
 
-                Sign Up
+                <span class="text-white">Sign Up</span>
             </v-btn>
         </div>
     </v-form>
