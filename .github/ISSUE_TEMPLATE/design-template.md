@@ -16,7 +16,7 @@ assignees: ''
 
 ### Definition of Done:
 - [ ] AC met
-- [ ] Approved by NZPMC marketing team via PM
+- [ ] Approved by PM
 - [ ] Issue closed
 
 ### Notes

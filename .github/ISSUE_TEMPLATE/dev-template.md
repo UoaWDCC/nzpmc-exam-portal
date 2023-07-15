@@ -17,6 +17,6 @@ assignees: ''
 ### Definition of Done:
 - [ ] AC met
 - [ ] PR linked
-- [ ] Merged into main/feature branch
+- [ ] Branch merged
 
 ### Notes

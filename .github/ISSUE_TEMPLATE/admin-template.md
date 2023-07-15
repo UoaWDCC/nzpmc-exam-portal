@@ -16,7 +16,7 @@ assignees: ''
 
 ### Definition of Done:
 - [ ] AC met
-- [ ] Approved by PM and other applicable team members
+- [ ] Approved by PM
 - [ ] Issue closed
 
 ### Notes
