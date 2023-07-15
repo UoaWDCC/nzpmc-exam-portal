@@ -16,6 +16,7 @@ assignees: ''
 
 ### Definition of Done:
 - [ ] AC met
+- [ ] Designs on Figma
 - [ ] Approved by PM
 - [ ] Issue closed
 
