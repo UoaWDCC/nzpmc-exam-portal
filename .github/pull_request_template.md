@@ -2,7 +2,7 @@
 
 <!-- Explain why you're making the change you are, what is the problem this PR solves? -->
 
-Closes #[Replace with ticket number]
+Closes #ticket_num
 
 **Solution**
 
@@ -12,10 +12,10 @@ Closes #[Replace with ticket number]
 <!-- **Discussion** -->
 <!-- At times we'll have outstanding questions or particular parts of the PR we want looked at. If so, uncomment these lines and indicate where we should start the conversation. -->
 
-**Risk**
+**Risks**
 
-<!-- Explain the risks with merging this PR -->
+<!-- Explain the risks with merging this PR. -->
 
 **Reviewers**
 
-<!-- Add a list of random people -->
+<!-- Add a list of random people and also add them at the top right. -->
