@@ -31,9 +31,9 @@ const userQuery: Resolver<
     ResolverTypeWrapper<User>,
     unknown,
     UserContext,
-    RequireFields<QueryUserArgs, 'userID'>
-> = async (_parents, args, _context) => {
-    return await getUser(args.userID)
+    Partial<QueryUserArgs>
+> = async (_parents, {userID, userEmail}, _context) => {
+    return await getUser(userID, userEmail)
 }
 const usersQuery: Resolver<
     ResolverTypeWrapper<UserPage>,

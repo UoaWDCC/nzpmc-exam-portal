@@ -7,7 +7,7 @@
       <div v-else>
         <AppTopbar />
         <!--Hack solution for broken exam page -->
-        <v-main style="padding-left: 0; padding-top: 33px; height: 100vh; overflow: hidden">
+        <v-main style="padding-left: 0; padding-top: 33px; height: 100vh; overflow: auto">
           <router-view />
         </v-main>
       </div>
@@ -44,8 +44,8 @@ export default {
       return this.userLoading
         ? 'Loading authentication service...'
         : this.user === null
-          ? 'Redirecting to the authentication page...'
-          : null
+        ? 'Redirecting to the authentication page...'
+        : null
     }
   },
 
