@@ -25,7 +25,7 @@ type Mutation {
 
     addUserQuiz(input: AddUserQuizInput!): UserQuiz
 
-	enrolUsersInQuiz(input: EnrolUsersInput!): [UserQuiz!]!
+	enrolUsersInQuiz(users:[UsersInput!]!, quizID:ID!): [UserQuiz!]!
     """
     User
     """

@@ -129,11 +129,6 @@ export type EditUserQuizQuestionInput = {
   userQuizID: Scalars['ID'];
 };
 
-export type EnrolUsersInput = {
-  quizID: Scalars['ID'];
-  users: Array<Scalars['ID']>;
-};
-
 export type Image = {
   __typename?: 'Image';
   imageURI: Scalars['String'];
@@ -269,7 +264,8 @@ export type MutationEditUserQuizQuestionArgs = {
 
 
 export type MutationEnrolUsersInQuizArgs = {
-  input: EnrolUsersInput;
+  quizID: Scalars['ID'];
+  users: Array<UsersInput>;
 };
 
 
@@ -376,6 +372,10 @@ export type QuizQuestionArgs = {
   id: Scalars['ID'];
 };
 
+export type QuizIdInput = {
+  quizID: Scalars['ID'];
+};
+
 export enum Sort {
   Asc = 'ASC',
   Desc = 'DESC'
@@ -439,6 +439,20 @@ export type UserQuizQuestion = {
   options: Array<Option>;
   question: Scalars['String'];
   userAnswer?: Maybe<Option>;
+};
+
+export type UsersInput = {
+  created?: InputMaybe<Scalars['DateTime']>;
+  displayName?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  emailVerified?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastName?: InputMaybe<Scalars['String']>;
+  modified?: InputMaybe<Scalars['DateTime']>;
+  photoURL?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['String']>;
+  yearLevel?: InputMaybe<Scalars['String']>;
 };
 
 export type UsersOrderByInput = {
@@ -534,7 +548,6 @@ export type ResolversTypes = {
   EditUserInput: EditUserInput;
   EditUserQuizInput: EditUserQuizInput;
   EditUserQuizQuestionInput: EditUserQuizQuestionInput;
-  EnrolUsersInput: EnrolUsersInput;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Image: ResolverTypeWrapper<Image>;
   ImageUploadInput: ImageUploadInput;
@@ -544,6 +557,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   Question: ResolverTypeWrapper<QuestionModel>;
   Quiz: ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'> & { question?: Maybe<ResolversTypes['Question']>, questions?: Maybe<Array<Maybe<ResolversTypes['Question']>>> }>;
+  QuizIDInput: QuizIdInput;
   Sort: Sort;
   String: ResolverTypeWrapper<Scalars['String']>;
   SubmissionInput: SubmissionInput;
@@ -552,6 +566,7 @@ export type ResolversTypes = {
   UserPage: ResolverTypeWrapper<UserPage>;
   UserQuiz: ResolverTypeWrapper<UserQuizModel>;
   UserQuizQuestion: ResolverTypeWrapper<UserQuizQuestionModel>;
+  UsersInput: UsersInput;
   UsersOrderByInput: UsersOrderByInput;
 };
 
@@ -573,7 +588,6 @@ export type ResolversParentTypes = {
   EditUserInput: EditUserInput;
   EditUserQuizInput: EditUserQuizInput;
   EditUserQuizQuestionInput: EditUserQuizQuestionInput;
-  EnrolUsersInput: EnrolUsersInput;
   ID: Scalars['ID'];
   Image: Image;
   ImageUploadInput: ImageUploadInput;
@@ -583,6 +597,7 @@ export type ResolversParentTypes = {
   Query: {};
   Question: QuestionModel;
   Quiz: Omit<Quiz, 'question' | 'questions'> & { question?: Maybe<ResolversParentTypes['Question']>, questions?: Maybe<Array<Maybe<ResolversParentTypes['Question']>>> };
+  QuizIDInput: QuizIdInput;
   String: Scalars['String'];
   SubmissionInput: SubmissionInput;
   Upload: Scalars['Upload'];
@@ -590,6 +605,7 @@ export type ResolversParentTypes = {
   UserPage: UserPage;
   UserQuiz: UserQuizModel;
   UserQuizQuestion: UserQuizQuestionModel;
+  UsersInput: UsersInput;
   UsersOrderByInput: UsersOrderByInput;
 };
 
@@ -621,7 +637,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationEditUserArgs, 'input'>>;
   editUserQuiz?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationEditUserQuizArgs, 'input'>>;
   editUserQuizQuestion?: Resolver<Maybe<ResolversTypes['UserQuizQuestion']>, ParentType, ContextType, RequireFields<MutationEditUserQuizQuestionArgs, 'input'>>;
-  enrolUsersInQuiz?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationEnrolUsersInQuizArgs, 'input'>>;
+  enrolUsersInQuiz?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationEnrolUsersInQuizArgs, 'quizID' | 'users'>>;
   image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationImageArgs, 'input'>>;
   submitUserQuizQuestions?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationSubmitUserQuizQuestionsArgs, 'input'>>;
   swapQuestion?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationSwapQuestionArgs, 'newID' | 'oldID' | 'quizID'>>;

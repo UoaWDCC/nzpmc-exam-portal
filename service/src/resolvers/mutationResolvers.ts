@@ -518,15 +518,18 @@ const enrolUsersInQuizMutation: Resolver<
     Array<ResolverTypeWrapper<UserQuizModel>>,
     unknown,
     UserContext,
-    RequireFields<MutationEnrolUsersInQuizArgs, 'input'>
-> = async (_parent, { input }, _context) => {
-    const { users, quizID } = input
-    const quiz = await getQuiz(quizID)
+    RequireFields<MutationEnrolUsersInQuizArgs, 'users' | 'quizID'>
+> = async (_parent, { users, quizID }, _context) => {
+    const quizToEnrol = quizID
+    console.log(users)
+    const quiz = await getQuiz(quizToEnrol)
 
     // Use `map` to create an array of Promises representing the addUserQuiz() operations
-    const addUserQuizPromises = users.map(async (userID) => {
+    const addUserQuizPromises = users.map(async (currentUser) => {
+        const userID = currentUser.id
+        const userEmail = currentUser.email
         try {
-            const user = await getUser(userID)
+            const user = await getUser(userID, userEmail)
             console.log(user)
         } catch (e) {
             console.error(e)
@@ -538,7 +541,7 @@ const enrolUsersInQuizMutation: Resolver<
         // TODO: enrol user
         const newUserQuiz = await addUserQuiz(
             userID,
-            quizID,
+            quizToEnrol,
             quiz.startTime,
             quiz.endTime,
         )
