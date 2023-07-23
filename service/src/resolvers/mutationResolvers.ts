@@ -21,6 +21,7 @@ import {
     deleteQuiz,
     swapQuestion,
     getOptionByID,
+    getUser,
 } from '../controllers'
 import {
     AdminAuthenticationError,
@@ -514,13 +515,49 @@ const editOrderQuestionMutation: Resolver<
 }
 
 const enrolUsersInQuizMutation: Resolver<
-    Maybe<ResolverTypeWrapper<User>>,
+    Array<ResolverTypeWrapper<UserQuizModel>>,
     unknown,
     UserContext,
     RequireFields<MutationEnrolUsersInQuizArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    throw new Error('not implemented')
+    const { users, quizID } = input
+    const quiz = await getQuiz(quizID)
+
+    // Use `map` to create an array of Promises representing the addUserQuiz() operations
+    const addUserQuizPromises = users.map(async (userID) => {
+        try {
+            const user = await getUser(userID)
+            console.log(user)
+        } catch (e) {
+            console.error(e)
+            console.error('User does not exist')
+            // TODO: create the user etc
+            return null
+        }
+
+        // TODO: enrol user
+        const newUserQuiz = await addUserQuiz(
+            userID,
+            quizID,
+            quiz.startTime,
+            quiz.endTime,
+        )
+
+        return newUserQuiz
+    })
+
+    const resolvedQuizzes = await Promise.all(addUserQuizPromises)
+    const newQuizzes: UserQuizModel[] = []
+
+    resolvedQuizzes.map((addedQuiz) => {
+        if (addedQuiz) {
+            newQuizzes.push(addedQuiz)
+        }
+    })
+
+    return newQuizzes
 }
+
 const mutationResolvers: MutationResolvers = {
     addOption: admin(addOptionMutation),
     addQuestion: admin(addQuestionMutation),
