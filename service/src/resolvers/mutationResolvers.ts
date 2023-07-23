@@ -57,6 +57,7 @@ import {
     MutationImageArgs,
     MutationResolvers,
     MutationSubmitUserQuizQuestionsArgs,
+    MutationEnrolUsersInQuizArgs,
     MutationSwapQuestionArgs,
     Option,
     Quiz,
@@ -67,7 +68,6 @@ import {
     UserQuizQuestionModel,
     QuestionModel,
     UserQuizModel,
-    MutationEnrolUsersInQuizArgs,
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
 
@@ -540,7 +540,7 @@ const mutationResolvers: MutationResolvers = {
     editUser: admin(editUserMutation),
     editUserQuiz: user(editUserQuizMutation),
     editUserQuizQuestion: admin(editUserQuizQuestionMutation),
-    enrolUsersInQuizMutation: admin(enrolUsersInQuizMutation),
+    enrolUsersInQuiz: admin(enrolUsersInQuizMutation),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
     swapQuestion: admin(swapQuestionMutation),

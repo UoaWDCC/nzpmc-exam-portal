@@ -25,6 +25,7 @@ type Mutation {
 
     addUserQuiz(input: AddUserQuizInput!): UserQuiz
 
+	enrolUsersInQuiz(input: EnrolUsersInput!): User
     """
     User
     """

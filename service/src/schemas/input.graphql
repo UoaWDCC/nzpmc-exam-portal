@@ -126,6 +126,10 @@ input EditOrderQuestionInput {
     quizID: ID!
 }
 
+input EnrolUsersInput {
+	users: [ID!]!
+    quizID: ID!
+}
 enum Sort {
     ASC
     DESC
