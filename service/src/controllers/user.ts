@@ -187,12 +187,10 @@ const deleteUser = async (id?: string | null, email?: string | null) => {
             let user: Schema.User | null = null
             if (id !== null && id !== undefined) {
                 user = await tran.findById(id)
+            } else if (email !== null && email !== undefined) {
+                user = await getUser(null, email)
             }
 
-            else if (email !== null && email !== undefined) {
-                user = await getUser(null, email) 
-            }
-            
             if (user === null) {
                 throw new NotFoundError()
             }
@@ -204,11 +202,15 @@ const deleteUser = async (id?: string | null, email?: string | null) => {
             await admin.auth().deleteUser(user.id)
 
             return user
-    })
+        })
     } catch (error) {
         console.log(error)
         throw error
     }
+}
+
+const enrolUserInQuiz = async (email: string, quizID: string) => {
+    throw new Error('not implemented')
 }
 
 const editUser = async (
@@ -248,6 +250,7 @@ export {
     getAllUsers,
     getUsersPagination,
     addUser,
+    enrolUserInQuiz,
     editUser,
     deleteUser,
 }

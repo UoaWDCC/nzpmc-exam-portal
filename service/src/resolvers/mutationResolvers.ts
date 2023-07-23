@@ -67,6 +67,7 @@ import {
     UserQuizQuestionModel,
     QuestionModel,
     UserQuizModel,
+    MutationEnrolUsersInQuizArgs,
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
 
@@ -307,13 +308,11 @@ const deleteUserMutation: Resolver<
     unknown,
     UserContext,
     Partial<MutationDeleteUserArgs>
-    > = async (_parent, { id, email }, _context) => {
+> = async (_parent, { id, email }, _context) => {
     const user = await deleteUser(id, email)
-    
-    return user;
-}
-        
 
+    return user
+}
 
 const editUserMutation: Resolver<
     Maybe<ResolverTypeWrapper<User>>,
@@ -514,6 +513,14 @@ const editOrderQuestionMutation: Resolver<
     return quiz
 }
 
+const enrolUsersInQuizMutation: Resolver<
+    Maybe<ResolverTypeWrapper<User>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationEnrolUsersInQuizArgs, 'input'>
+> = async (_parent, { input }, _context) => {
+    throw new Error('not implemented')
+}
 const mutationResolvers: MutationResolvers = {
     addOption: admin(addOptionMutation),
     addQuestion: admin(addQuestionMutation),
@@ -533,6 +540,7 @@ const mutationResolvers: MutationResolvers = {
     editUser: admin(editUserMutation),
     editUserQuiz: user(editUserQuizMutation),
     editUserQuizQuestion: admin(editUserQuizQuestionMutation),
+    enrolUsersInQuizMutation: admin(enrolUsersInQuizMutation),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
     swapQuestion: admin(swapQuestionMutation),
