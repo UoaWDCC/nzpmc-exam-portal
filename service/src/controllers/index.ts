@@ -25,6 +25,8 @@ import {
 import {
     getUserQuiz,
     getUserQuizzes,
+    getUserQuizbyQuizID,
+    getUserQuizzesByQuizID,
     getAllUserQuizzes,
     addUserQuiz,
     editUserQuiz,
@@ -51,6 +53,8 @@ export {
     getQuestionOptions,
     getUserQuiz,
     getUserQuizzes,
+    getUserQuizbyQuizID,
+    getUserQuizzesByQuizID,
     getAllQuizzes,
     getQuiz,
     deleteQuiz,
