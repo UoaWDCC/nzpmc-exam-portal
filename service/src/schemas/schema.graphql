@@ -29,6 +29,7 @@ type Query {
     User
     """
     userQuizzes: [UserQuiz!]!
+    userQuizzesByQuizID(quizID: ID!): [UserQuiz!]!
     userQuiz(quizID: ID!): UserQuiz!
 
     """

@@ -27,7 +27,7 @@ const getUser = async (
     }
 
     if (!user) {
-        throw new NotFoundError()
+        throw new NotFoundError(`User id ${id} doesn't exist`)
     }
 
     return packUser(user)

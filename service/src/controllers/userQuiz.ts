@@ -4,10 +4,11 @@ import {
     packUserQuiz,
     packUserQuizzes,
 } from '../mappers/userQuizMapper'
-import { Quiz, UserQuiz } from '../models'
+import { Quiz, UserQuiz, User } from '../models'
 import { NotFoundError } from '../utils/errors'
 import { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { addUserQuizQuestion } from './userQuizQuestion'
+import { getUser } from './user'
 
 const UserQuizRepository = getRepository(UserQuiz)
 
@@ -17,6 +18,34 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
 
         const userQuiz = await UserQuizTranRepository.findById(userQuizID)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
+
+        const expired =
+            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+
+        return packUserQuiz({
+            userID: userQuiz.userID,
+            quiz,
+            userQuiz,
+            expired,
+        })
+    })
+}
+
+const getUserQuizbyQuizID = async (quizID: string): Promise<UserQuizModel> => {
+    return runTransaction(async (tran) => {
+        const QuizTranRepository = tran.getRepository(Quiz)
+        const UserQuizTranRepository = tran.getRepository(UserQuiz)
+
+        const userQuiz: UserQuiz | null = await UserQuizTranRepository.whereEqualTo(
+            'quizID',
+            quizID,
+        ).findOne()
+
+        if (!userQuiz) {
+            throw new NotFoundError();
+        }
+
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
 
         const expired =
@@ -45,6 +74,33 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
             quizzes.map(
                 async (userQuiz): Promise<PackUserQuiz> => ({
                     userID,
+                    quiz: await QuizTranRepository.findById(userQuiz.quizID),
+                    userQuiz,
+                    expired:
+                        (userQuiz.endTime && userQuiz.endTime < new Date()) ??
+                        true,
+                }),
+            ),
+        )
+
+        return packUserQuizzes(userQuizzesPack)
+    })
+}
+
+const getUserQuizzesByQuizID = async (quizID: string): Promise<UserQuizModel[]> => {
+    return runTransaction(async (tran) => {
+        const QuizTranRepository = tran.getRepository(Quiz)
+        const UserQuizTranRepository = tran.getRepository(UserQuiz)
+
+        const userQuizzes = await UserQuizTranRepository.whereEqualTo(
+            (q) => q.quizID,
+            quizID,
+        ).find()
+
+        const userQuizzesPack: PackUserQuiz[] = await Promise.all(
+            userQuizzes.map(
+                async (userQuiz): Promise<PackUserQuiz> => ({
+                    userID: (await getUser(userQuiz.userID)).id,
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
@@ -151,6 +207,8 @@ export {
     addUserQuiz,
     getUserQuiz,
     getUserQuizzes,
+    getUserQuizbyQuizID,
+    getUserQuizzesByQuizID,
     getAllUserQuizzes,
     editUserQuiz,
     setUserQuizScore,

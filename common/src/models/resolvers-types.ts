@@ -307,6 +307,7 @@ export type Query = {
   userQuiz: UserQuiz;
   /** User */
   userQuizzes: Array<UserQuiz>;
+  userQuizzesByQuizID: Array<UserQuiz>;
   users: UserPage;
 };
 
@@ -328,6 +329,11 @@ export type QueryUserArgs = {
 
 
 export type QueryUserQuizArgs = {
+  quizID: Scalars['ID'];
+};
+
+
+export type QueryUserQuizzesByQuizIdArgs = {
   quizID: Scalars['ID'];
 };
 
@@ -660,6 +666,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<QueryUserArgs>>;
   userQuiz?: Resolver<ResolversTypes['UserQuiz'], ParentType, ContextType, RequireFields<QueryUserQuizArgs, 'quizID'>>;
   userQuizzes?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType>;
+  userQuizzesByQuizID?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<QueryUserQuizzesByQuizIdArgs, 'quizID'>>;
   users?: Resolver<ResolversTypes['UserPage'], ParentType, ContextType, Partial<QueryUsersArgs>>;
 };
 

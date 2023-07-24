@@ -3,6 +3,8 @@ import {
     getQuiz,
     getUser,
     getUserQuiz,
+    getUserQuizbyQuizID,
+    getUserQuizzesByQuizID,
     getUserQuizzes,
     getUsersPagination,
 } from '../controllers'
@@ -119,7 +121,9 @@ const userQuizQuery: Resolver<
     if (context.user === undefined) {
         throw new AuthenticationError()
     }
-    const userQuiz = await getUserQuiz(args.quizID)
+    // This was wrong getUserQuiz takes argument userQuizID not quizID
+    //const userQuiz = await getUserQuiz(args.quizID)
+    const userQuiz = await getUserQuizbyQuizID(args.quizID)
     const user = await getUser(userQuiz.userID)
 
     if (user.id !== context.user.uid && !context.user.admin)
@@ -145,6 +149,19 @@ const userQuizzesQuery: Resolver<
     return getUserQuizzes(context.user.uid)
 }
 
+const userQuizzesByQuizIDQuerry: Resolver<
+    ResolverTypeWrapper<UserQuizModel>[],
+    unknown,
+    UserContext,
+    RequireFields<QueryUserQuizArgs, 'quizID'>
+> = (_parents, args, context) => {
+    if (context.user === undefined || !context.user.admin) {
+        throw new AuthenticationError()
+    }
+    const id: string = args.quizID;
+    return getUserQuizzesByQuizID(id);
+}
+
 const queryResolvers: QueryResolvers = {
     currentTime: user(currentTimeQuery),
     image: user(imageQuery),
@@ -154,6 +171,7 @@ const queryResolvers: QueryResolvers = {
     user: admin(userQuery),
     userQuiz: admin(userQuizQuery),
     userQuizzes: user(userQuizzesQuery),
+    userQuizzesByQuizID: admin(userQuizzesByQuizIDQuerry),
     users: admin(usersQuery),
 }
 
