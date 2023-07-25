@@ -1,6 +1,6 @@
 <template>
   <v-container class="quiz-management">
-    <h2>Quiz Management</h2>
+    <h2>Quiz Management</h2> 
     <v-btn @click="enrollUserIntoQuiz">Enroll User into Quiz</v-btn>
     <v-divider />
   </v-container>
@@ -16,6 +16,15 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import type { User } from '@/components/app/admin/UserManagement.vue'
+import {
+  downloadUserQuizzesCsvQuery,
+} from '@/utils/quizManagement'
+
+export type UserQuiz = {
+  user: User,
+  score: number
+}
 
 export default defineComponent({
   name: 'QuizManagement',
@@ -39,6 +48,7 @@ export default defineComponent({
     async downloadUserQuizzes() {
       try {
         // TODO: Add your logic to download current user quizzes based on the quizIdInput here
+        await downloadUserQuizzesCsvQuery(this.$apollo, this.quizIdInput);
         console.log('Downloading user quizzes for quiz ID:', this.quizIdInput);
       } catch (error) {
         console.error('Failed to download user quizzes:', error);

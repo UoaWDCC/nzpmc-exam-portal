@@ -87,12 +87,13 @@ export const downloadUsersCsvQuery = async (
       .join(',')
 
     // Convert user data to CSV format
-    let csvContent = `${headers}\n${userList
+    const csvContent = `${headers}\n${userList
       .map((user: User) => {
         const values = Object.values(user)
         return values.filter((_, index) => Object.keys(user)[index] !== '__typename').join(',')
       })
       .join('\n')}`
+    console.log(csvContent)
 
     // Create a Blob with the CSV content
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
