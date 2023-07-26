@@ -3,11 +3,34 @@ import { packUser, packUsers } from '../mappers/userMapper'
 import { User } from '../models'
 import * as Schema from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
+import { admin, firestore } from '../utils/firebase'
 
 const UserRepository = getRepository(User)
 
-const getUser = async (id: string): Promise<Schema.User> => {
-    return packUser(await UserRepository.findById(id))
+const getUser = async (
+    id?: string | null,
+    email?: string | null,
+): Promise<Schema.User> => {
+    let user: User | null = null
+    if (id) {
+        try {
+            user = await UserRepository.findById(id)
+            return packUser(user)
+        } catch (e) {}
+    }
+
+    if (email) {
+        user = await UserRepository.whereEqualTo(
+            'email',
+            email.toLowerCase(),
+        ).findOne()
+    }
+
+    if (!user) {
+        throw new NotFoundError()
+    }
+
+    return packUser(user)
 }
 
 const getAllUsers = async (): Promise<Schema.User[]> => {
@@ -30,7 +53,8 @@ const getUsersPagination = async (
     const users = await UserRepository.find()
 
     const sortedUsers = caseInsensitiveSort(orderBy, users)
-
+    // This is dependent that the user has a display name, first name, last name, or email
+    // For testing purposes this may not always be the case.
     const finalUsers = sortedUsers.filter(
         (user: any) =>
             user.displayName
@@ -38,7 +62,8 @@ const getUsersPagination = async (
                 .toLowerCase()
                 .includes(term.toLowerCase()) ||
             user.firstName.trim().toLowerCase().includes(term.toLowerCase()) ||
-            user.lastName.trim().toLowerCase().includes(term.toLowerCase()),
+            user.lastName.trim().toLowerCase().includes(term.toLowerCase()) ||
+            user.email.trim().toLowerCase().includes(term.toLowerCase()),
     )
 
     finalUsers.slice((page - 1) * limit, page * limit)
@@ -52,7 +77,8 @@ const getUsersPagination = async (
     }
 }
 
-const sortUsersList = (users: any, key: string, isDescending: boolean) => {   
+const sortUsersList = (users: any, key: string, isDescending: boolean) => {
+    // This is sorting on a key. The key may not exist for all users. (Though it should)
     const sortedUsers = users.sort((user1: any, user2: any) => {
         user1[key].trim().localeCompare(user2[key].trim(), undefined, {
             sensitivity: 'accent',
@@ -143,7 +169,7 @@ const addUser = async (
 
     user.id = id
     user.displayName = displayName
-    user.email = email
+    user.email = email.toLowerCase()
     user.photoURL = photoURL
     user.firstName = firstName
     user.lastName = lastName
@@ -153,6 +179,36 @@ const addUser = async (
     const newUser = await UserRepository.create(user)
 
     return await getUser(newUser.id)
+}
+
+const deleteUser = async (id?: string | null, email?: string | null) => {
+    try {
+        return UserRepository.runTransaction(async (tran) => {
+            let user: Schema.User | null = null
+            if (id !== null && id !== undefined) {
+                user = await tran.findById(id)
+            }
+
+            else if (email !== null && email !== undefined) {
+                user = await getUser(null, email) 
+            }
+            
+            if (user === null) {
+                throw new NotFoundError()
+            }
+            if (user.role === 'admin') {
+                throw new Error(`Cannot delete admin user: ${user.email}`)
+            }
+            console.log('deleting user email: ', email, ' from db')
+            await tran.delete(user.id)
+            await admin.auth().deleteUser(user.id)
+
+            return user
+    })
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
 }
 
 const editUser = async (
@@ -187,4 +243,11 @@ const editUser = async (
     })
 }
 
-export { getUser, getAllUsers, getUsersPagination, addUser, editUser }
+export {
+    getUser,
+    getAllUsers,
+    getUsersPagination,
+    addUser,
+    editUser,
+    deleteUser,
+}

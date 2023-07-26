@@ -7,6 +7,7 @@ import {
     addUserQuiz,
     editQuestionOption,
     deleteQuestionOption,
+    deleteUser,
     getQuestion,
     editQuestion,
     editQuiz,
@@ -40,6 +41,7 @@ import {
     MutationAddQuizArgs,
     MutationAddUserArgs,
     MutationAddUserQuizArgs,
+    MutationDeleteUserArgs,
     MutationDeleteQuestionArgs,
     MutationDeleteQuizArgs,
     MutationDeleteOptionArgs,
@@ -64,7 +66,7 @@ import {
     User,
     UserQuizQuestionModel,
     QuestionModel,
-    UserQuizModel
+    UserQuizModel,
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
 
@@ -140,10 +142,17 @@ const addUserMutation: Resolver<
         displayName || '',
         firstName,
         lastName,
-        photoURL || '',
+        photoURL ? photoURL : '',
         email,
         '',
     )
+    console.log(userID)
+
+    // Add UserQuiz if quizID is defined
+    if (quizID) {
+        const quiz = await getQuiz(quizID)
+        await addUserQuiz(userID, quizID, quiz.startTime, quiz.endTime)
+    }
 
     const user = await addUser(
         userID,
@@ -156,14 +165,9 @@ const addUserMutation: Resolver<
         role || '',
     )
 
-    // Add UserQuiz if quizID is defined
-    if (quizID) {
-        const quiz = await getQuiz(quizID)
-        await addUserQuiz(userID, quizID, quiz.startTime, quiz.endTime)
-    }
-
     // Send reset password email
-    await resetUserPasswordEmail(email)
+    //await resetUserPasswordEmail(email)
+    console.log(user)
 
     return user
 }
@@ -297,6 +301,19 @@ const editSelfMutation: Resolver<
 
     return user
 }
+
+const deleteUserMutation: Resolver<
+    Maybe<ResolverTypeWrapper<User>>,
+    unknown,
+    UserContext,
+    Partial<MutationDeleteUserArgs>
+    > = async (_parent, { id, email }, _context) => {
+    const user = await deleteUser(id, email)
+    
+    return user;
+}
+        
+
 
 const editUserMutation: Resolver<
     Maybe<ResolverTypeWrapper<User>>,
@@ -506,6 +523,7 @@ const mutationResolvers: MutationResolvers = {
     deleteQuestion: admin(deleteQuestionMutation),
     deleteQuiz: admin(deleteQuizMutation),
     deleteOption: admin(deleteOptionMutation),
+    deleteUser: admin(deleteUserMutation),
     editAnswer: admin(editAnswerMutation),
     editOption: admin(editOptionMutation),
     editOrderQuestion: admin(editOrderQuestionMutation),
