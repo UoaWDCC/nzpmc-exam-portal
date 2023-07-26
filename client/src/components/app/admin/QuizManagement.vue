@@ -1,4 +1,29 @@
 <template>
+  <v-dialog v-model="popUpDialog" class="popup-dialog">
+    <v-card>
+      <v-card-title class="popup-headline">NZPMC Admin</v-card-title>
+      <v-card-text class="popup-text">
+        <div class="custom-progress">
+          <v-progress-circular
+            v-if="loading"
+            :size="100"
+            :width="15"
+            color="primary"
+            indeterminate
+          ></v-progress-circular>
+        <!-- <temp> -->
+        
+        <template v-else>
+          {{popUpMessage}}
+        </template>
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="popUpDialog = false" class = "popup-button">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <v-container class="quiz-management">
     <h2>Quiz Management</h2> 
     <v-btn @click="enrollUserIntoQuiz">Enroll User into Quiz</v-btn>
@@ -32,6 +57,9 @@ export default defineComponent({
   data() {
     return {
       quizIdInput: '',
+      loading: false,
+      popUpDialog: false,
+      popUpMessage: '',
     };
   },
 
@@ -47,11 +75,19 @@ export default defineComponent({
 
     async downloadUserQuizzes() {
       try {
-        // TODO: Add your logic to download current user quizzes based on the quizIdInput here
-        await downloadUserQuizzesCsvQuery(this.$apollo, this.quizIdInput);
-        console.log('Downloading user quizzes for quiz ID:', this.quizIdInput);
+        const success = await downloadUserQuizzesCsvQuery(this.$apollo, this.quizIdInput); // waits for the query to finish
+        
+        this.popUpMessage = 'Downloaded user quizzes for quiz id: ' + this.quizIdInput;
+        if (!success) {
+          this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput;
+        }
+
+        this.popUpDialog = true;
       } catch (error) {
         console.error('Failed to download user quizzes:', error);
+
+        this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput;
+        this.popUpDialog = true;
       }
     },
   },
