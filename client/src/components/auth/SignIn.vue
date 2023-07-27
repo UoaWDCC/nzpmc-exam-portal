@@ -3,10 +3,12 @@
         <!-- TODO: style showing back -->
         <AuthHeader title="Sign In" :text="`Hello, ${email}.`" @back="$emit('go', 'Email')" />
 
+        <div class="text-subtitle-1 font-weight-black px-4">Password</div>
+
         <div class="pb-4 px-4 fields">
             <!-- TODO: toggle pwd visibility ( :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'") -->
             <v-text-field v-model="password"
-                :type="showPassword ? 'text' : 'password'" autocomplete="current-password" label="Password"
+                :type="showPassword ? 'text' : 'password'" autocomplete="current-password"
                 :rules="[(v) => !!v || 'This is required']" required autofocus hide-details="auto"
                 @click:append="showPassword = !showPassword"></v-text-field>
         </div>
@@ -142,5 +144,11 @@ export default {
     > div {
         width: 100%;
     }
+}
+
+.v-text-field {
+    background-color: $white;
+    border: 2px solid black;
+    border-radius: 15px;
 }
 </style>

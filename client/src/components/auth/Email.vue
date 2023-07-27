@@ -2,11 +2,11 @@
   <v-form ref="form" v-model="valid" :disabled="loading" class="auth-email" @submit="nextPanel">
     <AuthHeader title="Authenticate" text="Enter your email to sign in or sign up" />
 
+    <div class="text-subtitle-1 font-weight-black px-4">Email</div>
+
     <div class="pb-4 px-4">
       <v-text-field
         v-model="currentEmail"
-        label="Email"
-        placeholder="john.smith@example.com"
         type="email"
         autocomplete="username"
         hide-details="auto"
@@ -37,7 +37,7 @@
       <v-btn id="continue-button" type="submit" :disabled="!valid || loading" :loading="loading">
         <span>Continue</span>
 
-        <v-icon right dark>mdi-arrow-right</v-icon>
+        <v-icon color="white">mdi-arrow-right</v-icon>
       </v-btn>
     </div>
   </v-form>
@@ -151,9 +151,9 @@ export default {
   font-size: medium;
 }
 
-// .v-text-field {
-//     background-color: $white;
-//     border: 2px solid red;
-//     border-radius: 15px;
-// }
+.v-text-field {
+    background-color: $white;
+    border: 2px solid black;
+    border-radius: 15px;
+}
 </style>
