@@ -166,6 +166,7 @@ export type Mutation = {
   image?: Maybe<Image>;
   submitUserQuizQuestions?: Maybe<UserQuiz>;
   swapQuestion?: Maybe<Quiz>;
+  unenrolUsersFromQuiz: Array<Scalars['ID']>;
 };
 
 
@@ -283,6 +284,12 @@ export type MutationSwapQuestionArgs = {
   newID: Scalars['ID'];
   oldID: Scalars['ID'];
   quizID: Scalars['ID'];
+};
+
+
+export type MutationUnenrolUsersFromQuizArgs = {
+  quizID: Scalars['ID'];
+  users: Array<UsersInput>;
 };
 
 export type Option = {
@@ -647,6 +654,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationImageArgs, 'input'>>;
   submitUserQuizQuestions?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationSubmitUserQuizQuestionsArgs, 'input'>>;
   swapQuestion?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationSwapQuestionArgs, 'newID' | 'oldID' | 'quizID'>>;
+  unenrolUsersFromQuiz?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationUnenrolUsersFromQuizArgs, 'quizID' | 'users'>>;
 };
 
 export type OptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Option'] = ResolversParentTypes['Option']> = {

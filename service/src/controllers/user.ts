@@ -209,10 +209,6 @@ const deleteUser = async (id?: string | null, email?: string | null) => {
     }
 }
 
-const enrolUserInQuiz = async (email: string, quizID: string) => {
-    throw new Error('not implemented')
-}
-
 const editUser = async (
     id: string,
     displayName?: string,
@@ -250,7 +246,6 @@ export {
     getAllUsers,
     getUsersPagination,
     addUser,
-    enrolUserInQuiz,
     editUser,
     deleteUser,
 }
