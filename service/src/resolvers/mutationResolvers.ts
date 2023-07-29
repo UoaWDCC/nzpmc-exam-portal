@@ -87,15 +87,9 @@ const addQuestionMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuestionArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { quizID, question, imageURI, numOfAnswers, topics } = input
+    const { quizID, question, imageURI, topics } = input
 
-    return await addQuestion(
-        quizID,
-        question,
-        imageURI || '',
-        numOfAnswers,
-        topics,
-    )
+    return await addQuestion(quizID, question, imageURI || '', topics)
 }
 
 const addQuizMutation: Resolver<
@@ -227,14 +221,13 @@ const editQuestionMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuestionArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const { quizID, id, question, imageURI, numOfAnswers, topics } = input
+    const { quizID, id, question, imageURI, topics } = input
 
     return await editQuestion(
         quizID,
         id,
         question || undefined,
         imageURI || undefined,
-        numOfAnswers || undefined,
         '',
         topics || undefined,
     )

@@ -28,7 +28,6 @@ export type AddOptionInput = {
 
 export type AddQuestionInput = {
   imageURI?: InputMaybe<Scalars['String']>;
-  numOfAnswers: Scalars['Int'];
   question: Scalars['String'];
   quizID: Scalars['ID'];
   topics: Scalars['String'];
@@ -79,7 +78,6 @@ export type EditOrderQuestionInput = {
 export type EditQuestionInput = {
   id: Scalars['ID'];
   imageURI?: InputMaybe<Scalars['String']>;
-  numOfAnswers?: InputMaybe<Scalars['Int']>;
   question?: InputMaybe<Scalars['String']>;
   quizID: Scalars['ID'];
   topics?: InputMaybe<Scalars['String']>;
@@ -337,7 +335,6 @@ export type Question = {
   id: Scalars['ID'];
   imageURI?: Maybe<Scalars['String']>;
   modified?: Maybe<Scalars['DateTime']>;
-  numOfAnswers?: Maybe<Scalars['Int']>;
   options?: Maybe<Array<Maybe<Option>>>;
   question?: Maybe<Scalars['String']>;
   topics?: Maybe<Scalars['String']>;
@@ -636,7 +633,6 @@ export type QuestionResolvers<ContextType = any, ParentType extends ResolversPar
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   imageURI?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   modified?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  numOfAnswers?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   options?: Resolver<Maybe<Array<Maybe<ResolversTypes['Option']>>>, ParentType, ContextType>;
   question?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   topics?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

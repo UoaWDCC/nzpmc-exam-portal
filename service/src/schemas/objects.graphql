@@ -16,7 +16,6 @@ type Question {
     id: ID!
     question: String
     imageURI: String
-    numOfAnswers: Int
     topics: String # should be enum
     answer: Option
     options: [Option]

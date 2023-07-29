@@ -50,7 +50,6 @@ input EditQuizInput {
 input AddQuestionInput {
     quizID: ID!
     question: String!
-    numOfAnswers: Int!
     topics: String!
     imageURI: String
 }
@@ -59,7 +58,6 @@ input EditQuestionInput {
     id: ID!
     quizID: ID!
     question: String
-    numOfAnswers: Int
     topics: String
     imageURI: String
 }
