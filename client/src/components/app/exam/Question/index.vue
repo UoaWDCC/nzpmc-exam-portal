@@ -13,6 +13,11 @@
     <div v-if="questionData" class="fill-height flex-grow-1" style="overflow-y: auto">
       <v-container fluid>
         <v-row>
+          <v-col style="height: 20rem">
+            <DisplayText :text="questionData.question" />
+          </v-col>
+        </v-row>
+        <v-row>
           <v-col cols="12" md="6" class="mb-n3">
             <div class="align-center d-flex mb-3">
               <h2 class="flex-grow-1 text-h5" style="line-height: 1">
@@ -24,8 +29,6 @@
                 :question-number="questionNumber"
               />
             </div>
-
-            <DisplayText :text="questionData.question" />
           </v-col>
 
           <v-col cols="12" md="6">
@@ -98,11 +101,11 @@ export default {
         if (error) {
           this.error = error.message
         } else {
-		  if (data) {
-			this.questionData = data.userQuiz.question
-			console.log(this.questionData)
-		  }
-		  }
+          if (data) {
+            this.questionData = data.userQuiz.question
+            console.log(this.questionData)
+          }
+        }
       },
       fetchPolicy: 'cache-and-network'
     },
@@ -113,13 +116,12 @@ export default {
           quizID: this.$route.params.quizID
         }
       },
-	  result({ data, error, loading }) {
+      result({ data, error, loading }) {
         this.loading = loading
         if (error) {
           this.error = error.message
         } else {
-          if (data) 
-          this.quizData = data.userQuiz
+          if (data) this.quizData = data.userQuiz
         }
       },
       fetchPolicy: 'cache-and-network'

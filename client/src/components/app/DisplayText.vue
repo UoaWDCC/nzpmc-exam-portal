@@ -1,5 +1,5 @@
 <template>
-  <latex :content="parsed" style="margin-bottom: -16px" />
+  <div v-html="parsed"></div>
 </template>
 
 <script lang="ts">
