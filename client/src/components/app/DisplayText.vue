@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import showdown from 'showdown'
+import { Converter } from 'showdown'
 
 export default {
   name: 'AppDisplayText',
@@ -14,7 +14,7 @@ export default {
 
   data() {
     return {
-      converter: new showdown.Converter()
+      converter: new Converter()
     }
   },
 
