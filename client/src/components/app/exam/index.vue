@@ -1,50 +1,45 @@
 <template>
+  <div class="app-exam">
+    <v-scroll-y-reverse-transition>
+      <v-alert v-if="error" type="error" class="mx-3 my-6">
+        {{ $errorMessage }}
+      </v-alert>
+    </v-scroll-y-reverse-transition>
+
+    <AppExamTopbarLoader v-if="loading" />
+
+    <AppExamTopbar v-if="data" :name="data.name" />
+
     <div
-        class="app-exam"
+      v-if="data || loading"
+      class="d-flex flex-grow-1"
+      :style="{ height: `calc(100vh - ${TOOLBAR_HEIGHT * 2}px)` }"
     >
-            <v-scroll-y-reverse-transition>
-                <v-alert v-if="error" type="error" class="mx-3 my-6">
-                    {{ $errorMessage }}
-                </v-alert>
-            </v-scroll-y-reverse-transition>
+      <div class="flex-shrink-0" style="overflow-y: auto">
+        <v-navigation-drawer
+          absolute
+          permanent
+          class="background--grey grey lighten-5"
+          style="width: unset; min-width: 56px"
+          mini-variant
+        >
+          <AppExamSidebarLoader v-if="loading" />
 
-            <AppExamTopbarLoader v-if="isLoading" />
+          <v-scroll-y-reverse-transition>
+            <AppExamSidebar v-if="data" :questions="data.questions" />
+          </v-scroll-y-reverse-transition>
+        </v-navigation-drawer>
+      </div>
 
-            <AppExamTopbar v-if="data" :name="data.name" />
+      <AppExamQuestionLoader v-if="isLoading" />
 
-            <div
-                v-if="data || isLoading"
-                class="d-flex flex-grow-1"
-                :style="{ height: `calc(100vh - ${TOOLBAR_HEIGHT * 2}px)` }"
-            >
-                <div class="flex-shrink-0" style="overflow-y: auto">
-                    <v-navigation-drawer
-							absolute
-                        permanent
-                        class="background--grey grey lighten-5"
-                        style="width: unset; min-width: 56px"
-                        mini-variant
-                    >
-                        <AppExamSidebarLoader v-if="isLoading" />
-
-                        <v-scroll-y-reverse-transition>
-                            <AppExamSidebar
-                                v-if="data"
-                                :questions="data.questions"
-                            />
-                        </v-scroll-y-reverse-transition>
-                    </v-navigation-drawer>
-                </div>
-
-                <AppExamQuestionLoader v-if="isLoading" />
-
-                <div v-if="data" class="flex-grow-1" style="overflow: hidden">
-                    <component :is="routeTransition" hide-on-leave>
-                        <router-view :key="$route.params.questionID" />
-                    </component>
-                </div>
-            </div>
+      <div v-if="data" class="flex-grow-1" style="overflow: hidden">
+        <component :is="routeTransition" hide-on-leave>
+          <router-view :key="$route.params.questionID" />
+        </component>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -56,78 +51,84 @@ import AppExamQuestionLoader from './Question/Loader.vue'
 import AppExamSidebar from './Sidebar.vue'
 import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
 import { defineComponent } from 'vue'
-
 import { TOOLBAR_HEIGHT } from '@/helpers'
-import type {UserQuizModel} from '@nzpmc-exam-portal/common'
+import type { UserQuizModel } from '@nzpmc-exam-portal/common'
 
-export default defineComponent ({
-    name: 'AppExam',
+export default defineComponent({
+  name: 'AppExam',
 
-    metaInfo() {
-        return {
-            title: this.name ?? 'Exam',
+  metaInfo() {
+    return {
+      title: this.name ?? 'Exam'
+    }
+  },
+
+  components: {
+    AppExamTopbarLoader,
+    AppExamTopbar,
+    AppExamSidebarLoader,
+    AppExamQuestionLoader,
+    AppExamSidebar
+  },
+
+  beforeRouteUpdate(to, from, next) {
+    this.routeTransition =
+      from.params.questionID === undefined
+        ? 'Transition'
+        : to.params.questionID > from.params.questionID
+        ? VSlideXReverseTransition
+        : VSlideXTransition
+    next()
+  },
+
+  data(): {
+    data: UserQuizModel | undefined
+    loading: boolean
+    error: any
+    routeTransition: any
+    TOOLBAR_HEIGHT: number
+  } {
+    return {
+      TOOLBAR_HEIGHT,
+      routeTransition: VSlideXTransition,
+      data: undefined,
+      loading: false,
+      error: null
+    }
+  },
+
+  apollo: {
+    name: {
+      query: UserQuizQuery,
+      variables() {
+        return { quizID: this.$route.params.quizID }
+      },
+
+      result({ data, error, loading }) {
+        this.loading = loading
+        if (error) {
+          this.error = error.message
+        } else {
+          if (data) {
+            this.data = data.userQuiz
+            console.log(data)
+          }
         }
-    },
-
-    components: {
-        AppExamTopbarLoader,
-        AppExamTopbar,
-        AppExamSidebarLoader,
-        AppExamQuestionLoader,
-        AppExamSidebar,
-    },
-
-    beforeRouteUpdate(to, from, next) {
-        // Determine whether to show question transition as left or right
-        this.routeTransition =
-            from.params.questionID === undefined
-                ? 'Transition'
-                : to.params.questionID > from.params.questionID
-                ? VSlideXReverseTransition
-                : VSlideXTransition
-        next()
-    },
-
-	data() : {
-		data: UserQuizModel | undefined,
-	} {
-        return {
-            UserQuizQuery,
-            TOOLBAR_HEIGHT,
-            routeTransition: VSlideXTransition,
-			data: null,
-        }
-    },
-
-    apollo: {
-        name: {
-            query: UserQuizQuery,
-            variables() {
-                return { quizID: this.$route.params.quizID }
-            },
-
-		  result({ data , error, loading }) {
-			this.loading = loading
-			if (error) {
-			  this.error = error.message
-			} else {
-				if (data) this.data = data; 
-			}
-		  },
-            fetchPolicy: 'cache-only',
-        },
-    },
+      },
+      fetchPolicy: 'network-only'
+    }
+  }
 })
 </script>
 
 <style>
 .app-exam .slide-x-transition-enter {
-    opacity: 0;
-    transform: translateX(-50vw);
+  opacity: 0;
+  transform: translateX(-50vw);
 }
 
 .app-exam .slide-x-reverse-transition-enter {
-    opacity: 0;
-    transform: translateX(50vw);
+  opacity: 0;
+  transform: translateX(50vw);
 }
 </style>
