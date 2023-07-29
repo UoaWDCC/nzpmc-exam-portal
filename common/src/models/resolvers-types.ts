@@ -39,7 +39,6 @@ export type AddQuizInput = {
   duration: Scalars['Int'];
   endTime: Scalars['DateTime'];
   name: Scalars['String'];
-  numOfQuestions: Scalars['Int'];
   startTime: Scalars['DateTime'];
 };
 
@@ -92,7 +91,6 @@ export type EditQuizInput = {
   endTime?: InputMaybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   name?: InputMaybe<Scalars['String']>;
-  numOfQuestions?: InputMaybe<Scalars['Int']>;
   startTime?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -354,7 +352,6 @@ export type Quiz = {
   id: Scalars['ID'];
   modified?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
-  numOfQuestions?: Maybe<Scalars['Int']>;
   question?: Maybe<Question>;
   questions?: Maybe<Array<Maybe<Question>>>;
   startTime?: Maybe<Scalars['DateTime']>;
@@ -654,7 +651,6 @@ export type QuizResolvers<ContextType = any, ParentType extends ResolversParentT
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   modified?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  numOfQuestions?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   question?: Resolver<Maybe<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<QuizQuestionArgs, 'id'>>;
   questions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Question']>>>, ParentType, ContextType>;
   startTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;

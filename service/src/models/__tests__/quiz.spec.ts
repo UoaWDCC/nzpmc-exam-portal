@@ -9,7 +9,6 @@ describe('Quiz', () => {
         quiz.name = 'example quiz'
         quiz.description = 'example description'
         quiz.duration = 60
-        quiz.numOfQuestions = 10
         quiz.startTime = new Date()
         quiz.endTime = new Date()
 
@@ -24,7 +23,6 @@ describe('Quiz', () => {
         quiz.name = 'example quiz'
         quiz.description = 'example description'
         quiz.duration = 60
-        quiz.numOfQuestions = 10
         quiz.startTime = new Date()
         quiz.endTime = new Date()
 

@@ -104,17 +104,9 @@ const addQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuizArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { name, description, duration, numOfQuestions, startTime, endTime } =
-        input
+    const { name, description, duration, startTime, endTime } = input
 
-    return await addQuiz(
-        name,
-        description,
-        duration,
-        numOfQuestions,
-        startTime,
-        endTime,
-    )
+    return await addQuiz(name, description, duration, startTime, endTime)
 }
 
 const addUserMutation: Resolver<
@@ -254,22 +246,13 @@ const editQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuizArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const {
-        id,
-        name,
-        description,
-        duration,
-        numOfQuestions,
-        startTime,
-        endTime,
-    } = input
+    const { id, name, description, duration, startTime, endTime } = input
 
     return await editQuiz(
         id,
         name || undefined,
         description || undefined,
         duration || undefined,
-        numOfQuestions || undefined,
         startTime || undefined,
         endTime || undefined,
     )
@@ -307,13 +290,11 @@ const deleteUserMutation: Resolver<
     unknown,
     UserContext,
     Partial<MutationDeleteUserArgs>
-    > = async (_parent, { id, email }, _context) => {
+> = async (_parent, { id, email }, _context) => {
     const user = await deleteUser(id, email)
-    
-    return user;
-}
-        
 
+    return user
+}
 
 const editUserMutation: Resolver<
     Maybe<ResolverTypeWrapper<User>>,
@@ -503,7 +484,6 @@ const editOrderQuestionMutation: Resolver<
     const { questionIDs, quizID } = input
     const quiz = await editQuiz(
         quizID,
-        undefined,
         undefined,
         undefined,
         undefined,

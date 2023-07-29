@@ -36,7 +36,6 @@ type Quiz {
     name: String
     description: String
     duration: Int
-    numOfQuestions: Int
     question(id: ID!): Question
     questions: [Question]
     startTime: DateTime

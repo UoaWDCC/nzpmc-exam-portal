@@ -34,7 +34,6 @@ input AddQuizInput {
     name: String!
     description: String!
     duration: Int!
-    numOfQuestions: Int!
     startTime: DateTime!
     endTime: DateTime!
 }
@@ -44,7 +43,6 @@ input EditQuizInput {
     name: String
     description: String
     duration: Int
-    numOfQuestions: Int
     startTime: DateTime
     endTime: DateTime
 }
