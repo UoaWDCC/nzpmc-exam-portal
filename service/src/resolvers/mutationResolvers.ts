@@ -69,8 +69,10 @@ import {
     UserQuizQuestionModel,
     QuestionModel,
     UserQuizModel,
+    MutationUnenrolUsersFromQuizArgs,
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
+import { deleteUserQuiz } from '../controllers/userQuiz'
 
 const addOptionMutation: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,
@@ -561,6 +563,31 @@ const enrolUsersInQuizMutation: Resolver<
     return newQuizzes
 }
 
+const unenrolUsersFromQuizMutation: Resolver<
+    Array<ResolverTypeWrapper<string>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationUnenrolUsersFromQuizArgs, 'quizID' | 'users'>
+> = async (_parent, { users, quizID }, _context) => {
+    const quizToUnenrolFrom = quizID
+
+    const deletedUserQuizIDs: string[] = []
+    // Use `map` to create an array of Promises representing the addUserQuiz() operations
+    const addUserQuizPromises = users.map(async (currentUser) => {
+        const userID = currentUser.id
+        const userEmail = currentUser.email
+        const deletedQuizID = await deleteUserQuiz(quizToUnenrolFrom, userID)
+        if (deletedQuizID !== null) {
+            deletedUserQuizIDs.push(deletedQuizID)
+        }
+    })
+
+    // Wait for all the promises to resolve
+    await Promise.all(addUserQuizPromises)
+
+    return deletedUserQuizIDs
+}
+
 const mutationResolvers: MutationResolvers = {
     addOption: admin(addOptionMutation),
     addQuestion: admin(addQuestionMutation),
@@ -581,6 +608,7 @@ const mutationResolvers: MutationResolvers = {
     editUserQuiz: user(editUserQuizMutation),
     editUserQuizQuestion: admin(editUserQuizQuestionMutation),
     enrolUsersInQuiz: admin(enrolUsersInQuizMutation),
+    unenrolUsersFromQuiz: admin(unenrolUsersFromQuizMutation),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
     swapQuestion: admin(swapQuestionMutation),
