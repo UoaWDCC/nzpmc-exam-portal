@@ -11,43 +11,44 @@
             color="primary"
             indeterminate
           ></v-progress-circular>
-        <!-- <temp> -->
-        
-        <template v-else>
-          {{popUpMessage}}
-        </template>
+          <!-- <temp> -->
+
+          <template v-else>
+            {{ popUpMessage }}
+          </template>
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="popUpDialog = false" class = "popup-button">Close</v-btn>
+        <v-btn color="primary" @click="popUpDialog = false" class="popup-button">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 
   <v-container class="quiz-management">
-    <h2>Quiz Management</h2> 
+    <h2>Quiz Management</h2>
     <v-btn @click="enrollUserIntoQuiz">Enroll User into Quiz</v-btn>
     <v-divider />
   </v-container>
   <v-container>
-    <v-text-field
-      v-model="quizIdInput"
+    <v-select
       label="Quiz ID"
-      class="text-field"
-    ></v-text-field>
+      :items="quizzes"
+      item-title="name"
+      item-value="id"
+      @update:model-value="updateQuizID"
+    ></v-select>
     <v-btn @click="downloadUserQuizzes">Download User Quizzes</v-btn>
-</v-container>
+  </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue'
 import type { User } from '@/components/app/admin/UserManagement.vue'
-import {
-  downloadUserQuizzesCsvQuery,
-} from '@/utils/quizManagement'
+import { AllQuizIDQuery } from '@/gql/queries/quiz'
+import { downloadUserQuizzesCsvQuery } from '@/utils/quizManagement'
 
 export type UserQuiz = {
-  user: User,
+  user: User
   score: number
 }
 
@@ -56,46 +57,65 @@ export default defineComponent({
 
   data() {
     return {
+      quizzes: [],
       quizIdInput: '',
       loading: false,
       popUpDialog: false,
-      popUpMessage: '',
-    };
+      popUpMessage: ''
+    }
   },
 
+  apollo: {
+    userQuizzes: {
+      query: AllQuizIDQuery,
+      result({ data, error, loading }) {
+        this.loading = loading
+        if (error) {
+          this.error = error.message
+        } else {
+          if (data) {
+            this.quizzes = data.quizzes
+          }
+        }
+      },
+      fetchPolicy: 'cache-and-network'
+    }
+  },
   methods: {
+    updateQuizID(id) {
+      this.quizIdInput = id
+    },
     async enrollUserIntoQuiz() {
       try {
         // TODO: Add your logic to enroll a user into the quiz here
-        console.log('User enrolled into the quiz');
+        console.log('User enrolled into the quiz')
       } catch (error) {
-        console.error('Failed to enroll user into the quiz:', error);
+        console.error('Failed to enroll user into the quiz:', error)
       }
     },
 
     async downloadUserQuizzes() {
       try {
-        const success = await downloadUserQuizzesCsvQuery(this.$apollo, this.quizIdInput); // waits for the query to finish
-        
-        this.popUpMessage = 'Downloaded user quizzes for quiz id: ' + this.quizIdInput;
+        const success = await downloadUserQuizzesCsvQuery(this.$apollo, this.quizIdInput) // waits for the query to finish
+
+        this.popUpMessage = 'Downloaded user quizzes for quiz id: ' + this.quizIdInput
         if (!success) {
-          this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput;
+          this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput
         }
 
-        this.popUpDialog = true;
+        this.popUpDialog = true
       } catch (error) {
-        console.error('Failed to download user quizzes:', error);
+        console.error('Failed to download user quizzes:', error)
 
-        this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput;
-        this.popUpDialog = true;
+        this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput
+        this.popUpDialog = true
       }
-    },
-  },
-});
+    }
+  }
+})
 </script>
 
 <style scoped lang="scss">
-
 .container .v-divider {
   margin-top: 2rem;
 }
