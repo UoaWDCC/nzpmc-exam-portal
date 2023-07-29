@@ -5,12 +5,12 @@
 
   <v-scroll-y-reverse-transition>
     <v-alert v-if="error" type="error" class="ma-3">
-      {{ $errorMessage }}
+      {{ error }}
     </v-alert>
   </v-scroll-y-reverse-transition>
 
   <v-scroll-y-reverse-transition>
-    <div v-if="data" class="fill-height flex-grow-1" style="overflow-y: auto">
+    <div v-if="questionData" class="fill-height flex-grow-1" style="overflow-y: auto">
       <v-container fluid>
         <v-row>
           <v-col cols="12" md="6" class="mb-n3">
@@ -19,16 +19,19 @@
                 Question {{ questionNumber }}
               </h2>
 
-              <AppExamQuestionFlagButton :flagged="data.flag" :question-number="questionNumber" />
+              <AppExamQuestionFlagButton
+                :flagged="questionData.flag"
+                :question-number="questionNumber"
+              />
             </div>
 
-            <DisplayText :text="data.question" />
+            <DisplayText :text="questionData.question" />
           </v-col>
 
           <v-col cols="12" md="6">
             <AppExamQuestionOptions
-              :options="data.options"
-              :answer="data.userAnswer ? data.userAnswer.id : null"
+              :options="questionData.options"
+              :answer="questionData.userAnswer ? questionData.userAnswer.id : null"
               :question-number="questionNumber"
             />
           </v-col>
@@ -64,8 +67,8 @@ export default {
     return {
       loading: false,
       error: null,
-      questionData: null,
-      quizData: null
+      questionData: undefined,
+      quizData: undefined
     }
   },
 
@@ -90,11 +93,18 @@ export default {
         }
       },
       loadingKey: 'loading',
-      error(error) {
-        this.error = error.message
+      result({ data, error, loading }) {
+        this.loading = loading
+        if (error) {
+          this.error = error.message
+        } else {
+		  if (data) {
+			this.questionData = data.userQuiz.question
+			console.log(this.questionData)
+		  }
+		  }
       },
-      update: (data) => data.userQuiz.question,
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'cache-and-network'
     },
     quizData: {
       query: UserQuizQuery,
@@ -103,7 +113,16 @@ export default {
           quizID: this.$route.params.quizID
         }
       },
-      fetchPolicy: 'cache-only'
+	  result({ data, error, loading }) {
+        this.loading = loading
+        if (error) {
+          this.error = error.message
+        } else {
+          if (data) 
+          this.quizData = data.userQuiz
+        }
+      },
+      fetchPolicy: 'cache-and-network'
     }
   }
 }
