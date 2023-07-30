@@ -1,3 +1,8 @@
+<style>
+#submit-button {
+  width: 100%;
+}
+</style>
 <template>
   <AppExamTopbarTimer />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
@@ -12,7 +17,7 @@
       />
     </v-list-item-group>
   </v-list>
-  <v-btn color="secondary" depressed class="ml-2">Submit</v-btn>
+  <v-btn color="secondary" depressed id="submit-button">Submit</v-btn>
 </template>
 
 <script lang="ts">
