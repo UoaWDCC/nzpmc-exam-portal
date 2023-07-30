@@ -1,6 +1,6 @@
 <template>
   <AppExamTopbarTimer />
-  <v-list dense nav class="app-exam-sidebar" style="max-height: 100%; overflow: auto">
+  <v-list dense nav class="app-exam-sidebar" style="max-height: calc(100% - 5rem); overflow: auto">
     <v-list-item-group v-model="selected" color="primary">
       <AppExamSidebarLink
         v-for="(question, index) in questions"
@@ -12,6 +12,7 @@
       />
     </v-list-item-group>
   </v-list>
+  <v-btn color="secondary" depressed class="ml-2">Submit</v-btn>
 </template>
 
 <script lang="ts">
