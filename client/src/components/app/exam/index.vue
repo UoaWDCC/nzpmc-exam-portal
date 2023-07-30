@@ -129,6 +129,7 @@ export default defineComponent({
   max-width: 100vw;
   .question-container {
     justify-self: flex-end;
+    padding-left: 256px;
   }
 }
 </style>

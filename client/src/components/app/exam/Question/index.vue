@@ -1,7 +1,6 @@
 <style scoped lang="scss">
 .question-container {
   justify-self: flex-end;
-  width: 100vw;
 }
 </style>
 <template>
@@ -16,37 +15,34 @@
   </v-scroll-y-reverse-transition>
 
   <v-scroll-y-reverse-transition>
-    <div v-if="questionData" class="question-container" style="overflow-y: auto">
-      <v-container fluid>
-        <v-row>
-          <v-col>
-            <DisplayText :text="questionData.question" />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" md="6" class="mb-n3">
-            <div class="align-center d-flex mb-3">
-              <h2 class="flex-grow-1 text-h5" style="line-height: 1">
-                Question {{ questionNumber }}
-              </h2>
+    <v-container fluid v-if="questionData" class="question-container">
+      <v-row>
+        <v-col>
+          <DisplayText :text="questionData.question" />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="6" class="mb-n3">
+          <div class="align-center d-flex mb-3">
+            <h2 class="flex-grow-1 text-h5" style="line-height: 1">
+              Question {{ questionNumber }}
+            </h2>
 
-              <AppExamQuestionFlagButton
-                :flagged="questionData.flag"
-                :question-number="questionNumber"
-              />
-            </div>
-          </v-col>
-
-          <v-col cols="12" md="6">
-            <AppExamQuestionOptions
-              :options="questionData.options"
-              :answer="questionData.userAnswer ? questionData.userAnswer.id : null"
+            <AppExamQuestionFlagButton
+              :flagged="questionData.flag"
               :question-number="questionNumber"
             />
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <AppExamQuestionOptions
+          :options="questionData.options"
+          :answer="questionData.userAnswer ? questionData.userAnswer.id : null"
+          :question-number="questionNumber"
+        />
+      </v-row>
+    </v-container>
   </v-scroll-y-reverse-transition>
 </template>
 
