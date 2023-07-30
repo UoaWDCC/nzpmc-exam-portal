@@ -1,3 +1,9 @@
+<style scoped lang="scss">
+.question-container {
+  justify-self: flex-end;
+  width: 100vw;
+}
+</style>
 <template>
   <template v-if="loading">
     <AppExamQuestionLoader />
@@ -10,10 +16,10 @@
   </v-scroll-y-reverse-transition>
 
   <v-scroll-y-reverse-transition>
-    <div v-if="questionData" class="fill-height flex-grow-1" style="overflow-y: auto">
+    <div v-if="questionData" class="question-container" style="overflow-y: auto">
       <v-container fluid>
         <v-row>
-          <v-col style="height: 20rem">
+          <v-col>
             <DisplayText :text="questionData.question" />
           </v-col>
         </v-row>

@@ -10,35 +10,25 @@
 
     <AppExamTopbar v-if="data" :name="data.name" />
 
-    <div
-      v-if="data || loading"
-      class="d-flex flex-grow-1"
-      :style="{ height: `calc(100vh - ${TOOLBAR_HEIGHT * 2}px)` }"
-    >
-      <div class="flex-shrink-0" style="overflow-y: auto">
-        <v-navigation-drawer
-          absolute
-          permanent
-          class="background--grey grey lighten-5"
-          style="width: unset; min-width: 56px"
-          mini-variant
-        >
+    <v-container v-if="data || loading" class="exam-and-sidebar-container">
+      <v-card>
+        <v-navigation-drawer permanent clipped left mini-variant>
           <AppExamSidebarLoader v-if="loading" />
 
           <v-scroll-y-reverse-transition>
             <AppExamSidebar v-if="data" :questions="data.questions" />
           </v-scroll-y-reverse-transition>
         </v-navigation-drawer>
-      </div>
+      </v-card>
 
       <AppExamQuestionLoader v-if="isLoading" />
 
-      <div v-if="data" class="flex-grow-1" style="overflow: hidden">
+      <div v-if="data" class="question-container" style="overflow: hidden">
         <component :is="routeTransition" hide-on-leave>
           <router-view :key="$route.params.questionID" />
         </component>
       </div>
-    </div>
+    </v-container>
   </div>
 </template>
 
@@ -121,7 +111,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped lang="scss">
 .app-exam .slide-x-transition-enter {
   opacity: 0;
   transform: translateX(-50vw);
@@ -130,5 +120,15 @@ export default defineComponent({
 .app-exam .slide-x-reverse-transition-enter {
   opacity: 0;
   transform: translateX(50vw);
+}
+
+.exam-and-sidebar-container {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  max-width: 100vw;
+  .question-container {
+    justify-self: flex-end;
+  }
 }
 </style>
