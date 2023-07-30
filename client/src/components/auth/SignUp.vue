@@ -15,16 +15,6 @@
 
         <div class="pb-4 px-4">
             <v-text-field
-                label="Email"
-                :value="email"
-                type="email"
-                autocomplete="username"
-                hide-details="auto"
-                class="mb-4"
-                disabled
-            ></v-text-field>
-
-            <v-text-field
                 v-model="password"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
@@ -74,7 +64,7 @@
             >
                 <v-icon left dark>mdi-account-plus</v-icon>
 
-                <span class="text-white">Sign Up</span>
+                <span class="text-white">&nbsp;Sign Up</span>
             </v-btn>
         </div>
     </v-form>
