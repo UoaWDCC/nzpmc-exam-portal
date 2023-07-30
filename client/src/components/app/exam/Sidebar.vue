@@ -1,4 +1,5 @@
 <template>
+  <AppExamTopbarTimer />
   <v-list dense nav class="app-exam-sidebar" style="max-height: 100%; overflow: auto">
     <v-list-item-group v-model="selected" color="primary">
       <AppExamSidebarLink
@@ -14,6 +15,7 @@
 </template>
 
 <script lang="ts">
+import AppExamTopbarTimer from './TopbarTimer.vue'
 import AppExamSidebarLink from './SidebarLink.vue'
 import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
@@ -22,7 +24,7 @@ const SIDEBAR_WIDTH = 56
 export default {
   name: 'AppExamSidebar',
 
-  components: { AppExamSidebarLink },
+  components: { AppExamSidebarLink, AppExamTopbarTimer },
 
   props: {
     questions: {

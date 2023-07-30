@@ -17,23 +17,20 @@
   <v-scroll-y-reverse-transition>
     <v-container fluid v-if="questionData" class="question-container">
       <v-row>
+        <h2 class="flex-grow-1 text-h5" style="line-height: 1">Question {{ questionNumber }}</h2>
+      </v-row>
+      <v-row>
         <v-col>
           <DisplayText :text="questionData.question" />
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="6" class="mb-n3">
-          <div class="align-center d-flex mb-3">
-            <h2 class="flex-grow-1 text-h5" style="line-height: 1">
-              Question {{ questionNumber }}
-            </h2>
-
-            <AppExamQuestionFlagButton
-              :flagged="questionData.flag"
-              :question-number="questionNumber"
-            />
-          </div>
-        </v-col>
+        <div class="align-center d-flex mb-3">
+          <AppExamQuestionFlagButton
+            :flagged="questionData.flag"
+            :question-number="questionNumber"
+          />
+        </div>
       </v-row>
       <v-row>
         <AppExamQuestionOptions
