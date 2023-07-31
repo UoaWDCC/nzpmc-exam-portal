@@ -6,7 +6,7 @@
     >
         <AuthHeader
             title="Forgot your password?"
-            text="If you've forgotten your password, we can send you a reset link."
+            :text="'If you have forgotten your password, we can send you a reset link.'"
             show-back
             @back="$emit('go', 'SignIn')"
         />
@@ -19,7 +19,6 @@
                 autocomplete="username"
                 hide-details="auto"
                 class="mb-4"
-                disabled
             ></v-text-field>
         </div>
 
@@ -37,13 +36,13 @@
 
         <div class="d-flex justify-end pb-4 px-4">
             <v-btn
-                color="primary"
+                color="secondary"
                 type="submit"
                 :disabled="loading || !!success"
                 :loading="loading"
             >
                 <v-icon left dark>mdi-email</v-icon>
-                Send email
+                <span class="text-white">&nbsp;Send email</span>
             </v-btn>
         </div>
     </v-form>

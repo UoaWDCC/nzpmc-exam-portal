@@ -1,6 +1,6 @@
 <template>
     <div class="align-center auth-header d-flex header">
-        <v-btn v-if="showBack" icon color="secondary" class="ml-4" large @click="$emit('back')">
+        <v-btn v-if="showBack" icon color="secondary" class="ml-0" large @click="$emit('back')">
             <v-icon color="white">mdi-arrow-left</v-icon>
         </v-btn>
 

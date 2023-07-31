@@ -1,5 +1,10 @@
 <template>
-    <v-form v-model="valid" class="auth-sign-in" :disabled="loading || !!success" @submit="signIn">
+    <v-form 
+        v-model="valid" 
+        class="auth-sign-in" 
+        :disabled="loading || !!success" 
+        @submit="signIn">
+
         <AuthHeader 
             title="Sign In" 
             :text="`Hello, ${email}.`"
@@ -36,7 +41,7 @@
 
             <v-btn id="sign-in-button" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
                 <v-icon>mdi-login-variant</v-icon>
-                <span>&nbsp;Sign In</span>
+                <span class="text-white">&nbsp;Sign In</span>
             </v-btn>
         </div>
     </v-form>
@@ -132,10 +137,6 @@ export default {
 
 #sign-in-button {
     background-color: $secondary;
-}
-
-#sign-in-button span {
-    color: $white;
 }
 
 .fields {
