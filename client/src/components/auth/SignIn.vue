@@ -1,13 +1,17 @@
 <template>
     <v-form v-model="valid" class="auth-sign-in" :disabled="loading || !!success" @submit="signIn">
-        <!-- TODO: style showing back -->
-        <AuthHeader title="Sign In" :text="`Hello, ${email}.`" @back="$emit('go', 'Email')" />
+        <AuthHeader 
+            title="Sign In" 
+            :text="`Hello, ${email}.`"
+            show-back 
+            @back="$emit('go', 'Email')" 
+        />
 
         <div class="text-subtitle-1 font-weight-black px-4">Password</div>
 
         <div class="pb-4 px-4 fields">
-            <!-- TODO: toggle pwd visibility ( :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'") -->
-            <v-text-field v-model="password"
+            <v-text-field 
+                v-model="password"
                 :type="showPassword ? 'text' : 'password'" autocomplete="current-password"
                 :rules="[(v) => !!v || 'This is required']" required autofocus hide-details="auto"
                 @click:append="showPassword = !showPassword"></v-text-field>
@@ -25,15 +29,14 @@
             </v-alert>
         </v-expand-transition> -->
 
-        <div class="align-center d-flex justify-space-between pb-4 px-4">
+        <div class="align-center d-flex justify-space-between">
             <v-btn small :disabled="!!success" @click="$emit('go', 'ForgotPassword')">
                 Forgot password?
             </v-btn>
 
             <v-btn id="sign-in-button" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
-                <!-- <v-icon left dark>mdi-login</v-icon> -->
-
-                <span>Sign In</span>
+                <v-icon>mdi-login-variant</v-icon>
+                <span>&nbsp;Sign In</span>
             </v-btn>
         </div>
     </v-form>
