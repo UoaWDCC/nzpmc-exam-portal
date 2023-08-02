@@ -1,6 +1,6 @@
 <template>
     <div class="align-center auth-header d-flex header">
-        <v-btn v-if="showBack" icon flat @click="$emit('back')">
+        <v-btn id="back-button" v-if="showBack" icon flat @click="$emit('back')">
             <v-icon color="secondary" size="40">mdi-chevron-left</v-icon>
         </v-btn>
 
@@ -48,4 +48,11 @@ export default {
     }
 }
 
+#back-button {
+    position: absolute;
+    top: 29.7%;
+    left: 38%;
+    transform: translate(-50%, -50%);
+
+}
 </style>

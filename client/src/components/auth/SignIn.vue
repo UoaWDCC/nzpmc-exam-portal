@@ -5,7 +5,8 @@
         :disabled="loading || !!success" 
         @submit="signIn">
 
-        <AuthHeader 
+        <AuthHeader
+            id="back"
             title="Sign In" 
             :text="`Hello, ${email}.`"
             show-back 
@@ -35,9 +36,9 @@
         </v-expand-transition> -->
 
         <div class="align-center d-flex justify-space-between">
-            <v-btn small :disabled="!!success" @click="$emit('go', 'ForgotPassword')">
+            <v-label id="forgot-password" small :disabled="!!success" @click="$emit('go', 'ForgotPassword')">
                 Forgot password?
-            </v-btn>
+            </v-label>
 
             <v-btn id="sign-in-button" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
                 <v-icon>mdi-login-variant</v-icon>
@@ -137,13 +138,37 @@ export default {
 
 #sign-in-button {
     background-color: $secondary;
+    text-align: center;
+    position: absolute;
+    top: 68%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: medium;
+    width: max(20vw, 20vh);
+    height: 6vh;
+    border-radius: 18px;
+    letter-spacing: 6px;
+}
+
+#forgot-password {
+    position: absolute;
+    top: 74%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: small;
+    box-shadow: none;
+}
+
+#forgot-password:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .fields {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 100px;
 
     > div {
         width: 100%;
@@ -155,4 +180,6 @@ export default {
     border: 2px solid black;
     border-radius: 15px;
 }
+
+
 </style>
