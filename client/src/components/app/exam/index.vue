@@ -123,10 +123,13 @@ export default defineComponent({
 .exam-and-sidebar-container {
   width: 100%;
   margin: 0;
+  padding-right: 0;
+  padding-bottom: 0;
   max-width: 100vw;
   .question-container {
+    padding: 0;
     justify-self: flex-end;
-    padding-left: 256px;
+    padding-left: 240px;
   }
 }
 </style>

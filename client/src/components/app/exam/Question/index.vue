@@ -1,10 +1,20 @@
 <style scoped lang="scss">
 .question-container {
+  overflow-y: auto;
+  overflow-x: hidden;
   justify-self: flex-end;
+  padding-bottom: 0;
   #next-question-button {
     background-color: $examDarkBlue;
     color: $white;
     margin: auto;
+  }
+  .options-area {
+    display: flex;
+    flex-direction: column;
+    background: $grey;
+    padding: 32px;
+    margin: 0 -32px;
   }
 }
 </style>
@@ -37,16 +47,14 @@
           />
         </div>
       </v-row>
-      <v-row>
+      <div class="options-area">
         <AppExamQuestionOptions
           :options="questionData.options"
           :answer="questionData.userAnswer ? questionData.userAnswer.id : null"
           :question-number="questionNumber"
         />
-      </v-row>
-      <v-row>
         <v-btn id="next-question-button" variant="flat">Next Question</v-btn>
-      </v-row>
+      </div>
     </v-container>
   </v-scroll-y-reverse-transition>
 </template>
