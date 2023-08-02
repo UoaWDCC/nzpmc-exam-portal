@@ -121,7 +121,6 @@ export default defineComponent({
 }
 
 .exam-and-sidebar-container {
-  display: flex;
   width: 100%;
   margin: 0;
   max-width: 100vw;
