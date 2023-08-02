@@ -1,6 +1,11 @@
 <style scoped lang="scss">
 .question-container {
   justify-self: flex-end;
+  #next-question-button {
+    background-color: $examDarkBlue;
+    color: $white;
+    margin: auto;
+  }
 }
 </style>
 <template>
@@ -38,6 +43,9 @@
           :answer="questionData.userAnswer ? questionData.userAnswer.id : null"
           :question-number="questionNumber"
         />
+      </v-row>
+      <v-row>
+        <v-btn id="next-question-button" variant="flat">Next Question</v-btn>
       </v-row>
     </v-container>
   </v-scroll-y-reverse-transition>
