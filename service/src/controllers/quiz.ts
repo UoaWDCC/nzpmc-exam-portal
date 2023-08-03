@@ -20,7 +20,6 @@ const addQuiz = async (
     name: string,
     description: string,
     duration: number,
-    numOfQuestions: number,
     startTime: Date,
     endTime: Date,
 ): Promise<Schema.Quiz> => {
@@ -29,7 +28,6 @@ const addQuiz = async (
     quiz.name = name
     quiz.description = description
     quiz.duration = duration
-    quiz.numOfQuestions = numOfQuestions
     quiz.startTime = startTime
     quiz.endTime = endTime
 
@@ -43,7 +41,6 @@ const editQuiz = async (
     name?: string,
     description?: string,
     duration?: number,
-    numOfQuestions?: number,
     startTime?: Date,
     endTime?: Date,
     questionIDsOrder?: string[],
@@ -57,9 +54,6 @@ const editQuiz = async (
         quiz.name = name ? name : quiz.name
         quiz.description = description ? description : quiz.description
         quiz.duration = duration ? duration : quiz.duration
-        quiz.numOfQuestions = numOfQuestions
-            ? numOfQuestions
-            : quiz.numOfQuestions
         quiz.startTime = startTime ? startTime : quiz.startTime
         quiz.endTime = endTime ? endTime : quiz.endTime
         quiz.questionIDsOrder = questionIDsOrder
