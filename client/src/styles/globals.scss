@@ -26,6 +26,9 @@ body {
   padding: 0;
 }
 
+.v-navigation-drawer__content {
+  background: $examDarkBlue;
+}
 //Visibility
 .hide-for-mobile {
   //hide for tablet and mobile

@@ -1,20 +1,16 @@
 <template>
-    <v-toolbar
-        elevation="0"
-        dense
-        class="app-exam-topbar"
-        style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-    >
-        <v-toolbar-title>{{ name }}</v-toolbar-title>
+  <v-toolbar
+    elevation="0"
+    dense
+    class="app-exam-topbar"
+    style="padding-left: 256px; padding-top: 30px; border-bottom: thin solid rgba(0, 0, 0, 0.12)"
+  >
+    <v-toolbar-title>{{ name }}</v-toolbar-title>
 
-        <v-spacer />
+    <v-spacer />
 
-        <AppExamTopbarSpinner />
-
-        <AppExamTopbarTimer />
-
-        <v-btn color="secondary" depressed class="ml-2">Submit</v-btn>
-    </v-toolbar>
+    <AppExamTopbarSpinner />
+  </v-toolbar>
 </template>
 
 <script lang="ts">
@@ -22,15 +18,15 @@ import AppExamTopbarSpinner from './TopbarSpinner.vue'
 import AppExamTopbarTimer from './TopbarTimer.vue'
 
 export default {
-    name: 'AppExamTopbar',
+  name: 'AppExamTopbar',
 
-    components: { AppExamTopbarSpinner, AppExamTopbarTimer },
+  components: { AppExamTopbarSpinner, AppExamTopbarTimer },
 
-    props: {
-        name: {
-            type: String,
-            required: true,
-        },
-    },
+  props: {
+    name: {
+      type: String,
+      required: true
+    }
+  }
 }
 </script>
