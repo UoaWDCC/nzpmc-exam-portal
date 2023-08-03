@@ -8,7 +8,6 @@ class Question {
 
     @IsDataURI()
     imageURI!: string
-    numOfAnswers!: number
     topics!: string
 
     answerID!: string

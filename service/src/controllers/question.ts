@@ -49,7 +49,6 @@ const addQuestion = async (
     quizID: string,
     q: string,
     imageURI: string,
-    numOfAnswers: number,
     topics: string,
 ): Promise<QuestionModel> => {
     return runTransaction(async (tran) => {
@@ -64,7 +63,6 @@ const addQuestion = async (
 
         question.question = q
         question.imageURI = imageURI
-        question.numOfAnswers = numOfAnswers
         question.topics = topics
         question.answerID = ''
 
@@ -91,7 +89,6 @@ const editQuestion = async (
     id: string,
     q?: string,
     imageURI?: string,
-    numOfAnswers?: number,
     answer?: string,
     topics?: string,
 ): Promise<QuestionModel> => {
@@ -109,9 +106,6 @@ const editQuestion = async (
 
         question.question = q ? q : question.question
         question.imageURI = imageURI ? imageURI : question.imageURI
-        question.numOfAnswers = numOfAnswers
-            ? numOfAnswers
-            : question.numOfAnswers
         question.topics = topics ? topics : question.topics
         question.modified = new Date()
 
