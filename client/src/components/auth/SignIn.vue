@@ -139,9 +139,9 @@ export default {
 #sign-in-button {
     background-color: $secondary;
     text-align: center;
-    position: absolute;
-    top: 68%;
-    left: 50%;
+    position: relative;
+    margin-top: 30px;
+    left: 60px;
     transform: translate(-50%, -50%);
     font-size: medium;
     width: max(20vw, 20vh);
@@ -151,12 +151,13 @@ export default {
 }
 
 #forgot-password {
-    position: absolute;
-    top: 74%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    text-align: center;
+    position: relative;
+    top: 35px;
+    left: 120px;
     font-size: small;
     box-shadow: none;
+    padding-right: 115px;
 }
 
 #forgot-password:hover {
@@ -168,7 +169,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 100px;
 
     > div {
         width: 100%;
