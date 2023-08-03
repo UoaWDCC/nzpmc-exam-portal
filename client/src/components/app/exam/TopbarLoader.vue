@@ -1,51 +1,43 @@
 <template>
-    <ApolloQuery
-        :query="UserQuizzesQuery"
-        :update="
-            (data: Query) =>
-                data.userQuizzes.find(
-                    (quiz) => quiz.id === $route.params.quizID,
-                )"
-        fetch-policy="cache-only"
-    >
-        <template #default="{ result: { data } }">
-            <v-toolbar
-                elevation="0"
-                dense
-                style="border-bottom: thin solid rgba(0, 0, 0, 0.12)"
-            >
-                <!-- Show quiz name from userQuizzes if it already exists in the cache -->
-                <v-toolbar-title v-if="data">{{ data.name }}</v-toolbar-title>
+  <v-toolbar elevation="0" dense style="border-bottom: thin solid rgba(0, 0, 0, 0.12)">
+    <!-- Show quiz name from userQuizzes if it already exists in the cache -->
+    <v-toolbar-title v-if="userQuiz">{{ userQuiz.name }}</v-toolbar-title>
 
-                <v-skeleton-loader
-                    v-else
-                    type="text"
-                    width="160"
-                    class="mb-n2"
-                />
+    <v-skeleton-loader v-else type="text" width="160" class="mb-n2" />
 
-                <v-spacer />
+    <v-spacer />
 
-                <v-skeleton-loader
-                    v-for="i in 2"
-                    :key="i"
-                    type="button"
-                    class="ml-2"
-                />
-            </v-toolbar>
-        </template>
-    </ApolloQuery>
+    <v-skeleton-loader v-for="i in 2" :key="i" type="button" class="ml-2" />
+  </v-toolbar>
 </template>
 
 <script lang="ts">
 import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
-import type { Query } from '@nzpmc-exam-portal/common';
 
 export default {
-    name: 'AppExamTopbarLoader',
+  name: 'AppExamTopbarLoader',
 
-    data() {
-        return { UserQuizzesQuery }
-    },
+  apollo: {
+    userQuizzes: {
+      query: UserQuizzesQuery,
+      result({ data, error, loading }) {
+        this.loading = loading
+        if (error) {
+          console.error(error.message)
+        } else {
+          console.log(data)
+          if (data) {
+            data.userQuizzes.find((quiz) => quiz.id === this.$route.params.quizID)
+          }
+        }
+      },
+      fetchPolicy: 'cache-and-network'
+    }
+  },
+  data() {
+    return {
+      userQuiz: undefined
+    }
+  }
 }
 </script>

@@ -1,35 +1,35 @@
 <template>
-    <latex :content="parsed" style="margin-bottom: -16px" />
+  <div v-html="parsed"></div>
 </template>
 
 <script lang="ts">
-var showdown = require('showdown')
+import { Converter } from 'showdown'
 
 export default {
-    name: 'AppDisplayText',
+  name: 'AppDisplayText',
 
-    props: {
-        text: { type: String, required: true },
-    },
+  props: {
+    text: { type: String, required: true }
+  },
 
-    data() {
-        return {
-            converter: new showdown.Converter(),
-        }
-    },
+  data() {
+    return {
+      converter: new Converter()
+    }
+  },
 
-    computed: {
-        parsed() {
-            return this.converter.makeHtml(this.text)
-        },
-    },
+  computed: {
+    parsed() {
+      return this.converter.makeHtml(this.text)
+    }
+  }
 }
 </script>
 
 <style>
 img {
-    max-width: min(100%, 300px);
-    margin: 0 auto;
-    display: block;
+  max-width: min(100%, 300px);
+  margin: 0 auto;
+  display: block;
 }
 </style>

@@ -3,7 +3,6 @@ export type QuestionModel = {
     id: string
     question: string
     imageURI: string
-    numOfAnswers: number
     topics: string
     answerID: string
     created: Date

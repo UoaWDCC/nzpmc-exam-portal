@@ -7,7 +7,6 @@ class Quiz {
     name!: string
     description!: string
     duration!: number
-    numOfQuestions!: number
     startTime!: Date
     endTime!: Date
 
