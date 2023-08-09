@@ -21,6 +21,7 @@ import {
     deleteQuiz,
     swapQuestion,
     getOptionByID,
+    getUser,
 } from '../controllers'
 import {
     AdminAuthenticationError,
@@ -57,6 +58,7 @@ import {
     MutationImageArgs,
     MutationResolvers,
     MutationSubmitUserQuizQuestionsArgs,
+    MutationEnrolUsersInQuizArgs,
     MutationSwapQuestionArgs,
     Option,
     Quiz,
@@ -67,8 +69,10 @@ import {
     UserQuizQuestionModel,
     QuestionModel,
     UserQuizModel,
+    MutationUnenrolUsersFromQuizArgs,
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
+import { deleteUserQuiz } from '../controllers/userQuiz'
 
 const addOptionMutation: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,
@@ -487,6 +491,78 @@ const editOrderQuestionMutation: Resolver<
     return quiz
 }
 
+const enrolUsersInQuizMutation: Resolver<
+    Array<ResolverTypeWrapper<UserQuizModel>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationEnrolUsersInQuizArgs, 'users' | 'quizID'>
+> = async (_parent, { users, quizID }, _context) => {
+    const quizToEnrol = quizID
+    console.log(users)
+    const quiz = await getQuiz(quizToEnrol)
+
+    // Use `map` to create an array of Promises representing the addUserQuiz() operations
+    const addUserQuizPromises = users.map(async (currentUser) => {
+        const userID = currentUser.id
+        const userEmail = currentUser.email
+        try {
+            const user = await getUser(userID, userEmail)
+            console.log(user)
+        } catch (e) {
+            console.error(e)
+            console.error('User does not exist')
+            // TODO: create the user etc
+            return null
+        }
+
+        // TODO: enrol user
+        const newUserQuiz = await addUserQuiz(
+            userID,
+            quizToEnrol,
+            quiz.startTime,
+            quiz.endTime,
+        )
+
+        return newUserQuiz
+    })
+
+    const resolvedQuizzes = await Promise.all(addUserQuizPromises)
+    const newQuizzes: UserQuizModel[] = []
+
+    resolvedQuizzes.map((addedQuiz) => {
+        if (addedQuiz) {
+            newQuizzes.push(addedQuiz)
+        }
+    })
+
+    return newQuizzes
+}
+
+const unenrolUsersFromQuizMutation: Resolver<
+    Array<ResolverTypeWrapper<string>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationUnenrolUsersFromQuizArgs, 'quizID' | 'users'>
+> = async (_parent, { users, quizID }, _context) => {
+    const quizToUnenrolFrom = quizID
+
+    const deletedUserQuizIDs: string[] = []
+    // Use `map` to create an array of Promises representing the addUserQuiz() operations
+    const addUserQuizPromises = users.map(async (currentUser) => {
+        const userID = currentUser.id
+        const userEmail = currentUser.email
+        const deletedQuizID = await deleteUserQuiz(quizToUnenrolFrom, userID)
+        if (deletedQuizID !== null) {
+            deletedUserQuizIDs.push(deletedQuizID)
+        }
+    })
+
+    // Wait for all the promises to resolve
+    await Promise.all(addUserQuizPromises)
+
+    return deletedUserQuizIDs
+}
+
 const mutationResolvers: MutationResolvers = {
     addOption: admin(addOptionMutation),
     addQuestion: admin(addQuestionMutation),
@@ -506,6 +582,8 @@ const mutationResolvers: MutationResolvers = {
     editUser: admin(editUserMutation),
     editUserQuiz: user(editUserQuizMutation),
     editUserQuizQuestion: admin(editUserQuizQuestionMutation),
+    enrolUsersInQuiz: admin(enrolUsersInQuizMutation),
+    unenrolUsersFromQuiz: admin(unenrolUsersFromQuizMutation),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
     swapQuestion: admin(swapQuestionMutation),

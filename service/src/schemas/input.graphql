@@ -121,7 +121,22 @@ input EditOrderQuestionInput {
     questionIDs: [ID!]!
     quizID: ID!
 }
-
+input UsersInput {
+	id: ID!
+    displayName: String
+    email: String
+    emailVerified: String
+    photoURL: String
+    firstName: String
+    lastName: String
+    yearLevel: String
+    role: String
+    created: DateTime
+    modified: DateTime
+}
+input QuizIDInput {
+    quizID: ID!
+}
 enum Sort {
     ASC
     DESC

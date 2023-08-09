@@ -43,6 +43,7 @@ type Quiz {
     modified: DateTime
 }
 
+
 type UserQuiz {
     id: ID!
     user: User

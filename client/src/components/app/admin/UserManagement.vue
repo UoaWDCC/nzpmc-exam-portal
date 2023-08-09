@@ -105,7 +105,7 @@ import {
   addUserMutation,
   downloadUsersCsvQuery,
   successMessage
-} from '../../../utils/userManagement'
+} from '@/utils/userManagement'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
 import type { Student } from '@/utils/csv_parser'
 import { parse } from 'papaparse'
