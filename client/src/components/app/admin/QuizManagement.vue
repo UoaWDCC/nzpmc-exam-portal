@@ -24,21 +24,59 @@
     </v-card>
   </v-dialog>
 
-  <v-container class="quiz-management">
-    <h2>Quiz Management</h2>
-    <v-btn @click="enrollUserIntoQuiz">Enroll User into Quiz</v-btn>
-    <v-divider />
+  <v-container class="quiz-management" fluid>
+    <v-container fluid>
+        <v-select
+        label="SELECT AN EXAM"
+        :items="quizzes"
+        item-title="name"
+        item-value="id"
+        @update:model-value="updateQuizID"
+        ></v-select>
+
+        <v-btn size="large" color="secondary">
+          ADD NEW EXAM
+          <v-icon
+          end
+          icon="mdi-plus-box-outline"
+        ></v-icon>
+        </v-btn>
+    </v-container>
+
+    <v-container fluid class="mt-16 bg-grey-lighten-2 pa-10">
+      <div class="d-flex">
+        <h2 class="me-auto">EXAM: <span class="text-h6 ml-2">{{ quizName }}</span></h2>
+        <v-text-field label="ID" :model-value=quizIdInput class="id-input" density="comfortable" readonly></v-text-field>
+      </div>
+
+      <v-text-field label="Exam Name" :model-value=quizIdInput></v-text-field>
+      <v-textarea label="Description" auto-grow model-value="Example Description" rows="3" clearable></v-textarea>
+      
+      <v-divider :thickness="3" class="pa-5"/>
+
+      <v-text-field label="Exam Time (minutes)" :model-value=60></v-text-field>
+
+      <v-divider :thickness="3" class="pa-5"/>
+
+      <v-row>
+        <v-col cols="12" sm="6">
+          <v-text-field label="Start Date" prepend-inner-icon="mdi-calendar-range"></v-text-field>
+          <v-text-field label="Start Time" prepend-inner-icon="mdi-clock-time-eight-outline"></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6">
+          <v-text-field label="End Date" prepend-inner-icon="mdi-calendar-range"></v-text-field>
+          <v-text-field label="End Time" prepend-inner-icon="mdi-clock-time-eight-outline"></v-text-field>
+        </v-col>
+      </v-row>
+      
+      <v-btn @click="enrollUserIntoQuiz">Enroll User into Quiz</v-btn>
+
+      <v-divider />
+        <v-btn @click="downloadUserQuizzes">Download User Quizzes</v-btn>
+    </v-container>
   </v-container>
-  <v-container>
-    <v-select
-      label="Quiz ID"
-      :items="quizzes"
-      item-title="name"
-      item-value="id"
-      @update:model-value="updateQuizID"
-    ></v-select>
-    <v-btn @click="downloadUserQuizzes">Download User Quizzes</v-btn>
-  </v-container>
+    
+
 </template>
 
 <script lang="ts">
@@ -81,6 +119,11 @@ export default defineComponent({
       fetchPolicy: 'cache-and-network'
     }
   },
+  computed: {
+    quizName() {
+      return this.quizzes.find((quiz) => quiz.id === this.quizIdInput)?.name ?? "(no exam selected)";
+    }
+  },
   methods: {
     updateQuizID(id) {
       this.quizIdInput = id
@@ -116,13 +159,16 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.id-input {
+  max-width: 18rem;
+}
+
 .container .v-divider {
   margin-top: 2rem;
 }
 .quiz-management {
   display: flex;
   flex-direction: column;
-  max-width: 1400px;
   align-items: flex-start; /* Updated to left-aligned */
 }
 

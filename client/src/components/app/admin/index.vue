@@ -3,17 +3,18 @@
 	padding-top: 64px;
 	display:flex;
 	flex-direction:column;
-	max-width: 1400px;
 	align-items: center;
+	padding: 31px 0;
+	margin: 0;
 }
+
 </style>
 
 <template>
-	<v-container class="app-admin">
-	  <v-container v-if="store.userIsAdmin">
-		<h1>Admin</h1>
-		<v-container>
-		  <v-tabs v-model="currentTab">
+	<v-container class="app-admin" fluid>
+	  <v-container v-if="store.userIsAdmin" fluid class="pa-0">
+		<v-container fluid class="pa-0">
+		  <v-tabs v-model="currentTab" grow>
 			<v-tab v-for="(tab, index) in tabs" :key="index" :value="tab.value">
 			  {{ tab.label }}
 			</v-tab>
@@ -44,10 +45,10 @@
 	data() {
 	  return {
 		store: useMainStore(),
-		currentTab: 'UserManagement', // Default to User Management tab
+		currentTab: 'Quiz Management', // Default to Quiz Management tab
 		tabs: [
-		  { value: 'UserManagement', label: 'User Management', component: UserManagement },
-		  { value: 'QuizManagement', label: 'Quiz Management', component: QuizManagement },
+			{ value: 'QuizManagement', label: 'Quiz Management', component: QuizManagement },
+			{ value: 'UserManagement', label: 'User Management', component: UserManagement },
 		],
 	  };
 	},
