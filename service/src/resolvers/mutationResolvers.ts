@@ -91,15 +91,9 @@ const addQuestionMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuestionArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { quizID, question, imageURI, numOfAnswers, topics } = input
+    const { quizID, question, imageURI, topics } = input
 
-    return await addQuestion(
-        quizID,
-        question,
-        imageURI || '',
-        numOfAnswers,
-        topics,
-    )
+    return await addQuestion(quizID, question, imageURI || '', topics)
 }
 
 const addQuizMutation: Resolver<
@@ -108,17 +102,9 @@ const addQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuizArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { name, description, duration, numOfQuestions, startTime, endTime } =
-        input
+    const { name, description, duration, startTime, endTime } = input
 
-    return await addQuiz(
-        name,
-        description,
-        duration,
-        numOfQuestions,
-        startTime,
-        endTime,
-    )
+    return await addQuiz(name, description, duration, startTime, endTime)
 }
 
 const addUserMutation: Resolver<
@@ -239,14 +225,13 @@ const editQuestionMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuestionArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const { quizID, id, question, imageURI, numOfAnswers, topics } = input
+    const { quizID, id, question, imageURI, topics } = input
 
     return await editQuestion(
         quizID,
         id,
         question || undefined,
         imageURI || undefined,
-        numOfAnswers || undefined,
         '',
         topics || undefined,
     )
@@ -258,22 +243,13 @@ const editQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuizArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const {
-        id,
-        name,
-        description,
-        duration,
-        numOfQuestions,
-        startTime,
-        endTime,
-    } = input
+    const { id, name, description, duration, startTime, endTime } = input
 
     return await editQuiz(
         id,
         name || undefined,
         description || undefined,
         duration || undefined,
-        numOfQuestions || undefined,
         startTime || undefined,
         endTime || undefined,
     )
@@ -505,7 +481,6 @@ const editOrderQuestionMutation: Resolver<
     const { questionIDs, quizID } = input
     const quiz = await editQuiz(
         quizID,
-        undefined,
         undefined,
         undefined,
         undefined,
