@@ -13,7 +13,7 @@
                 :duration="exam.duration"
                 :start-time="exam.startTime"
                 :end-time="exam.endTime"
-                :to="{ name: 'AppExam', params: { quizID: exam.id } }"
+                :to="{ name: 'AppExam', params: { quizID: exam.quizID } }"
             />
         </div>
 
@@ -91,7 +91,9 @@ export default {
                         'name' in quiz &&
                         typeof quiz.name === 'string' &&
                         'startTime' in quiz &&
-                        typeof quiz.startTime === 'string',
+                        typeof quiz.startTime === 'string' &&
+                        'quizID' in quiz &&
+                        typeof quiz.quizID === 'string' 
                 )
             },
         },

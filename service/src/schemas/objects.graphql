@@ -46,6 +46,7 @@ type Quiz {
 
 type UserQuiz {
     id: ID!
+    quizID: ID
     user: User
     name: String
     description: String
