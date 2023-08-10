@@ -104,7 +104,8 @@ export default defineComponent({
           }
         }
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true
     }
   }
 })
