@@ -43,13 +43,13 @@
         </v-btn>
     </v-container>
 
-    <v-container fluid class="mt-16 bg-grey-lighten-2 pa-10">
+    <v-container fluid class="mt-8 bg-grey-lighten-2 pa-10">
       <div class="d-flex">
         <h2 class="me-auto">EXAM: <span class="text-h6 ml-2">{{ quizName }}</span></h2>
         <v-text-field label="ID" :model-value=quizIdInput class="id-input" density="comfortable" readonly></v-text-field>
       </div>
 
-      <v-text-field label="Exam Name" :model-value=quizIdInput></v-text-field>
+      <v-text-field label="Exam Name" :model-value=quizName></v-text-field>
       <v-textarea label="Description" auto-grow model-value="Example Description" rows="3" clearable></v-textarea>
       
       <v-divider :thickness="3" class="pa-5"/>
@@ -68,7 +68,21 @@
           <v-text-field label="End Time" prepend-inner-icon="mdi-clock-time-eight-outline"></v-text-field>
         </v-col>
       </v-row>
-      
+
+      <v-container fluid class="px-0">
+      <v-btn size="large" color="blue-darken-2">EDIT QUESTIONS<v-icon end icon="mdi-cog"></v-icon></v-btn>
+      </v-container>
+
+      <v-container fluid class="px-0 mt-5">
+      <v-btn block size="large" color="white">ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon></v-btn>
+      <v-btn block size="large" color="blue-darken-2" class="mt-3">DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn>
+      </v-container>
+
+      <v-container fluid class="px-0 mt-5">
+      <v-btn block size="large" color="secondary">GRADE EXAM</v-btn>
+      <v-btn block size="large" color="secondary" class="mt-3">RELEASE RESULTS</v-btn>
+      </v-container>
+
       <v-btn @click="enrollUserIntoQuiz">Enroll User into Quiz</v-btn>
 
       <v-divider />
