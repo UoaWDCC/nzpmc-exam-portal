@@ -424,6 +424,7 @@ export type UserQuiz = {
   name?: Maybe<Scalars['String']>;
   question?: Maybe<UserQuizQuestion>;
   questions?: Maybe<Array<Maybe<UserQuizQuestion>>>;
+  quizID?: Maybe<Scalars['ID']>;
   score?: Maybe<Scalars['Int']>;
   startTime?: Maybe<Scalars['DateTime']>;
   user?: Maybe<User>;
@@ -733,6 +734,7 @@ export type UserQuizResolvers<ContextType = any, ParentType extends ResolversPar
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   question?: Resolver<Maybe<ResolversTypes['UserQuizQuestion']>, ParentType, ContextType, RequireFields<UserQuizQuestionArgs, 'id'>>;
   questions?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserQuizQuestion']>>>, ParentType, ContextType>;
+  quizID?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   startTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;

@@ -20,7 +20,10 @@ export const UserQuizQuery = gql`
     userQuiz(quizID: $quizID) {
       ...UserQuizFragment
       questions {
-        ...UserQuizQuestionFragment
+        ...UserQuizFullQuestionFragment
+        options {
+          ...UserQuizOptionFragment
+        }
         userAnswer {
           id
         }
@@ -28,7 +31,8 @@ export const UserQuizQuery = gql`
     }
   }
   ${UserQuizFragment}
-  ${UserQuizQuestionFragment}
+  ${UserQuizFullQuestionFragment}
+  ${UserQuizOptionFragment}
 `
 
 export const UserQuizFullQuestionQuery = gql`

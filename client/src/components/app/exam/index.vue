@@ -95,6 +95,7 @@ export default defineComponent({
       result({ data, error, loading }) {
         this.loading = loading
         if (error) {
+          console.log(this.$route.params.quizID)
           this.error = error.message
         } else {
           if (data) {
@@ -103,7 +104,8 @@ export default defineComponent({
           }
         }
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true
     }
   }
 })

@@ -16,10 +16,10 @@ const packUserQuiz = ({
 }: PackUserQuiz): UserQuizModel => {
     return {
         userID,
-        userQuizID: userQuiz.id,
         expired,
         id: userQuiz.id,
         name: quiz.name,
+        quizID: userQuiz.quizID,
         description: quiz.description,
         duration: quiz.duration,
         score: userQuiz.score ?? undefined,
