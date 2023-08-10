@@ -19,10 +19,6 @@
 }
 </style>
 <template>
-  <template v-if="loading">
-    <AppExamQuestionLoader />
-  </template>
-
   <v-scroll-y-reverse-transition>
     <v-alert v-if="error" type="error" class="ma-3">
       {{ error }}
@@ -30,27 +26,27 @@
   </v-scroll-y-reverse-transition>
 
   <v-scroll-y-reverse-transition>
-    <v-container fluid v-if="questionData" class="question-container">
+    <v-container fluid v-if="quizData" class="question-container">
       <v-row>
         <h2 class="flex-grow-1 text-h5" style="line-height: 1">Question {{ questionNumber }}</h2>
       </v-row>
       <v-row>
         <v-col>
-          <DisplayText :text="questionData.question" />
+          <DisplayText :text="question.question" />
         </v-col>
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
           <AppExamQuestionFlagButton
-            :flagged="questionData.flag"
+            :flagged="question.flag"
             :question-number="questionNumber"
           />
         </div>
       </v-row>
       <div class="options-area">
         <AppExamQuestionOptions
-          :options="questionData.options"
-          :answer="questionData.userAnswer ? questionData.userAnswer.id : null"
+          :options="question.options"
+          :answer="question.userAnswer ? question.userAnswer.id : null"
           :question-number="questionNumber"
         />
         <v-btn id="next-question-button" variant="flat">Next Question</v-btn>
@@ -65,6 +61,7 @@ import AppExamQuestionOptions from './Options.vue'
 import AppExamQuestionFlagButton from './FlagButton.vue'
 import AppExamQuestionLoader from './Loader.vue'
 import DisplayText from '@/components/app/DisplayText.vue'
+import type { Question } from '@nzpmc-exam-portal/common'
 
 export default {
   name: 'AppExamQuestion',
@@ -77,15 +74,11 @@ export default {
   },
 
   data(): {
-    loading: boolean
     error: any
-    questionData: any
     quizData: any
   } {
     return {
-      loading: false,
       error: null,
-      questionData: undefined,
       quizData: undefined
     }
   },
@@ -94,36 +87,27 @@ export default {
     questionNumber() {
       if (this.quizData) {
         const questionID = this.$route.params.questionID
-        return this.quizData.questions.findIndex((question) => question.id === questionID) + 1
+        return (
+          this.quizData.questions.findIndex((question: Question) => question.id === questionID) + 1
+        )
+      }
+
+      return null
+    },
+    question() {
+      if (this.quizData) {
+        const questionID = this.$route.params.questionID
+        const question = this.quizData.questions.find((question: Question) => question.id === questionID);
+        console.log(question)
+        return question;
       }
 
       return null
     }
+    
   },
 
   apollo: {
-    questionData: {
-      query: UserQuizFullQuestionQuery,
-      variables() {
-        return {
-          quizID: this.$route.params.quizID,
-          questionID: this.$route.params.questionID
-        }
-      },
-      loadingKey: 'loading',
-      result({ data, error, loading }) {
-        this.loading = loading
-        if (error) {
-          this.error = error.message
-        } else {
-          if (data) {
-            this.questionData = data.userQuiz.question
-            console.log(this.questionData)
-          }
-        }
-      },
-      fetchPolicy: 'cache-and-network'
-    },
     quizData: {
       query: UserQuizQuery,
       variables() {
@@ -132,14 +116,14 @@ export default {
         }
       },
       result({ data, error, loading }) {
-        this.loading = loading
         if (error) {
           this.error = error.message
         } else {
           if (data) this.quizData = data.userQuiz
         }
       },
-      fetchPolicy: 'cache-and-network'
+      fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true
     }
   }
 }
