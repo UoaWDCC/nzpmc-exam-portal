@@ -39,9 +39,11 @@ export default {
 
   computed: {
     timeString() {
-      const minutes = Math.floor(this.secondsRemaining / 60)
-      const seconds = this.secondsRemaining % 60
-      return `${minutes}:${seconds}`
+      const hours = Math.floor(this.secondsRemaining / (60 * 60));
+      const minutes = Math.floor((this.secondsRemaining - (60 * 60 * hours)) / 60);
+      const seconds = this.secondsRemaining % 60;
+
+      return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${(seconds < 10 ? '0' : '') + seconds}`
     }
   },
 
