@@ -8,9 +8,9 @@ import logoSvg from '@/assets/logo-auth.svg'
   <div class="hide-for-mobile">
     <div class="align-center auth background--blue d-flex justify-center primary">
       <v-sheet class="auth-container" elevation="2" max-width="100%" width="28rem">
-        <router-link :to="{ path: 'App' }" class="d-flex pa-4">
-          <v-img :src="logoSvg" height="96" contain />
-        </router-link>
+        <div class="d-flex pa-4" >
+          <v-img :src="logoSvg" height="96" contain/>
+        </div>
 
         <div
           v-if="userLoading || user"

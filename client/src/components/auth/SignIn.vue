@@ -20,7 +20,8 @@
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'" autocomplete="current-password"
                 :rules="[(v) => !!v || 'This is required']" required autofocus hide-details="auto"
-                @click:append="showPassword = !showPassword"></v-text-field>
+                @click:append="showPassword = !showPassword">
+            </v-text-field>
         </div>
 
         <v-expand-transition>
@@ -41,7 +42,7 @@
             </v-label>
 
             <v-btn id="sign-in-button" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
-                <v-icon>mdi-login-variant</v-icon>
+                <v-icon :class="password.length > 0 ? 'active': ''">mdi-login-variant</v-icon>
                 <span class="text-white">&nbsp;Sign In</span>
             </v-btn>
         </div>
@@ -148,6 +149,13 @@ export default {
     height: 6vh;
     border-radius: 18px;
     letter-spacing: 6px;
+    i{ 
+        color:white;
+        opacity: 0.60;
+        &.active{
+            opacity: 1;
+        }
+    }
 }
 
 #forgot-password {
