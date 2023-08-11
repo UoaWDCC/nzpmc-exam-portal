@@ -25,8 +25,15 @@ export default {
 
   data() {
     return {
-      secondsRemaining: 20,
+      secondsRemaining: this.duration.valueOf() * 60,
       timer: null as unknown as ReturnType<typeof setInterval>
+    }
+  },
+
+  props: {
+    duration: {
+      type: Number,
+      required: true,
     }
   },
 

@@ -4,7 +4,7 @@
 }
 </style>
 <template>
-  <AppExamTopbarTimer />
+  <AppExamTopbarTimer :duration="duration" />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
     <v-list-item-group v-model="selected" color="primary">
       <AppExamSidebarLink
@@ -46,6 +46,10 @@ export default {
             'userAnswer' in question
         )
       }
+    },
+    duration: {
+      type: Number,
+      required: true,
     }
   },
 
