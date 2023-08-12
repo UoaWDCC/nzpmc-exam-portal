@@ -58,6 +58,7 @@ export default {
       result({ data, error, loading }) {
         this.loading = loading
         if (error) {
+          console.log(error.message);
           this.error = error.message
         } else {
           if (data) this.userQuizzes = data.userQuizzes;

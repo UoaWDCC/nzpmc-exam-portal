@@ -1,6 +1,6 @@
 export type UserQuizModel = {
     userID: string
-    userQuizID: string
+    quizID: string
     expired: boolean
     id: string
     name: string
