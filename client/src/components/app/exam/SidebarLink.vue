@@ -28,7 +28,7 @@ export default {
   methods: {
     flagColour(flagged: boolean): string {
       if (flagged) {
-        return '#FE9D02'
+        return 'secondary'
       } else {
         return 'white'
       }

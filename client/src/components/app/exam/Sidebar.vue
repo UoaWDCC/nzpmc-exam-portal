@@ -6,15 +6,10 @@
 <template>
   <AppExamTopbarTimer />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
+    <v-divider color="white" thickness="3" class="border-opacity-100 mb-5" />
     <v-list-item-group v-model="selected" color="primary">
-      <AppExamSidebarLink
-        v-for="(question, index) in questions"
-        :id="question.id"
-        :key="index"
-        :number="index + 1"
-        :answered="question.userAnswer !== null"
-        :flagged="question.flag"
-      />
+      <AppExamSidebarLink v-for="(question, index) in questions" :id="question.id" :key="index" :number="index + 1"
+        :answered="question.userAnswer !== null" :flagged="question.flag" />
     </v-list-item-group>
   </v-list>
   <v-btn color="secondary" depressed id="submit-button">Submit</v-btn>
