@@ -1,6 +1,9 @@
-<style>
+<style scoped lang="scss">
 #submit-button {
-  width: 100%;
+  width: calc(100% - 15px);
+  margin-left: 6px;
+  margin-bottom: 1rem;
+  color: white;
 }
 </style>
 <template>
