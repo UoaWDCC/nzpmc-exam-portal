@@ -15,7 +15,7 @@
         :answered="question.userAnswer !== null" :flagged="question.flag" />
     </v-list-item-group>
   </v-list>
-  <v-btn color="secondary" depressed id="submit-button">Submit</v-btn>
+  <v-btn color="secondary" variant="flat" id="submit-button">Submit</v-btn>
 </template>
 
 <script lang="ts">
@@ -23,8 +23,8 @@ import AppExamTopbarTimer from './TopbarTimer.vue'
 import AppExamSidebarLink from './SidebarLink.vue'
 import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
+import { onMounted } from 'vue'
 const SIDEBAR_WIDTH = 56
-
 export default {
   name: 'AppExamSidebar',
 
@@ -69,6 +69,8 @@ export default {
           })
       }
     }
+
   }
+
 }
 </script>
