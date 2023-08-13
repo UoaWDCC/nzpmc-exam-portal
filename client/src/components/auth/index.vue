@@ -32,8 +32,6 @@ import logoSvg from '@/assets/logo-auth.svg'
 
           <AuthSignIn v-if="panel === 'SignIn'" :email="email" @go="go" />
 
-          <AuthSignUp v-if="panel === 'SignUp'" :email="email" @go="go" />
-
           <AuthForgotPassword v-if="panel === 'ForgotPassword'" :email="email" @go="go" />
         </div>
       </v-sheet>

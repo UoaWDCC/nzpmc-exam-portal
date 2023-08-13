@@ -1,6 +1,6 @@
 <template>
   <v-form ref="form" v-model="valid" :disabled="loading" class="auth-email" @submit="nextPanel">
-    <AuthHeader title="Authenticate" text="Enter your email to sign in or sign up" />
+    <AuthHeader title="Authenticate" text="Please enter your email to sign in" />
 
     <div class="text-subtitle-1 font-weight-black px-4">Email</div>
 
@@ -90,7 +90,7 @@ export default {
   },
 
   mounted() {
-    // Automatically go to sign in or sign up page if email given in params
+    // Automatically go to sign in page if email given in params
     this.$nextTick(() => {
       if (this.$route.query.email && (this.$refs['form'] as HTMLFormElement).validate()) {
         this.nextPanel()
@@ -102,7 +102,7 @@ export default {
   },
 
   methods: {
-    // Show the sign up or sign in form
+    // Show the sign in form
     nextPanel(e) {
       if (e) e.preventDefault()
       // Determine if account exists
@@ -111,11 +111,12 @@ export default {
 
       fetchSignInMethodsForEmail(auth, this.email)
         .then((methods) => {
-          // Success
+          // Success (go to Sign In)
           if (methods.length > 0) {
             this.$emit('go', 'SignIn')
+          // Non-existing email  
           } else {
-            this.$emit('go', 'SignUp')
+            this.error = 'An account associated with this email address does not exist.'
           }
         })
         .catch((error) => {
