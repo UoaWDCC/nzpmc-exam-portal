@@ -30,12 +30,6 @@
             </v-alert>
         </v-expand-transition>
 
-        <!-- <v-expand-transition>
-            <v-alert v-if="success" type="success" class="mx-4">
-                {{ success }}
-            </v-alert>
-        </v-expand-transition> -->
-
         <div class="align-center d-flex justify-space-between">
             <v-label id="forgot-password" small :disabled="!!success" @click="$emit('go', 'ForgotPassword')">
                 Forgot password?

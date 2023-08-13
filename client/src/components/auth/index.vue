@@ -45,7 +45,6 @@ import { mapState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 import AuthEmail from './Email.vue'
 import AuthSignIn from './SignIn.vue'
-import AuthSignUp from './SignUp.vue'
 import AuthForgotPassword from './ForgotPassword.vue'
 import MobilePlaceHolder from '../MobilePlaceholder.vue'
 import { defineComponent } from 'vue'
@@ -63,7 +62,7 @@ export default defineComponent({
     titleTemplate: '%s - NZPMC'
   },
 
-  components: { AuthEmail, AuthSignIn, AuthSignUp, AuthForgotPassword, MobilePlaceHolder },
+  components: { AuthEmail, AuthSignIn, AuthForgotPassword, MobilePlaceHolder },
 
   data() {
     return {
