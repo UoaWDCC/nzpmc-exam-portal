@@ -20,6 +20,7 @@
         autofocus
       ></v-text-field>
 
+        
       <input
         type="password"
         autocomplete="current-password"
@@ -34,7 +35,8 @@
     </v-expand-transition>
 
     <div class="d-flex justify-end pb-4 px-4">
-      <v-btn id="continue-button" type="submit" :disabled="!valid || loading" :loading="loading">
+      <!-- check for validity -->
+      <v-btn id="continue-button" type="submit" :disabled="loading" :loading="loading">
         <span>Continue</span>
 
         <v-icon color="white">mdi-arrow-right</v-icon>
