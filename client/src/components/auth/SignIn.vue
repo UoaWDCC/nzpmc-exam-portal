@@ -135,7 +135,7 @@ export default {
     background-color: $secondary;
     text-align: center;
     position: relative;
-    margin-top: 30px;
+    margin-top: 40px;
     left: 60px;
     transform: translate(-50%, -50%);
     font-size: medium;

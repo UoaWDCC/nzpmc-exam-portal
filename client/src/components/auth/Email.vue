@@ -1,11 +1,11 @@
 <template>
   <v-form ref="form" v-model="valid" :disabled="loading" class="auth-email" @submit="nextPanel">
-    <AuthHeader title="Authenticate" text="Please enter your email to sign in" />
+    <AuthHeader title="Authentication" text="Please enter your email to sign in." />
 
     <div class="text-subtitle-1 font-weight-black px-4">Email</div>
 
     <div class="pb-4 px-4">
-      <v-text-field
+      <v-text-field 
         v-model="currentEmail"
         type="email"
         autocomplete="username"
@@ -19,22 +19,15 @@
         required
         autofocus
       ></v-text-field>
-
-        
-      <input
-        type="password"
-        autocomplete="current-password"
-        label="Password"
-        style="height: 0"
-        tabindex="-1"
-      />
     </div>
 
     <v-expand-transition>
-      <v-alert v-if="error" type="error" dismissible class="mx-4">{{ error }}</v-alert>
+      <v-alert v-if="error" type="error" dismissible class="mx-4">
+        {{ error }}
+      </v-alert>
     </v-expand-transition>
 
-    <div class="d-flex justify-end pb-4 px-4">
+    <div class="align-center d-flex justify-space-between pb-4 px-4">
       <!-- check for validity -->
       <v-btn id="continue-button" type="submit" :disabled="loading" :loading="loading">
         <span>Continue</span>
@@ -126,7 +119,7 @@ export default {
               this.error = 'The email address is not valid.'
               break
             default:
-              this.error = 'This is an error message'
+              this.error = 'This is an error message.'
           }
         })
         .finally(() => {
@@ -147,6 +140,7 @@ export default {
   height: 6vh;
   border-radius: 18px;
   letter-spacing: 6px;
+  margin-top: 15px;
 }
 
 #continue-button span {
