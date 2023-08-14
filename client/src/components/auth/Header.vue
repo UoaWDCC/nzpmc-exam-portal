@@ -28,7 +28,7 @@ export default {
 
 .header {
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
     &__text {
         display: flex;

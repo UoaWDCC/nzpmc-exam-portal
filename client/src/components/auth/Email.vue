@@ -4,15 +4,15 @@
 
     <div class="text-subtitle-1 font-weight-black px-4">Email</div>
 
-    <div class="pb-4 px-4">
-      <v-text-field 
+    <div class="pb-4 px-4"> 
+      <input class ="email"
         v-model="currentEmail"
         type="email"
         autocomplete="username"
         hide-details="auto"
         required
-        autofocus
-      ></v-text-field>
+        autofocus 
+      />
     </div>
 
     <v-expand-transition>
@@ -142,9 +142,13 @@ export default {
   font-size: medium;
 }
 
-.v-text-field {
-    background-color: $white;
+.email {
+    background-color: white;
     border: 2px solid black;
-    border-radius: 15px;
+    border-radius: 15px;;
+    width: 315px;
+    height: 7vh;
+    text-align: center;
+    font-size: large;
 }
 </style>

@@ -15,13 +15,13 @@
 
         <div class="text-subtitle-1 font-weight-black px-4">Password</div>
 
-        <div class="pb-4 px-4 fields">
-            <v-text-field 
+        <div class="pb-4 px-4"> 
+            <input class ="password"
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'" autocomplete="current-password"
                 :rules="[(v) => !!v || 'This is required']" required autofocus hide-details="auto"
-                @click:append="showPassword = !showPassword">
-            </v-text-field>
+                @click:append="showPassword = !showPassword" 
+            />
         </div>
 
         <v-expand-transition>
@@ -116,7 +116,7 @@ export default {
                             break
                         default:
                             // this.$errorMessage
-                            this.error = 'Default error.'
+                            this.error = 'This is required.'
                     }
                 })
                 .finally(() => {
@@ -139,7 +139,7 @@ export default {
     left: 60px;
     transform: translate(-50%, -50%);
     font-size: medium;
-    width: max(20vw, 20vh);
+    width: 315px;
     height: 6vh;
     border-radius: 18px;
     letter-spacing: 6px;
@@ -167,21 +167,13 @@ export default {
     text-decoration: underline;
 }
 
-.fields {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    > div {
-        width: 100%;
-    }
-}
-
-.v-text-field {
-    background-color: $white;
+.password {
+    background-color: white;
     border: 2px solid black;
-    border-radius: 15px;
+    border-radius: 15px;;
+    width: 315px;
+    height: 7vh;
+    text-align: center;
+    font-size: large;
 }
-
-
 </style>

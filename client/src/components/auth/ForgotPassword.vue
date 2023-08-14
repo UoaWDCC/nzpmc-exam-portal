@@ -4,22 +4,21 @@
         :disabled="loading || !!success"
         @submit="forgotPassword"
     >
-        <AuthHeader
+        <AuthHeader class="pb-4 px-4"
             title="Forgot your password?"
-            :text="'If you have forgotten your password, we can send you a reset link.'"
+            :text="'A link to reset your password will be sent to your email.'"
             show-back
             @back="$emit('go', 'SignIn')"
         />
 
         <div class="pb-4 px-4">
-            <v-text-field
+            <input class ="forgotPassword"
                 label="Email"
                 :value="email"
                 type="email"
                 autocomplete="username"
                 hide-details="auto"
-                class="mb-4"
-            ></v-text-field>
+            />
         </div>
 
         <v-expand-transition>
@@ -116,3 +115,17 @@ export default {
     },
 }
 </script>
+
+<style scoped lang="scss">
+@import '@/styles/globals.scss';
+
+.forgotPassword {
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 15px;;
+    width: 315px;
+    height: 7vh;
+    text-align: center;
+    font-size: large;
+}
+</style>    
