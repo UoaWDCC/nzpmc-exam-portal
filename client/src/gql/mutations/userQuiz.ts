@@ -24,3 +24,11 @@ export const UserQuizUpdateAnswerMutation = gql`
     }
     ${UserQuizOptionFragment}
 `
+
+export const UserQuizSubmitMutation = gql`
+    mutation UserQuizSubmitMutation($input: EditUserQuizQuestionInput!) {
+        editUserQuizQuestion(input: $input) {
+            id
+        }
+    }
+`
