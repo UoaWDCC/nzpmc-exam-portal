@@ -62,6 +62,7 @@ export default {
           this.error = error.message
         } else {
           if (data) this.userQuizzes = data.userQuizzes;
+          console.log(data.userQuizzes)
         }
       },
       fetchPolicy: 'network-only',

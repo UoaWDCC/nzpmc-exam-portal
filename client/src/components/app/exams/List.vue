@@ -10,7 +10,7 @@
                 :to="{ name: 'AppExam', params: { quizID: exam.id } }" />
         </div>
 
-        <div v-if="upcomingExams.length || pastExams.length" class="d-flex my-6" style="gap: 24px">
+        <div v-if="upcomingExams.length || pastExams.length || submittedExams.length" class="d-flex my-6" style="gap: 24px">
             <div v-if="upcomingExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
                 <h2 class="mb-6 text-h5">Upcoming Exams</h2>
 
@@ -23,6 +23,13 @@
                 <h2 class="mb-6 text-h5">Past Exams</h2>
 
                 <AppExamsInfoCard v-for="exam in pastExams" :key="exam.id" :title="exam.name"
+                    :description="exam.description" :duration="exam.duration" :start-time="exam.startTime"
+                    :end-time="exam.endTime" />
+            </div>
+            <div v-if="submittedExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
+                <h2 class="mb-6 text-h5">Submitted Exams</h2>
+
+                <AppExamsInfoCard v-for="exam in submittedExams" :key="exam.id" :title="exam.name"
                     :description="exam.description" :duration="exam.duration" :start-time="exam.startTime"
                     :end-time="exam.endTime" />
             </div>
@@ -74,7 +81,7 @@ export default {
             return this.userQuizzes.filter(
                 (quiz) =>
                     new Date(quiz.startTime) <= new Date() &&
-                    new Date() < new Date(quiz.endTime),
+                    new Date() < new Date(quiz.endTime) && !quiz.submitted,
             )
         },
 
@@ -89,6 +96,12 @@ export default {
         pastExams() {
             return this.userQuizzes.filter(
                 (quiz) => new Date() >= new Date(quiz.endTime),
+            )
+        },
+        // submitted exams
+        submittedExams() {
+            return this.userQuizzes.filter(
+                (quiz) => quiz.submitted !== undefined && quiz.submitted === true,
             )
         },
     },
