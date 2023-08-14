@@ -51,7 +51,24 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-container class="container upload-csv">
+
+  <v-container fluid >
+    <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
+    <div class="d-flex">
+        <v-file-input label="UPLOAD CSV TO ADD USERS" prepend-icon="mdi-paperclip"></v-file-input>
+        <v-btn color="secondary" size="x-large">ADD USERS</v-btn>
+    </div>
+  </v-container>
+
+  <v-container fluid >
+    <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
+    <div class="d-flex">
+        <v-file-input label="UPLOAD CSV TO DELETE USERS" prepend-icon="mdi-paperclip"></v-file-input>
+        <v-btn color="secondary" size="x-large">DELETE USERS</v-btn>
+    </div>
+  </v-container>
+
+  <v-container class="container upload-csv bg-red">
     <h2>Upload CSV</h2>
     <v-file-input
       prepend-icon=""
