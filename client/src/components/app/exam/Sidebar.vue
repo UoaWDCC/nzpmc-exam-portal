@@ -15,13 +15,14 @@
         :answered="question.userAnswer !== null" :flagged="question.flag" />
     </v-list-item-group>
   </v-list>
-  <v-btn color="secondary" v-on:click="submitQuiz()" variant="flat" id="submit-button">Submit</v-btn>
+  <v-btn color="secondary" :disabled="submitting" v-on:click="submitQuiz()" variant="flat"
+    id="submit-button">Submit</v-btn>
 </template>
 
 <script lang="ts">
 import AppExamTopbarTimer from './TopbarTimer.vue'
 import AppExamSidebarLink from './SidebarLink.vue'
-import { UserQuizSubmitMutation } from '@/gql/mutations/userQuiz'
+import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import { onMounted } from 'vue'
@@ -51,20 +52,23 @@ export default {
   },
   methods: {
     submitQuiz() {
+      console.log("clicek")
       const mutation = this.$apollo.mutate({
-        mutation: UserQuizSubmitMutation,
+        mutation: SubmitUserQuizQuestionsMutation,
         variables: {
           input: {
             userQuizID: this.$route.params.quizID,
-            endTime: Date.now(),
           }
         }
       })
+      this.submitting = true;
       mutation
         .then(() => {
           this.$router.push({
             name: 'AppExams'
+
           })
+          this.submitting = false;
         })
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
@@ -77,6 +81,7 @@ export default {
   data() {
     return {
       SIDEBAR_WIDTH,
+      submitting: false,
 
       selected: 0
     }
