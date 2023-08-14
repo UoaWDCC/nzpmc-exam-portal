@@ -4,6 +4,7 @@ export const UserQuizFragment = gql`
     fragment UserQuizFragment on UserQuiz {
         id
         name
+        quizID
         description
         duration
         startTime

@@ -1,0 +1,5 @@
+StudentFirstName,StudentMiddleName,StudentSurname,StudentEmail,StudentYearLevel,HeardFrom,ReasonForTaking,TeacherCode,TeacherName,TeacherEmail,SchoolName,SchoolAddress,PhoneNumber,TeacherCategory,Island,City
+Emily,Rose,Johnson,emily.johnson@WDCC.school.nz,10,School,Science excites me,2a4d5e6f7g8h9i0j1k2l3,Sarah Thompson,sarah.thompson@WDCC.school.nz,WDCC,3 WDCC road,8765401234,Science Teacher,North Island,Auckland
+Michael,James,Brown,michael.brown@WDCC.school.nz,11,Friend,Curiosity,b2c3d4e5f6g7h8i9j0k1l,Robert Johnson,robert.johnson@WDCC.school.nz,WDCC,3 WDCC road,8765432109,Math Teacher,South Island,Wellington
+Sophia,Grace,Davis,sophia.davis@WDCC.school.nz,9,Website,Love of History,0a1b2c3d4e5f6g7h8i9j0k,Emma Thompson,emma.thompson@WDCC.school.nz,WDCC,3 WDCC road,8765490321,History Teacher,North Island,Auckland
+Ethan,Alexander,Wilson,ethan.wilson@WDCC.school.nz,12,Parent,College Prep,d1e2f3g4h5i6j7k8l9m0n,David Smith,david.smith@WDCC.school.nz,WDCC,3 WDCC road,8765098743,English Teacher,South Island,Christchurch

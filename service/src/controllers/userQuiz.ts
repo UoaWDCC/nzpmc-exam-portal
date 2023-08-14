@@ -4,10 +4,13 @@ import {
     packUserQuiz,
     packUserQuizzes,
 } from '../mappers/userQuizMapper'
-import { Quiz, UserQuiz } from '../models'
+import { Quiz, UserQuiz, User } from '../models'
 import { NotFoundError } from '../utils/errors'
 import { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { addUserQuizQuestion } from './userQuizQuestion'
+import { getUser } from './user'
+import { firestore } from '../utils/firebase'
+import { WriteResult } from '@google-cloud/firestore'
 
 const UserQuizRepository = getRepository(UserQuiz)
 
@@ -17,6 +20,35 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
 
         const userQuiz = await UserQuizTranRepository.findById(userQuizID)
+        const quiz = await QuizTranRepository.findById(userQuiz.quizID)
+
+        const expired =
+            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+
+        return packUserQuiz({
+            userID: userQuiz.userID,
+            quiz,
+            userQuiz,
+            expired,
+        })
+    })
+}
+
+const getUserQuizbyQuizID = async (quizID: string): Promise<UserQuizModel> => {
+    return runTransaction(async (tran) => {
+        const QuizTranRepository = tran.getRepository(Quiz)
+        const UserQuizTranRepository = tran.getRepository(UserQuiz)
+
+        const userQuiz: UserQuiz | null =
+            await UserQuizTranRepository.whereEqualTo(
+                'quizID',
+                quizID,
+            ).findOne()
+
+        if (!userQuiz) {
+            throw new NotFoundError()
+        }
+
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
 
         const expired =
@@ -45,6 +77,35 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
             quizzes.map(
                 async (userQuiz): Promise<PackUserQuiz> => ({
                     userID,
+                    quiz: await QuizTranRepository.findById(userQuiz.quizID),
+                    userQuiz,
+                    expired:
+                        (userQuiz.endTime && userQuiz.endTime < new Date()) ??
+                        true,
+                }),
+            ),
+        )
+
+        return packUserQuizzes(userQuizzesPack)
+    })
+}
+
+const getUserQuizzesByQuizID = async (
+    quizID: string,
+): Promise<UserQuizModel[]> => {
+    return runTransaction(async (tran) => {
+        const QuizTranRepository = tran.getRepository(Quiz)
+        const UserQuizTranRepository = tran.getRepository(UserQuiz)
+
+        const userQuizzes = await UserQuizTranRepository.whereEqualTo(
+            (q) => q.quizID,
+            quizID,
+        ).find()
+
+        const userQuizzesPack: PackUserQuiz[] = await Promise.all(
+            userQuizzes.map(
+                async (userQuiz): Promise<PackUserQuiz> => ({
+                    userID: (await getUser(userQuiz.userID)).id,
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
@@ -139,6 +200,40 @@ const editUserQuiz = async (
 
     return await getUserQuiz(userQuizID)
 }
+const deleteUserQuiz = async (quizid: string, userid: string) => {
+    try {
+        // Query 'userquizs' collection with the given parameters
+        let userQuizID: string | null = null // Initialize with a default value
+
+        const querySnapshot = await firestore
+            .collection('UserQuizs')
+            .where('quizID', '==', quizid)
+            .where('userID', '==', userid)
+            .get()
+
+        // Delete each matching document
+        const deletePromises: Promise<WriteResult>[] = []
+        querySnapshot.forEach((doc) => {
+            deletePromises.push(doc.ref.delete())
+            userQuizID = doc.id
+        })
+
+        // Wait for all deletions to complete
+        await Promise.all(deletePromises)
+
+        if (userQuizID === null) {
+            // Handle the case when no matching documents are found
+            console.log('No matching documents found.')
+            return null
+        }
+
+        console.log('Documents successfully deleted!')
+        return userQuizID
+    } catch (error) {
+        console.error('Error deleting documents:', error)
+        throw error
+    }
+}
 
 const setUserQuizScore = (
     userQuizID: string,
@@ -151,7 +246,10 @@ export {
     addUserQuiz,
     getUserQuiz,
     getUserQuizzes,
+    getUserQuizbyQuizID,
+    getUserQuizzesByQuizID,
     getAllUserQuizzes,
+    deleteUserQuiz,
     editUserQuiz,
     setUserQuizScore,
 }

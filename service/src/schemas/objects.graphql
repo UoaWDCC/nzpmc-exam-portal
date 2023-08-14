@@ -16,7 +16,6 @@ type Question {
     id: ID!
     question: String
     imageURI: String
-    numOfAnswers: Int
     topics: String # should be enum
     answer: Option
     options: [Option]
@@ -36,7 +35,6 @@ type Quiz {
     name: String
     description: String
     duration: Int
-    numOfQuestions: Int
     question(id: ID!): Question
     questions: [Question]
     startTime: DateTime
@@ -45,8 +43,10 @@ type Quiz {
     modified: DateTime
 }
 
+
 type UserQuiz {
     id: ID!
+    quizID: ID
     user: User
     name: String
     description: String

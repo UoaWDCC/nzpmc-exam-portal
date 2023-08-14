@@ -21,6 +21,7 @@ import {
     deleteQuiz,
     swapQuestion,
     getOptionByID,
+    getUser,
 } from '../controllers'
 import {
     AdminAuthenticationError,
@@ -57,6 +58,7 @@ import {
     MutationImageArgs,
     MutationResolvers,
     MutationSubmitUserQuizQuestionsArgs,
+    MutationEnrolUsersInQuizArgs,
     MutationSwapQuestionArgs,
     Option,
     Quiz,
@@ -67,8 +69,10 @@ import {
     UserQuizQuestionModel,
     QuestionModel,
     UserQuizModel,
+    MutationUnenrolUsersFromQuizArgs,
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
+import { deleteUserQuiz } from '../controllers/userQuiz'
 
 const addOptionMutation: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,
@@ -87,15 +91,9 @@ const addQuestionMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuestionArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { quizID, question, imageURI, numOfAnswers, topics } = input
+    const { quizID, question, imageURI, topics } = input
 
-    return await addQuestion(
-        quizID,
-        question,
-        imageURI || '',
-        numOfAnswers,
-        topics,
-    )
+    return await addQuestion(quizID, question, imageURI || '', topics)
 }
 
 const addQuizMutation: Resolver<
@@ -104,17 +102,9 @@ const addQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuizArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { name, description, duration, numOfQuestions, startTime, endTime } =
-        input
+    const { name, description, duration, startTime, endTime } = input
 
-    return await addQuiz(
-        name,
-        description,
-        duration,
-        numOfQuestions,
-        startTime,
-        endTime,
-    )
+    return await addQuiz(name, description, duration, startTime, endTime)
 }
 
 const addUserMutation: Resolver<
@@ -235,14 +225,13 @@ const editQuestionMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuestionArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const { quizID, id, question, imageURI, numOfAnswers, topics } = input
+    const { quizID, id, question, imageURI, topics } = input
 
     return await editQuestion(
         quizID,
         id,
         question || undefined,
         imageURI || undefined,
-        numOfAnswers || undefined,
         '',
         topics || undefined,
     )
@@ -254,22 +243,13 @@ const editQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuizArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const {
-        id,
-        name,
-        description,
-        duration,
-        numOfQuestions,
-        startTime,
-        endTime,
-    } = input
+    const { id, name, description, duration, startTime, endTime } = input
 
     return await editQuiz(
         id,
         name || undefined,
         description || undefined,
         duration || undefined,
-        numOfQuestions || undefined,
         startTime || undefined,
         endTime || undefined,
     )
@@ -307,13 +287,11 @@ const deleteUserMutation: Resolver<
     unknown,
     UserContext,
     Partial<MutationDeleteUserArgs>
-    > = async (_parent, { id, email }, _context) => {
+> = async (_parent, { id, email }, _context) => {
     const user = await deleteUser(id, email)
-    
-    return user;
-}
-        
 
+    return user
+}
 
 const editUserMutation: Resolver<
     Maybe<ResolverTypeWrapper<User>>,
@@ -508,10 +486,81 @@ const editOrderQuestionMutation: Resolver<
         undefined,
         undefined,
         undefined,
-        undefined,
         questionIDs,
     )
     return quiz
+}
+
+const enrolUsersInQuizMutation: Resolver<
+    Array<ResolverTypeWrapper<UserQuizModel>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationEnrolUsersInQuizArgs, 'users' | 'quizID'>
+> = async (_parent, { users, quizID }, _context) => {
+    const quizToEnrol = quizID
+    console.log(users)
+    const quiz = await getQuiz(quizToEnrol)
+
+    // Use `map` to create an array of Promises representing the addUserQuiz() operations
+    const addUserQuizPromises = users.map(async (currentUser) => {
+        const userID = currentUser.id
+        const userEmail = currentUser.email
+        try {
+            const user = await getUser(userID, userEmail)
+            console.log(user)
+        } catch (e) {
+            console.error(e)
+            console.error('User does not exist')
+            // TODO: create the user etc
+            return null
+        }
+
+        // TODO: enrol user
+        const newUserQuiz = await addUserQuiz(
+            userID,
+            quizToEnrol,
+            quiz.startTime,
+            quiz.endTime,
+        )
+
+        return newUserQuiz
+    })
+
+    const resolvedQuizzes = await Promise.all(addUserQuizPromises)
+    const newQuizzes: UserQuizModel[] = []
+
+    resolvedQuizzes.map((addedQuiz) => {
+        if (addedQuiz) {
+            newQuizzes.push(addedQuiz)
+        }
+    })
+
+    return newQuizzes
+}
+
+const unenrolUsersFromQuizMutation: Resolver<
+    Array<ResolverTypeWrapper<string>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationUnenrolUsersFromQuizArgs, 'quizID' | 'users'>
+> = async (_parent, { users, quizID }, _context) => {
+    const quizToUnenrolFrom = quizID
+
+    const deletedUserQuizIDs: string[] = []
+    // Use `map` to create an array of Promises representing the addUserQuiz() operations
+    const addUserQuizPromises = users.map(async (currentUser) => {
+        const userID = currentUser.id
+        const userEmail = currentUser.email
+        const deletedQuizID = await deleteUserQuiz(quizToUnenrolFrom, userID)
+        if (deletedQuizID !== null) {
+            deletedUserQuizIDs.push(deletedQuizID)
+        }
+    })
+
+    // Wait for all the promises to resolve
+    await Promise.all(addUserQuizPromises)
+
+    return deletedUserQuizIDs
 }
 
 const mutationResolvers: MutationResolvers = {
@@ -533,6 +582,8 @@ const mutationResolvers: MutationResolvers = {
     editUser: admin(editUserMutation),
     editUserQuiz: user(editUserQuizMutation),
     editUserQuizQuestion: admin(editUserQuizQuestionMutation),
+    enrolUsersInQuiz: admin(enrolUsersInQuizMutation),
+    unenrolUsersFromQuiz: admin(unenrolUsersFromQuizMutation),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
     swapQuestion: admin(swapQuestionMutation),

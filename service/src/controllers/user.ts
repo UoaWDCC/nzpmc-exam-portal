@@ -27,7 +27,7 @@ const getUser = async (
     }
 
     if (!user) {
-        throw new NotFoundError()
+        throw new NotFoundError(`User id ${id} doesn't exist`)
     }
 
     return packUser(user)
@@ -187,12 +187,10 @@ const deleteUser = async (id?: string | null, email?: string | null) => {
             let user: Schema.User | null = null
             if (id !== null && id !== undefined) {
                 user = await tran.findById(id)
+            } else if (email !== null && email !== undefined) {
+                user = await getUser(null, email)
             }
 
-            else if (email !== null && email !== undefined) {
-                user = await getUser(null, email) 
-            }
-            
             if (user === null) {
                 throw new NotFoundError()
             }
@@ -204,7 +202,7 @@ const deleteUser = async (id?: string | null, email?: string | null) => {
             await admin.auth().deleteUser(user.id)
 
             return user
-    })
+        })
     } catch (error) {
         console.log(error)
         throw error

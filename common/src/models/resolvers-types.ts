@@ -28,7 +28,6 @@ export type AddOptionInput = {
 
 export type AddQuestionInput = {
   imageURI?: InputMaybe<Scalars['String']>;
-  numOfAnswers: Scalars['Int'];
   question: Scalars['String'];
   quizID: Scalars['ID'];
   topics: Scalars['String'];
@@ -39,7 +38,6 @@ export type AddQuizInput = {
   duration: Scalars['Int'];
   endTime: Scalars['DateTime'];
   name: Scalars['String'];
-  numOfQuestions: Scalars['Int'];
   startTime: Scalars['DateTime'];
 };
 
@@ -80,7 +78,6 @@ export type EditOrderQuestionInput = {
 export type EditQuestionInput = {
   id: Scalars['ID'];
   imageURI?: InputMaybe<Scalars['String']>;
-  numOfAnswers?: InputMaybe<Scalars['Int']>;
   question?: InputMaybe<Scalars['String']>;
   quizID: Scalars['ID'];
   topics?: InputMaybe<Scalars['String']>;
@@ -92,7 +89,6 @@ export type EditQuizInput = {
   endTime?: InputMaybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   name?: InputMaybe<Scalars['String']>;
-  numOfQuestions?: InputMaybe<Scalars['Int']>;
   startTime?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -161,10 +157,12 @@ export type Mutation = {
   editUser?: Maybe<User>;
   editUserQuiz?: Maybe<UserQuiz>;
   editUserQuizQuestion?: Maybe<UserQuizQuestion>;
+  enrolUsersInQuiz: Array<UserQuiz>;
   /** Image */
   image?: Maybe<Image>;
   submitUserQuizQuestions?: Maybe<UserQuiz>;
   swapQuestion?: Maybe<Quiz>;
+  unenrolUsersFromQuiz: Array<Scalars['ID']>;
 };
 
 
@@ -262,6 +260,12 @@ export type MutationEditUserQuizQuestionArgs = {
 };
 
 
+export type MutationEnrolUsersInQuizArgs = {
+  quizID: Scalars['ID'];
+  users: Array<UsersInput>;
+};
+
+
 export type MutationImageArgs = {
   input: ImageUploadInput;
 };
@@ -276,6 +280,12 @@ export type MutationSwapQuestionArgs = {
   newID: Scalars['ID'];
   oldID: Scalars['ID'];
   quizID: Scalars['ID'];
+};
+
+
+export type MutationUnenrolUsersFromQuizArgs = {
+  quizID: Scalars['ID'];
+  users: Array<UsersInput>;
 };
 
 export type Option = {
@@ -300,6 +310,7 @@ export type Query = {
   userQuiz: UserQuiz;
   /** User */
   userQuizzes: Array<UserQuiz>;
+  userQuizzesByQuizID: Array<UserQuiz>;
   users: UserPage;
 };
 
@@ -325,6 +336,11 @@ export type QueryUserQuizArgs = {
 };
 
 
+export type QueryUserQuizzesByQuizIdArgs = {
+  quizID: Scalars['ID'];
+};
+
+
 export type QueryUsersArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<UsersOrderByInput>;
@@ -339,7 +355,6 @@ export type Question = {
   id: Scalars['ID'];
   imageURI?: Maybe<Scalars['String']>;
   modified?: Maybe<Scalars['DateTime']>;
-  numOfAnswers?: Maybe<Scalars['Int']>;
   options?: Maybe<Array<Maybe<Option>>>;
   question?: Maybe<Scalars['String']>;
   topics?: Maybe<Scalars['String']>;
@@ -354,7 +369,6 @@ export type Quiz = {
   id: Scalars['ID'];
   modified?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
-  numOfQuestions?: Maybe<Scalars['Int']>;
   question?: Maybe<Question>;
   questions?: Maybe<Array<Maybe<Question>>>;
   startTime?: Maybe<Scalars['DateTime']>;
@@ -363,6 +377,10 @@ export type Quiz = {
 
 export type QuizQuestionArgs = {
   id: Scalars['ID'];
+};
+
+export type QuizIdInput = {
+  quizID: Scalars['ID'];
 };
 
 export enum Sort {
@@ -406,6 +424,7 @@ export type UserQuiz = {
   name?: Maybe<Scalars['String']>;
   question?: Maybe<UserQuizQuestion>;
   questions?: Maybe<Array<Maybe<UserQuizQuestion>>>;
+  quizID?: Maybe<Scalars['ID']>;
   score?: Maybe<Scalars['Int']>;
   startTime?: Maybe<Scalars['DateTime']>;
   user?: Maybe<User>;
@@ -428,6 +447,20 @@ export type UserQuizQuestion = {
   options: Array<Option>;
   question: Scalars['String'];
   userAnswer?: Maybe<Option>;
+};
+
+export type UsersInput = {
+  created?: InputMaybe<Scalars['DateTime']>;
+  displayName?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  emailVerified?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastName?: InputMaybe<Scalars['String']>;
+  modified?: InputMaybe<Scalars['DateTime']>;
+  photoURL?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['String']>;
+  yearLevel?: InputMaybe<Scalars['String']>;
 };
 
 export type UsersOrderByInput = {
@@ -532,6 +565,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   Question: ResolverTypeWrapper<QuestionModel>;
   Quiz: ResolverTypeWrapper<Omit<Quiz, 'question' | 'questions'> & { question?: Maybe<ResolversTypes['Question']>, questions?: Maybe<Array<Maybe<ResolversTypes['Question']>>> }>;
+  QuizIDInput: QuizIdInput;
   Sort: Sort;
   String: ResolverTypeWrapper<Scalars['String']>;
   SubmissionInput: SubmissionInput;
@@ -540,6 +574,7 @@ export type ResolversTypes = {
   UserPage: ResolverTypeWrapper<UserPage>;
   UserQuiz: ResolverTypeWrapper<UserQuizModel>;
   UserQuizQuestion: ResolverTypeWrapper<UserQuizQuestionModel>;
+  UsersInput: UsersInput;
   UsersOrderByInput: UsersOrderByInput;
 };
 
@@ -570,6 +605,7 @@ export type ResolversParentTypes = {
   Query: {};
   Question: QuestionModel;
   Quiz: Omit<Quiz, 'question' | 'questions'> & { question?: Maybe<ResolversParentTypes['Question']>, questions?: Maybe<Array<Maybe<ResolversParentTypes['Question']>>> };
+  QuizIDInput: QuizIdInput;
   String: Scalars['String'];
   SubmissionInput: SubmissionInput;
   Upload: Scalars['Upload'];
@@ -577,6 +613,7 @@ export type ResolversParentTypes = {
   UserPage: UserPage;
   UserQuiz: UserQuizModel;
   UserQuizQuestion: UserQuizQuestionModel;
+  UsersInput: UsersInput;
   UsersOrderByInput: UsersOrderByInput;
 };
 
@@ -608,9 +645,11 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationEditUserArgs, 'input'>>;
   editUserQuiz?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationEditUserQuizArgs, 'input'>>;
   editUserQuizQuestion?: Resolver<Maybe<ResolversTypes['UserQuizQuestion']>, ParentType, ContextType, RequireFields<MutationEditUserQuizQuestionArgs, 'input'>>;
+  enrolUsersInQuiz?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationEnrolUsersInQuizArgs, 'quizID' | 'users'>>;
   image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<MutationImageArgs, 'input'>>;
   submitUserQuizQuestions?: Resolver<Maybe<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<MutationSubmitUserQuizQuestionsArgs, 'input'>>;
   swapQuestion?: Resolver<Maybe<ResolversTypes['Quiz']>, ParentType, ContextType, RequireFields<MutationSwapQuestionArgs, 'newID' | 'oldID' | 'quizID'>>;
+  unenrolUsersFromQuiz?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationUnenrolUsersFromQuizArgs, 'quizID' | 'users'>>;
 };
 
 export type OptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Option'] = ResolversParentTypes['Option']> = {
@@ -630,6 +669,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<QueryUserArgs>>;
   userQuiz?: Resolver<ResolversTypes['UserQuiz'], ParentType, ContextType, RequireFields<QueryUserQuizArgs, 'quizID'>>;
   userQuizzes?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType>;
+  userQuizzesByQuizID?: Resolver<Array<ResolversTypes['UserQuiz']>, ParentType, ContextType, RequireFields<QueryUserQuizzesByQuizIdArgs, 'quizID'>>;
   users?: Resolver<ResolversTypes['UserPage'], ParentType, ContextType, Partial<QueryUsersArgs>>;
 };
 
@@ -639,7 +679,6 @@ export type QuestionResolvers<ContextType = any, ParentType extends ResolversPar
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   imageURI?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   modified?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  numOfAnswers?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   options?: Resolver<Maybe<Array<Maybe<ResolversTypes['Option']>>>, ParentType, ContextType>;
   question?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   topics?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -654,7 +693,6 @@ export type QuizResolvers<ContextType = any, ParentType extends ResolversParentT
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   modified?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  numOfQuestions?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   question?: Resolver<Maybe<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<QuizQuestionArgs, 'id'>>;
   questions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Question']>>>, ParentType, ContextType>;
   startTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
@@ -696,6 +734,7 @@ export type UserQuizResolvers<ContextType = any, ParentType extends ResolversPar
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   question?: Resolver<Maybe<ResolversTypes['UserQuizQuestion']>, ParentType, ContextType, RequireFields<UserQuizQuestionArgs, 'id'>>;
   questions?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserQuizQuestion']>>>, ParentType, ContextType>;
+  quizID?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   startTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
