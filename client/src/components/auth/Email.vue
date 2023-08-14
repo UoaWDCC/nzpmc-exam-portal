@@ -10,12 +10,6 @@
         type="email"
         autocomplete="username"
         hide-details="auto"
-        :rules="[
-                    (v: string) => !!v || 'This is required',
-                    (v: string) =>
-                        emailRegex.test(v) ||
-                        'Please enter a valid email address',
-                ]"
         required
         autofocus
       ></v-text-field>
@@ -104,7 +98,7 @@ export default {
 
       fetchSignInMethodsForEmail(auth, this.email)
         .then((methods) => {
-          // Success (go to Sign In)
+          // Success
           if (methods.length > 0) {
             this.$emit('go', 'SignIn')
           // Non-existing email  
@@ -112,16 +106,16 @@ export default {
             this.error = 'An account associated with this email address does not exist.'
           }
         })
-        .catch((error) => {
-          // An error occurred
-          switch (error.code) {
-            case 'auth/invalid-email':
-              this.error = 'The email address is not valid.'
-              break
-            default:
-              this.error = 'This is an error message.'
-          }
-        })
+          .catch((error) => {
+            // An error occurred
+            switch (error.code) {
+              case 'auth/invalid-email':
+                this.error = 'Please enter a valid email address.'
+                break
+              default:
+                this.error = 'This is an error message.'
+            }
+          })
         .finally(() => {
           // Clean up loading state
           this.loading = false
