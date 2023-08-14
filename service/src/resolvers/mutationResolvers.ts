@@ -427,6 +427,8 @@ const submitUserQuizQuestionsMutation: Resolver<
     if (new Date().getTime() > userQuiz.endTime.getTime() + 60000) {
         throw new AuthenticationError()
     }
+    // flag quiz as submitted
+    editUserQuiz(userQuizID, undefined, undefined, undefined, true);
 
     const { userAnswerIDs, correctAnswerIDs } = await getUserAnswers(userQuizID)
 

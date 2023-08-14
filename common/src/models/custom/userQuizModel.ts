@@ -7,6 +7,7 @@ export type UserQuizModel = {
     description: string
     duration: number
     score?: number
+    submitted?: boolean
     startTime?: Date
     endTime?: Date
     created: Date
