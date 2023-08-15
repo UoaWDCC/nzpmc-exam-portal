@@ -56,16 +56,33 @@
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
     <div class="d-flex">
         <v-file-input label="UPLOAD CSV TO ADD USERS" prepend-icon="mdi-paperclip"></v-file-input>
-        <v-btn color="secondary" size="x-large">ADD USERS</v-btn>
+        <v-btn color="secondary" size="x-large" class="text-body-2">ADD USERS</v-btn>
     </div>
   </v-container>
 
   <v-container fluid >
-    <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
+    <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">DELETE USERS</h2>
     <div class="d-flex">
         <v-file-input label="UPLOAD CSV TO DELETE USERS" prepend-icon="mdi-paperclip"></v-file-input>
-        <v-btn color="secondary" size="x-large">DELETE USERS</v-btn>
+        <v-btn color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
     </div>
+    <div class="d-flex">
+      <v-text-field
+      label="Enter Emails (separate with ',')"
+      ref="emailsToDelete"
+      @input="handleEmailInputChange"
+      @change="handleEmailInputChange"
+      >
+      <template v-slot:details>
+        <p>{{ deleteMessage }}</p>
+      </template>
+    </v-text-field>
+        <v-btn color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
+    </div>
+  </v-container>
+
+  <v-container>
+    <v-btn block size="large" color="blue-darken-2" class="mt-3">DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn>
   </v-container>
 
   <v-container class="container upload-csv bg-red">
