@@ -64,7 +64,7 @@ export default {
           if (data) this.userQuizzes = data.userQuizzes;
         }
       },
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'network-only',
     },
   },
 }

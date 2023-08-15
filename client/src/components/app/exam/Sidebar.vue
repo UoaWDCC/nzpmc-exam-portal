@@ -1,23 +1,21 @@
-<style>
+<style scoped lang="scss">
 #submit-button {
-  width: 100%;
+  width: calc(100% - 15px);
+  margin-left: 6px;
+  margin-bottom: 1rem;
+  color: white;
 }
 </style>
 <template>
   <AppExamTopbarTimer />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
+    <v-divider color="white" thickness="3" class="border-opacity-100 mb-5" />
     <v-list-item-group v-model="selected" color="primary">
-      <AppExamSidebarLink
-        v-for="(question, index) in questions"
-        :id="question.id"
-        :key="index"
-        :number="index + 1"
-        :answered="question.userAnswer !== null"
-        :flagged="question.flag"
-      />
+      <AppExamSidebarLink v-for="(question, index) in questions" :id="question.id" :key="index" :number="index + 1"
+        :answered="question.userAnswer !== null" :flagged="question.flag" />
     </v-list-item-group>
   </v-list>
-  <v-btn color="secondary" depressed id="submit-button">Submit</v-btn>
+  <v-btn color="secondary" variant="flat" id="submit-button">Submit</v-btn>
 </template>
 
 <script lang="ts">
@@ -25,8 +23,8 @@ import AppExamTopbarTimer from './TopbarTimer.vue'
 import AppExamSidebarLink from './SidebarLink.vue'
 import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
+import { onMounted } from 'vue'
 const SIDEBAR_WIDTH = 56
-
 export default {
   name: 'AppExamSidebar',
 
@@ -71,6 +69,8 @@ export default {
           })
       }
     }
+
   }
+
 }
 </script>
