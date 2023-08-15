@@ -8,6 +8,7 @@ class UserQuiz {
     quizID!: string
 
     score: number | null = null
+    submitted: boolean | undefined;
 
     startTime?: Date
     endTime?: Date
