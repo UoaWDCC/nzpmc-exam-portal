@@ -367,7 +367,7 @@ const editUserQuizQuestionMutation: Resolver<
         userQuizID,
         questionID,
         answerID || undefined,
-        flag || undefined,
+        flag ?? undefined
     )
 
     return userQuizQuestion

@@ -164,7 +164,7 @@ const editUserQuizQuestion = async (
     userQuizID: string,
     questionID: string,
     optionID?: string,
-    flag?: boolean,
+    flag: boolean | undefined = undefined,
 ): Promise<UserQuizQuestionModel> => {
     let expired = true
     return runTransaction(async (tran) => {
@@ -199,8 +199,8 @@ const editUserQuizQuestion = async (
         userQuizQuestion.firstViewed = new Date()
         userQuizQuestion.lastAnswered = new Date()
         userQuizQuestion.modified = new Date()
-        userQuizQuestion.flag = flag ?? userQuizQuestion.flag
-
+        userQuizQuestion.flag = flag !== undefined ? flag : userQuizQuestion.flag
+        console.log(flag)
         const newUserQuizQuestion = await userQuiz.questions.create(
             userQuizQuestion,
         )
