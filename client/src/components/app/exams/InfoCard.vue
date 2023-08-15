@@ -1,5 +1,5 @@
 <template>
-    <v-sheet color="white" class="app-exams-card mb-3 pa-4" rounded>
+    <v-sheet color="secondary" class="app-exams-card mb-3 pa-4" rounded>
         <h3 class="text-h6">{{ title }}</h3>
 
         <span class="text--secondary text-subtitle-2">

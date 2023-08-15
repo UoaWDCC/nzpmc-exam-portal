@@ -34,7 +34,7 @@ const userQuery: Resolver<
     unknown,
     UserContext,
     Partial<QueryUserArgs>
-> = async (_parents, {userID, userEmail}, _context) => {
+> = async (_parents, { userID, userEmail }, _context) => {
     return await getUser(userID, userEmail)
 }
 const usersQuery: Resolver<
@@ -123,7 +123,7 @@ const userQuizQuery: Resolver<
     }
     // This was wrong getUserQuiz takes argument userQuizID not quizID
     //const userQuiz = await getUserQuiz(args.quizID)
-    const userQuiz = await getUserQuizbyQuizID(args.quizID)
+    const userQuiz = await getUserQuiz(args.quizID)
     const user = await getUser(userQuiz.userID)
 
     if (user.id !== context.user.uid && !context.user.admin)
