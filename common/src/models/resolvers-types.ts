@@ -427,6 +427,7 @@ export type UserQuiz = {
   quizID?: Maybe<Scalars['ID']>;
   score?: Maybe<Scalars['Int']>;
   startTime?: Maybe<Scalars['DateTime']>;
+  submitted?: Maybe<Scalars['Boolean']>;
   user?: Maybe<User>;
 };
 
@@ -737,6 +738,7 @@ export type UserQuizResolvers<ContextType = any, ParentType extends ResolversPar
   quizID?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   startTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  submitted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

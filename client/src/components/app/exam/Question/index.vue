@@ -4,11 +4,13 @@
   overflow-x: hidden;
   justify-self: flex-end;
   padding-bottom: 0;
+
   #next-question-button {
     background-color: $examDarkBlue;
     color: $white;
     margin: auto;
   }
+
   .options-area {
     display: flex;
     flex-direction: column;
@@ -37,19 +39,13 @@
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
-          <AppExamQuestionFlagButton
-            :flagged="question.flag"
-            :question-number="questionNumber"
-          />
+          <AppExamQuestionFlagButton :flagged="question.flag" :question-number="questionNumber" />
         </div>
       </v-row>
       <div class="options-area">
-        <AppExamQuestionOptions
-          :options="question.options"
-          :answer="question.userAnswer ? question.userAnswer.id : null"
-          :question-number="questionNumber"
-        />
-        <v-btn id="next-question-button" variant="flat">Next Question</v-btn>
+        <AppExamQuestionOptions :options="question.options" :answer="question.userAnswer ? question.userAnswer.id : null"
+          :question-number="questionNumber" />
+        <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat">Next Question</v-btn>
       </div>
     </v-container>
   </v-scroll-y-reverse-transition>
@@ -91,7 +87,6 @@ export default {
           this.quizData.questions.findIndex((question: Question) => question.id === questionID) + 1
         )
       }
-
       return null
     },
     question() {
@@ -104,7 +99,22 @@ export default {
 
       return null
     }
-    
+
+  },
+  methods: {
+    nextQuestion() {
+      if (this.questionNumber) {
+        const nextQuestionIndex = this.questionNumber // index will use exact same value because it has 1 added to it
+        const nextQuestionID = this.quizData.questions[nextQuestionIndex].id
+        console.log(nextQuestionID)
+        this.$router.push({
+          name: 'AppExamQuestion',
+          params: { quizID: this.$route.params.quizID, questionID: nextQuestionID }
+        })
+      }
+
+    },
+
   },
 
   apollo: {

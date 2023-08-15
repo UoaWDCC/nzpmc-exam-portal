@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import logoSvg from '@/assets/logo.svg'
+import logoSvg from '@/assets/logo-auth.svg'
 </script>
 
 <template>
@@ -7,12 +7,10 @@ import logoSvg from '@/assets/logo.svg'
   <MobilePlaceHolder />
   <div class="hide-for-mobile">
     <div class="align-center auth background--blue d-flex justify-center primary">
-      <v-sheet rounded elevation="2" max-width="100%" width="25rem">
-        <router-link :to="{ path: 'Site' }" class="d-flex pa-4">
-          <v-img :src="logoSvg" height="96" contain />
-        </router-link>
-
-        <v-divider />
+      <v-sheet class="auth-container" elevation="2" max-width="100%" width="28rem">
+        <div class="d-flex pa-4" >
+          <v-img :src="logoSvg" height="96" contain/>
+        </div>
 
         <div
           v-if="userLoading || user"
@@ -34,8 +32,6 @@ import logoSvg from '@/assets/logo.svg'
 
           <AuthSignIn v-if="panel === 'SignIn'" :email="email" @go="go" />
 
-          <AuthSignUp v-if="panel === 'SignUp'" :email="email" @go="go" />
-
           <AuthForgotPassword v-if="panel === 'ForgotPassword'" :email="email" @go="go" />
         </div>
       </v-sheet>
@@ -49,7 +45,6 @@ import { mapState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 import AuthEmail from './Email.vue'
 import AuthSignIn from './SignIn.vue'
-import AuthSignUp from './SignUp.vue'
 import AuthForgotPassword from './ForgotPassword.vue'
 import MobilePlaceHolder from '../MobilePlaceholder.vue'
 import { defineComponent } from 'vue'
@@ -67,7 +62,7 @@ export default defineComponent({
     titleTemplate: '%s - NZPMC'
   },
 
-  components: { AuthEmail, AuthSignIn, AuthSignUp, AuthForgotPassword, MobilePlaceHolder },
+  components: { AuthEmail, AuthSignIn, AuthForgotPassword, MobilePlaceHolder },
 
   data() {
     return {
@@ -117,6 +112,11 @@ export default defineComponent({
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.auth-container {
+  border-radius: 30px;
+  padding: 50px;
 }
 
 </style>

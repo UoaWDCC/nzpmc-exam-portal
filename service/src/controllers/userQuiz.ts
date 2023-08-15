@@ -183,6 +183,7 @@ const editUserQuiz = async (
     score?: number,
     startTime?: Date,
     endTime?: Date,
+    submitted?: boolean
 ): Promise<UserQuizModel> => {
     await UserQuizRepository.runTransaction(async (tran) => {
         const userQuiz = await tran.findById(userQuizID)
@@ -193,6 +194,8 @@ const editUserQuiz = async (
         userQuiz.score = score ? score : userQuiz.score
         userQuiz.startTime = startTime ? startTime : userQuiz.startTime
         userQuiz.endTime = endTime ? endTime : userQuiz.endTime
+        // default value false if document doesn't have a submitted flag
+        userQuiz.submitted = submitted ? submitted : userQuiz.submitted ?? false
         userQuiz.modified = new Date()
 
         tran.update(userQuiz)
