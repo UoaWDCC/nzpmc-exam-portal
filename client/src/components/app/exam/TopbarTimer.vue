@@ -26,6 +26,7 @@ export default {
   data() {
     return {
       secondsRemaining: this.duration.valueOf() * 60,
+      startEpoch: this.quizStart as number | null,
       timer: null as unknown as ReturnType<typeof setInterval>
     }
   },
@@ -33,6 +34,9 @@ export default {
   props: {
     duration: {
       type: Number,
+      required: true,
+    },
+    quizStart: {
       required: true,
     }
   },
@@ -48,6 +52,12 @@ export default {
   },
 
   mounted() {
+    if (!this.startEpoch) {
+      //TODO: edit user quiz to persist start time
+      const currentTimeSeconds = Math.floor(Date.now() / 1000);
+      this.startEpoch = currentTimeSeconds;
+    }
+
     this.startTimer()
   },
 
@@ -57,13 +67,18 @@ export default {
 
   methods: {
     startTimer() {
-      this.timer = setInterval(this.decreaseTimer, 1000)
+      this.timer = setInterval(this.updateTimer, 1000)
     },
 
-    decreaseTimer() {
-      this.secondsRemaining--
+    updateTimer() {
+      const currentTimeSeconds = Math.floor(Date.now() / 1000);
+      const elapsedSeconds = currentTimeSeconds - this.startEpoch!;
+      this.secondsRemaining = (this.duration.valueOf() * 60) - elapsedSeconds;
 
-      if (this.secondsRemaining === 0) this.stopTimer()
+      if (this.secondsRemaining <= 0) {
+        this.secondsRemaining = 0;
+        this.stopTimer()
+      }
     },
 
     stopTimer() {

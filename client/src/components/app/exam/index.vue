@@ -15,7 +15,7 @@
         <AppExamSidebarLoader v-if="loading" />
 
         <v-scroll-y-reverse-transition>
-          <AppExamSidebar v-if="data" :questions="data.questions" :duration="data.duration" />
+          <AppExamSidebar v-if="data" :questions="data.questions" :duration="data.duration" :quizStart="data.quizStart" />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
 
