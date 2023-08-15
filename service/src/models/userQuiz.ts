@@ -8,7 +8,7 @@ class UserQuiz {
     quizID!: string
 
     score: number | null = null
-
+    quizStart: number | null = null
     startTime?: Date
     endTime?: Date
 

@@ -113,6 +113,7 @@ export type EditUserInput = {
 
 export type EditUserQuizInput = {
   endTime?: InputMaybe<Scalars['DateTime']>;
+  quizStart?: InputMaybe<Scalars['Int']>;
   score?: InputMaybe<Scalars['Int']>;
   startTime?: InputMaybe<Scalars['DateTime']>;
   userQuizID: Scalars['ID'];
@@ -425,6 +426,7 @@ export type UserQuiz = {
   question?: Maybe<UserQuizQuestion>;
   questions?: Maybe<Array<Maybe<UserQuizQuestion>>>;
   quizID?: Maybe<Scalars['ID']>;
+  quizStart?: Maybe<Scalars['Int']>;
   score?: Maybe<Scalars['Int']>;
   startTime?: Maybe<Scalars['DateTime']>;
   user?: Maybe<User>;
@@ -735,6 +737,7 @@ export type UserQuizResolvers<ContextType = any, ParentType extends ResolversPar
   question?: Resolver<Maybe<ResolversTypes['UserQuizQuestion']>, ParentType, ContextType, RequireFields<UserQuizQuestionArgs, 'id'>>;
   questions?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserQuizQuestion']>>>, ParentType, ContextType>;
   quizID?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  quizStart?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   startTime?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;

@@ -159,6 +159,7 @@ const addUserQuiz = async (
     }
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
+    userQuiz.quizStart = null;
 
     UserQuizRepository.create(userQuiz)
 
@@ -180,6 +181,7 @@ const addUserQuiz = async (
 
 const editUserQuiz = async (
     userQuizID: string,
+    quizStart?: number,
     score?: number,
     startTime?: Date,
     endTime?: Date,
@@ -193,6 +195,7 @@ const editUserQuiz = async (
         userQuiz.score = score ? score : userQuiz.score
         userQuiz.startTime = startTime ? startTime : userQuiz.startTime
         userQuiz.endTime = endTime ? endTime : userQuiz.endTime
+        userQuiz.quizStart = quizStart ? quizStart : userQuiz.quizStart
         userQuiz.modified = new Date()
 
         tran.update(userQuiz)
@@ -239,7 +242,7 @@ const setUserQuizScore = (
     userQuizID: string,
     score: number,
 ): Promise<UserQuizModel> => {
-    return editUserQuiz(userQuizID, score, undefined, undefined)
+    return editUserQuiz(userQuizID, undefined, score, undefined, undefined)
 }
 
 export {

@@ -17,6 +17,7 @@ const packUserQuiz = ({
     return {
         userID,
         expired,
+        quizStart: userQuiz.quizStart ?? undefined,
         id: userQuiz.id,
         name: quiz.name,
         quizID: userQuiz.quizID,
