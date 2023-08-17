@@ -4,7 +4,7 @@
 }
 </style>
 <template>
-  <AppExamTopbarTimer :duration="duration" :quizStart="quizStart" />
+  <AppExamTopbarTimer :duration="duration" :quizStart="quizStart" :userQuizId="userQuizId"/>
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
     <v-list-item-group v-model="selected" color="primary">
       <AppExamSidebarLink
@@ -53,6 +53,9 @@ export default {
     },
     quizStart: {
       required: true,
+    },
+    userQuizId: {
+      required: true
     }
   },
 

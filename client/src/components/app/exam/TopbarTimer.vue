@@ -20,12 +20,14 @@
 </template>
 
 <script lang="ts">
+import { EditUserQuiz } from '@/gql/mutations/userQuiz'
+
 export default {
   name: 'AppExamTopbarTimer',
 
   data() {
     return {
-      secondsRemaining: this.duration.valueOf() * 60,
+      secondsRemaining: null,
       startEpoch: this.quizStart as number | null,
       timer: null as unknown as ReturnType<typeof setInterval>
     }
@@ -34,31 +36,56 @@ export default {
   props: {
     duration: {
       type: Number,
-      required: true,
+      required: true
     },
     quizStart: {
-      required: true,
+      required: true
+    },
+    userQuizId: {
+      required: true
     }
   },
 
   computed: {
     timeString() {
-      const hours = Math.floor(this.secondsRemaining / (60 * 60));
-      const minutes = Math.floor((this.secondsRemaining - (60 * 60 * hours)) / 60);
-      const seconds = this.secondsRemaining % 60;
+      if (!this.secondsRemaining) return "00:00:00";
 
-      return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${(seconds < 10 ? '0' : '') + seconds}`
+      const hours = Math.floor(this.secondsRemaining / (60 * 60))
+      const minutes = Math.floor((this.secondsRemaining - 60 * 60 * hours) / 60)
+      const seconds = this.secondsRemaining % 60
+
+      return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${
+        (seconds < 10 ? '0' : '') + seconds
+      }`
     }
   },
 
   mounted() {
     if (!this.startEpoch) {
-      //TODO: edit user quiz to persist start time
-      const currentTimeSeconds = Math.floor(Date.now() / 1000);
-      this.startEpoch = currentTimeSeconds;
-    }
+      //persist start time
+      const currentTimeSeconds = Math.floor(Date.now() / 1000)
 
-    this.startTimer()
+      const handleMutation = async () => {
+        try {
+          await this.$apollo.mutate({
+            mutation: EditUserQuiz,
+            variables: {
+              input: {
+                quizStart: currentTimeSeconds,
+                userQuizID: this.userQuizId
+              }
+            }
+          })
+          this.startEpoch = currentTimeSeconds
+          this.startTimer()
+        } catch (e) {
+          console.error(e)
+        }
+      }
+      handleMutation();      
+    } else {
+      this.startTimer()
+    }
   },
 
   beforeUnmount() {
@@ -71,12 +98,12 @@ export default {
     },
 
     updateTimer() {
-      const currentTimeSeconds = Math.floor(Date.now() / 1000);
-      const elapsedSeconds = currentTimeSeconds - this.startEpoch!;
-      this.secondsRemaining = (this.duration.valueOf() * 60) - elapsedSeconds;
+      const currentTimeSeconds = Math.floor(Date.now() / 1000)
+      const elapsedSeconds = currentTimeSeconds - this.startEpoch!
+      this.secondsRemaining = this.duration.valueOf() * 60 - elapsedSeconds
 
       if (this.secondsRemaining <= 0) {
-        this.secondsRemaining = 0;
+        this.secondsRemaining = 0
         this.stopTimer()
       }
     },
