@@ -1,7 +1,7 @@
 ---
 name: Design Template
 about: For new design issues
-title: '000 Issue Title'
+title: 'Topic: Title'
 labels: ''
 assignees: ''
 
