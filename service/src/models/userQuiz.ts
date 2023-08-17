@@ -8,8 +8,8 @@ class UserQuiz {
     quizID!: string
 
     score: number | null = null
+    quizStart: number | null = null
     submitted: boolean | undefined;
-
     startTime?: Date
     endTime?: Date
 

@@ -7,7 +7,7 @@
 }
 </style>
 <template>
-  <AppExamTopbarTimer />
+  <AppExamTopbarTimer :duration="duration" :quizStart="quizStart" :userQuizId="userQuizId"/>
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
     <v-divider color="white" thickness="3" class="border-opacity-100 mb-5" />
     <v-list-item-group v-model="selected" color="primary">
@@ -48,6 +48,16 @@ export default {
             'userAnswer' in question
         )
       }
+    },
+    duration: {
+      type: Number,
+      required: true,
+    },
+    quizStart: {
+      required: true,
+    },
+    userQuizId: {
+      required: true
     }
   },
   methods: {
