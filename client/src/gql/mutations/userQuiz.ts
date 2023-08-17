@@ -32,3 +32,11 @@ export const EditUserQuiz = gql`
     }
   }
 `
+
+export const SubmitUserQuizQuestionsMutation = gql`
+    mutation SubmitUserQuizQuestions($input: SubmissionInput!) {
+        submitUserQuizQuestions(input: $input) {
+            id
+        }
+    }
+`

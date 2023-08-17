@@ -1,15 +1,27 @@
 <template>
-    <v-form v-model="valid" class="auth-sign-in" :disabled="loading || !!success" @submit="signIn">
-        <AuthHeader title="Sign In" :text="`Hello, ${email}.`" show-back @back="$emit('go', 'Email')" />
+    <v-form 
+        v-model="valid" 
+        class="auth-sign-in" 
+        :disabled="loading || !!success" 
+        @submit="signIn">
 
-        <div class="pb-4 px-4">
-            <v-text-field label="Email" :value="email" type="email" autocomplete="username" hide-details="auto" class="mb-4"
-                disabled></v-text-field>
+        <AuthHeader
+            id="back"
+            title="Sign In" 
+            :text="`Hello, ${email}.`"
+            show-back 
+            @back="$emit('go', 'Email')" 
+        />
 
-            <v-text-field v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'" autocomplete="current-password" label="Password"
+        <div class="text-subtitle-1 font-weight-black px-4">Password</div>
+
+        <div class="pb-4 px-4"> 
+            <input class ="password"
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'" autocomplete="current-password"
                 :rules="[(v) => !!v || 'This is required']" required autofocus hide-details="auto"
-                @click:append="showPassword = !showPassword"></v-text-field>
+                @click:append="showPassword = !showPassword" 
+            />
         </div>
 
         <v-expand-transition>
@@ -18,21 +30,14 @@
             </v-alert>
         </v-expand-transition>
 
-        <v-expand-transition>
-            <v-alert v-if="success" type="success" class="mx-4">
-                {{ success }}
-            </v-alert>
-        </v-expand-transition>
-
-        <div class="align-center d-flex justify-space-between pb-4 px-4">
-            <v-btn small :disabled="!!success" @click="$emit('go', 'ForgotPassword')">
+        <div class="align-center d-flex justify-space-between">
+            <v-label id="forgot-password" small :disabled="!!success" @click="$emit('go', 'ForgotPassword')">
                 Forgot password?
-            </v-btn>
+            </v-label>
 
             <v-btn id="sign-in-button" type="submit" :disabled="!valid || loading || !!success" :loading="loading">
-                <v-icon left dark>mdi-login</v-icon>
-
-                <span>Sign In</span>
+                <v-icon :class="password.length > 0 ? 'active': ''">mdi-login-variant</v-icon>
+                <span class="text-white">&nbsp;Sign In</span>
             </v-btn>
         </div>
     </v-form>
@@ -111,7 +116,7 @@ export default {
                             break
                         default:
                             // this.$errorMessage
-                            this.error = 'Default error.'
+                            this.error = 'This is required.'
                     }
                 })
                 .finally(() => {
@@ -128,10 +133,47 @@ export default {
 
 #sign-in-button {
     background-color: $secondary;
+    text-align: center;
+    position: relative;
+    margin-top: 40px;
+    left: 60px;
+    transform: translate(-50%, -50%);
+    font-size: medium;
+    width: 315px;
+    height: 6vh;
+    border-radius: 18px;
+    letter-spacing: 6px;
+    i{ 
+        color:white;
+        opacity: 0.60;
+        &.active{
+            opacity: 1;
+        }
+    }
 }
 
-#sign-in-button span {
-    color: $white;
+#forgot-password {
+    text-align: center;
+    position: relative;
+    top: 35px;
+    left: 120px;
+    font-size: small;
+    box-shadow: none;
+    padding-right: 115px;
 }
 
+#forgot-password:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.password {
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 15px;;
+    width: 315px;
+    height: 7vh;
+    text-align: center;
+    font-size: large;
+}
 </style>

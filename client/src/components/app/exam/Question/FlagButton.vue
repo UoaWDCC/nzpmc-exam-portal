@@ -29,7 +29,7 @@ export default {
 
     data() {
         return {
-            currentFlagged: false,
+            currentFlagged: this.flagged,
         }
     },
 
@@ -54,15 +54,14 @@ export default {
         // Toggle flag state
         toggle() {
             // Set new flag state, will be reverted if mutation fails
-            this.currentFlagged = !this.currentFlagged
-
+            console.log(this.currentFlagged)
             const mutation = this.$apollo.mutate({
                 mutation: UserQuizUpdateFlagMutation,
                 variables: {
                     input: {
                         userQuizID: this.$route.params.quizID,
                         questionID: this.$route.params.questionID,
-                        flag: this.currentFlagged,
+                        flag: !this.currentFlagged,
                     },
                 },
             })
@@ -70,17 +69,18 @@ export default {
             // Record mutation in unresolved store, so AppExamTopbarSpinner shows spinner until resolved
             this.unresolvedQuestionPromises.push(mutation)
 
+
             mutation
+                .then(() => {
+                    this.currentFlagged = !this.currentFlagged;
+                    console.log("flagged")
+                })
                 .catch(() => {
                     this.snackbarQueue.push(
                         `An error occured when ${this.flagged ? 'unflagging' : 'flagging'
                         } Question ${this.questionNumber
                         }. Please check your connection and try again.`,
                     )
-                })
-                .finally(() => {
-                    // Ensure flag state is synced with server
-                    this.currentFlagged = this.flagged
                 })
         },
     },
