@@ -8,7 +8,7 @@
 </style>
 <template>
   <v-item-group v-model="selected" class="options-container">
-    <v-item v-for="option in sortedOptions" v-slot="{ active, toggle }" :key="option.id">
+    <v-item v-for="(option, index) in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
       <v-card
         elevation="1"
         :dark="active"
@@ -18,7 +18,7 @@
         @keyup.enter="toggle"
       >
         <v-icon class="ml-4 my-4">
-          {{ active ? 'mdi-check-circle-outline' : 'mdi-checkbox-blank-circle-outline' }}
+          {{ isSelected(option.id) ? 'mdi-check-circle' : 'mdi-checkbox-blank-circle-outline' }}
         </v-icon>
 
         <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
@@ -121,6 +121,8 @@ export default {
         })
         .finally(() => {
           // Ensure selected state is synced with server
+          console.log("Success")
+          console.log(this.answer)
           this.setSelected(this.answer)
         })
     }
@@ -130,6 +132,11 @@ export default {
     // Ensure the selected state is synced with the server
     setSelected(answerID: any) {
       this.selected = this.sortedOptions.findIndex((option) => option.id === answerID)
+    },
+
+    // Check if an option is selected
+    isSelected(optionId: string): boolean {
+      return this.selected === this.sortedOptions.findIndex((option) => option.id === optionId);
     }
   }
 }
