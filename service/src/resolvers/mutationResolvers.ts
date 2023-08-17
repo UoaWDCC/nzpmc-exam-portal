@@ -343,10 +343,11 @@ const editUserQuizMutation: Resolver<
     }
 
     // is Admin
-    const { userQuizID, score, startTime, endTime } = input
+    const { userQuizID, quizStart, score, startTime, endTime } = input
 
     const userQuiz = await editUserQuiz(
         userQuizID,
+        quizStart || undefined,
         score || undefined,
         startTime,
         endTime,

@@ -159,6 +159,7 @@ const addUserQuiz = async (
     }
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
+    userQuiz.quizStart = null;
 
     UserQuizRepository.create(userQuiz)
 
@@ -180,6 +181,7 @@ const addUserQuiz = async (
 
 const editUserQuiz = async (
     userQuizID: string,
+    quizStart?: number,
     score?: number,
     startTime?: Date,
     endTime?: Date,
@@ -194,6 +196,7 @@ const editUserQuiz = async (
         userQuiz.score = score ? score : userQuiz.score
         userQuiz.startTime = startTime ? startTime : userQuiz.startTime
         userQuiz.endTime = endTime ? endTime : userQuiz.endTime
+        userQuiz.quizStart = quizStart ? quizStart : userQuiz.quizStart
         // default value false if document doesn't have a submitted flag
         userQuiz.submitted = submitted ? submitted : userQuiz.submitted ?? false
         userQuiz.modified = new Date()
@@ -242,7 +245,7 @@ const setUserQuizScore = (
     userQuizID: string,
     score: number,
 ): Promise<UserQuizModel> => {
-    return editUserQuiz(userQuizID, score, undefined, undefined)
+    return editUserQuiz(userQuizID, undefined, score, undefined, undefined)
 }
 
 export {

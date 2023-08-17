@@ -54,6 +54,7 @@ type UserQuiz {
     question(id: ID!): UserQuizQuestion
     questions: [UserQuizQuestion]
     score: Int
+    quizStart: Int
     submitted: Boolean
     startTime: DateTime
     endTime: DateTime

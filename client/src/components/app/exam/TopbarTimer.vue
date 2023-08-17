@@ -20,26 +20,72 @@
 </template>
 
 <script lang="ts">
+import { EditUserQuiz } from '@/gql/mutations/userQuiz'
+
 export default {
   name: 'AppExamTopbarTimer',
 
   data() {
     return {
-      secondsRemaining: 20,
+      secondsRemaining: null,
+      startEpoch: this.quizStart as number | null,
       timer: null as unknown as ReturnType<typeof setInterval>
+    }
+  },
+
+  props: {
+    duration: {
+      type: Number,
+      required: true
+    },
+    quizStart: {
+      required: true
+    },
+    userQuizId: {
+      required: true
     }
   },
 
   computed: {
     timeString() {
-      const minutes = Math.floor(this.secondsRemaining / 60)
+      if (!this.secondsRemaining) return "00:00:00";
+
+      const hours = Math.floor(this.secondsRemaining / (60 * 60))
+      const minutes = Math.floor((this.secondsRemaining - 60 * 60 * hours) / 60)
       const seconds = this.secondsRemaining % 60
-      return `${minutes}:${seconds}`
+
+      return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${
+        (seconds < 10 ? '0' : '') + seconds
+      }`
     }
   },
 
   mounted() {
-    this.startTimer()
+    if (!this.startEpoch) {
+      //persist start time
+      const currentTimeSeconds = Math.floor(Date.now() / 1000)
+
+      const handleMutation = async () => {
+        try {
+          await this.$apollo.mutate({
+            mutation: EditUserQuiz,
+            variables: {
+              input: {
+                quizStart: currentTimeSeconds,
+                userQuizID: this.userQuizId
+              }
+            }
+          })
+          this.startEpoch = currentTimeSeconds
+          this.startTimer()
+        } catch (e) {
+          console.error(e)
+        }
+      }
+      handleMutation();      
+    } else {
+      this.startTimer()
+    }
   },
 
   beforeUnmount() {
@@ -48,13 +94,18 @@ export default {
 
   methods: {
     startTimer() {
-      this.timer = setInterval(this.decreaseTimer, 1000)
+      this.timer = setInterval(this.updateTimer, 1000)
     },
 
-    decreaseTimer() {
-      this.secondsRemaining--
+    updateTimer() {
+      const currentTimeSeconds = Math.floor(Date.now() / 1000)
+      const elapsedSeconds = currentTimeSeconds - this.startEpoch!
+      this.secondsRemaining = this.duration.valueOf() * 60 - elapsedSeconds
 
-      if (this.secondsRemaining === 0) this.stopTimer()
+      if (this.secondsRemaining <= 0) {
+        this.secondsRemaining = 0
+        this.stopTimer()
+      }
     },
 
     stopTimer() {
