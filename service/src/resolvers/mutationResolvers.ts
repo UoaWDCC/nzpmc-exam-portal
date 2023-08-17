@@ -429,7 +429,7 @@ const submitUserQuizQuestionsMutation: Resolver<
         throw new AuthenticationError()
     }
     // flag quiz as submitted
-    editUserQuiz(userQuizID, undefined, undefined, undefined, true);
+    editUserQuiz(userQuizID, undefined, undefined, undefined, undefined, true)
 
     const { userAnswerIDs, correctAnswerIDs } = await getUserAnswers(userQuizID)
 
