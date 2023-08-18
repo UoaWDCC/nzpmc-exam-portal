@@ -8,7 +8,7 @@
         "login": "ts-node ./test/scripts/loginScript",
         "add-user": "ts-node ./test/scripts/addUser",
         "lint": "eslint . --ext .js,.ts",
-        "fix": "eslint . --fix --ext .js,.ts",
+        "lint:f": "eslint . --fix --ext .js,.ts",
         "build": "tsc",
         "docker": "docker build . -t nzpmc-backend:latest",
         "test": "jest",
