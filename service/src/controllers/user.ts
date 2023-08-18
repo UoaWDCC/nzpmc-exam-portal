@@ -3,7 +3,7 @@ import { packUser, packUsers } from '../mappers/userMapper'
 import { User } from '../models'
 import * as Schema from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
-import { admin, firestore } from '../utils/firebase'
+import { admin } from '../utils/firebase'
 
 const UserRepository = getRepository(User)
 

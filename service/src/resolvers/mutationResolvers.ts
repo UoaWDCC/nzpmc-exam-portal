@@ -28,12 +28,7 @@ import {
     AuthenticationError,
     NotFoundError,
 } from '../utils/errors'
-import {
-    addFirebaseUser,
-    bucket,
-    resetUserPasswordEmail,
-    UserContext,
-} from '../utils/firebase'
+import { addFirebaseUser, bucket, UserContext } from '../utils/firebase'
 import {
     Image,
     Maybe,
@@ -368,7 +363,7 @@ const editUserQuizQuestionMutation: Resolver<
         userQuizID,
         questionID,
         answerID || undefined,
-        flag ?? undefined
+        flag ?? undefined,
     )
 
     return userQuizQuestion

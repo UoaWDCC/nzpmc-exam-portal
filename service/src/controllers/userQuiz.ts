@@ -4,7 +4,7 @@ import {
     packUserQuiz,
     packUserQuizzes,
 } from '../mappers/userQuizMapper'
-import { Quiz, UserQuiz, User } from '../models'
+import { Quiz, UserQuiz } from '../models'
 import { NotFoundError } from '../utils/errors'
 import { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { addUserQuizQuestion } from './userQuizQuestion'
@@ -159,7 +159,7 @@ const addUserQuiz = async (
     }
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
-    userQuiz.quizStart = null;
+    userQuiz.quizStart = null
 
     UserQuizRepository.create(userQuiz)
 
@@ -171,7 +171,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ; (await questions.find()).map((question) => {
+        ;(await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
@@ -185,7 +185,7 @@ const editUserQuiz = async (
     score?: number,
     startTime?: Date,
     endTime?: Date,
-    submitted?: boolean
+    submitted?: boolean,
 ): Promise<UserQuizModel> => {
     await UserQuizRepository.runTransaction(async (tran) => {
         const userQuiz = await tran.findById(userQuizID)
