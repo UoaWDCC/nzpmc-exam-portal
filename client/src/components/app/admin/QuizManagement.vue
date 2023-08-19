@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import type { User } from '@/components/app/admin/UserManagement.vue'
 import { AllQuizIDQuery } from '@/gql/queries/quiz'
 import { downloadUserQuizzesCsvQuery } from '@/utils/quizManagement'

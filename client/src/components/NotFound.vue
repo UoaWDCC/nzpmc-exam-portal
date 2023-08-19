@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import logoBg from '@/assets/background_unsplash_1.png'
 import nzpmcLogo from '@/assets/nzpmc_logo_2.png'
 </script>
 

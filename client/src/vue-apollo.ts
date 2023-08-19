@@ -69,7 +69,7 @@ function getHeaders() {
 }
 
 // Call this in the Vue app file
-export function createProvider(options = {}) {
+export function createProvider() {
   const cache = new InMemoryCache()
 
   // HTTP connection to the API

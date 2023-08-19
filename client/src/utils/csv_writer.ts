@@ -1,7 +1,6 @@
 import {createObjectCsvWriter } from 'csv-writer';
 import type {Student} from './csv_parser';
 import * as path from 'path';
-import type { ObjectStringifierHeader } from 'csv-writer/src/lib/record';
 
 /**
 * Generates a CSV file from the given students array

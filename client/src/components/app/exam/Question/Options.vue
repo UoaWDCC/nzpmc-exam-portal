@@ -8,7 +8,7 @@
 </style>
 <template>
   <v-item-group v-model="selected" class="options-container">
-    <v-item v-for="(option, index) in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
+    <v-item v-for="(option) in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
       <v-card
         elevation="1"
         :dark="active"
