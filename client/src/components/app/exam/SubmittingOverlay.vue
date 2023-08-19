@@ -2,7 +2,7 @@
     <v-dialog persistent v-model="examStore.submitting">
         <v-card class="overlay-card">
             <div class="logo-container mb-6">
-                <v-img contain id="logo" :src="logo" />
+                <img id="logo" :src="logo" />
             </div>
             <h2>We are submitting your exam.</h2>
             <p>Please wait...</p>
@@ -40,9 +40,16 @@ export default defineComponent({
     align-self: center;
 
     .logo-container {
+        display: flex;
+
+        width: 30rem;
+        justify-content: center;
+        align-items: center;
 
         #logo {
-            width: 30rem;
+            max-width: none;
+            width: 100%;
+            object-fit: contain;
         }
     }
 }
