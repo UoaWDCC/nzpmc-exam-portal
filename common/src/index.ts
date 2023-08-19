@@ -1,2 +1,2 @@
-export * from "./models/resolvers-types";
-export * from "./models/custom";
+export * from './models/resolvers-types'
+export * from './models/custom'

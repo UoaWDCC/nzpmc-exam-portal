@@ -8,22 +8,15 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "prettier",
         "plugin:jest/recommended"
     ],
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint", "prettier", "unused-imports"],
+    "plugins": ["@typescript-eslint", "unused-imports"],
     "parserOptions": {
         "ecmaVersion": 2021,
         "sourceType": "module"
     },
     "rules": {
-        "prettier/prettier": [
-            "error",
-            {
-                "endOfLine": "auto"
-            }
-        ],
         "comma-dangle": ["error", "always-multiline"],
         "block-scoped-var": "error",
         "indent": "off",
