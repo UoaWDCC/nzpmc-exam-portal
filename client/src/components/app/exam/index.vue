@@ -15,7 +15,8 @@
         <AppExamSidebarLoader v-if="loading" />
 
         <v-scroll-y-reverse-transition>
-          <AppExamSidebar v-if="data" :questions="data.questions" :duration="data.duration" :quizStart="data.quizStart" :userQuizId="data.id"/>
+          <AppExamSidebar v-if="data" :questions="data.questions" :duration="data.duration" :quizStart="data.quizStart"
+            :userQuizId="data.id" />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
 
@@ -41,6 +42,7 @@ import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
 import { defineComponent } from 'vue'
 import { TOOLBAR_HEIGHT } from '@/helpers'
 import type { UserQuizModel } from '@nzpmc-exam-portal/common'
+import { watch } from 'vue'
 
 export default defineComponent({
   name: 'AppExam',
@@ -64,8 +66,8 @@ export default defineComponent({
       from.params.questionID === undefined
         ? 'Transition'
         : to.params.questionID > from.params.questionID
-        ? VSlideXReverseTransition
-        : VSlideXTransition
+          ? VSlideXReverseTransition
+          : VSlideXTransition
     next()
   },
 
@@ -100,6 +102,9 @@ export default defineComponent({
         } else {
           if (data) {
             this.data = data.userQuiz
+            if (this.data?.submitted) {
+              this.$router.push({ name: 'AppExams' })
+            }
             console.log(data)
           }
         }
@@ -107,7 +112,7 @@ export default defineComponent({
       fetchPolicy: 'network-only',
       notifyOnNetworkStatusChange: true
     }
-  }
+  },
 })
 </script>
 
@@ -128,6 +133,7 @@ export default defineComponent({
   padding-right: 0;
   padding-bottom: 0;
   max-width: 100vw;
+
   .question-container {
     padding: 0;
     justify-self: flex-end;
