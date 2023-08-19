@@ -79,10 +79,10 @@ const getUsersPagination = async (
     }
 }
 
-const sortUsersList = (users: any, key: string, isDescending: boolean) => {
+const sortUsersList = (users: User[], key: string, isDescending: boolean) => {
     // This is sorting on a key. The key may not exist for all users. (Though it should)
     const sortedUsers = users.sort((user1: User, user2: User) => {
-        user1[key].trim().localeCompare(user2[key].trim(), undefined, {
+        return user1[key].trim().localeCompare(user2[key].trim(), undefined, {
             sensitivity: 'accent',
         })
     })
@@ -93,9 +93,13 @@ const sortUsersList = (users: any, key: string, isDescending: boolean) => {
     }
 }
 
-const sortUsersYearLevel = (users: any, key: string, isDescending: boolean) => {
+const sortUsersYearLevel = (
+    users: User[],
+    key: string,
+    isDescending: boolean,
+) => {
     const sortedUsers = users.sort((user1: User, user2: User) => {
-        parseInt(user1[key].trim()) - parseInt(user2[key].trim())
+        return parseInt(user1[key].trim()) - parseInt(user2[key].trim())
     })
     if (isDescending) {
         return sortedUsers.reverse()
@@ -104,8 +108,11 @@ const sortUsersYearLevel = (users: any, key: string, isDescending: boolean) => {
     }
 }
 
-const caseInsensitiveSort = (orderBy: Schema.UsersOrderByInput, users: any) => {
-    let sortedUsers: any
+const caseInsensitiveSort = (
+    orderBy: Schema.UsersOrderByInput,
+    users: User[],
+) => {
+    let sortedUsers: User[]
     let key: string
     if (orderBy.displayName) {
         key = 'displayName'
