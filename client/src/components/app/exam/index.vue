@@ -1,5 +1,6 @@
 <template>
   <div class="app-exam">
+    <AppSubmittingOverlay />
     <v-scroll-y-reverse-transition>
       <v-alert v-if="error" type="error" class="mx-3 my-6">
         {{ $errorMessage }}
@@ -38,6 +39,7 @@ import AppExamTopbar from './Topbar.vue'
 import AppExamSidebarLoader from './SidebarLoader.vue'
 import AppExamQuestionLoader from './Question/Loader.vue'
 import AppExamSidebar from './Sidebar.vue'
+import AppSubmittingOverlay from './SubmittingOverlay.vue'
 import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
 import { defineComponent } from 'vue'
 import { TOOLBAR_HEIGHT } from '@/helpers'
@@ -58,6 +60,7 @@ export default defineComponent({
     AppExamTopbar,
     AppExamSidebarLoader,
     AppExamQuestionLoader,
+    AppSubmittingOverlay,
     AppExamSidebar
   },
 

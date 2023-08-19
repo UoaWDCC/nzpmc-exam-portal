@@ -8,9 +8,6 @@
 </style>
 <template>
   <AppExamTopbarTimer :duration="duration" :quizStart="quizStart" :userQuizId="userQuizId" />
-  <v-dialog persistent v-model="examStore.submitting">
-    <v-card width="50%">love</v-card>
-  </v-dialog>
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
     <v-divider color="white" thickness="3" class="border-opacity-100 mb-5" />
     <v-list-item-group v-model="selected" color="primary">
