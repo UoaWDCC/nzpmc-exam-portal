@@ -90,6 +90,15 @@ export default defineComponent({
     }
   },
 
+  methods: {
+    redirectToExams() {
+      if (this.data?.submitted) {
+        this.$router.push({ name: 'AppExams' })
+      }
+    }
+
+  },
+
   apollo: {
     name: {
       query: UserQuizQuery,
@@ -105,9 +114,6 @@ export default defineComponent({
         } else {
           if (data) {
             this.data = data.userQuiz
-            if (this.data?.submitted) {
-              this.$router.push({ name: 'AppExams' })
-            }
             const currentQuestions = data?.userQuiz.questions
             this.$router.push({
               name: 'AppExamQuestion',
@@ -121,6 +127,13 @@ export default defineComponent({
       notifyOnNetworkStatusChange: true
     }
   },
+  watch: {
+    'data.submitted': function (newVal, oldVal) {
+      if (newVal) {
+        this.redirectToExams()
+      }
+    }
+  }
 })
 </script>
 
