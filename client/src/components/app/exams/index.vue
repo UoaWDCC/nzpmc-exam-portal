@@ -26,8 +26,9 @@
       </v-scroll-y-reverse-transition>
 
       <AppExamsList v-if="!loading && userQuizzes" :user-quizzes="userQuizzes" />
-      <v-skeleton-loader v-if="loading" v-for="i in 3" :key="i" class="mb-3 mx-auto"
-        type="list-item-two-line"></v-skeleton-loader>
+      <v-container v-if="loading" class="pa-0">
+        <v-skeleton-loader v-for="i in 3" :key="i" class="mb-3 mx-auto" type="list-item-two-line"></v-skeleton-loader>
+      </v-container>
     </v-container>
   </div>
 </template>
