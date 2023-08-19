@@ -30,8 +30,12 @@ const addUserDocument = async (uid: string) => {
 const args = process.argv.slice(2)
 
 if (args.length === 0) {
-    console.log('Adding User with user ID:', process.env.USER_ID)
-    addUserDocument(process.env.USER_ID!)
+    if (process.env.USER_ID) {
+        console.log('Adding User with user ID:', process.env.USER_ID)
+        addUserDocument(process.env.USER_ID)
+    } else {
+        console.log('User ID not found in .env file')
+    }
 } else {
     console.log('Adding User with user ID:', args[0])
     addUserDocument(args[0])
