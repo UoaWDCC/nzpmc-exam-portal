@@ -6,7 +6,7 @@ import { auth } from '@/firebase'
 const AUTH_TOKEN = 'apollo-token'
 
 // Http endpoint
-const httpEndpoint = import.meta.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:4000/graphql'
+const httpEndpoint = import.meta.env.VITE_VUE_APP_GRAPHQL_HTTP || 'http://localhost:4000/graphql'
 
 // Config
 const defaultOptions = {
