@@ -15,7 +15,7 @@
           <strong>upcoming exams</strong>.<br />
 
           If you can't see an exam that you think you should be enrolled in, contact us
-          at <strong><a href="mailto:contact.nzpmc@gmail.com">contact.nzpmc@gmail.com</a></strong>.
+          at <strong><a :href="'mailto:' + contactEmail">{{ contactEmail }}</a></strong>.
         </p>
       </div>
 
@@ -49,6 +49,7 @@ export default {
       userQuizzes: null,
       error: "",
       loading: true,
+      contactEmail: 'contact@nzpmc.com'
     }
   },
 
