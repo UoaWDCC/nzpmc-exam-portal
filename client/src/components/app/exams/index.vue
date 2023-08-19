@@ -6,7 +6,8 @@
       <div class="my-6">
         <h1 class="heading mb-6 text-uppercase font-weight-bold">My Exams</h1>
         <p class="intro">
-          Kia Ora, welcome to the <strong>New Zealand Physics and Mathematics Competition!</strong><br />
+          Kia Ora <strong>{{ store.user!.displayName }}</strong>, welcome to the <strong>New Zealand Physics and
+            Mathematics Competition!</strong><br />
 
           This is your chance to prove your skills and knowledge in <strong>Physics</strong> and
           <strong>Mathematics</strong>.<br /><br />
@@ -34,6 +35,7 @@
 <script lang="ts">
 import AppExamsList from './List.vue'
 import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
+import { useMainStore } from '@/stores/main'
 
 export default {
   name: 'AppExams',
@@ -46,6 +48,7 @@ export default {
 
   data() {
     return {
+      store: useMainStore(),
       userQuizzes: null,
       error: "",
       loading: true,

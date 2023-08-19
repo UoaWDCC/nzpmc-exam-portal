@@ -55,7 +55,7 @@ import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 						<p>{{ store.user!.email }}</p>
 					</v-list-item>
 					<v-list-item>
-						<v-btn @click="signOut(auth)">Log Out </v-btn>
+						<v-btn flat color="secondary" @click="signOut(auth)">Log Out </v-btn>
 					</v-list-item>
 				</v-list>
 			</v-menu>
@@ -82,7 +82,7 @@ export default {
 
 	data() {
 		return {
-			store: useMainStore()
+			store: useMainStore(),
 		}
 	},
 
