@@ -1,4 +1,10 @@
 {
     "name": "@nzpmc-exam-portal/common",
-    "version": "0.0.0"
+    "version": "0.0.0",
+    "scripts": {
+        "lint": "eslint .",
+        "lint:f": "eslint . --fix"
+    },
+    "main": "index.js",
+    "license": "MIT"
 }
