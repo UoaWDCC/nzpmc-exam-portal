@@ -548,7 +548,6 @@ const unenrolUsersFromQuizMutation: Resolver<
     // Use `map` to create an array of Promises representing the addUserQuiz() operations
     const addUserQuizPromises = users.map(async (currentUser) => {
         const userID = currentUser.id
-        const userEmail = currentUser.email
         const deletedQuizID = await deleteUserQuiz(quizToUnenrolFrom, userID)
         if (deletedQuizID !== null) {
             deletedUserQuizIDs.push(deletedQuizID)

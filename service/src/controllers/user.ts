@@ -16,7 +16,9 @@ const getUser = async (
         try {
             user = await UserRepository.findById(id)
             return packUser(user)
-        } catch (e) {}
+        } catch (e) {
+            // Do nothing
+        }
     }
 
     if (email) {

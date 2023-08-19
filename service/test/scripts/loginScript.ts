@@ -39,7 +39,7 @@ const createIdToken = async (uid) => {
 
 const args = process.argv.slice(2)
 
-if (args.length == 0) {
+if (args.length === 0) {
     console.log('Login with User ID:', process.env.USER_ID)
     createIdToken(process.env.USER_ID)
 } else {
