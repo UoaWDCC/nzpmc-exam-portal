@@ -10,7 +10,7 @@ import logoBg from '@/assets/logo-background.jpg'
 
 <script lang="ts">
 export default {
-    name: 'Site',
+    name: 'SitePage',
 
     metaInfo: {
         title: 'Welcome',
