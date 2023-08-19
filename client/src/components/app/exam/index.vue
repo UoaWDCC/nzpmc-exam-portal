@@ -115,10 +115,12 @@ export default defineComponent({
           if (data) {
             this.data = data.userQuiz
             const currentQuestions = data?.userQuiz.questions
-            this.$router.push({
-              name: 'AppExamQuestion',
-              params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
-            })
+            if (this.$route.params.questionID !== undefined) {
+              this.$router.push({
+                name: 'AppExamQuestion',
+                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
+              })
+            }
             console.log(data)
           }
         }
