@@ -58,7 +58,7 @@ const getUsersPagination = async (
     // This is dependent that the user has a display name, first name, last name, or email
     // For testing purposes this may not always be the case.
     const finalUsers = sortedUsers.filter(
-        (user: any) =>
+        (user: User) =>
             user.displayName
                 .trim()
                 .toLowerCase()
@@ -81,7 +81,7 @@ const getUsersPagination = async (
 
 const sortUsersList = (users: any, key: string, isDescending: boolean) => {
     // This is sorting on a key. The key may not exist for all users. (Though it should)
-    const sortedUsers = users.sort((user1: any, user2: any) => {
+    const sortedUsers = users.sort((user1: User, user2: User) => {
         user1[key].trim().localeCompare(user2[key].trim(), undefined, {
             sensitivity: 'accent',
         })
@@ -94,7 +94,7 @@ const sortUsersList = (users: any, key: string, isDescending: boolean) => {
 }
 
 const sortUsersYearLevel = (users: any, key: string, isDescending: boolean) => {
-    const sortedUsers = users.sort((user1: any, user2: any) => {
+    const sortedUsers = users.sort((user1: User, user2: User) => {
         parseInt(user1[key].trim()) - parseInt(user2[key].trim())
     })
     if (isDescending) {
