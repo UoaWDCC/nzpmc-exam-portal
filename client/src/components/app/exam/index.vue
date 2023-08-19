@@ -115,7 +115,8 @@ export default defineComponent({
           if (data) {
             this.data = data.userQuiz
             const currentQuestions = data?.userQuiz.questions
-            if (this.$route.params.questionID !== undefined) {
+            console.log(this.$route.params.questionID)
+            if (this.$route.params.questionID === undefined) {
               this.$router.push({
                 name: 'AppExamQuestion',
                 params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
