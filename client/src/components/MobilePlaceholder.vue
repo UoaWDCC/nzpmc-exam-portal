@@ -82,7 +82,7 @@ import phone from '@/assets/phone.png'
       span {
         text-decoration: underline;
       }
-    } 
+    }
 
     .subcaption {
       font-size: 2.7vh;

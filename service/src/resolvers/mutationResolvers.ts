@@ -28,12 +28,7 @@ import {
     AuthenticationError,
     NotFoundError,
 } from '../utils/errors'
-import {
-    addFirebaseUser,
-    bucket,
-    resetUserPasswordEmail,
-    UserContext,
-} from '../utils/firebase'
+import { addFirebaseUser, bucket, UserContext } from '../utils/firebase'
 import {
     Image,
     Maybe,
@@ -368,7 +363,7 @@ const editUserQuizQuestionMutation: Resolver<
         userQuizID,
         questionID,
         answerID || undefined,
-        flag ?? undefined
+        flag ?? undefined,
     )
 
     return userQuizQuestion
@@ -553,7 +548,6 @@ const unenrolUsersFromQuizMutation: Resolver<
     // Use `map` to create an array of Promises representing the addUserQuiz() operations
     const addUserQuizPromises = users.map(async (currentUser) => {
         const userID = currentUser.id
-        const userEmail = currentUser.email
         const deletedQuizID = await deleteUserQuiz(quizToUnenrolFrom, userID)
         if (deletedQuizID !== null) {
             deletedUserQuizIDs.push(deletedQuizID)

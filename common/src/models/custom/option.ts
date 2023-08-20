@@ -1,4 +1,4 @@
 export type Option = {
-    id: string;
-    option: string;
-  };
+  id: string;
+  option: string;
+};

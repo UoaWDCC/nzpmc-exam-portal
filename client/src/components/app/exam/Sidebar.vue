@@ -51,10 +51,10 @@ export default {
     },
     duration: {
       type: Number,
-      required: true,
+      required: true
     },
     quizStart: {
-      required: true,
+      required: true
     },
     userQuizId: {
       required: true
@@ -62,12 +62,12 @@ export default {
   },
   methods: {
     submitQuiz() {
-      console.log("clicek")
+      console.log('clicek')
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {
           input: {
-            userQuizID: this.$route.params.quizID,
+            userQuizID: this.$route.params.quizID
           }
         }
       })
@@ -76,15 +76,12 @@ export default {
         .then(() => {
           this.$router.push({
             name: 'AppExams'
-
           })
         })
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
         })
-
     }
-
   },
 
   data() {
@@ -95,8 +92,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useMainStore, ['snackbarQueue']),
-
+    ...mapWritableState(useMainStore, ['snackbarQueue'])
   },
 
   watch: {
@@ -113,8 +109,6 @@ export default {
           })
       }
     }
-
   }
-
 }
 </script>

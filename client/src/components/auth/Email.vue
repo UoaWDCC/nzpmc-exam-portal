@@ -4,14 +4,15 @@
 
     <div class="text-subtitle-1 font-weight-black px-4">Email</div>
 
-    <div class="pb-4 px-4"> 
-      <input class ="email"
+    <div class="pb-4 px-4">
+      <input
+        class="email"
         v-model="currentEmail"
         type="email"
         autocomplete="username"
         hide-details="auto"
         required
-        autofocus 
+        autofocus
       />
     </div>
 
@@ -101,21 +102,21 @@ export default {
           // Success
           if (methods.length > 0) {
             this.$emit('go', 'SignIn')
-          // Non-existing email  
+            // Non-existing email
           } else {
             this.error = 'An account associated with this email address does not exist.'
           }
         })
-          .catch((error) => {
-            // An error occurred
-            switch (error.code) {
-              case 'auth/invalid-email':
-                this.error = 'Please enter a valid email address.'
-                break
-              default:
-                this.error = 'This is an error message.'
-            }
-          })
+        .catch((error) => {
+          // An error occurred
+          switch (error.code) {
+            case 'auth/invalid-email':
+              this.error = 'Please enter a valid email address.'
+              break
+            default:
+              this.error = 'This is an error message.'
+          }
+        })
         .finally(() => {
           // Clean up loading state
           this.loading = false
@@ -143,12 +144,12 @@ export default {
 }
 
 .email {
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 15px;;
-    width: 315px;
-    height: 7vh;
-    text-align: center;
-    font-size: large;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 15px;
+  width: 315px;
+  height: 7vh;
+  text-align: center;
+  font-size: large;
 }
 </style>

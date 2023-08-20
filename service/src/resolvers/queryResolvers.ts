@@ -3,7 +3,6 @@ import {
     getQuiz,
     getUser,
     getUserQuiz,
-    getUserQuizbyQuizID,
     getUserQuizzesByQuizID,
     getUserQuizzes,
     getUsersPagination,
@@ -158,8 +157,8 @@ const userQuizzesByQuizIDQuerry: Resolver<
     if (context.user === undefined || !context.user.admin) {
         throw new AuthenticationError()
     }
-    const id: string = args.quizID;
-    return getUserQuizzesByQuizID(id);
+    const id: string = args.quizID
+    return getUserQuizzesByQuizID(id)
 }
 
 const queryResolvers: QueryResolvers = {

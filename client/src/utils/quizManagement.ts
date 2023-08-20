@@ -3,12 +3,14 @@ import { GetUserQuizzesListQuery } from '../gql/queries/userQuizList'
 import type { UserQuiz } from '@/components/app/admin/QuizManagement.vue'
 
 export const downloadUserQuizzesCsvQuery = async (
-  apollo: ApolloClient<NormalizedCacheObject>, quizId: string
+  apollo: ApolloClient<NormalizedCacheObject>,
+  quizId: string
 ): Promise<boolean> => {
   try {
     const query = await apollo.query({
       query: GetUserQuizzesListQuery,
-      variables: { // additional parameters to pass to the query
+      variables: {
+        // additional parameters to pass to the query
         quizId: quizId
       }
     })
@@ -37,11 +39,13 @@ export const downloadUserQuizzesCsvQuery = async (
     const csvContent = `${csvHeaders}\n${userQuizListFormatted
       .map((currentUserQuiz) => {
         const values = Object.values(currentUserQuiz)
-        return values.filter((_, index) => Object.keys(currentUserQuiz)[index] !== '__typename').join(',')
+        return values
+          .filter((_, index) => Object.keys(currentUserQuiz)[index] !== '__typename')
+          .join(',')
       })
       .join('\n')}`
     console.log(csvContent)
-      
+
     // Create a Blob with the CSV content
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
 
@@ -57,9 +61,8 @@ export const downloadUserQuizzesCsvQuery = async (
     URL.revokeObjectURL(link.href)
     link.remove()
 
-    console.log("success?")
+    console.log('success?')
     return true
-
   } catch (error) {
     console.error('Failed to download user quizzes as CSV:', error)
     return false
