@@ -13,10 +13,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Pull latest changes 
+        run: git pull origin main
         
       - name: List files in directory
         run: ls -R
-        
+
       - name: Install ESLint
         run: |
           npm install eslint@8.10.0
