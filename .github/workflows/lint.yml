@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Pull latest changes 
-        run: git pull origin main
+        run: git pull
         
       - name: List files in directory
         run: ls -R
