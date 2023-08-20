@@ -16,7 +16,7 @@ const getUser = async (
         try {
             user = await UserRepository.findById(id)
             return packUser(user)
-        } catch (e) {}
+        } catch (e) { }
     }
 
     if (email) {
@@ -234,7 +234,9 @@ const editUser = async (
         user.yearLevel = yearLevel ? yearLevel : user.yearLevel
         user.role = role ? role : user.role
         user.modified = new Date()
-
+        admin.auth().updateUser(id, {
+            displayName: displayName ? displayName : user.displayName
+        })
         await tran.update(user)
 
         return user

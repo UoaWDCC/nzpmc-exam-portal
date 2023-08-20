@@ -6,7 +6,8 @@
       <div class="my-6">
         <h1 class="heading mb-6 text-uppercase font-weight-bold">My Exams</h1>
         <p class="intro">
-          Kia Ora, welcome to the <strong>New Zealand Physics and Mathematics Competition!</strong><br />
+          Kia Ora <strong>{{ nameCase(store.user!.displayName) }}</strong>, welcome to the <strong>New Zealand Physics and
+            Mathematics Competition!</strong><br />
 
           This is your chance to prove your skills and knowledge in <strong>Physics</strong> and
           <strong>Mathematics</strong>.<br /><br />
@@ -15,7 +16,7 @@
           <strong>upcoming exams</strong>.<br />
 
           If you can't see an exam that you think you should be enrolled in, contact us
-          at <strong><a href="mailto:contact.nzpmc@gmail.com">contact.nzpmc@gmail.com</a></strong>.
+          at <strong><a :href="'mailto:' + contactEmail">{{ contactEmail }}</a></strong>.
         </p>
       </div>
 
@@ -34,10 +35,14 @@
 <script lang="ts">
 import AppExamsList from './List.vue'
 import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
+import { nameCase } from '@/helpers'
+import { useMainStore } from '@/stores/main'
+import formattingMixin from '@/utils/formattingMixin'
 
 export default {
   name: 'AppExams',
 
+  mixins: [formattingMixin],
   metaInfo: {
     title: 'My Exams' as string,
   },
@@ -46,12 +51,13 @@ export default {
 
   data() {
     return {
+      store: useMainStore(),
       userQuizzes: null,
       error: "",
       loading: true,
+      contactEmail: 'contact@nzpmc.com'
     }
   },
-
   apollo: {
     userQuizzes: {
       query: UserQuizzesQuery,
