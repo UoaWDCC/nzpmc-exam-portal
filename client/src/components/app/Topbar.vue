@@ -51,7 +51,7 @@ import topbar_nzpmc_logo from '@/assets/topbar_nzpmc_logo.png'
 				</template>
 				<v-list>
 					<v-list-item>
-						<h2>{{ store.user!.displayName }}</h2>
+						<h2>{{ nameCase(store.user!.displayName) }}</h2>
 						<p>{{ store.user!.email }}</p>
 					</v-list-item>
 					<v-list-item>
@@ -71,20 +71,22 @@ import { signOut } from 'firebase/auth'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 import { Icon } from '@iconify/vue'
+import formattingMixin from '@/utils/formattingMixin'
 
 export default {
 	name: 'AppTopbar',
+	mixins: [formattingMixin],
 
 	computed: {
 		// Get state from Pinia store
 		...mapWritableState(useMainStore, ['snackbarQueue']),
 	},
-
 	data() {
 		return {
-			store: useMainStore(),
+			store: useMainStore()
 		}
 	},
+
 
 	methods: {
 		signOut() {

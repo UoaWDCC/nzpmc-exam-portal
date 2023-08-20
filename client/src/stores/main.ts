@@ -10,7 +10,7 @@ export const useMainStore = defineStore('mainStore', {
     userLoading: true,
     //App claims state
     userIsAdmin: false,
-
+    displayName: "" as string,
 
     // App snackbar notifications
     snackbarQueue: [] as string[],
