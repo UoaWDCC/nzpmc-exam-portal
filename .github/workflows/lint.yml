@@ -12,7 +12,7 @@ jobs:
       actions: read 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
            ref: ${{ github.ref }}
            fetch-depth: 0
@@ -28,7 +28,7 @@ jobs:
 
       - name: Run ESLint
         run: npx eslint .
-          --config ./common/eslintrc.json
+          --config ./common/.eslintrc.json
           --ext .js,.jsx,.ts,.tsx
           --format @microsoft/eslint-formatter-sarif
           --output-file eslint-results.sarif
