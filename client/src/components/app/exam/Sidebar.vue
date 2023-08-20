@@ -7,16 +7,28 @@
 }
 </style>
 <template>
-  <AppExamTopbarTimer :duration="duration" :quizStart="quizStart" :userQuizId="userQuizId"/>
+  <AppExamTopbarTimer :duration="duration" :quizStart="quizStart" :userQuizId="userQuizId" />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
     <v-divider color="white" thickness="3" class="border-opacity-100 mb-5" />
     <v-list-item-group v-model="selected" color="primary">
-      <AppExamSidebarLink v-for="(question, index) in questions" :id="question.id" :key="index" :number="index + 1"
-        :answered="question.userAnswer !== null" :flagged="question.flag" />
+      <AppExamSidebarLink
+        v-for="(question, index) in questions"
+        :id="question.id"
+        :key="index"
+        :number="index + 1"
+        :answered="question.userAnswer !== null"
+        :flagged="question.flag"
+      />
     </v-list-item-group>
   </v-list>
-  <v-btn color="secondary" :disabled="submitting" v-on:click="submitQuiz()" variant="flat"
-    id="submit-button">Submit</v-btn>
+  <v-btn
+    color="secondary"
+    :disabled="submitting"
+    v-on:click="submitQuiz()"
+    variant="flat"
+    id="submit-button"
+    >Submit</v-btn
+  >
 </template>
 
 <script lang="ts">
@@ -50,10 +62,10 @@ export default {
     },
     duration: {
       type: Number,
-      required: true,
+      required: true
     },
     quizStart: {
-      required: true,
+      required: true
     },
     userQuizId: {
       required: true
@@ -61,30 +73,27 @@ export default {
   },
   methods: {
     submitQuiz() {
-      console.log("clicek")
+      console.log('clicek')
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {
           input: {
-            userQuizID: this.$route.params.quizID,
+            userQuizID: this.$route.params.quizID
           }
         }
       })
-      this.submitting = true;
+      this.submitting = true
       mutation
         .then(() => {
           this.$router.push({
             name: 'AppExams'
-
           })
-          this.submitting = false;
+          this.submitting = false
         })
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
         })
-
     }
-
   },
 
   data() {
@@ -96,8 +105,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useMainStore, ['snackbarQueue']),
-
+    ...mapWritableState(useMainStore, ['snackbarQueue'])
   },
 
   watch: {
@@ -114,8 +122,6 @@ export default {
           })
       }
     }
-
   }
-
 }
 </script>

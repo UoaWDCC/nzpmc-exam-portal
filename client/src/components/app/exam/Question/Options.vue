@@ -8,7 +8,7 @@
 </style>
 <template>
   <v-item-group v-model="selected" class="options-container">
-    <v-item v-for="(option) in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
+    <v-item v-for="option in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
       <v-card
         elevation="1"
         :dark="active"
@@ -121,7 +121,7 @@ export default {
         })
         .finally(() => {
           // Ensure selected state is synced with server
-          console.log("Success")
+          console.log('Success')
           console.log(this.answer)
           this.setSelected(this.answer)
         })
@@ -136,7 +136,7 @@ export default {
 
     // Check if an option is selected
     isSelected(optionId: string): boolean {
-      return this.selected === this.sortedOptions.findIndex((option) => option.id === optionId);
+      return this.selected === this.sortedOptions.findIndex((option) => option.id === optionId)
     }
   }
 }

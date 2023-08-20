@@ -48,7 +48,7 @@ export default {
 
   computed: {
     timeString() {
-      if (!this.secondsRemaining) return "00:00:00";
+      if (!this.secondsRemaining) return '00:00:00'
 
       const hours = Math.floor(this.secondsRemaining / (60 * 60))
       const minutes = Math.floor((this.secondsRemaining - 60 * 60 * hours) / 60)
@@ -82,7 +82,7 @@ export default {
           console.error(e)
         }
       }
-      handleMutation();      
+      handleMutation()
     } else {
       this.startTimer()
     }

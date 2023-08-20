@@ -1,28 +1,25 @@
 import gql from 'graphql-tag'
-import {
-    UserQuizQuestionFragment,
-    UserQuizOptionFragment,
-} from '../fragments/userQuiz'
+import { UserQuizQuestionFragment, UserQuizOptionFragment } from '../fragments/userQuiz'
 
 export const UserQuizUpdateFlagMutation = gql`
-    mutation UserQuizUpdateFlagMutation($input: EditUserQuizQuestionInput!) {
-        editUserQuizQuestion(input: $input) {
-            ...UserQuizQuestionFragment
-        }
+  mutation UserQuizUpdateFlagMutation($input: EditUserQuizQuestionInput!) {
+    editUserQuizQuestion(input: $input) {
+      ...UserQuizQuestionFragment
     }
-    ${UserQuizQuestionFragment}
+  }
+  ${UserQuizQuestionFragment}
 `
 
 export const UserQuizUpdateAnswerMutation = gql`
-    mutation UserQuizUpdateAnswerMutation($input: EditUserQuizQuestionInput!) {
-        editUserQuizQuestion(input: $input) {
-            id
-            userAnswer {
-                ...UserQuizOptionFragment
-            }
-        }
+  mutation UserQuizUpdateAnswerMutation($input: EditUserQuizQuestionInput!) {
+    editUserQuizQuestion(input: $input) {
+      id
+      userAnswer {
+        ...UserQuizOptionFragment
+      }
     }
-    ${UserQuizOptionFragment}
+  }
+  ${UserQuizOptionFragment}
 `
 
 export const EditUserQuiz = gql`
@@ -34,9 +31,9 @@ export const EditUserQuiz = gql`
 `
 
 export const SubmitUserQuizQuestionsMutation = gql`
-    mutation SubmitUserQuizQuestions($input: SubmissionInput!) {
-        submitUserQuizQuestions(input: $input) {
-            id
-        }
+  mutation SubmitUserQuizQuestions($input: SubmissionInput!) {
+    submitUserQuizQuestions(input: $input) {
+      id
     }
+  }
 `

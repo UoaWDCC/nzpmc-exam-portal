@@ -4,39 +4,39 @@ import logoSvg from '@/assets/logo-auth.svg'
 
 <template>
   <div id="background">
-  <MobilePlaceHolder />
-  <div class="hide-for-mobile">
-    <div class="align-center auth background--blue d-flex justify-center primary">
-      <v-sheet class="auth-container" elevation="2" max-width="100%" width="28rem">
-        <div class="d-flex pa-4" >
-          <v-img :src="logoSvg" height="96" contain/>
-        </div>
+    <MobilePlaceHolder />
+    <div class="hide-for-mobile">
+      <div class="align-center auth background--blue d-flex justify-center primary">
+        <v-sheet class="auth-container" elevation="2" max-width="100%" width="28rem">
+          <div class="d-flex pa-4">
+            <v-img :src="logoSvg" height="96" contain />
+          </div>
 
-        <div
-          v-if="userLoading || user"
-          class="align-center d-flex flex-wrap justify-center pa-4 text-center"
-          style="gap: 1rem"
-        >
-          <v-progress-circular indeterminate color="primary"></v-progress-circular>
+          <div
+            v-if="userLoading || user"
+            class="align-center d-flex flex-wrap justify-center pa-4 text-center"
+            style="gap: 1rem"
+          >
+            <v-progress-circular indeterminate color="primary"></v-progress-circular>
 
-          {{ userLoading ? 'Loading authentication service...' : 'Redirecting to the app...' }}
-        </div>
+            {{ userLoading ? 'Loading authentication service...' : 'Redirecting to the app...' }}
+          </div>
 
-        <div v-else>
-          <AuthEmail
-            v-if="panel === 'Email'"
-            :email="email"
-            @go="go"
-            @update-email="(v) => (email = v)"
-          />
+          <div v-else>
+            <AuthEmail
+              v-if="panel === 'Email'"
+              :email="email"
+              @go="go"
+              @update-email="(v) => (email = v)"
+            />
 
-          <AuthSignIn v-if="panel === 'SignIn'" :email="email" @go="go" />
+            <AuthSignIn v-if="panel === 'SignIn'" :email="email" @go="go" />
 
-          <AuthForgotPassword v-if="panel === 'ForgotPassword'" :email="email" @go="go" />
-        </div>
-      </v-sheet>
+            <AuthForgotPassword v-if="panel === 'ForgotPassword'" :email="email" @go="go" />
+          </div>
+        </v-sheet>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -102,22 +102,20 @@ export default defineComponent({
 @import '@/styles/globals.scss';
 
 #background {
-    background-image: url(@/assets/background_unsplash_1.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  background-image: url(@/assets/background_unsplash_1.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .auth-container {
   border-radius: 30px;
   padding: 50px;
 }
-
 </style>
-
