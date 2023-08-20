@@ -19,7 +19,6 @@ const getUser = async (
         } catch (e) {
             // Do nothing
         }
-
     }
 
     if (email) {
@@ -245,7 +244,7 @@ const editUser = async (
         user.role = role ? role : user.role
         user.modified = new Date()
         admin.auth().updateUser(id, {
-            displayName: displayName ? displayName : user.displayName
+            displayName: displayName ? displayName : user.displayName,
         })
         await tran.update(user)
 

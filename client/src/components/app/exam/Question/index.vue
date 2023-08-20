@@ -43,9 +43,14 @@
         </div>
       </v-row>
       <div class="options-area">
-        <AppExamQuestionOptions :options="question.options" :answer="question.userAnswer ? question.userAnswer.id : null"
-          :question-number="questionNumber" />
-        <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat">Next Question</v-btn>
+        <AppExamQuestionOptions
+          :options="question.options"
+          :answer="question.userAnswer ? question.userAnswer.id : null"
+          :question-number="questionNumber"
+        />
+        <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat"
+          >Next Question</v-btn
+        >
       </div>
     </v-container>
   </v-scroll-y-reverse-transition>
@@ -90,14 +95,15 @@ export default {
     question() {
       if (this.quizData) {
         const questionID = this.$route.params.questionID
-        const question = this.quizData.questions.find((question: Question) => question.id === questionID);
+        const question = this.quizData.questions.find(
+          (question: Question) => question.id === questionID
+        )
         console.log(question)
-        return question;
+        return question
       }
 
       return null
     }
-
   },
   methods: {
     nextQuestion() {
@@ -110,9 +116,7 @@ export default {
           params: { quizID: this.$route.params.quizID, questionID: nextQuestionID }
         })
       }
-
-    },
-
+    }
   },
 
   apollo: {

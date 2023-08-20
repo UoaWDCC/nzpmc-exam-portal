@@ -35,25 +35,23 @@ export const addUserMutation = async (
   }
 }
 
-
 export const deleteUsersMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   email: string
-  ): Promise<boolean> => {
-    try {
-      const mutation = await apollo.mutate({
-        mutation: DeleteUserMutation,
-        variables: {
-          deleteUserEmail: email
-        }
-      })
-      const deletedEmail = mutation.data.deleteUser.email
-      return deletedEmail === email.toLowerCase()
-    } 
-    catch (e) {
-      console.error(e)
-      return false
-    }
+): Promise<boolean> => {
+  try {
+    const mutation = await apollo.mutate({
+      mutation: DeleteUserMutation,
+      variables: {
+        deleteUserEmail: email
+      }
+    })
+    const deletedEmail = mutation.data.deleteUser.email
+    return deletedEmail === email.toLowerCase()
+  } catch (e) {
+    console.error(e)
+    return false
+  }
 }
 
 export const successMessage = (successfulEmails: string[]): string => {

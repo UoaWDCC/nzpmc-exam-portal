@@ -1,14 +1,13 @@
 {
-    "name": "@nzpmc-exam-portal/common",
-    "version": "0.0.0",
-    "scripts": {
-        "lint": "eslint .",
-        "lint:f": "eslint . --fix"
-    },
-    "main": "index.js",
-    "license": "MIT",
-    "devDependencies": {
-        "eslint-config-prettier": "^9.0.0"
-    },
-    "dependencies": {}
+  "name": "@nzpmc-exam-portal/common",
+  "version": "0.0.0",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:f": "eslint . --fix"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "eslint-config-prettier": "^9.0.0"
+  },
+  "dependencies": {}
 }
