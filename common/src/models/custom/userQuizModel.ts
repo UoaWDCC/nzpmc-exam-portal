@@ -1,4 +1,4 @@
-import { QuestionModel } from "./questionModel"
+import { QuestionModel } from './questionModel'
 
 export type UserQuizModel = {
   userID: string
