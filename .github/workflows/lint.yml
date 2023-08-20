@@ -14,8 +14,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Pull latest changes 
-        run: git pull
+      - name: Get latest commits
+        run: git fetch --prune --unshallow
         
       - name: List files in directory
         run: ls -R
