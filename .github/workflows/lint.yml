@@ -24,6 +24,7 @@ jobs:
       - name: Run ESLint
         uses: sibiraj-s/action-eslint@v3
         with:
+          all-files: true
           eslint-args: '--ignore-path=.gitignore --quiet'
           extensions: 'js,jsx,ts,tsx'
           annotations: true
