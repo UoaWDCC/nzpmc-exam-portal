@@ -11,12 +11,24 @@
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
     <v-divider color="white" thickness="3" class="border-opacity-100 mb-5" />
     <v-list-item-group v-model="selected" color="primary">
-      <AppExamSidebarLink v-for="(question, index) in questions" :id="question.id" :key="index" :number="index + 1"
-        :answered="question.userAnswer !== null" :flagged="question.flag" />
+      <AppExamSidebarLink
+        v-for="(question, index) in questions"
+        :id="question.id"
+        :key="index"
+        :number="index + 1"
+        :answered="question.userAnswer !== null"
+        :flagged="question.flag"
+      />
     </v-list-item-group>
   </v-list>
-  <v-btn color="secondary" :disabled="examStore.submitting" v-on:click="submitQuiz()" variant="flat"
-    id="submit-button">Submit</v-btn>
+  <v-btn
+    color="secondary"
+    :disabled="examStore.submitting"
+    v-on:click="submitQuiz()"
+    variant="flat"
+    id="submit-button"
+    >Submit</v-btn
+  >
 </template>
 
 <script lang="ts">
@@ -71,7 +83,7 @@ export default {
           }
         }
       })
-      this.examStore.submitting = true;
+      this.examStore.submitting = true
       mutation
         .then(() => {
           this.$router.push({

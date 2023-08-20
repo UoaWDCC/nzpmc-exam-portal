@@ -1,17 +1,17 @@
 import gql from 'graphql-tag'
 
 export const UserQuizFragment = gql`
-    fragment UserQuizFragment on UserQuiz {
-        id
-        name
-        quizID
-        description
-        duration
-        startTime
-        endTime
-        quizStart
-        submitted
-    }
+  fragment UserQuizFragment on UserQuiz {
+    id
+    name
+    quizID
+    description
+    duration
+    startTime
+    endTime
+    quizStart
+    submitted
+  }
 `
 
 export const UserQuizQuestionFragment = gql`

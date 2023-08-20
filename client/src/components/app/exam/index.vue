@@ -16,8 +16,13 @@
         <AppExamSidebarLoader v-if="loading" />
 
         <v-scroll-y-reverse-transition>
-          <AppExamSidebar v-if="data" :questions="data.questions" :duration="data.duration" :quizStart="data.quizStart"
-            :userQuizId="data.id" />
+          <AppExamSidebar
+            v-if="data"
+            :questions="data.questions"
+            :duration="data.duration"
+            :quizStart="data.quizStart"
+            :userQuizId="data.id"
+          />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
 
@@ -69,8 +74,8 @@ export default defineComponent({
       from.params.questionID === undefined
         ? 'Transition'
         : to.params.questionID > from.params.questionID
-          ? VSlideXReverseTransition
-          : VSlideXTransition
+        ? VSlideXReverseTransition
+        : VSlideXTransition
     next()
   },
 
@@ -96,7 +101,6 @@ export default defineComponent({
         this.$router.push({ name: 'AppExams' })
       }
     }
-
   },
 
   apollo: {

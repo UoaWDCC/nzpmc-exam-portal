@@ -5,5 +5,5 @@ export const useExamStore = defineStore('examStore', {
     // Promises still that still need to be resolved
     unresolvedQuestionPromises: [] as Promise<any>[],
     submitting: false
-  }),
+  })
 })
