@@ -13,5 +13,8 @@
         "lint": "eslint .",
         "lint:f": "eslint . --fix"
     },
-    "packageManager": "yarn@1.22.19"
+    "packageManager": "yarn@1.22.19",
+    "devDependencies": {
+        "husky": "^8.0.3"
+    }
 }
