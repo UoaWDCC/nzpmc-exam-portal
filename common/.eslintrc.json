@@ -26,7 +26,6 @@
     "no-undef": ["error"],
     "no-unused-vars": "off",
     "object-shorthand": "error",
-    "quotes": ["error", "single"],
     "prefer-const": "error",
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
