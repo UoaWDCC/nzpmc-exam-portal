@@ -5,7 +5,6 @@
     "lint": "eslint .",
     "lint:f": "eslint . --fix"
   },
-  "main": "index.js",
   "license": "MIT",
   "devDependencies": {
     "eslint-config-prettier": "^9.0.0"
