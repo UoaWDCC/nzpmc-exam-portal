@@ -24,5 +24,6 @@ jobs:
         uses: wearerequired/lint-action@v2
         with:
           eslint: true
+          eslint_extensions: js,ts,jsx,tsx
           prettier: true
           auto_fix: true
