@@ -1,39 +1,34 @@
 name: Lint
 
-on: pull_request
+on: [pull_request, push]
 
 jobs:
-    run-linters:
-        name: Run linters
-        runs-on: ubuntu-latest
-        defaults:
-          run:
-            working-directory: ./exam-portal-frontend
+  eslint:
+    name: Run eslint scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-        steps:
-            - name: Check out Git repository
-              uses: actions/checkout@v2
+      - name: Install ESLint
+        run: |
+          npm install eslint@8.10.0
+          npm install @microsoft/eslint-formatter-sarif@2.1.7
 
-            # - uses: actions/cache@v2
-            #   with:
-            #       path: ~/.npm
-            #       key: ${{ runner.os }}-node14-${{ hashFiles('**/package-lock.json') }}
-            #       restore-keys: |
-            #           ${{ runner.os }}-node14-
+      - name: Run ESLint
+        run: npx eslint .
+          --config ./common/eslintrc.json
+          --ext .js,.jsx,.ts,.tsx
+          --format @microsoft/eslint-formatter-sarif
+          --output-file eslint-results.sarif
+        continue-on-error: true
 
-            # - name: Set up Node.js
-            #   uses: actions/setup-node@v2
-            #   with:
-            #       node-version: 14
-            # - name: Upgrade npm 🎉
-            #   run: npm install -g npm@7
-
-            # # ESLint and Prettier must be in `package.json`
-            # - name: Install Node.js dependencies
-            #   run: npm ci --no-optional
- 
-            # - name: Run linters
-            #   uses: wearerequired/lint-action@v1
-            #   with:
-            #       eslint: true
-            #       prettier: true
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: eslint-results.sarif
+          wait-for-processing: true
