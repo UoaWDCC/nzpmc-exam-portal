@@ -2,10 +2,6 @@ import type { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { AddUserMutation } from '../gql/mutations/addUsers'
 import { GetUserListQuery } from '../gql/queries/userList'
 import { DeleteUserMutation } from '../gql/mutations/deleteUsers'
-import type { User } from '@/components/app/admin/UserManagement.vue'
-import { GetUserWithEmailQuery } from '@/gql/queries/user'
-const DEFAULT_PHOTO_URL =
-  'https://www.google.com/url?sa=i&url=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F49917726%2Fretrieving-default-image-all-url-profile-picture-from-facebook-graph-api&psig=AOvVaw1lWm0yfLpY9NU3R3KLDP7M&ust=1686548570967000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCOj_5ZTBuv8CFQAAAAAdAAAAABAE'
 
 export const addUserMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,

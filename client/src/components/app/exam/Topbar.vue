@@ -15,12 +15,11 @@
 
 <script lang="ts">
 import AppExamTopbarSpinner from './TopbarSpinner.vue'
-import AppExamTopbarTimer from './TopbarTimer.vue'
 
 export default {
   name: 'AppExamTopbar',
 
-  components: { AppExamTopbarSpinner, AppExamTopbarTimer },
+  components: { AppExamTopbarSpinner },
 
   props: {
     name: {

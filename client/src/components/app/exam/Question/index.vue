@@ -52,10 +52,9 @@
 </template>
 
 <script lang="ts">
-import { UserQuizFullQuestionQuery, UserQuizQuery } from '@/gql/queries/userQuiz'
+import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamQuestionOptions from './Options.vue'
 import AppExamQuestionFlagButton from './FlagButton.vue'
-import AppExamQuestionLoader from './Loader.vue'
 import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
 
@@ -65,7 +64,6 @@ export default {
   components: {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
-    AppExamQuestionLoader,
     DisplayText
   },
 
@@ -125,7 +123,7 @@ export default {
           quizID: this.$route.params.quizID
         }
       },
-      result({ data, error, loading }) {
+      result({ data, error }) {
         if (error) {
           this.error = error.message
         } else {

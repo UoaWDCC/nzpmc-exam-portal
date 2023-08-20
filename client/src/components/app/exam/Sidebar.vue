@@ -25,7 +25,6 @@ import AppExamSidebarLink from './SidebarLink.vue'
 import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
-import { onMounted } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 const SIDEBAR_WIDTH = 56

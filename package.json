@@ -9,7 +9,9 @@
         "service": "cd service && yarn run dev",
         "client": "cd client && yarn run dev",
         "add-user": "cd service && yarn run add-user",
-        "service-dev": "cd service && yarn run login && yarn run dev"
+        "service-dev": "cd service && yarn run login && yarn run dev",
+        "lint": "eslint .",
+        "lint:f": "eslint . --fix"
     },
     "packageManager": "yarn@1.22.19"
 }

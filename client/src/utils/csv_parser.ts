@@ -1,5 +1,3 @@
-import * as fs from 'fs'
-import * as path from 'path'
 import { parse } from 'papaparse'
 
 // Island enums for error checking
@@ -84,7 +82,7 @@ export async function parseCSVPapaparse(file) {
           reject(new Error(`Invalid phone number: ${phoneNumber}`))
           return
         }
-		*/
+    */
 
         if (!email) return
         // Create the student object instance
@@ -223,22 +221,22 @@ export async function parseCSV(filename: string): Promise<Student[]> {
 */
 
 // Error checking functions
-function isValidIsland(islandValue: string): boolean {
-  return Object.values(Island).includes(islandValue as Island)
-}
+// function isValidIsland(islandValue: string): boolean {
+//   return Object.values(Island).includes(islandValue as Island)
+// }
 
-function isValidYearLevel(yearLevel: number): boolean {
-  return yearLevel >= 1 && yearLevel <= 13
-}
+// function isValidYearLevel(yearLevel: number): boolean {
+//   return yearLevel >= 1 && yearLevel <= 13
+// }
 
-function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email)
-}
+// function isValidEmail(email: string): boolean {
+//   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+//   return emailRegex.test(email)
+// }
 
-function isValidPhoneNumber(phoneNumber: string): boolean {
-  return phoneNumber.length === 10
-}
+// function isValidPhoneNumber(phoneNumber: string): boolean {
+//   return phoneNumber.length === 10
+// }
 
 // This function will capitalise words if they were passed through in lowercase
 function toTitleCase(str: string): string {
