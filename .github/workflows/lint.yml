@@ -22,5 +22,8 @@ jobs:
         run: yarn
 
       - name: Run ESLint
-        run: yarn lint:f
-        continue-on-error: true
+        uses: sibiraj-s/action-eslint@v3
+        with:
+          eslint-args: '--ignore-path=.gitignore --quiet'
+          extensions: 'js,jsx,ts,tsx'
+          annotations: true
