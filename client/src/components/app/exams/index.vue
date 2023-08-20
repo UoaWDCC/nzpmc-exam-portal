@@ -43,7 +43,6 @@
 <script lang="ts">
 import AppExamsList from './List.vue'
 import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
-import { nameCase } from '@/helpers'
 import { useMainStore } from '@/stores/main'
 import formattingMixin from '@/utils/formattingMixin'
 
