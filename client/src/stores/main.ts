@@ -1,3 +1,4 @@
+import type { User } from 'firebase/auth'
 import { defineStore } from 'pinia'
 
 export const useMainStore = defineStore('mainStore', {
@@ -5,13 +6,13 @@ export const useMainStore = defineStore('mainStore', {
     routeLoading: false,
 
     // Firebase Auth
-    user: null as any,
+    user: null as User | null,
     userLoading: true,
     //App claims state
     userIsAdmin: false,
+    displayName: "" as string,
 
-
-        // App snackbar notifications
-        snackbarQueue: [] as string[],
-    }),
+    // App snackbar notifications
+    snackbarQueue: [] as string[],
+  }),
 })
