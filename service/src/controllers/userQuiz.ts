@@ -171,7 +171,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ; (await questions.find()).map((question) => {
+        ;(await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
