@@ -5,6 +5,7 @@
   padding: 1rem;
   display: flex;
 }
+
 .container:hover {
   opacity: 0.96;
 }
@@ -17,7 +18,7 @@
 
         <span>
           {{ description }} &middot; {{ generateDurationString(duration) }} &middot;
-          {{ generateDateString(startTime) }} until
+          {{ generateDateString(openTime) }} until
           {{ generateDateString(endTime) }}
         </span>
       </div>
@@ -37,7 +38,7 @@ export default {
     title: { type: String, required: true },
     description: { type: String, required: true },
     duration: { type: Number, required: true },
-    startTime: { type: String, required: true },
+    openTime: { type: String, required: true },
     endTime: { type: String, required: true },
     // Router link to the exam
     to: { type: Object, required: true }

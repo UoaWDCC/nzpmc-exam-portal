@@ -9,7 +9,7 @@ export type UserQuizModel = {
   quizStart?: number;
   score?: number;
   submitted?: boolean;
-  startTime?: Date;
+  openTime?: Date;
   endTime?: Date;
   created: Date;
   modified: Date;

@@ -20,7 +20,7 @@ const addQuiz = async (
     name: string,
     description: string,
     duration: number,
-    startTime: Date,
+    openTime: Date,
     endTime: Date,
 ): Promise<Schema.Quiz> => {
     const quiz = new Quiz()
@@ -28,7 +28,7 @@ const addQuiz = async (
     quiz.name = name
     quiz.description = description
     quiz.duration = duration
-    quiz.startTime = startTime
+    quiz.openTime = openTime
     quiz.endTime = endTime
 
     const newQuiz = await QuizRepository.create(quiz)
@@ -41,7 +41,7 @@ const editQuiz = async (
     name?: string,
     description?: string,
     duration?: number,
-    startTime?: Date,
+    openTime?: Date,
     endTime?: Date,
     questionIDsOrder?: string[],
 ): Promise<Schema.Quiz> => {
@@ -54,7 +54,7 @@ const editQuiz = async (
         quiz.name = name ? name : quiz.name
         quiz.description = description ? description : quiz.description
         quiz.duration = duration ? duration : quiz.duration
-        quiz.startTime = startTime ? startTime : quiz.startTime
+        quiz.openTime = openTime ? openTime : quiz.openTime
         quiz.endTime = endTime ? endTime : quiz.endTime
         quiz.questionIDsOrder = questionIDsOrder
             ? questionIDsOrder

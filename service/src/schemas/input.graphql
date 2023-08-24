@@ -34,7 +34,7 @@ input AddQuizInput {
     name: String!
     description: String!
     duration: Int!
-    startTime: DateTime!
+    openTime: DateTime!
     endTime: DateTime!
 }
 
@@ -43,7 +43,7 @@ input EditQuizInput {
     name: String
     description: String
     duration: Int
-    startTime: DateTime
+    openTime: DateTime
     endTime: DateTime
 }
 
@@ -101,7 +101,7 @@ input EditUserQuizInput {
     userQuizID: ID!
     score: Int
     quizStart: Int
-    startTime: DateTime
+    openTime: DateTime
     endTime: DateTime
 }
 

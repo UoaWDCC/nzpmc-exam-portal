@@ -7,7 +7,7 @@ class Quiz {
     name!: string
     description!: string
     duration!: number
-    startTime!: Date
+    openTime!: Date
     endTime!: Date
 
     @SubCollection(Question, 'Question')

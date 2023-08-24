@@ -6,7 +6,7 @@ export const UserQuizFragment = gql`
     name
     description
     duration
-    startTime
+    openTime
     endTime
     submitted
   }

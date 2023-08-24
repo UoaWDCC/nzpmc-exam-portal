@@ -97,9 +97,9 @@ const addQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuizArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { name, description, duration, startTime, endTime } = input
+    const { name, description, duration, openTime, endTime } = input
 
-    return await addQuiz(name, description, duration, startTime, endTime)
+    return await addQuiz(name, description, duration, openTime, endTime)
 }
 
 const addUserMutation: Resolver<
@@ -136,7 +136,7 @@ const addUserMutation: Resolver<
     // Add UserQuiz if quizID is defined
     if (quizID) {
         const quiz = await getQuiz(quizID)
-        await addUserQuiz(userID, quizID, quiz.startTime, quiz.endTime)
+        await addUserQuiz(userID, quizID, quiz.openTime, quiz.endTime)
     }
 
     const user = await addUser(
@@ -167,7 +167,7 @@ const addUserQuizMutation: Resolver<
 
     const quiz = await getQuiz(quizID)
 
-    return await addUserQuiz(userID, quizID, quiz.startTime, quiz.endTime)
+    return await addUserQuiz(userID, quizID, quiz.openTime, quiz.endTime)
 }
 
 const editAnswerMutation: Resolver<
@@ -238,14 +238,14 @@ const editQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuizArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const { id, name, description, duration, startTime, endTime } = input
+    const { id, name, description, duration, openTime, endTime } = input
 
     return await editQuiz(
         id,
         name || undefined,
         description || undefined,
         duration || undefined,
-        startTime || undefined,
+        openTime || undefined,
         endTime || undefined,
     )
 }
@@ -322,29 +322,29 @@ const editUserQuizMutation: Resolver<
     if (!context.user.admin) {
         // is not Admin
         const { userQuizID } = input
-        let { startTime } = input
+        let { openTime } = input
 
-        if (startTime) {
-            startTime = new Date().valueOf()
+        if (openTime) {
+            openTime = new Date().valueOf()
         }
 
         const userQuizObj = await getUserQuiz(userQuizID)
-        if (userQuizObj.startTime) {
-            // if startTime is already set need to be admin to change
+        if (userQuizObj.openTime) {
+            // if openTime is already set need to be admin to change
             throw new AdminAuthenticationError()
         }
 
-        return await editUserQuiz(userQuizID, undefined, startTime, undefined)
+        return await editUserQuiz(userQuizID, undefined, openTime, undefined)
     }
 
     // is Admin
-    const { userQuizID, quizStart, score, startTime, endTime } = input
+    const { userQuizID, quizStart, score, openTime, endTime } = input
 
     const userQuiz = await editUserQuiz(
         userQuizID,
         quizStart || undefined,
         score || undefined,
-        startTime,
+        openTime,
         endTime,
     )
 
@@ -517,7 +517,7 @@ const enrolUsersInQuizMutation: Resolver<
         const newUserQuiz = await addUserQuiz(
             userID,
             quizToEnrol,
-            quiz.startTime,
+            quiz.openTime,
             quiz.endTime,
         )
 

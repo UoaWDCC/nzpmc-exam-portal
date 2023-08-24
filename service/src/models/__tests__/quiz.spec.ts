@@ -9,7 +9,7 @@ describe('Quiz', () => {
         quiz.name = 'example quiz'
         quiz.description = 'example description'
         quiz.duration = 60
-        quiz.startTime = new Date()
+        quiz.openTime = new Date()
         quiz.endTime = new Date()
 
         const quizDocument = await QuizRepository.create(quiz)
@@ -23,7 +23,7 @@ describe('Quiz', () => {
         quiz.name = 'example quiz'
         quiz.description = 'example description'
         quiz.duration = 60
-        quiz.startTime = new Date()
+        quiz.openTime = new Date()
         quiz.endTime = new Date()
 
         const quizDocument = await QuizRepository.create(quiz)

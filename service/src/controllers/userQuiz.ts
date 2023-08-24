@@ -146,15 +146,15 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
 const addUserQuiz = async (
     userID: string,
     quizID: string,
-    startTime: Date,
+    openTime: Date,
     endTime: Date,
 ): Promise<UserQuizModel> => {
     const userQuiz = new UserQuiz()
 
     userQuiz.userID = userID
     userQuiz.quizID = quizID
-    if (startTime && endTime) {
-        userQuiz.startTime = startTime
+    if (openTime && endTime) {
+        userQuiz.openTime = openTime
         userQuiz.endTime = endTime
     }
     userQuiz.created = new Date()
@@ -171,7 +171,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ;(await questions.find()).map((question) => {
+        ; (await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
@@ -183,7 +183,7 @@ const editUserQuiz = async (
     userQuizID: string,
     quizStart?: number,
     score?: number,
-    startTime?: Date,
+    openTime?: Date,
     endTime?: Date,
     submitted?: boolean,
 ): Promise<UserQuizModel> => {
@@ -194,7 +194,7 @@ const editUserQuiz = async (
         }
 
         userQuiz.score = score ? score : userQuiz.score
-        userQuiz.startTime = startTime ? startTime : userQuiz.startTime
+        userQuiz.openTime = openTime ? openTime : userQuiz.openTime
         userQuiz.endTime = endTime ? endTime : userQuiz.endTime
         userQuiz.quizStart = quizStart ? quizStart : userQuiz.quizStart
         // default value false if document doesn't have a submitted flag

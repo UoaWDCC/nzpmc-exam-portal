@@ -10,7 +10,7 @@ class UserQuiz {
     score: number | null = null
     quizStart: number | null = null
     submitted: boolean | undefined
-    startTime?: Date
+    openTime?: Date
     endTime?: Date
 
     @SubCollection(UserQuizQuestion, 'Question')
