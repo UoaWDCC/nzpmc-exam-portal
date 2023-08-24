@@ -19,7 +19,7 @@
         <span>
           {{ description }} &middot; {{ generateDurationString(duration) }} &middot;
           {{ generateDateString(openTime) }} until
-          {{ generateDateString(endTime) }}
+          {{ generateDateString(closeTime) }}
         </span>
       </div>
 
@@ -39,7 +39,7 @@ export default {
     description: { type: String, required: true },
     duration: { type: Number, required: true },
     openTime: { type: String, required: true },
-    endTime: { type: String, required: true },
+    closeTime: { type: String, required: true },
     // Router link to the exam
     to: { type: Object, required: true }
   },

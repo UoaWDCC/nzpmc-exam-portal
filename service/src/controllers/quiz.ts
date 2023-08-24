@@ -21,7 +21,7 @@ const addQuiz = async (
     description: string,
     duration: number,
     openTime: Date,
-    endTime: Date,
+    closeTime: Date,
 ): Promise<Schema.Quiz> => {
     const quiz = new Quiz()
 
@@ -29,7 +29,7 @@ const addQuiz = async (
     quiz.description = description
     quiz.duration = duration
     quiz.openTime = openTime
-    quiz.endTime = endTime
+    quiz.closeTime = closeTime
 
     const newQuiz = await QuizRepository.create(quiz)
 
@@ -42,7 +42,7 @@ const editQuiz = async (
     description?: string,
     duration?: number,
     openTime?: Date,
-    endTime?: Date,
+    closeTime?: Date,
     questionIDsOrder?: string[],
 ): Promise<Schema.Quiz> => {
     return QuizRepository.runTransaction(async (tran) => {
@@ -55,7 +55,7 @@ const editQuiz = async (
         quiz.description = description ? description : quiz.description
         quiz.duration = duration ? duration : quiz.duration
         quiz.openTime = openTime ? openTime : quiz.openTime
-        quiz.endTime = endTime ? endTime : quiz.endTime
+        quiz.closeTime = closeTime ? closeTime : quiz.closeTime
         quiz.questionIDsOrder = questionIDsOrder
             ? questionIDsOrder
             : quiz.questionIDsOrder

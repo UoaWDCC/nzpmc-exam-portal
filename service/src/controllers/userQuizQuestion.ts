@@ -128,7 +128,7 @@ const addUserQuizQuestion = async (
             throw new NotFoundError()
         }
 
-        expired = (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+        expired = (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
@@ -176,7 +176,7 @@ const editUserQuizQuestion = async (
             throw new NotFoundError()
         }
 
-        expired = (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+        expired = (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
@@ -308,7 +308,7 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
         }
 
         const expired =
-            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+            (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
         if (expired) {
             throw new UserQuizExpiredError()
         }

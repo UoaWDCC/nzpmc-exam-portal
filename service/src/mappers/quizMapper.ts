@@ -8,7 +8,7 @@ const packQuiz = (quiz: Quiz): SchemaQuiz => {
         description: quiz.description,
         duration: quiz.duration,
         openTime: quiz.openTime,
-        endTime: quiz.endTime,
+        closeTime: quiz.closeTime,
         created: quiz.created,
         modified: quiz.modified,
     }

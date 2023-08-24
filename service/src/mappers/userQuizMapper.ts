@@ -26,7 +26,7 @@ const packUserQuiz = ({
         score: userQuiz.score ?? undefined,
         submitted: userQuiz.submitted,
         openTime: userQuiz.openTime,
-        endTime: userQuiz.endTime,
+        closeTime: userQuiz.closeTime,
         created: userQuiz.created,
         modified: userQuiz.modified,
     }

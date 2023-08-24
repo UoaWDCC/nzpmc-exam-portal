@@ -35,7 +35,7 @@ input AddQuizInput {
     description: String!
     duration: Int!
     openTime: DateTime!
-    endTime: DateTime!
+    closeTime: DateTime!
 }
 
 input EditQuizInput {
@@ -44,7 +44,7 @@ input EditQuizInput {
     description: String
     duration: Int
     openTime: DateTime
-    endTime: DateTime
+    closeTime: DateTime
 }
 
 input AddQuestionInput {
@@ -102,7 +102,7 @@ input EditUserQuizInput {
     score: Int
     quizStart: Int
     openTime: DateTime
-    endTime: DateTime
+    closeTime: DateTime
 }
 
 input ImageUploadInput {

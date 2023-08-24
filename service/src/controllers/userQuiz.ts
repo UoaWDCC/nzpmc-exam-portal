@@ -23,7 +23,7 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
 
         const expired =
-            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+            (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
 
         return packUserQuiz({
             userID: userQuiz.userID,
@@ -52,7 +52,7 @@ const getUserQuizbyQuizID = async (quizID: string): Promise<UserQuizModel> => {
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
 
         const expired =
-            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+            (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
 
         return packUserQuiz({
             userID: userQuiz.userID,
@@ -80,7 +80,7 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
-                        (userQuiz.endTime && userQuiz.endTime < new Date()) ??
+                        (userQuiz.closeTime && userQuiz.closeTime < new Date()) ??
                         true,
                 }),
             ),
@@ -109,7 +109,7 @@ const getUserQuizzesByQuizID = async (
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
-                        (userQuiz.endTime && userQuiz.endTime < new Date()) ??
+                        (userQuiz.closeTime && userQuiz.closeTime < new Date()) ??
                         true,
                 }),
             ),
@@ -133,7 +133,7 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
-                        (userQuiz.endTime && userQuiz.endTime < new Date()) ??
+                        (userQuiz.closeTime && userQuiz.closeTime < new Date()) ??
                         true,
                 }),
             ),
@@ -147,15 +147,15 @@ const addUserQuiz = async (
     userID: string,
     quizID: string,
     openTime: Date,
-    endTime: Date,
+    closeTime: Date,
 ): Promise<UserQuizModel> => {
     const userQuiz = new UserQuiz()
 
     userQuiz.userID = userID
     userQuiz.quizID = quizID
-    if (openTime && endTime) {
+    if (openTime && closeTime) {
         userQuiz.openTime = openTime
-        userQuiz.endTime = endTime
+        userQuiz.closeTime = closeTime
     }
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
@@ -184,7 +184,7 @@ const editUserQuiz = async (
     quizStart?: number,
     score?: number,
     openTime?: Date,
-    endTime?: Date,
+    closeTime?: Date,
     submitted?: boolean,
 ): Promise<UserQuizModel> => {
     await UserQuizRepository.runTransaction(async (tran) => {
@@ -195,7 +195,7 @@ const editUserQuiz = async (
 
         userQuiz.score = score ? score : userQuiz.score
         userQuiz.openTime = openTime ? openTime : userQuiz.openTime
-        userQuiz.endTime = endTime ? endTime : userQuiz.endTime
+        userQuiz.closeTime = closeTime ? closeTime : userQuiz.closeTime
         userQuiz.quizStart = quizStart ? quizStart : userQuiz.quizStart
         // default value false if document doesn't have a submitted flag
         userQuiz.submitted = submitted ? submitted : userQuiz.submitted ?? false

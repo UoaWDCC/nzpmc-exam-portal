@@ -97,9 +97,9 @@ const addQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuizArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { name, description, duration, openTime, endTime } = input
+    const { name, description, duration, openTime, closeTime } = input
 
-    return await addQuiz(name, description, duration, openTime, endTime)
+    return await addQuiz(name, description, duration, openTime, closeTime)
 }
 
 const addUserMutation: Resolver<
@@ -136,7 +136,7 @@ const addUserMutation: Resolver<
     // Add UserQuiz if quizID is defined
     if (quizID) {
         const quiz = await getQuiz(quizID)
-        await addUserQuiz(userID, quizID, quiz.openTime, quiz.endTime)
+        await addUserQuiz(userID, quizID, quiz.openTime, quiz.closeTime)
     }
 
     const user = await addUser(
@@ -167,7 +167,7 @@ const addUserQuizMutation: Resolver<
 
     const quiz = await getQuiz(quizID)
 
-    return await addUserQuiz(userID, quizID, quiz.openTime, quiz.endTime)
+    return await addUserQuiz(userID, quizID, quiz.openTime, quiz.closeTime)
 }
 
 const editAnswerMutation: Resolver<
@@ -238,7 +238,7 @@ const editQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuizArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const { id, name, description, duration, openTime, endTime } = input
+    const { id, name, description, duration, openTime, closeTime } = input
 
     return await editQuiz(
         id,
@@ -246,7 +246,7 @@ const editQuizMutation: Resolver<
         description || undefined,
         duration || undefined,
         openTime || undefined,
-        endTime || undefined,
+        closeTime || undefined,
     )
 }
 
@@ -338,14 +338,14 @@ const editUserQuizMutation: Resolver<
     }
 
     // is Admin
-    const { userQuizID, quizStart, score, openTime, endTime } = input
+    const { userQuizID, quizStart, score, openTime, closeTime } = input
 
     const userQuiz = await editUserQuiz(
         userQuizID,
         quizStart || undefined,
         score || undefined,
         openTime,
-        endTime,
+        closeTime,
     )
 
     return userQuiz
@@ -414,13 +414,13 @@ const submitUserQuizQuestionsMutation: Resolver<
 
     const userQuiz = await getUserQuiz(userQuizID)
 
-    // endtime doesn't exist means quiz hasn't started
-    if (!userQuiz.endTime) {
+    // closeTime doesn't exist means quiz hasn't started
+    if (!userQuiz.closeTime) {
         throw new AuthenticationError()
     }
 
-    // ensure quiz cannot be submitted if currenttime is after the quiz endtime with 60s leeway
-    if (new Date().getTime() > userQuiz.endTime.getTime() + 60000) {
+    // ensure quiz cannot be submitted if currenttime is after the quiz closeTime with 60s leeway
+    if (new Date().getTime() > userQuiz.closeTime.getTime() + 60000) {
         throw new AuthenticationError()
     }
     // flag quiz as submitted
@@ -518,7 +518,7 @@ const enrolUsersInQuizMutation: Resolver<
             userID,
             quizToEnrol,
             quiz.openTime,
-            quiz.endTime,
+            quiz.closeTime,
         )
 
         return newUserQuiz

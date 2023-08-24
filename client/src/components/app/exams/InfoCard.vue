@@ -5,7 +5,7 @@
     <span class="text--secondary text-subtitle-2">
       {{ description }} &middot; {{ generateDurationString(duration) }} &middot;
       {{ generateDateString(openTime) }} until
-      {{ generateDateString(endTime) }}
+      {{ generateDateString(closeTime) }}
     </span>
   </v-sheet>
 </template>
@@ -21,7 +21,7 @@ export default {
     description: { type: String, required: true },
     duration: { type: Number, required: true },
     openTime: { type: String, required: true },
-    endTime: { type: String, required: true }
+    closeTime: { type: String, required: true }
   },
 
   methods: {

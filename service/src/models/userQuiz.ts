@@ -11,7 +11,7 @@ class UserQuiz {
     quizStart: number | null = null
     submitted: boolean | undefined
     openTime?: Date
-    endTime?: Date
+    closeTime?: Date
 
     @SubCollection(UserQuizQuestion, 'Question')
     questions?: ISubCollection<UserQuizQuestion>
