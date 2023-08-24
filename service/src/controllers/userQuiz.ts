@@ -80,7 +80,8 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
-                        (userQuiz.closeTime && userQuiz.closeTime < new Date()) ??
+                        (userQuiz.closeTime &&
+                            userQuiz.closeTime < new Date()) ??
                         true,
                 }),
             ),
@@ -109,7 +110,8 @@ const getUserQuizzesByQuizID = async (
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
-                        (userQuiz.closeTime && userQuiz.closeTime < new Date()) ??
+                        (userQuiz.closeTime &&
+                            userQuiz.closeTime < new Date()) ??
                         true,
                 }),
             ),
@@ -133,7 +135,8 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
-                        (userQuiz.closeTime && userQuiz.closeTime < new Date()) ??
+                        (userQuiz.closeTime &&
+                            userQuiz.closeTime < new Date()) ??
                         true,
                 }),
             ),
