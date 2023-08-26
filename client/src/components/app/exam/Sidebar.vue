@@ -23,7 +23,7 @@
   </v-list>
   <v-btn
     color="secondary"
-    :disabled="submitting"
+    :disabled="examStore.submitting"
     v-on:click="submitQuiz()"
     variant="flat"
     id="submit-button"
@@ -37,6 +37,7 @@ import AppExamSidebarLink from './SidebarLink.vue'
 import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
+import { useExamStore } from './examStore'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 const SIDEBAR_WIDTH = 56
@@ -82,13 +83,12 @@ export default {
           }
         }
       })
-      this.submitting = true
+      this.examStore.submitting = true
       mutation
         .then(() => {
           this.$router.push({
             name: 'AppExams'
           })
-          this.submitting = false
         })
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
@@ -99,8 +99,7 @@ export default {
   data() {
     return {
       SIDEBAR_WIDTH,
-      submitting: false,
-
+      examStore: useExamStore(),
       selected: 0
     }
   },

@@ -71,7 +71,6 @@ export default {
     AppExamQuestionFlagButton,
     DisplayText
   },
-
   data(): {
     error: any
     quizData: any
@@ -81,7 +80,6 @@ export default {
       quizData: undefined
     }
   },
-
   computed: {
     questionNumber() {
       if (this.quizData) {
