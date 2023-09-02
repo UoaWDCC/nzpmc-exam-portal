@@ -4,13 +4,7 @@
       <v-card-title class="popup-headline">NZPMC Admin</v-card-title>
       <v-card-text class="popup-text">
         <div class="custom-progress">
-          <v-progress-circular
-            v-if="loading"
-            :size="100"
-            :width="15"
-            color="primary"
-            indeterminate
-          ></v-progress-circular>
+          <v-progress-circular v-if="loading" :size="100" :width="15" color="primary" indeterminate></v-progress-circular>
           <!-- <temp> -->
 
           <template v-else>
@@ -26,13 +20,8 @@
 
   <v-container class="quiz-management" fluid>
     <v-container fluid>
-      <v-select
-        label="SELECT AN EXAM"
-        :items="quizzes"
-        item-title="name"
-        item-value="id"
-        @update:model-value="updateQuizID"
-      ></v-select>
+      <v-select label="SELECT AN EXAM" :items="quizzes" item-title="name" item-value="id"
+        @update:model-value="updateQuizID"></v-select>
 
       <v-btn size="large" color="secondary">
         ADD NEW EXAM
@@ -45,23 +34,12 @@
         <h2 class="me-auto">
           EXAM: <span class="text-h6 ml-2">{{ quizName }}</span>
         </h2>
-        <v-text-field
-          label="ID"
-          :model-value="quizIdInput"
-          class="id-input"
-          density="comfortable"
-          readonly
-        ></v-text-field>
+        <v-text-field label="ID" :model-value="quizIdInput" class="id-input" density="comfortable"
+          readonly></v-text-field>
       </div>
 
       <v-text-field label="Exam Name" :model-value="quizName"></v-text-field>
-      <v-textarea
-        label="Description"
-        auto-grow
-        model-value="Example Description"
-        rows="3"
-        clearable
-      ></v-textarea>
+      <v-textarea label="Description" auto-grow :model-value="quizDescription" rows="3" clearable></v-textarea>
 
       <v-divider :thickness="3" class="pa-5" />
 
@@ -72,33 +50,22 @@
       <v-row>
         <v-col cols="12" sm="6">
           <v-text-field label="Start Date" prepend-inner-icon="mdi-calendar-range"></v-text-field>
-          <v-text-field
-            label="Start Time"
-            prepend-inner-icon="mdi-clock-time-eight-outline"
-          ></v-text-field>
+          <v-text-field label="Start Time" prepend-inner-icon="mdi-clock-time-eight-outline"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6">
           <v-text-field label="End Date" prepend-inner-icon="mdi-calendar-range"></v-text-field>
-          <v-text-field
-            label="End Time"
-            prepend-inner-icon="mdi-clock-time-eight-outline"
-          ></v-text-field>
+          <v-text-field label="End Time" prepend-inner-icon="mdi-clock-time-eight-outline"></v-text-field>
         </v-col>
       </v-row>
 
       <v-container fluid class="px-0">
-        <v-btn size="large" color="blue-darken-2"
-          >EDIT QUESTIONS<v-icon end icon="mdi-cog"></v-icon
-        ></v-btn>
+        <v-btn size="large" color="blue-darken-2">EDIT QUESTIONS<v-icon end icon="mdi-cog"></v-icon></v-btn>
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn block size="large" color="white"
-          >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
-        ></v-btn>
-        <v-btn block size="large" color="blue-darken-2" class="mt-3"
-          >DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn
-        >
+        <v-btn block size="large" color="white">ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end
+            icon="mdi-paperclip"></v-icon></v-btn>
+        <v-btn block size="large" color="blue-darken-2" class="mt-3">DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn>
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
@@ -118,7 +85,7 @@
 import { defineComponent } from 'vue'
 import type { User } from '@/components/app/admin/UserManagement.vue'
 import { AllQuizIDQuery } from '@/gql/queries/quiz'
-import { downloadUserQuizzesCsvQuery } from '@/utils/quizManagement'
+import { downloadUserQuizzesCsvQuery, getQuizInfoQuery } from '@/utils/quizManagement'
 
 export type UserQuiz = {
   user: User
@@ -134,7 +101,8 @@ export default defineComponent({
       quizIdInput: '',
       loading: false,
       popUpDialog: false,
-      popUpMessage: ''
+      popUpMessage: '',
+      selectedQuiz: undefined
     }
   },
 
@@ -157,11 +125,15 @@ export default defineComponent({
   computed: {
     quizName() {
       return this.quizzes.find((quiz) => quiz.id === this.quizIdInput)?.name ?? '(no exam selected)'
+    },
+    quizDescription() {
+      return this.selectedQuiz ? this.selectedQuiz.description : ``
     }
   },
   methods: {
     updateQuizID(id) {
       this.quizIdInput = id
+      this.fetchQuizInfo()
     },
     async enrollUserIntoQuiz() {
       try {
@@ -169,6 +141,15 @@ export default defineComponent({
         console.log('User enrolled into the quiz')
       } catch (error) {
         console.error('Failed to enroll user into the quiz:', error)
+      }
+    },
+
+    async fetchQuizInfo() {
+      try {
+        const quiz = await getQuizInfoQuery(this.$apollo, this.quizIdInput)
+        this.selectedQuiz = quiz
+      } catch (error) {
+
       }
     },
 
@@ -201,10 +182,12 @@ export default defineComponent({
 .container .v-divider {
   margin-top: 2rem;
 }
+
 .quiz-management {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Updated to left-aligned */
+  align-items: flex-start;
+  /* Updated to left-aligned */
 }
 
 .quiz-management h2 {
@@ -217,7 +200,8 @@ export default defineComponent({
 
 .quiz-management .text-field {
   width: 100%;
-  margin: 1rem 0; /* Added spacing above and below the input box */
+  margin: 1rem 0;
+  /* Added spacing above and below the input box */
 }
 
 .quiz-management v-divider {

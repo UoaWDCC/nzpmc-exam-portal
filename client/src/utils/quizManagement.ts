@@ -1,6 +1,26 @@
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { GetUserQuizzesListQuery } from '../gql/queries/userQuizList'
 import type { UserQuiz } from '@/components/app/admin/QuizManagement.vue'
+import type { QuizModel } from '@nzpmc-exam-portal/common'
+import { GetQuizInfoQuery } from '@/gql/queries/quiz'
+
+export const getQuizInfoQuery = async (
+  apollo: ApolloClient<NormalizedCacheObject>,
+  quizId: string
+): Promise<QuizModel> => {
+  try {
+    const query = await apollo.query({
+      query: GetQuizInfoQuery,
+      variables: {
+        quizId: quizId
+      }
+    })
+    return query.data.quiz
+  }
+  catch (error) {
+    return false
+  }
+}
 
 export const downloadUserQuizzesCsvQuery = async (
   apollo: ApolloClient<NormalizedCacheObject>,
