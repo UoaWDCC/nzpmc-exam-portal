@@ -16,8 +16,7 @@ export const getQuizInfoQuery = async (
       }
     })
     return query.data.quiz
-  }
-  catch (error) {
+  } catch (error) {
     return false
   }
 }
