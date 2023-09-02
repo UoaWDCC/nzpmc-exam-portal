@@ -54,7 +54,8 @@
           <v-text-field label="Start Time" prepend-inner-icon="mdi-clock-time-eight-outline"></v-text-field>
         </v-col>
         <v-col cols="12" sm="6">
-          <v-text-field label="End Date" prepend-inner-icon="mdi-calendar-range"></v-text-field>
+          <v-text-field label="End Date" :model-value="quizEndDate"
+            prepend-inner-icon="mdi-calendar-range"></v-text-field>
           <v-text-field label="End Time" prepend-inner-icon="mdi-clock-time-eight-outline"></v-text-field>
         </v-col>
       </v-row>
@@ -138,6 +139,14 @@ export default defineComponent({
     quizStartDate() {
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.startTime)
+        return date.toDateString()
+      }
+      return ``
+    },
+    quizEndDate() {
+
+      if (this.selectedQuiz !== undefined) {
+        const date = new Date(this.selectedQuiz.endTime)
         return date.toDateString()
       }
       return ``
