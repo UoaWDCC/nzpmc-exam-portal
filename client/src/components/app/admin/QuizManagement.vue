@@ -103,16 +103,18 @@
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn  @click="enrollUserIntoQuiz" block size="large" color="white">ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end
-            icon="mdi-paperclip"></v-icon></v-btn>
-        <v-btn @click="downloadUserQuizzes" block size="large" color="blue-darken-2" class="mt-3">DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn>
+        <v-btn @click="enrollUserIntoQuiz" block size="large" color="white"
+          >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
+        ></v-btn>
+        <v-btn @click="downloadUserQuizzes" block size="large" color="blue-darken-2" class="mt-3"
+          >DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn
+        >
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
         <v-btn block size="large" color="secondary">GRADE EXAM</v-btn>
         <v-btn block size="large" color="secondary" class="mt-3">RELEASE RESULTS</v-btn>
       </v-container>
-
     </v-container>
   </v-container>
 </template>
