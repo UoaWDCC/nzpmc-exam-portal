@@ -8,3 +8,38 @@ export const AllQuizIDQuery = gql`
     }
   }
 `
+
+export const GetQuizInfoQuery = gql`
+query Quiz($quizId: ID!) {
+  quiz(quizID: $quizId) {
+    id
+    name
+    description
+    duration
+    questions {
+      id
+      question
+      imageURI
+      topics
+      answer {
+        id
+        option
+        created
+        modified
+      }
+      options {
+        id
+        option
+        created
+        modified
+      }
+      created
+      modified
+    }
+    startTime
+    endTime
+    created
+    modified
+  }
+}
+`
