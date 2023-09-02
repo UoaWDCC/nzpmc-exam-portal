@@ -146,7 +146,6 @@ export default defineComponent({
       return ``
     },
     quizEndDate() {
-
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.endTime)
         return date.toDateString()
