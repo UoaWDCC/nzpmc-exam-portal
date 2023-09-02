@@ -43,7 +43,7 @@
 
       <v-divider :thickness="3" class="pa-5" />
 
-      <v-text-field label="Exam Time (minutes)" :model-value="60"></v-text-field>
+      <v-text-field label="Exam Time (minutes)" :model-value="quizDurationMinutes"></v-text-field>
 
       <v-divider :thickness="3" class="pa-5" />
 
@@ -128,6 +128,9 @@ export default defineComponent({
     },
     quizDescription() {
       return this.selectedQuiz ? this.selectedQuiz.description : ``
+    },
+    quizDurationMinutes() {
+      return this.selectedQuiz ? this.selectedQuiz.duration / 60 : ``
     }
   },
   methods: {
