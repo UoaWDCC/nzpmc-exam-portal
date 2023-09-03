@@ -27,6 +27,7 @@
   <v-container class="quiz-management" fluid>
     <v-container fluid>
       <v-select
+        v-model="quizIdInput"
         label="SELECT AN EXAM"
         :items="quizzes"
         item-title="name"
