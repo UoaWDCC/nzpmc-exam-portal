@@ -50,7 +50,8 @@ export const getQuizInfoQuery = async (
       query: GetQuizInfoQuery,
       variables: {
         quizId: quizId
-      }
+      },
+      fetchPolicy: 'network-only'
     })
     return query.data.quiz
   } catch (error) {
