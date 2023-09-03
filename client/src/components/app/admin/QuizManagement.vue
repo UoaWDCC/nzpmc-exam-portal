@@ -191,7 +191,11 @@ export default defineComponent({
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
         // multiply by 60 to convert to seconds
-        debounce(editQuizMutation(this.$apollo, this.quizIdInput, { duration: 60 * parseInt(currentValue) }))
+        debounce(
+          editQuizMutation(this.$apollo, this.quizIdInput, {
+            duration: 60 * parseInt(currentValue)
+          })
+        )
       }
     },
     async enrollUserIntoQuiz() {
