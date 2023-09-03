@@ -31,11 +31,11 @@ input EditUserInput {
 }
 
 input AddQuizInput {
-    name: String!
-    description: String!
-    duration: Int!
-    openTime: DateTime!
-    closeTime: DateTime!
+    name: String
+    description: String
+    duration: Int
+    openTime: DateTime
+    closeTime: DateTime
 }
 
 input EditQuizInput {

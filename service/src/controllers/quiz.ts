@@ -17,19 +17,19 @@ const getAllQuizzes = async (): Promise<Schema.Quiz[]> => {
 }
 
 const addQuiz = async (
-    name: string,
-    description: string,
-    duration: number,
-    openTime: Date,
-    closeTime: Date,
+    name?: string | null,
+    description?: string | null,
+    duration?: number | null,
+    openTime?: Date | null,
+    closeTime?: Date | null,
 ): Promise<Schema.Quiz> => {
     const quiz = new Quiz()
 
-    quiz.name = name
-    quiz.description = description
-    quiz.duration = duration
-    quiz.openTime = openTime
-    quiz.closeTime = closeTime
+    quiz.name = name ?? ``
+    quiz.description = description ?? ``
+    quiz.duration = duration ?? 69
+    quiz.openTime = openTime ?? new Date()
+    quiz.closeTime = closeTime ?? new Date()
 
     const newQuiz = await QuizRepository.create(quiz)
 
