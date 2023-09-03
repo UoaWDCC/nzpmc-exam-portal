@@ -44,8 +44,7 @@
 
       <v-divider :thickness="3" class="pa-5" />
 
-      <v-text-field type="number" label="Exam Time (minutes)" @change="handleDurationChange"
-        :model-value="quizDurationMinutes"></v-text-field>
+      <v-text-field type="number" label="Exam Time (minutes)" :model-value="quizDurationMinutes"></v-text-field>
 
       <v-divider :thickness="3" class="pa-5" />
 
