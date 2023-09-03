@@ -278,8 +278,8 @@ export default defineComponent({
       this.loading = false
     },
     async editAndUpdateSelectedQuiz(id: string, input: editQuizInput) {
-      const debouncedDurationEdit = debounce(editQuizMutation)
-      const res = await debouncedDurationEdit(this.$apollo, id, input)
+      const debouncedEdit = debounce(editQuizMutation)
+      const res = await debouncedEdit(this.$apollo, id, input)
       console.log(res)
       this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
       if (input.name !== undefined) {
