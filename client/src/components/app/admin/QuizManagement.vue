@@ -244,9 +244,11 @@ export default defineComponent({
     }
   },
   methods: {
-    updateQuizID(id) {
+    async updateQuizID(id: string) {
+      this.loading = true
       this.quizIdInput = id
-      this.fetchQuizInfo()
+      await this.fetchQuizInfo()
+      this.loading = false
     },
     handleDescriptionChange(event: Event) {
       const currentValue: string = event.target.value
@@ -299,6 +301,7 @@ export default defineComponent({
       try {
         const quiz = await getQuizInfoQuery(this.$apollo, this.quizIdInput)
         this.selectedQuiz = quiz
+        return
       } catch (error) {}
     },
 
