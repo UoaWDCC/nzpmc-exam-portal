@@ -9,9 +9,11 @@ export const debounce = (fn: any, timeout: number = 300) => {
   let timer: NodeJS.Timeout
   return (...args: any[]) => {
     clearTimeout(timer)
-    timer = setTimeout(() => {
-      fn.apply(this, args)
-    }, timeout)
+    return new Promise((resolve) => {
+      timer = setTimeout(() => {
+        resolve(fn.apply(this, args))
+      }, timeout)
+    })
   }
 }
 
@@ -41,7 +43,7 @@ export const editQuizMutation = async (
         }
       }
     })
-    return mutation.data
+    return mutation.data.editQuiz
   } catch (error) {
     return false
   }

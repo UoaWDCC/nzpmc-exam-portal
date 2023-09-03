@@ -222,7 +222,7 @@ export default defineComponent({
         const date = new Date(this.selectedQuiz.modified)
         return date.toLocaleString()
       }
-      return ``
+      return `(no exam selected)`
     }
   },
   methods: {
@@ -233,25 +233,34 @@ export default defineComponent({
     handleDescriptionChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        debounce(editQuizMutation(this.$apollo, this.quizIdInput, { description: currentValue }))
+        this.editAndUpdateSelectedQuiz({ description: currentValue })
       }
     },
     handleNameChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        debounce(editQuizMutation(this.$apollo, this.quizIdInput, { name: currentValue }))
+        this.editAndUpdateSelectedQuiz({ name: currentValue })
       }
     },
     handleDurationChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
         // multiply by 60 to convert to seconds
-        debounce(
-          editQuizMutation(this.$apollo, this.quizIdInput, {
-            duration: 60 * parseInt(currentValue)
-          })
-        )
+        this.editAndUpdateSelectedQuiz({ duration: 60 * parseInt(currentValue) })
       }
+    },
+    editAndUpdateSelectedQuiz(input: {
+      description?: string
+      duration?: number
+      endTime?: Date
+      name?: string
+      startTime?: Date
+    }) {
+      const debouncedDurationEdit = debounce(editQuizMutation)
+      debouncedDurationEdit(this.$apollo, this.quizIdInput, input).then((res: any) => {
+        console.log(res)
+        this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
+      })
     },
     async enrollUserIntoQuiz() {
       try {

@@ -6,7 +6,7 @@ export type QuizModel = {
   duration: number;
   endTime: Date;
   id: string;
-  modified: Date;
+  modified: string;
   name: string;
   questions: QuestionModel[];
   startTime: Date;
