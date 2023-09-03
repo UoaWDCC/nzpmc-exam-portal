@@ -261,7 +261,9 @@ export default defineComponent({
       debouncedDurationEdit(this.$apollo, this.quizIdInput, input).then((res: any) => {
         console.log(res)
         this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
-        this.$apollo.queries.userQuizzes.refetch()
+        if (input.name !== undefined) {
+          this.$apollo.queries.userQuizzes.refetch()
+        }
       })
     },
     async enrollUserIntoQuiz() {
