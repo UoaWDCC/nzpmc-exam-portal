@@ -244,7 +244,7 @@ export default defineComponent({
     quizLastModified() {
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.modified)
-        return date.getTime()
+        return date.toLocaleString()
       }
       return `(no exam selected)`
     }
