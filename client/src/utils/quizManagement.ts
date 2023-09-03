@@ -13,7 +13,11 @@ export type editQuizInput = {
   startTime?: Date
 }
 export const formatDateToTime = (date: Date) => {
-  return date.toLocaleTimeString().split(' ')[0]
+  const split = date.toTimeString().split(' ')[0].split(':')
+  split.map((item: string, index: number) => {
+    split[index] = item.padStart(2, '0')
+  })
+  return split.join(':')
 }
 
 export const formatDateToDate = (date: Date) => {
