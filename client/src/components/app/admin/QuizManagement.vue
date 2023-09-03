@@ -41,10 +41,13 @@
     </v-container>
 
     <v-container fluid class="mt-8 bg-grey-lighten-2 pa-10">
-      <div class="d-flex">
-        <h2 class="me-auto">
-          EXAM: <span class="text-h6 ml-2">{{ quizName }}</span>
-        </h2>
+      <div class="d-flex mb-5">
+        <div class="me-auto">
+          <h2>
+            EXAM: <span class="text-h6 ml-2">{{ quizName }}</span>
+          </h2>
+          <p><b>Last Modified: </b>{{ quizLastModified }}</p>
+        </div>
         <v-text-field
           label="ID"
           :model-value="quizIdInput"
@@ -53,7 +56,6 @@
           readonly
         ></v-text-field>
       </div>
-
       <v-text-field
         label="Exam Name"
         @change="handleNameChange"
@@ -212,6 +214,13 @@ export default defineComponent({
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.endTime)
         return date.toTimeString()
+      }
+      return ``
+    },
+    quizLastModified() {
+      if (this.selectedQuiz !== undefined) {
+        const date = new Date(this.selectedQuiz.modified)
+        return date.toLocaleString()
       }
       return ``
     }

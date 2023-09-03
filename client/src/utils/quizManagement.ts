@@ -57,7 +57,8 @@ export const getQuizInfoQuery = async (
       variables: {
         quizId: quizId
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true
     })
     return query.data.quiz
   } catch (error) {
