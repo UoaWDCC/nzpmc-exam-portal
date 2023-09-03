@@ -90,12 +90,14 @@
           <v-text-field
             :disabled="loading"
             label="Start Date"
+            type="date"
             prepend-inner-icon="mdi-calendar-range"
             :model-value="quizStartDate"
           ></v-text-field>
           <v-text-field
             label="Start Time"
             :disabled="loading"
+            type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
             :model-value="quizStartTime"
           ></v-text-field>
@@ -104,12 +106,14 @@
           <v-text-field
             label="End Date"
             :disabled="loading"
+            type="date"
             :model-value="quizEndDate"
             prepend-inner-icon="mdi-calendar-range"
           ></v-text-field>
           <v-text-field
             label="End Time"
             :disabled="loading"
+            type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
             :model-value="quizEndTime"
           ></v-text-field>
@@ -156,7 +160,9 @@ import {
   downloadUserQuizzesCsvQuery,
   editQuizMutation,
   getQuizInfoQuery,
-  createEmptyExamMutation
+  createEmptyExamMutation,
+  formatDateToDate,
+  formatDateToTime
 } from '@/utils/quizManagement'
 import type { EditQuizInput, QuizModel } from '@nzpmc-exam-portal/common'
 
@@ -210,35 +216,35 @@ export default defineComponent({
     quizStartDate() {
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.startTime)
-        return date.toDateString()
+        return formatDateToDate(date)
       }
       return ``
     },
     quizEndDate() {
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.endTime)
-        return date.toDateString()
+        return formatDateToDate(date)
       }
       return ``
     },
     quizStartTime() {
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.startTime)
-        return date.toTimeString()
+        return formatDateToTime(date)
       }
       return ``
     },
     quizEndTime() {
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.endTime)
-        return date.toTimeString()
+        return formatDateToTime(date)
       }
       return ``
     },
     quizLastModified() {
       if (this.selectedQuiz !== undefined) {
         const date = new Date(this.selectedQuiz.modified)
-        return date.toLocaleString()
+        return date.getTime()
       }
       return `(no exam selected)`
     }

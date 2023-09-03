@@ -12,7 +12,13 @@ export type editQuizInput = {
   name?: string
   startTime?: Date
 }
+export const formatDateToTime = (date: Date) => {
+  return date.toTimeString().split(' ')[0]
+}
 
+export const formatDateToDate = (date: Date) => {
+  return date.toISOString().split('T')[0]
+}
 export const debounce = (fn: any, timeout: number = 300) => {
   let timer: NodeJS.Timeout
   return (...args: any[]) => {
