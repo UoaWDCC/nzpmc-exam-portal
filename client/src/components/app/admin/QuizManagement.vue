@@ -100,6 +100,7 @@
             :disabled="loading"
             type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
+            @change="handleStartTimeChange"
             :model-value="quizStartTime"
           ></v-text-field>
         </v-col>
@@ -109,6 +110,7 @@
             :disabled="loading"
             type="date"
             :model-value="quizEndDate"
+            @change="handleEndDateChange"
             prepend-inner-icon="mdi-calendar-range"
           ></v-text-field>
           <v-text-field
@@ -116,6 +118,7 @@
             :disabled="loading"
             type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
+            @change="handleEndTimeChange"
             :model-value="quizEndTime"
           ></v-text-field>
         </v-col>
@@ -282,11 +285,45 @@ export default defineComponent({
     handleStartDateChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const date = new Date(currentValue)
-        const currentStartDate = new Date(this.selectedQuiz.startTime)
-        currentStartDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
+        const currentStartDate = this.updateDateFromString(currentValue)
         this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { startTime: currentStartDate })
       }
+    },
+    handleStartTimeChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        const currentStartTime = this.updateTimeFromString(currentValue)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { startTime: currentStartTime })
+      }
+    },
+    handleEndTimeChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        const currentEndTime = this.updateTimeFromString(currentValue)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { endTime: currentEndTime })
+      }
+    },
+    handleEndDateChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        const currentEndDate = this.updateDateFromString(currentValue)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { endTime: currentEndDate })
+      }
+    },
+    updateDateFromString(currentValue: string) {
+      const date = new Date(currentValue)
+      const currentStartDate = new Date(this.selectedQuiz.startTime)
+      currentStartDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
+      return currentStartDate
+    },
+    updateTimeFromString(currentValue: string) {
+      const currentStartDate = new Date(this.selectedQuiz.startTime)
+      const split = currentValue.split(':')
+      const hour = parseInt(split[0])
+      const minutes = parseInt(split[1])
+      currentStartDate.setHours(hour)
+      currentStartDate.setMinutes(minutes)
+      return currentStartDate
     },
     async createAndGoToExam() {
       this.loading = true
