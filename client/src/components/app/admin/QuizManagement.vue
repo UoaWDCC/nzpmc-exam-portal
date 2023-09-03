@@ -35,7 +35,7 @@
         @update:model-value="updateQuizID"
       ></v-select>
 
-      <v-btn size="large" color="secondary" @click="createAndGoToExam">
+      <v-btn :disabled="loading" size="large" color="secondary" @click="createAndGoToExam">
         ADD NEW EXAM
         <v-icon end icon="mdi-plus-box-outline"></v-icon>
       </v-btn>
@@ -59,6 +59,7 @@
       </div>
       <v-text-field
         label="Exam Name"
+        :disabled="loading"
         @change="handleNameChange"
         :model-value="quizName"
       ></v-text-field>
@@ -66,6 +67,7 @@
         label="Description"
         auto-grow
         @change="handleDescriptionChange"
+        :disabled="loading"
         :model-value="quizDescription"
         rows="3"
         clearable
@@ -76,6 +78,7 @@
       <v-text-field
         type="number"
         @change="handleDurationChange"
+        :disabled="loading"
         label="Exam Time (minutes)"
         :model-value="quizDurationMinutes"
       ></v-text-field>
@@ -85,12 +88,14 @@
       <v-row>
         <v-col cols="12" sm="6">
           <v-text-field
+            :disabled="loading"
             label="Start Date"
             prepend-inner-icon="mdi-calendar-range"
             :model-value="quizStartDate"
           ></v-text-field>
           <v-text-field
             label="Start Time"
+            :disabled="loading"
             prepend-inner-icon="mdi-clock-time-eight-outline"
             :model-value="quizStartTime"
           ></v-text-field>
@@ -98,11 +103,13 @@
         <v-col cols="12" sm="6">
           <v-text-field
             label="End Date"
+            :disabled="loading"
             :model-value="quizEndDate"
             prepend-inner-icon="mdi-calendar-range"
           ></v-text-field>
           <v-text-field
             label="End Time"
+            :disabled="loading"
             prepend-inner-icon="mdi-clock-time-eight-outline"
             :model-value="quizEndTime"
           ></v-text-field>
@@ -110,23 +117,31 @@
       </v-row>
 
       <v-container fluid class="px-0">
-        <v-btn size="large" color="blue-darken-2"
+        <v-btn size="large" :disabled="loading" color="blue-darken-2"
           >EDIT QUESTIONS<v-icon end icon="mdi-cog"></v-icon
         ></v-btn>
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn @click="enrollUserIntoQuiz" block size="large" color="white"
+        <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading"
           >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
         ></v-btn>
-        <v-btn @click="downloadUserQuizzes" block size="large" color="blue-darken-2" class="mt-3"
+        <v-btn
+          @click="downloadUserQuizzes"
+          block
+          size="large"
+          color="blue-darken-2"
+          class="mt-3"
+          :disabled="loading"
           >DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn
         >
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn block size="large" color="secondary">GRADE EXAM</v-btn>
-        <v-btn block size="large" color="secondary" class="mt-3">RELEASE RESULTS</v-btn>
+        <v-btn block size="large" :disabled="loading" color="secondary">GRADE EXAM</v-btn>
+        <v-btn block size="large" :disabled="loading" color="secondary" class="mt-3"
+          >RELEASE RESULTS</v-btn
+        >
       </v-container>
     </v-container>
   </v-container>
@@ -255,10 +270,12 @@ export default defineComponent({
       }
     },
     async createAndGoToExam() {
+      this.loading = true
       const res = await createEmptyExamMutation(this.$apollo)
       const id = res.id
       await this.editAndUpdateSelectedQuiz(id, { name: id })
       this.updateQuizID(id)
+      this.loading = false
     },
     async editAndUpdateSelectedQuiz(id: string, input: editQuizInput) {
       const debouncedDurationEdit = debounce(editQuizMutation)
