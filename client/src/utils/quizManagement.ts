@@ -18,7 +18,13 @@ export const debounce = (fn: any, timeout: number = 300) => {
 export const editQuizMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   quizId: string,
-  input: { description?: string, duration?: number, endTime?: Date, name?: string, startTime?: Date }
+  input: {
+    description?: string
+    duration?: number
+    endTime?: Date
+    name?: string
+    startTime?: Date
+  }
 ): Promise<QuizModel> => {
   try {
     const { description, duration, endTime, name, startTime } = input
