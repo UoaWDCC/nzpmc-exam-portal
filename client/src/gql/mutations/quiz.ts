@@ -7,3 +7,10 @@ export const EditQuizMutation = gql`
     }
   }
 `
+export const CreateQuizMutation = gql`
+  mutation AddQuiz($input: AddQuizInput!) {
+    addQuiz(input: $input) {
+      id
+    }
+  }
+`

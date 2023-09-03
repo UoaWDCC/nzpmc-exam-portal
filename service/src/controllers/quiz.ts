@@ -17,11 +17,11 @@ const getAllQuizzes = async (): Promise<Schema.Quiz[]> => {
 }
 
 const addQuiz = async (
-    name?: string,
-    description?: string,
-    duration?: number,
-    startTime?: Date,
-    endTime?: Date,
+    name?: string | null,
+    description?: string | null,
+    duration?: number | null,
+    startTime?: Date | null,
+    endTime?: Date | null,
 ): Promise<Schema.Quiz> => {
     const quiz = new Quiz()
 
