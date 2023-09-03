@@ -4,14 +4,15 @@ import type { UserQuiz } from '@/components/app/admin/QuizManagement.vue'
 import type { QuizModel } from '@nzpmc-exam-portal/common'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 
-const debounce = (fn: Function, timeout:number =300) => {
-  let timer :NodeJS.Timeout
-  return (...args : any[])=> {
+const debounce = (fn: Function, timeout: number = 300) => {
+  let timer: NodeJS.Timeout
+  return (...args: any[]) => {
     clearTimeout(timer)
-    timer = setTimeout(() => {fn.apply(this, args)}, timeout)
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+    }, timeout)
   }
 }
-
 
 export const getQuizInfoQuery = async (
   apollo: ApolloClient<NormalizedCacheObject>,
