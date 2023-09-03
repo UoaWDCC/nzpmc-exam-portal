@@ -175,7 +175,8 @@ export default defineComponent({
           }
         }
       },
-      fetchPolicy: 'cache-and-network'
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true
     }
   },
   computed: {
@@ -260,6 +261,7 @@ export default defineComponent({
       debouncedDurationEdit(this.$apollo, this.quizIdInput, input).then((res: any) => {
         console.log(res)
         this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
+        this.$apollo.queries.userQuizzes.refetch()
       })
     },
     async enrollUserIntoQuiz() {
