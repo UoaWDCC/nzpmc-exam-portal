@@ -34,7 +34,7 @@
         @update:model-value="updateQuizID"
       ></v-select>
 
-      <v-btn size="large" color="secondary">
+      <v-btn size="large" color="secondary" @click="createAndGoToExam">
         ADD NEW EXAM
         <v-icon end icon="mdi-plus-box-outline"></v-icon>
       </v-btn>
@@ -139,9 +139,10 @@ import {
   debounce,
   downloadUserQuizzesCsvQuery,
   editQuizMutation,
-  getQuizInfoQuery
+  getQuizInfoQuery,
+  createEmptyExamMutation
 } from '@/utils/quizManagement'
-import type { QuizModel } from '@nzpmc-exam-portal/common'
+import type { EditQuizInput, QuizModel } from '@nzpmc-exam-portal/common'
 
 export type UserQuiz = {
   user: User
@@ -250,13 +251,11 @@ export default defineComponent({
         this.editAndUpdateSelectedQuiz({ duration: 60 * parseInt(currentValue) })
       }
     },
-    editAndUpdateSelectedQuiz(input: {
-      description?: string
-      duration?: number
-      endTime?: Date
-      name?: string
-      startTime?: Date
-    }) {
+    async createAndGoToExam() {
+      const res = await createEmptyExamMutation(this.$apollo)
+      console.log(res)
+    },
+    editAndUpdateSelectedQuiz(input: editQuizInput) {
       const debouncedDurationEdit = debounce(editQuizMutation)
       debouncedDurationEdit(this.$apollo, this.quizIdInput, input).then((res: any) => {
         console.log(res)

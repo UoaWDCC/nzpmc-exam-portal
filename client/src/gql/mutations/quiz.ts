@@ -7,7 +7,7 @@ export const EditQuizMutation = gql`
     }
   }
 `
-export const CreateQuizMutation = gql`
+export const CreateExamMutation = gql`
   mutation AddQuiz($input: AddQuizInput!) {
     addQuiz(input: $input) {
       id

@@ -3,7 +3,15 @@ import { GetUserQuizzesListQuery } from '../gql/queries/userQuizList'
 import type { UserQuiz } from '@/components/app/admin/QuizManagement.vue'
 import type { QuizModel } from '@nzpmc-exam-portal/common'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
-import { EditQuizMutation } from '@/gql/mutations/quiz'
+import { CreateExamMutation, EditQuizMutation } from '@/gql/mutations/quiz'
+
+export type editQuizInput = {
+  description?: string
+  duration?: number
+  endTime?: Date
+  name?: string
+  startTime?: Date
+}
 
 export const debounce = (fn: any, timeout: number = 300) => {
   let timer: NodeJS.Timeout
@@ -17,16 +25,20 @@ export const debounce = (fn: any, timeout: number = 300) => {
   }
 }
 
+export const createEmptyExamMutation = async (apollo: ApolloClient<NormalizedCacheObject>) => {
+  const mutation = await apollo.mutate({
+    mutation: CreateExamMutation,
+    variables: {
+      input: {}
+    }
+  })
+  return mutation.data.addQuiz
+}
+
 export const editQuizMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   quizId: string,
-  input: {
-    description?: string
-    duration?: number
-    endTime?: Date
-    name?: string
-    startTime?: Date
-  }
+  input: editQuizInput
 ): Promise<QuizModel> => {
   try {
     const { description, duration, endTime, name, startTime } = input
