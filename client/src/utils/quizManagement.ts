@@ -13,11 +13,18 @@ export type editQuizInput = {
   startTime?: Date
 }
 export const formatDateToTime = (date: Date) => {
-  return date.toTimeString().split(' ')[0]
+  return date.toLocaleTimeString().split(' ')[0]
 }
 
 export const formatDateToDate = (date: Date) => {
-  return date.toISOString().split('T')[0]
+  const split = date.toLocaleDateString().split('/').reverse()
+  split.map((item: string, index: number) => {
+    //if not year pad
+    if (item.length < 4) {
+      split[index] = item.padStart(2, '0')
+    }
+  })
+  return split.join('-')
 }
 export const debounce = (fn: any, timeout: number = 300) => {
   let timer: NodeJS.Timeout

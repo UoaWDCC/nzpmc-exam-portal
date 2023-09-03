@@ -92,6 +92,7 @@
             label="Start Date"
             type="date"
             prepend-inner-icon="mdi-calendar-range"
+            @change="handleStartDateChange"
             :model-value="quizStartDate"
           ></v-text-field>
           <v-text-field
@@ -162,6 +163,7 @@ import {
   getQuizInfoQuery,
   createEmptyExamMutation,
   formatDateToDate,
+  type editQuizInput,
   formatDateToTime
 } from '@/utils/quizManagement'
 import type { EditQuizInput, QuizModel } from '@nzpmc-exam-portal/common'
@@ -275,6 +277,15 @@ export default defineComponent({
         this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, {
           duration: 60 * parseInt(currentValue)
         })
+      }
+    },
+    handleStartDateChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        const date = new Date(currentValue)
+        const currentStartDate = new Date(this.selectedQuiz.startTime)
+        currentStartDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { startTime: currentStartDate })
       }
     },
     async createAndGoToExam() {
