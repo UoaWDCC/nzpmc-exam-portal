@@ -335,8 +335,9 @@ export default defineComponent({
     },
     async editAndUpdateSelectedQuiz(id: string, input: editQuizInput) {
       const debouncedEdit = debounce(editQuizMutation)
+      this.loading = true
       const res = await debouncedEdit(this.$apollo, id, input)
-      console.log(res)
+      this.loading = false
       this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
       if (input.name !== undefined) {
         await this.$apollo.queries.userQuizzes.refetch()
