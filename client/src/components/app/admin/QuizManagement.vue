@@ -235,35 +235,38 @@ export default defineComponent({
     handleDescriptionChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        this.editAndUpdateSelectedQuiz({ description: currentValue })
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { description: currentValue })
       }
     },
     handleNameChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        this.editAndUpdateSelectedQuiz({ name: currentValue })
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { name: currentValue })
       }
     },
     handleDurationChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
         // multiply by 60 to convert to seconds
-        this.editAndUpdateSelectedQuiz({ duration: 60 * parseInt(currentValue) })
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, {
+          duration: 60 * parseInt(currentValue)
+        })
       }
     },
     async createAndGoToExam() {
       const res = await createEmptyExamMutation(this.$apollo)
-      console.log(res)
+      const id = res.id
+      await this.editAndUpdateSelectedQuiz(id, { name: id })
+      this.updateQuizID(id)
     },
-    editAndUpdateSelectedQuiz(input: editQuizInput) {
+    async editAndUpdateSelectedQuiz(id: string, input: editQuizInput) {
       const debouncedDurationEdit = debounce(editQuizMutation)
-      debouncedDurationEdit(this.$apollo, this.quizIdInput, input).then((res: any) => {
-        console.log(res)
-        this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
-        if (input.name !== undefined) {
-          this.$apollo.queries.userQuizzes.refetch()
-        }
-      })
+      const res = await debouncedDurationEdit(this.$apollo, id, input)
+      console.log(res)
+      this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
+      if (input.name !== undefined) {
+        await this.$apollo.queries.userQuizzes.refetch()
+      }
     },
     async enrollUserIntoQuiz() {
       try {
