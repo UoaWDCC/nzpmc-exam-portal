@@ -2,11 +2,12 @@
 .container .v-divider {
   margin-top: 2rem;
 }
-.container .emails {
+.emails {
   display: flex;
+  flex-direction: row;
   max-width: 100%;
-  flex-wrap: wrap;
   gap: 0.5rem;
+  padding: 0;
 }
 
 .popup-dialog {
@@ -56,7 +57,7 @@
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
     <div class="d-flex">
       <v-file-input label="UPLOAD CSV TO ADD USERS" prepend-icon="mdi-paperclip"></v-file-input>
-      <v-btn color="secondary" size="x-large" class="text-body-2">ADD USERS</v-btn>
+      <v-btn @click="addUsersWithCsv()" color="secondary" size="x-large" class="text-body-2">ADD USERS</v-btn>
     </div>
   </v-container>
 
@@ -64,7 +65,7 @@
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">DELETE USERS</h2>
     <div class="d-flex">
       <v-file-input label="UPLOAD CSV TO DELETE USERS" prepend-icon="mdi-paperclip"></v-file-input>
-      <v-btn color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
+      <v-btn @click="deleteUsersUsingCSV()" color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
     </div>
     <div class="d-flex">
       <v-text-field
@@ -77,17 +78,26 @@
           <p>{{ deleteMessage }}</p>
         </template>
       </v-text-field>
-      <v-btn color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
+      <v-btn @click="deleteUsersUsingInput()" color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
     </div>
+    <span style="display: flex; align-items: center; justify-content: space-between">
+      <h3>To delete:</h3>
+      <v-btn color="red" variant="outlined" @click="removeAllEmailsFromList()">Clear</v-btn>
+    </span>
+    <v-container class="emails">
+      <div v-for="(email, index) in currentEmails" :key="index">
+        <v-chip label closable @click:close="removeEmailFromList(index)">{{ email }}</v-chip>
+      </div>
+    </v-container>
   </v-container>
 
   <v-container>
-    <v-btn block size="large" color="blue-darken-2" class="mt-3"
-      >DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn
+    <v-btn @click="downloadUsersCsv()" block size="large" color="blue-darken-2" class="mt-3"
+      >DOWNLOAD USERS CSV FOR ALL EXAMS</v-btn
     >
   </v-container>
 
-  <v-container class="container upload-csv bg-red">
+  <!-- <v-container class="container upload-csv bg-red">
     <h2>Upload CSV</h2>
     <v-file-input
       prepend-icon=""
@@ -107,7 +117,7 @@
     <h2>Deleting Users</h2>
     <v-text-field
       label="Enter Emails (separate with ',')"
-      ref="emailsToDelete"
+
       @input="handleEmailInputChange"
       @change="handleEmailInputChange"
     >
@@ -132,7 +142,7 @@
     <h2>Get User data</h2>
     <v-btn @click="downloadUsersCsv()">Download CSV of users</v-btn>
     <v-divider />
-  </v-container>
+  </v-container> -->
 </template>
 
 <script lang="ts">
