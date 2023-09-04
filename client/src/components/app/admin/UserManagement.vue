@@ -56,7 +56,7 @@
   <v-container fluid>
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
     <div class="d-flex">
-      <v-file-input label="UPLOAD CSV TO ADD USERS" prepend-icon="mdi-paperclip"></v-file-input>
+      <v-file-input ref="csvUpload" @change="handleAddCsvUpload" accept=".csv" label="UPLOAD CSV TO ADD USERS" prepend-icon="mdi-paperclip"></v-file-input>
       <v-btn @click="addUsersWithCsv()" color="secondary" size="x-large" class="text-body-2">ADD USERS</v-btn>
     </div>
   </v-container>
@@ -64,7 +64,7 @@
   <v-container fluid>
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">DELETE USERS</h2>
     <div class="d-flex">
-      <v-file-input label="UPLOAD CSV TO DELETE USERS" prepend-icon="mdi-paperclip"></v-file-input>
+      <v-file-input ref="csvUpload" @change="handleDeleteCsvUpload" accept=".csv" label="UPLOAD CSV TO DELETE USERS" prepend-icon="mdi-paperclip"></v-file-input>
       <v-btn @click="deleteUsersUsingCSV()" color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
     </div>
     <div class="d-flex">
@@ -163,6 +163,8 @@ export type User = {
 }
 export interface IData {
   currentCsv: any
+  addCsv: any
+  deleteCsv: any
   currentEmails: string[]
   deleteMessage: string
   loading: boolean
@@ -185,6 +187,8 @@ export default {
   data(): IData {
     return {
       currentCsv: File,
+      addCsv: File,
+      deleteCsv: File,
       currentEmails: [],
       deleteMessage: '',
       loading: false,
@@ -220,24 +224,35 @@ export default {
         console.log(this.currentEmails)
       }
     },
-    handleCsvUpload(event: Event) {
+    handleAddCsvUpload(event: Event) {
       const input = event.target as FileInput
       const file = input.files?.[0]
 
       if (file) {
-        console.log('uploaded')
-        this.currentCsv = file
+        console.log('CSV for adding users uploaded')
+        this.addCsv = file
       } else {
-        this.currentCsv = undefined
+        this.addCsv = undefined
+      }
+    },
+    handleDeleteCsvUpload(event: Event) {
+      const input = event.target as FileInput
+      const file = input.files?.[0]
+
+      if (file) {
+        console.log('CSV for deleting users uploaded')
+        this.deleteCsv = file
+      } else {
+        this.deleteCsv = undefined
       }
     },
     async addUsersWithCsv() {
-      if (this.currentCsv.size > 0) {
+      if (this.addCsv.size > 0) {
         try {
           this.loading = true // Show the loading bar
           this.popUpDialog = true
 
-          this.students = await parseCSVPapaparse(this.currentCsv)
+          this.students = await parseCSVPapaparse(this.addCsv)
           let addedUsers = 0
           const addUserPromises = this.students.map(async (student) => {
             // TODO: fix "surname"
@@ -330,11 +345,11 @@ export default {
       }
     },
     async deleteUsersUsingCSV() {
-      if (this.currentCsv.size > 0) {
+      if (this.deleteCsv.size > 0) {
         try {
           this.loading = true // Show the loading bar
           this.popUpDialog = true // Show the success dialog
-          this.students = await parseCSVPapaparse(this.currentCsv)
+          this.students = await parseCSVPapaparse(this.deleteCsv)
 
           const deletionPromises = this.students.map(async (student) => {
             const success = await deleteUsersMutation(this.$apollo, student.email)
