@@ -330,7 +330,7 @@ export default defineComponent({
       const res = await createEmptyExamMutation(this.$apollo)
       const id = res.id
       await this.editAndUpdateSelectedQuiz(id, { name: id })
-      this.updateQuizID(id)
+      await this.updateQuizID(id)
       this.loading = false
     },
     async editAndUpdateSelectedQuiz(id: string, input: editQuizInput) {
