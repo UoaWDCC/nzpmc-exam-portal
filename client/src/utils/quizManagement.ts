@@ -4,6 +4,8 @@ import type { UserQuiz } from '@/components/app/admin/QuizManagement.vue'
 import type { QuizModel } from '@nzpmc-exam-portal/common'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 import { CreateExamMutation, EditQuizMutation } from '@/gql/mutations/quiz'
+import { parseCSVPapaparse } from './csv_parser'
+import { EnrolUsersInQuizMutation } from '@/gql/mutations/userQuiz'
 
 export type editQuizInput = {
   description?: string
@@ -78,11 +80,26 @@ export const editQuizMutation = async (
   }
 }
 
-export const enrolUsersInQuiz = async (
+export const enrolUsersInQuizFromCSV = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   quizId: string,
   csv: File
-) => {}
+) => {
+  try {
+    const students = await parseCSVPapaparse(csv)
+    const studentEmails = students.map((student) => ({ id: ``, email: student.email }))
+    const mutation = await apollo.mutate({
+      mutation: EnrolUsersInQuizMutation,
+      variables: {
+        users: studentEmails,
+        quizId: quizId
+      }
+    })
+    return mutation.data
+  } catch (error) {
+    return error
+  }
+}
 
 export const getQuizInfoQuery = async (
   apollo: ApolloClient<NormalizedCacheObject>,
