@@ -78,6 +78,12 @@ export const editQuizMutation = async (
   }
 }
 
+export const enrolUsersInQuiz = async (
+  apollo: ApolloClient<NormalizedCacheObject>,
+  quizId: string,
+  csv: File
+) => {}
+
 export const getQuizInfoQuery = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   quizId: string
