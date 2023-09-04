@@ -164,22 +164,26 @@ const addUserQuiz = async (
 
     UserQuizRepository.create(userQuiz)
 
-    runTransaction(async (tran) => {
+    const existingUserQuiz = await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
 
-        const existingUserQuiz = await UserQuizTranRepository.whereEqualTo(
+        const existingQuiz = await UserQuizTranRepository.whereEqualTo(
             (currentUserQuiz) => {
-                return
-                currentUserQuiz.quizID === quizID &&
+                return (
+                    currentUserQuiz.quizID === quizID &&
                     currentUserQuiz.userID === userID
+                )
             },
             true,
         ).findOne()
 
-        if (existingUserQuiz) {
-            return existingUserQuiz
-        }
+        return existingQuiz
     })
+
+    if (existingUserQuiz) {
+        return await getUserQuiz(existingUserQuiz.id)
+    }
+
     runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
 
