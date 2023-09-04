@@ -310,7 +310,7 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
         const expired =
             (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
         if (expired) {
-            throw new UserQuizExpiredError()
+            // throw new UserQuizExpiredError()
         }
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)

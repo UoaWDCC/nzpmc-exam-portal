@@ -10,7 +10,7 @@ import { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { addUserQuizQuestion } from './userQuizQuestion'
 import { getUser } from './user'
 import { firestore } from '../utils/firebase'
-import { WriteResult } from '@google-cloud/firestore'
+import { Firestore, WriteResult } from '@google-cloud/firestore'
 
 const UserQuizRepository = getRepository(UserQuiz)
 
@@ -149,6 +149,21 @@ const addUserQuiz = async (
     startTime: Date,
     endTime: Date,
 ): Promise<UserQuizModel> => {
+    //first check if userquiz already exists
+    const firestore = new Firestore()
+
+    const userQuizzesCollection = firestore.collection('userQuizs')
+
+    const query = userQuizzesCollection
+        .where('quizID', '==', quizID)
+        .where('userID', '==', userID)
+        .limit(1)
+
+    const snapshot = await query.get()
+    if (!snapshot.empty) {
+        return await getUserQuiz(snapshot.docs[0].id)
+    }
+
     const userQuiz = new UserQuiz()
 
     userQuiz.userID = userID
@@ -163,26 +178,6 @@ const addUserQuiz = async (
     userQuiz.submitted = false
 
     UserQuizRepository.create(userQuiz)
-
-    const existingUserQuiz = await runTransaction(async (tran) => {
-        const UserQuizTranRepository = tran.getRepository(UserQuiz)
-
-        const existingQuiz = await UserQuizTranRepository.whereEqualTo(
-            (currentUserQuiz) => {
-                return (
-                    currentUserQuiz.quizID === quizID &&
-                    currentUserQuiz.userID === userID
-                )
-            },
-            true,
-        ).findOne()
-
-        return existingQuiz
-    })
-
-    if (existingUserQuiz) {
-        return await getUserQuiz(existingUserQuiz.id)
-    }
 
     runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
