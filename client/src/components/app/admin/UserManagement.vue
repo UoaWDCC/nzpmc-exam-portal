@@ -97,52 +97,6 @@
     >
   </v-container>
 
-  <!-- <v-container class="container upload-csv bg-red">
-    <h2>Upload CSV</h2>
-    <v-file-input
-      prepend-icon=""
-      ref="csvUpload"
-      @change="handleCsvUpload"
-      accept=".csv"
-      label="Upload CSV"
-    ></v-file-input>
-    <v-divider />
-  </v-container>
-  <v-container class="container add-users">
-    <h2>Adding Users</h2>
-    <v-btn @click="addUsersWithCsv()">Add users using CSV</v-btn>
-    <v-divider />
-  </v-container>
-  <v-container class="container delete-users">
-    <h2>Deleting Users</h2>
-    <v-text-field
-      label="Enter Emails (separate with ',')"
-
-      @input="handleEmailInputChange"
-      @change="handleEmailInputChange"
-    >
-      <template v-slot:details>
-        <p>{{ deleteMessage }}</p>
-      </template>
-    </v-text-field>
-    <span style="display: flex; align-items: center; justify-content: space-between">
-      <h3>To delete:</h3>
-      <v-btn color="red" variant="outlined" @click="removeAllEmailsFromList()">Clear</v-btn>
-    </span>
-    <v-container class="emails">
-      <div v-for="(email, index) in currentEmails" :key="index">
-        <v-chip label closable @click:close="removeEmailFromList(index)">{{ email }}</v-chip>
-      </div>
-    </v-container>
-    <v-btn @click="deleteUsersUsingInput()">Delete users with emails</v-btn>
-    <v-btn @click="deleteUsersUsingCSV()">Delete users with CSV</v-btn>
-    <v-divider />
-  </v-container>
-  <v-container class="container download-users-csv">
-    <h2>Get User data</h2>
-    <v-btn @click="downloadUsersCsv()">Download CSV of users</v-btn>
-    <v-divider />
-  </v-container> -->
 </template>
 
 <script lang="ts">
@@ -162,7 +116,6 @@ export type User = {
   role: string
 }
 export interface IData {
-  currentCsv: any
   addCsv: any
   deleteCsv: any
   currentEmails: string[]
@@ -186,7 +139,6 @@ export default {
 
   data(): IData {
     return {
-      currentCsv: File,
       addCsv: File,
       deleteCsv: File,
       currentEmails: [],
