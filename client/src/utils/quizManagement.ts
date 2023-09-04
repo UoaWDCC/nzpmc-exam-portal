@@ -88,7 +88,7 @@ export const enrolUsersInQuizFromCSV = async (
   try {
     const students = await parseCSVPapaparse(csv)
     console.log(students)
-    const studentEmails = students.map((student) => ({ id: ``, email: student.email }))
+    const studentEmails = students.map((student) => ({ id: null, email: student.email }))
     const mutation = await apollo.mutate({
       mutation: EnrolUsersInQuizMutation,
       variables: {
