@@ -96,6 +96,7 @@ export const enrolUsersInQuizFromCSV = async (
         quizId: quizId
       }
     })
+    console.log(mutation.data)
     return mutation.data
   } catch (error) {
     return error

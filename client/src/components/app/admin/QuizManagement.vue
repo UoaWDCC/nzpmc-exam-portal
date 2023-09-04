@@ -261,6 +261,7 @@ export default defineComponent({
   methods: {
     async updateQuizID(id: string) {
       this.loading = true
+      this.uploadedCsv = undefined
       this.quizIdInput = id
       await this.fetchQuizInfo()
       this.loading = false
