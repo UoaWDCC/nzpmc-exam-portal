@@ -57,7 +57,9 @@
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
     <div class="d-flex">
       <v-file-input label="UPLOAD CSV TO ADD USERS" prepend-icon="mdi-paperclip"></v-file-input>
-      <v-btn @click="addUsersWithCsv()" color="secondary" size="x-large" class="text-body-2">ADD USERS</v-btn>
+      <v-btn @click="addUsersWithCsv()" color="secondary" size="x-large" class="text-body-2"
+        >ADD USERS</v-btn
+      >
     </div>
   </v-container>
 
@@ -65,7 +67,9 @@
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">DELETE USERS</h2>
     <div class="d-flex">
       <v-file-input label="UPLOAD CSV TO DELETE USERS" prepend-icon="mdi-paperclip"></v-file-input>
-      <v-btn @click="deleteUsersUsingCSV()" color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
+      <v-btn @click="deleteUsersUsingCSV()" color="secondary" size="x-large" class="text-body-2"
+        >DELETE USERS</v-btn
+      >
     </div>
     <div class="d-flex">
       <v-text-field
@@ -78,7 +82,9 @@
           <p>{{ deleteMessage }}</p>
         </template>
       </v-text-field>
-      <v-btn @click="deleteUsersUsingInput()" color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
+      <v-btn @click="deleteUsersUsingInput()" color="secondary" size="x-large" class="text-body-2"
+        >DELETE USERS</v-btn
+      >
     </div>
     <span style="display: flex; align-items: center; justify-content: space-between">
       <h3>To delete:</h3>
