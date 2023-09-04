@@ -27,6 +27,7 @@
   <v-container class="quiz-management" fluid>
     <v-container fluid>
       <v-select
+        :disabled="loading"
         v-model="quizIdInput"
         label="SELECT AN EXAM"
         :items="quizzes"
