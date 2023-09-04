@@ -152,14 +152,14 @@ const addUserQuiz = async (
     //first check if userquiz already exists
     const firestore = new Firestore()
 
-    const userQuizzesCollection = firestore.collection('userQuizs')
+    const userQuizzesCollection = firestore.collection('UserQuizs')
 
     const query = userQuizzesCollection
         .where('quizID', '==', quizID)
         .where('userID', '==', userID)
         .limit(1)
-
     const snapshot = await query.get()
+    console.log(snapshot.docs[0])
     if (!snapshot.empty) {
         return await getUserQuiz(snapshot.docs[0].id)
     }

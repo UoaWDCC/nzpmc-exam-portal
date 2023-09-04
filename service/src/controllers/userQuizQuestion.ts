@@ -20,7 +20,7 @@ const getUserQuizQuestion = async (
     let quizQuestion
 
     if (expired) {
-        throw new UserQuizExpiredError()
+        // throw new UserQuizExpiredError()
     }
 
     await runTransaction(async (tran) => {
