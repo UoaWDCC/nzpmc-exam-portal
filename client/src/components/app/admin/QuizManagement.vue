@@ -135,7 +135,7 @@
         <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading"
           >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
         ></v-btn>
-        <input ref="csvUploadZone" class="d-none" type="file" change="handleCsvUpload" />
+        <input ref="csvUploadZone" class="d-none" type="file" @change="handleCsvUpload" />
         <v-btn
           @click="downloadUserQuizzes"
           block
@@ -169,7 +169,8 @@ import {
   createEmptyExamMutation,
   formatDateToDate,
   type editQuizInput,
-  formatDateToTime
+  formatDateToTime,
+  enrolUsersInQuizFromCSV
 } from '@/utils/quizManagement'
 import type { EditQuizInput, QuizModel } from '@nzpmc-exam-portal/common'
 
@@ -313,8 +314,11 @@ export default defineComponent({
         this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { endTime: currentEndDate })
       }
     },
-    handleCsvUpload(e) {
+    async handleCsvUpload(e) {
       this.uploadedCsv = e.target.files[0]
+      this.loading = true
+      await enrolUsersInQuizFromCSV(this.$apollo, this.quizIdInput, this.uploadedCsv)
+      this.loading = false
     },
     updateDateFromString(currentValue: string) {
       const date = new Date(currentValue)
