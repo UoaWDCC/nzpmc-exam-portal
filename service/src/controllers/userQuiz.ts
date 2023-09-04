@@ -163,6 +163,7 @@ const addUserQuiz = async (
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
     userQuiz.quizStart = null
+    userQuiz.submitted = false
 
     UserQuizRepository.create(userQuiz)
 
@@ -174,7 +175,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ;(await questions.find()).map((question) => {
+        ; (await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
