@@ -160,6 +160,7 @@ const addUserQuiz = async (
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
     userQuiz.quizStart = null
+    userQuiz.submitted = false
 
     UserQuizRepository.create(userQuiz)
 
