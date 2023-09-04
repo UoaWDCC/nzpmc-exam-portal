@@ -134,6 +134,7 @@
         <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading"
           >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
         ></v-btn>
+        <input ref="csvUploadZone" class="d-none" type="file" change="handleCsvUpload" />
         <v-btn
           @click="downloadUserQuizzes"
           block
@@ -186,7 +187,8 @@ export default defineComponent({
       loading: false,
       popUpDialog: false,
       popUpMessage: '',
-      selectedQuiz: undefined as QuizModel
+      selectedQuiz: undefined as QuizModel,
+      uploadedCsv: undefined
     }
   },
 
@@ -310,6 +312,9 @@ export default defineComponent({
         this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { endTime: currentEndDate })
       }
     },
+    handleCsvUpload(e) {
+      this.uploadedCsv = e.target.files[0]
+    },
     updateDateFromString(currentValue: string) {
       const date = new Date(currentValue)
       const currentStartDate = new Date(this.selectedQuiz.startTime)
@@ -345,7 +350,17 @@ export default defineComponent({
     },
     async enrollUserIntoQuiz() {
       try {
-        // TODO: Add your logic to enroll a user into the quiz here
+        if (this.selectedQuiz !== undefined) {
+          this.loading = true
+          window.addEventListener(
+            'focus',
+            () => {
+              this.loading = false
+            },
+            { once: true }
+          )
+          this.$refs.csvUploadZone.click()
+        }
         console.log('User enrolled into the quiz')
       } catch (error) {
         console.error('Failed to enroll user into the quiz:', error)
