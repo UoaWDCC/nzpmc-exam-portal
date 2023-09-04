@@ -4,7 +4,7 @@ import {
     packUserQuiz,
     packUserQuizzes,
 } from '../mappers/userQuizMapper'
-import { Quiz, UserQuiz } from '../models'
+import { Quiz, User, UserQuiz } from '../models'
 import { NotFoundError } from '../utils/errors'
 import { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { addUserQuizQuestion } from './userQuizQuestion'
@@ -164,6 +164,22 @@ const addUserQuiz = async (
 
     UserQuizRepository.create(userQuiz)
 
+    runTransaction(async (tran) => {
+        const UserQuizTranRepository = tran.getRepository(UserQuiz)
+
+        const existingUserQuiz = await UserQuizTranRepository.whereEqualTo(
+            (currentUserQuiz) => {
+                return
+                currentUserQuiz.quizID === quizID &&
+                    currentUserQuiz.userID === userID
+            },
+            true,
+        ).findOne()
+
+        if (existingUserQuiz) {
+            return existingUserQuiz
+        }
+    })
     runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
 
