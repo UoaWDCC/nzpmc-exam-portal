@@ -12,8 +12,8 @@ export type UserQuizModel = {
   quizStart?: number;
   score?: number;
   submitted?: boolean;
-  startTime?: Date;
-  endTime?: Date;
+  openTime?: Date;
+  closeTime?: Date;
   created: Date;
   modified: Date;
 };

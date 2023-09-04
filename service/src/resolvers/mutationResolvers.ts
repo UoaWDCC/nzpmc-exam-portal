@@ -97,9 +97,9 @@ const addQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationAddQuizArgs, 'input'>
 > = async (_parents, { input }, _context) => {
-    const { name, description, duration, startTime, endTime } = input
+    const { name, description, duration, openTime, closeTime } = input
 
-    return await addQuiz(name, description, duration, startTime, endTime)
+    return await addQuiz(name, description, duration, openTime, closeTime)
 }
 
 const addUserMutation: Resolver<
@@ -136,7 +136,7 @@ const addUserMutation: Resolver<
     // Add UserQuiz if quizID is defined
     if (quizID) {
         const quiz = await getQuiz(quizID)
-        await addUserQuiz(userID, quizID, quiz.startTime, quiz.endTime)
+        await addUserQuiz(userID, quizID, quiz.openTime, quiz.closeTime)
     }
 
     const user = await addUser(
@@ -167,7 +167,7 @@ const addUserQuizMutation: Resolver<
 
     const quiz = await getQuiz(quizID)
 
-    return await addUserQuiz(userID, quizID, quiz.startTime, quiz.endTime)
+    return await addUserQuiz(userID, quizID, quiz.openTime, quiz.closeTime)
 }
 
 const editAnswerMutation: Resolver<
@@ -238,15 +238,15 @@ const editQuizMutation: Resolver<
     UserContext,
     RequireFields<MutationEditQuizArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const { id, name, description, duration, startTime, endTime } = input
+    const { id, name, description, duration, openTime, closeTime } = input
 
     return await editQuiz(
         id,
         name || undefined,
         description || undefined,
         duration || undefined,
-        startTime || undefined,
-        endTime || undefined,
+        openTime || undefined,
+        closeTime || undefined,
     )
 }
 
@@ -322,30 +322,30 @@ const editUserQuizMutation: Resolver<
     if (!context.user.admin) {
         // is not Admin
         const { userQuizID } = input
-        let { startTime } = input
+        let { openTime } = input
 
-        if (startTime) {
-            startTime = new Date().valueOf()
+        if (openTime) {
+            openTime = new Date().valueOf()
         }
 
         const userQuizObj = await getUserQuiz(userQuizID)
-        if (userQuizObj.startTime) {
-            // if startTime is already set need to be admin to change
+        if (userQuizObj.openTime) {
+            // if openTime is already set need to be admin to change
             throw new AdminAuthenticationError()
         }
 
-        return await editUserQuiz(userQuizID, undefined, startTime, undefined)
+        return await editUserQuiz(userQuizID, undefined, openTime, undefined)
     }
 
     // is Admin
-    const { userQuizID, quizStart, score, startTime, endTime } = input
+    const { userQuizID, quizStart, score, openTime, closeTime } = input
 
     const userQuiz = await editUserQuiz(
         userQuizID,
         quizStart || undefined,
         score || undefined,
-        startTime,
-        endTime,
+        openTime,
+        closeTime,
     )
 
     return userQuiz
@@ -414,13 +414,13 @@ const submitUserQuizQuestionsMutation: Resolver<
 
     const userQuiz = await getUserQuiz(userQuizID)
 
-    // endtime doesn't exist means quiz hasn't started
-    if (!userQuiz.endTime) {
+    // closeTime doesn't exist means quiz hasn't started
+    if (!userQuiz.closeTime) {
         throw new AuthenticationError()
     }
 
-    // ensure quiz cannot be submitted if currenttime is after the quiz endtime with 60s leeway
-    if (new Date().getTime() > userQuiz.endTime.getTime() + 60000) {
+    // ensure quiz cannot be submitted if currenttime is after the quiz closeTime with 60s leeway
+    if (new Date().getTime() > userQuiz.closeTime.getTime() + 60000) {
         throw new AuthenticationError()
     }
     // flag quiz as submitted
@@ -517,8 +517,8 @@ const enrolUsersInQuizMutation: Resolver<
         const newUserQuiz = await addUserQuiz(
             userID,
             quizToEnrol,
-            quiz.startTime,
-            quiz.endTime,
+            quiz.openTime,
+            quiz.closeTime,
         )
 
         return newUserQuiz

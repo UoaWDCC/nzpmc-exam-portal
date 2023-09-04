@@ -10,8 +10,8 @@ class UserQuiz {
     score: number | null = null
     quizStart: number | null = null
     submitted: boolean | undefined
-    startTime?: Date
-    endTime?: Date
+    openTime?: Date
+    closeTime?: Date
 
     @SubCollection(UserQuizQuestion, 'Question')
     questions?: ISubCollection<UserQuizQuestion>
