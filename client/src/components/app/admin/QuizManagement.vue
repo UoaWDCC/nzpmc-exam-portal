@@ -135,7 +135,7 @@
         <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading"
           >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
         ></v-btn>
-        <input ref="csvUploadZone" class="d-none" type="file" @change="handleCsvUpload" />
+        <v-file-input ref="csvUploadZone" class="d-none" type="file" @change="handleCsvUpload" />
         <v-btn
           @click="downloadUserQuizzes"
           block
@@ -190,7 +190,7 @@ export default defineComponent({
       popUpDialog: false,
       popUpMessage: '',
       selectedQuiz: undefined as QuizModel,
-      uploadedCsv: undefined
+      uploadedCsv: null
     }
   },
 
@@ -261,7 +261,7 @@ export default defineComponent({
   methods: {
     async updateQuizID(id: string) {
       this.loading = true
-      this.uploadedCsv = undefined
+      this.$refs.csvUploadZone.reset()
       this.quizIdInput = id
       await this.fetchQuizInfo()
       this.loading = false
