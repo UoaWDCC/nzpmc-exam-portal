@@ -56,20 +56,32 @@
   <v-container fluid>
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
     <div class="d-flex">
-
-      <v-file-input ref="csvUpload" @change="handleAddCsvUpload" accept=".csv" label="UPLOAD CSV TO ADD USERS" prepend-icon="mdi-paperclip"></v-file-input>
-      <v-btn @click="addUsersWithCsv()" color="secondary" size="x-large" class="text-body-2">ADD USERS</v-btn>
-
+      <v-file-input
+        ref="csvUpload"
+        @change="handleAddCsvUpload"
+        accept=".csv"
+        label="UPLOAD CSV TO ADD USERS"
+        prepend-icon="mdi-paperclip"
+      ></v-file-input>
+      <v-btn @click="addUsersWithCsv()" color="secondary" size="x-large" class="text-body-2"
+        >ADD USERS</v-btn
+      >
     </div>
   </v-container>
 
   <v-container fluid>
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">DELETE USERS</h2>
     <div class="d-flex">
-
-      <v-file-input ref="csvUpload" @change="handleDeleteCsvUpload" accept=".csv" label="UPLOAD CSV TO DELETE USERS" prepend-icon="mdi-paperclip"></v-file-input>
-      <v-btn @click="deleteUsersUsingCSV()" color="secondary" size="x-large" class="text-body-2">DELETE USERS</v-btn>
-
+      <v-file-input
+        ref="csvUpload"
+        @change="handleDeleteCsvUpload"
+        accept=".csv"
+        label="UPLOAD CSV TO DELETE USERS"
+        prepend-icon="mdi-paperclip"
+      ></v-file-input>
+      <v-btn @click="deleteUsersUsingCSV()" color="secondary" size="x-large" class="text-body-2"
+        >DELETE USERS</v-btn
+      >
     </div>
     <div class="d-flex">
       <v-text-field
@@ -102,7 +114,6 @@
       >DOWNLOAD USERS CSV FOR ALL EXAMS</v-btn
     >
   </v-container>
-
 </template>
 
 <script lang="ts">
