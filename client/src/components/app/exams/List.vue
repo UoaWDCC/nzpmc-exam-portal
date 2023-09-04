@@ -5,62 +5,30 @@
     </v-alert>
 
     <div v-if="currentExams.length" class="my-6">
-      <AppExamsLinkCard
-        v-for="exam in currentExams"
-        :key="exam.id"
-        :title="exam.name"
-        :description="exam.description"
-        :duration="exam.duration"
-        :open-time="exam.openTime"
-        :end-time="exam.endTime"
-        :to="{ name: 'AppExam', params: { quizID: exam.id } }"
-      />
+      <AppExamsLinkCard v-for="exam in currentExams" :key="exam.id" :title="exam.name" :description="exam.description"
+        :duration="exam.duration" :open-time="exam.openTime" :close-time="exam.closeTime"
+        :to="{ name: 'AppExam', params: { quizID: exam.id } }" />
     </div>
 
-    <div
-      v-if="upcomingExams.length || pastExams.length || submittedExams.length"
-      class="d-flex my-6"
-      style="gap: 24px"
-    >
+    <div v-if="upcomingExams.length || pastExams.length || submittedExams.length" class="d-flex my-6" style="gap: 24px">
       <div v-if="upcomingExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
         <h2 class="mb-6 text-h5">Upcoming Exams</h2>
 
-        <AppExamsInfoCard
-          v-for="exam in upcomingExams"
-          :key="exam.id"
-          :title="exam.name"
-          :description="exam.description"
-          :duration="exam.duration"
-          :open-time="exam.openTime"
-          :end-time="exam.endTime"
-        />
+        <AppExamsInfoCard v-for="exam in upcomingExams" :key="exam.id" :title="exam.name" :description="exam.description"
+          :duration="exam.duration" :open-time="exam.openTime" :close-time="exam.closeTime" />
       </div>
 
       <div v-if="pastExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
         <h2 class="mb-6 text-h5">Past Exams</h2>
 
-        <AppExamsInfoCard
-          v-for="exam in pastExams"
-          :key="exam.id"
-          :title="exam.name"
-          :description="exam.description"
-          :duration="exam.duration"
-          :open-time="exam.openTime"
-          :end-time="exam.endTime"
-        />
+        <AppExamsInfoCard v-for="exam in pastExams" :key="exam.id" :title="exam.name" :description="exam.description"
+          :duration="exam.duration" :open-time="exam.openTime" :close-time="exam.closeTime" />
       </div>
       <div v-if="submittedExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
         <h2 class="mb-6 text-h5">Submitted Exams</h2>
 
-        <AppExamsInfoCard
-          v-for="exam in submittedExams"
-          :key="exam.id"
-          :title="exam.name"
-          :description="exam.description"
-          :duration="exam.duration"
-          :open-time="exam.openTime"
-          :end-time="exam.endTime"
-        />
+        <AppExamsInfoCard v-for="exam in submittedExams" :key="exam.id" :title="exam.name" :description="exam.description"
+          :duration="exam.duration" :open-time="exam.openTime" :close-time="exam.closeTime" />
       </div>
     </div>
   </div>
