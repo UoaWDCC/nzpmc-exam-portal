@@ -10,6 +10,7 @@ export const UserQuizFragment = gql`
     openTime
     closeTime
     quizStart
+    submitted
   }
 `
 
