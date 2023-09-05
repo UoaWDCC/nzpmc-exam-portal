@@ -11,8 +11,8 @@
         :title="exam.name"
         :description="exam.description"
         :duration="exam.duration"
-        :start-time="exam.startTime"
-        :end-time="exam.endTime"
+        :open-time="exam.openTime"
+        :close-time="exam.closeTime"
         :to="{ name: 'AppExam', params: { quizID: exam.id } }"
       />
     </div>
@@ -31,8 +31,8 @@
           :title="exam.name"
           :description="exam.description"
           :duration="exam.duration"
-          :start-time="exam.startTime"
-          :end-time="exam.endTime"
+          :open-time="exam.openTime"
+          :close-time="exam.closeTime"
         />
       </div>
 
@@ -45,8 +45,8 @@
           :title="exam.name"
           :description="exam.description"
           :duration="exam.duration"
-          :start-time="exam.startTime"
-          :end-time="exam.endTime"
+          :open-time="exam.openTime"
+          :close-time="exam.closeTime"
         />
       </div>
       <div v-if="submittedExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
@@ -58,8 +58,8 @@
           :title="exam.name"
           :description="exam.description"
           :duration="exam.duration"
-          :start-time="exam.startTime"
-          :end-time="exam.endTime"
+          :open-time="exam.openTime"
+          :close-time="exam.closeTime"
         />
       </div>
     </div>
@@ -89,14 +89,14 @@ export default {
             typeof quiz.description === 'string' &&
             'duration' in quiz &&
             typeof quiz.duration === 'number' &&
-            'endTime' in quiz &&
-            typeof quiz.endTime === 'string' &&
+            'closeTime' in quiz &&
+            typeof quiz.closeTime === 'string' &&
             'id' in quiz &&
             typeof quiz.id === 'string' &&
             'name' in quiz &&
             typeof quiz.name === 'string' &&
-            'startTime' in quiz &&
-            typeof quiz.startTime === 'string' &&
+            'openTime' in quiz &&
+            typeof quiz.openTime === 'string' &&
             'quizID' in quiz &&
             typeof quiz.quizID === 'string'
         )
@@ -109,20 +109,20 @@ export default {
     currentExams() {
       return this.userQuizzes.filter(
         (quiz) =>
-          new Date(quiz.startTime) <= new Date() &&
-          new Date() < new Date(quiz.endTime) &&
+          new Date(quiz.openTime) <= new Date() &&
+          new Date() < new Date(quiz.closeTime) &&
           !quiz.submitted
       )
     },
 
     // Exams that have not yet started
     upcomingExams() {
-      return this.userQuizzes.filter((quiz) => new Date() < new Date(quiz.startTime))
+      return this.userQuizzes.filter((quiz) => new Date() < new Date(quiz.openTime))
     },
 
     // Exams that finished
     pastExams() {
-      return this.userQuizzes.filter((quiz) => new Date() >= new Date(quiz.endTime))
+      return this.userQuizzes.filter((quiz) => new Date() >= new Date(quiz.closeTime))
     },
     // submitted exams
     submittedExams() {
