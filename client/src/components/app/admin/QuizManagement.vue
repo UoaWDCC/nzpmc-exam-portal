@@ -224,28 +224,28 @@ export default defineComponent({
 
     quizStartDate() {
       if (this.selectedQuiz !== undefined) {
-        const date = new Date(this.selectedQuiz.startTime)
+        const date = new Date(this.selectedQuiz.openTime)
         return formatDateToDate(date)
       }
       return ``
     },
     quizEndDate() {
       if (this.selectedQuiz !== undefined) {
-        const date = new Date(this.selectedQuiz.endTime)
+        const date = new Date(this.selectedQuiz.closeTime)
         return formatDateToDate(date)
       }
       return ``
     },
     quizStartTime() {
       if (this.selectedQuiz !== undefined) {
-        const date = new Date(this.selectedQuiz.startTime)
+        const date = new Date(this.selectedQuiz.openTime)
         return formatDateToTime(date)
       }
       return ``
     },
     quizEndTime() {
       if (this.selectedQuiz !== undefined) {
-        const date = new Date(this.selectedQuiz.endTime)
+        const date = new Date(this.selectedQuiz.closeTime)
         return formatDateToTime(date)
       }
       return ``
@@ -290,29 +290,29 @@ export default defineComponent({
     handleStartDateChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const currentStartDate = this.updateDateFromString(currentValue)
-        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { startTime: currentStartDate })
+        const currentStartDate = this.updateDateFromString(currentValue, this.selectedQuiz.openTime)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { openTime: currentStartDate })
       }
     },
     handleStartTimeChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const currentStartTime = this.updateTimeFromString(currentValue)
-        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { startTime: currentStartTime })
+        const currentStartTime = this.updateTimeFromString(currentValue, this.selectedQuiz.openTime)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { openTime: currentStartTime })
       }
     },
     handleEndTimeChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const currentEndTime = this.updateTimeFromString(currentValue)
-        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { endTime: currentEndTime })
+        const currentEndTime = this.updateTimeFromString(currentValue, this.selectedQuiz.closeTime)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentEndTime })
       }
     },
     handleEndDateChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const currentEndDate = this.updateDateFromString(currentValue)
-        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { endTime: currentEndDate })
+        const currentEndDate = this.updateDateFromString(currentValue, this.selectedQuiz.closeTime)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentEndDate })
       }
     },
     async handleCsvUpload(e) {
@@ -321,20 +321,20 @@ export default defineComponent({
       await enrolUsersInQuizFromCSV(this.$apollo, this.quizIdInput, this.uploadedCsv)
       this.loading = false
     },
-    updateDateFromString(currentValue: string) {
+    updateDateFromString(currentValue: string, currentTimeString: string) {
       const date = new Date(currentValue)
-      const currentStartDate = new Date(this.selectedQuiz.startTime)
-      currentStartDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
-      return currentStartDate
+      const currentDate = new Date(currentTimeString)
+      currentDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
+      return currentDate
     },
-    updateTimeFromString(currentValue: string) {
-      const currentStartDate = new Date(this.selectedQuiz.startTime)
+    updateTimeFromString(currentValue: string, currentTimeString: string) {
+      const currentDate = new Date(currentTimeString)
       const split = currentValue.split(':')
       const hour = parseInt(split[0])
       const minutes = parseInt(split[1])
-      currentStartDate.setHours(hour)
-      currentStartDate.setMinutes(minutes)
-      return currentStartDate
+      currentDate.setHours(hour)
+      currentDate.setMinutes(minutes)
+      return currentDate
     },
     async createAndGoToExam() {
       this.loading = true

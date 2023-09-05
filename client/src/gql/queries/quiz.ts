@@ -36,8 +36,8 @@ export const GetQuizInfoQuery = gql`
         created
         modified
       }
-      startTime
-      endTime
+      openTime
+      closeTime
       created
       modified
     }

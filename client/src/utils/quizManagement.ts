@@ -10,9 +10,9 @@ import { EnrolUsersInQuizMutation } from '@/gql/mutations/userQuiz'
 export type editQuizInput = {
   description?: string
   duration?: number
-  endTime?: Date
+  closeTime?: Date
   name?: string
-  startTime?: Date
+  openTime?: Date
 }
 export const formatDateToTime = (date: Date) => {
   const split = date.toTimeString().split(' ')[0].split(':')
@@ -60,7 +60,7 @@ export const editQuizMutation = async (
   input: editQuizInput
 ): Promise<QuizModel> => {
   try {
-    const { description, duration, endTime, name, startTime } = input
+    const { description, duration, closeTime, name, openTime } = input
     const mutation = await apollo.mutate({
       mutation: EditQuizMutation,
       variables: {
@@ -68,9 +68,9 @@ export const editQuizMutation = async (
           id: quizId,
           description: description,
           duration: duration,
-          endTime: endTime,
+          closeTime: closeTime,
           name: name,
-          startTime: startTime
+          openTime: openTime
         }
       }
     })
@@ -116,6 +116,7 @@ export const getQuizInfoQuery = async (
       fetchPolicy: 'network-only',
       notifyOnNetworkStatusChange: true
     })
+    console.log(query.data.quiz)
     return query.data.quiz
   } catch (error) {
     return false
