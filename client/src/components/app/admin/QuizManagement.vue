@@ -93,7 +93,7 @@
             label="Open Date"
             type="date"
             prepend-inner-icon="mdi-calendar-range"
-            @change="handleStartDateChange"
+            @change="handleOpenDateChange"
             :model-value="quizStartDate"
           ></v-text-field>
           <v-text-field
@@ -101,7 +101,7 @@
             :disabled="loading"
             type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
-            @change="handleStartTimeChange"
+            @change="handleOpenTimeChange"
             :model-value="quizStartTime"
           ></v-text-field>
         </v-col>
@@ -111,7 +111,7 @@
             :disabled="loading"
             type="date"
             :model-value="quizEndDate"
-            @change="handleEndDateChange"
+            @change="handleCloseDateChange"
             prepend-inner-icon="mdi-calendar-range"
           ></v-text-field>
           <v-text-field
@@ -119,7 +119,7 @@
             :disabled="loading"
             type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
-            @change="handleEndTimeChange"
+            @change="handleCloseTimeChange"
             :model-value="quizEndTime"
           ></v-text-field>
         </v-col>
@@ -287,32 +287,38 @@ export default defineComponent({
         })
       }
     },
-    handleStartDateChange(event: Event) {
+    handleOpenDateChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const currentStartDate = this.updateDateFromString(currentValue, this.selectedQuiz.openTime)
-        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { openTime: currentStartDate })
+        const currentOpenDate = this.updateDateFromString(currentValue, this.selectedQuiz.openTime)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { openTime: currentOpenDate })
       }
     },
-    handleStartTimeChange(event: Event) {
+    handleOpenTimeChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const currentStartTime = this.updateTimeFromString(currentValue, this.selectedQuiz.openTime)
-        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { openTime: currentStartTime })
+        const currentOpenTime = this.updateTimeFromString(currentValue, this.selectedQuiz.openTime)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { openTime: currentOpenTime })
       }
     },
-    handleEndTimeChange(event: Event) {
+    handleCloseTimeChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const currentEndTime = this.updateTimeFromString(currentValue, this.selectedQuiz.closeTime)
-        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentEndTime })
+        const currentCloseTime = this.updateTimeFromString(
+          currentValue,
+          this.selectedQuiz.closeTime
+        )
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentCloseTime })
       }
     },
-    handleEndDateChange(event: Event) {
+    handleCloseDateChange(event: Event) {
       const currentValue: string = event.target.value
       if (this.selectedQuiz !== undefined) {
-        const currentEndDate = this.updateDateFromString(currentValue, this.selectedQuiz.closeTime)
-        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentEndDate })
+        const currentCloseDate = this.updateDateFromString(
+          currentValue,
+          this.selectedQuiz.closeTime
+        )
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentCloseDate })
       }
     },
     async handleCsvUpload(e) {
