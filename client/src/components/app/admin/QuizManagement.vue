@@ -90,14 +90,14 @@
         <v-col cols="12" sm="6">
           <v-text-field
             :disabled="loading"
-            label="Start Date"
+            label="Open Date"
             type="date"
             prepend-inner-icon="mdi-calendar-range"
             @change="handleStartDateChange"
             :model-value="quizStartDate"
           ></v-text-field>
           <v-text-field
-            label="Start Time"
+            label="Open Time"
             :disabled="loading"
             type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
@@ -107,7 +107,7 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-text-field
-            label="End Date"
+            label="Close Date"
             :disabled="loading"
             type="date"
             :model-value="quizEndDate"
@@ -115,7 +115,7 @@
             prepend-inner-icon="mdi-calendar-range"
           ></v-text-field>
           <v-text-field
-            label="End Time"
+            label="Close Time"
             :disabled="loading"
             type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
