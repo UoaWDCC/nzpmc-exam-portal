@@ -1,4 +1,15 @@
 <template>
+  <v-dialog v-model="confirmationDialog" max-width="400">
+    <v-card>
+      <v-card-title class="popup-headline">Confirm Action</v-card-title>
+      <v-card-text class="popup-text">{{ confirmationMessage }}</v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="confirmAction">Yes</v-btn>
+        <v-btn color="secondary" @click="cancelAction">No</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <v-dialog v-model="popUpDialog" class="popup-dialog">
     <v-card>
       <v-card-title class="popup-headline">NZPMC Admin</v-card-title>
@@ -135,7 +146,7 @@
         <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading"
           >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
         ></v-btn>
-        <v-file-input ref="csvUploadZone" class="d-none" type="file" @change="handleCsvUpload" />
+        <v-file-input ref="csvUploadZone" class="d-none" type="file" @input="handleCsvUpload" />
         <v-btn
           @click="downloadUserQuizzes"
           block
@@ -161,6 +172,7 @@
 import { defineComponent } from 'vue'
 import type { User } from '@/components/app/admin/UserManagement.vue'
 import { AllQuizIDQuery } from '@/gql/queries/quiz'
+import { parseCSVPapaparse } from '@/utils/csv_parser'
 import {
   debounce,
   downloadUserQuizzesCsvQuery,
@@ -190,7 +202,11 @@ export default defineComponent({
       popUpDialog: false,
       popUpMessage: '',
       selectedQuiz: undefined as QuizModel,
-      uploadedCsv: null
+      uploadedCsv: null,
+      confirmationDialog: false,
+      confirmationMessage: '',
+      confirmAction: () => {},
+      cancelAction: () => {},
     }
   },
 
@@ -321,11 +337,65 @@ export default defineComponent({
         this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentCloseDate })
       }
     },
+    async showEnrolUsersConfirmation() {
+
+    console.log(this.uploadedCsv);
+
+    if (this.uploadedCsv == undefined || this.uploadedCsv.size == undefined) {
+      this.popUpMessage = 'No CSV file selected';
+      this.popUpDialog = true;
+      return;
+    }
+
+    // Trigger the confirmation dialog immediately upon file selection
+    this.showConfirmation('Are you sure you want to add users using the selected CSV?')
+      .then(async (confirmed) => {
+        if (confirmed) {
+          try {
+          this.loading = true
+            
+          const students = await parseCSVPapaparse(this.uploadedCsv)
+          const enrolledUsers = await enrolUsersInQuizFromCSV(this.$apollo, this.quizIdInput, this.uploadedCsv).then((res) => res.enrolUsersInQuiz);
+          console.log(enrolledUsers)
+          console.log(`Enrolled users: ${enrolledUsers.length} / ${students.length}`)
+          this.popUpMessage = `Enrolled users: ${enrolledUsers.length} / ${students.length}`;
+          this.popUpDialog = true;
+          } catch (error) {
+            console.error('Failed to enroll users into the quiz:', error)
+            this.popUpMessage = 'Failed to enroll students';
+            this.popUpDialog = true;
+          }
+          finally {
+            this.loading = false
+          }
+        }
+      });
+    },
+
+    showConfirmation(message: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.confirmationMessage = message;
+      this.confirmationDialog = true;
+
+      this.confirmAction = () => {
+        this.confirmationDialog = false;
+        this.loading = true; // Show the loading bar
+        this.popUpDialog = true;
+        resolve(true);
+      };
+
+      this.cancelAction = () => {
+        this.confirmationDialog = false;
+        this.loading = false; // Show the loading bar
+        this.popUpDialog = false;
+        resolve(false);
+      };
+    });
+    },
     async handleCsvUpload(e) {
-      this.uploadedCsv = e.target.files[0]
-      this.loading = true
-      await enrolUsersInQuizFromCSV(this.$apollo, this.quizIdInput, this.uploadedCsv)
-      this.loading = false
+      this.uploadedCsv = e.target.files[0];
+      await this.showEnrolUsersConfirmation();
+
     },
     updateDateFromString(currentValue: string, currentTimeString: string) {
       const date = new Date(currentValue)
@@ -371,11 +441,17 @@ export default defineComponent({
             },
             { once: true }
           )
+
           this.$refs.csvUploadZone.click()
+
         }
-        console.log('User enrolled into the quiz')
       } catch (error) {
         console.error('Failed to enroll user into the quiz:', error)
+      }
+      finally {
+        this.uploadedCsv = null;
+        this.$refs.csvUploadZone.reset();
+
       }
     },
 
@@ -440,5 +516,21 @@ export default defineComponent({
 
 .quiz-management v-divider {
   margin-top: 2rem;
+}
+
+.popup-dialog {
+  width: 600px;
+  max-width: 100%;
+}
+.popup-headline {
+  text-align: center;
+}
+.popup-text {
+  font-size: 1.5rem;
+  text-align: center;
+}
+.popup-button {
+  margin: 0 auto;
+  display: block;
 }
 </style>
