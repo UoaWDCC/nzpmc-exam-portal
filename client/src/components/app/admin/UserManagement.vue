@@ -131,7 +131,7 @@
 </template>
 
 <script lang="ts">
-import { deleteUsersMutation, addUserMutation, successMessage } from '@/utils/userManagement'
+import { deleteUsersMutation, addUserMutation, successMessage, downloadUsersCsvQuery } from '@/utils/userManagement'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
 import type { Student } from '@/utils/csv_parser'
 import { parse } from 'papaparse'
@@ -442,6 +442,7 @@ export default {
 
     async downloadUsersCsv() {
       try {
+        const data = downloadUsersCsvQuery(this.$apollo)
         console.log('downloaded users csv')
         this.popUpMessage = 'Downloaded users csv'
         this.popUpDialog = true
