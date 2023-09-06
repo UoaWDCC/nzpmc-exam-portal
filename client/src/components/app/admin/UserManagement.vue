@@ -28,7 +28,7 @@
 </style>
 
 <template>
-<v-dialog v-model="confirmationDialog" max-width="400">
+  <v-dialog v-model="confirmationDialog" max-width="400">
     <v-card>
       <v-card-title class="popup-headline">Confirm Action</v-card-title>
       <v-card-text class="popup-text">{{ confirmationMessage }}</v-card-text>
@@ -76,7 +76,11 @@
         prepend-icon="mdi-paperclip"
         clearable
       ></v-file-input>
-      <v-btn @click="showAddUsersConfirmation()" color="secondary" size="x-large" class="text-body-2"
+      <v-btn
+        @click="showAddUsersConfirmation()"
+        color="secondary"
+        size="x-large"
+        class="text-body-2"
         >ADD USERS</v-btn
       >
     </div>
@@ -92,7 +96,11 @@
         label="UPLOAD CSV TO DELETE USERS"
         prepend-icon="mdi-paperclip"
       ></v-file-input>
-      <v-btn @click="showDeleteUsersConfirmation('csv')" color="secondary" size="x-large" class="text-body-2"
+      <v-btn
+        @click="showDeleteUsersConfirmation('csv')"
+        color="secondary"
+        size="x-large"
+        class="text-body-2"
         >DELETE USERS</v-btn
       >
     </div>
@@ -108,7 +116,11 @@
           <p>{{ deleteMessage }}</p>
         </template>
       </v-text-field>
-      <v-btn @click="showDeleteUsersConfirmation('input')" color="secondary" size="x-large" class="text-body-2"
+      <v-btn
+        @click="showDeleteUsersConfirmation('input')"
+        color="secondary"
+        size="x-large"
+        class="text-body-2"
         >DELETE USERS</v-btn
       >
     </div>
@@ -158,11 +170,11 @@ export interface IData {
   successAction: string
   successfulUsers: number
   students: Student[]
-  totalUsers: number,
-  confirmationDialog: boolean,
-  confirmationMessage: string,
-  confirmAction: Function,
-  cancelAction: Function,
+  totalUsers: number
+  confirmationDialog: boolean
+  confirmationMessage: string
+  confirmAction: Function
+  cancelAction: Function
 }
 
 export default {
@@ -189,7 +201,7 @@ export default {
       confirmationDialog: false,
       confirmationMessage: '',
       confirmAction: () => {},
-      cancelAction: () => {},
+      cancelAction: () => {}
     }
   },
 
@@ -222,58 +234,57 @@ export default {
         this.popUpDialog = true
         return
       }
-      this.showConfirmation('Are you sure you want to add users using the selected CSV?')
-        .then((confirmed) => {
+      this.showConfirmation('Are you sure you want to add users using the selected CSV?').then(
+        (confirmed) => {
           if (confirmed) {
-            this.addUsersWithCsv();
+            this.addUsersWithCsv()
           }
-        });
+        }
+      )
     },
     showDeleteUsersConfirmation(source: 'csv' | 'input') {
       if (source == 'csv' && (this.deleteCsv == undefined || this.deleteCsv.size == undefined)) {
         this.popUpMessage = 'No CSV file selected'
         this.popUpDialog = true
         return
-      }
-      else if (source == 'input' && this.currentEmails.length == 0) {
+      } else if (source == 'input' && this.currentEmails.length == 0) {
         this.popUpMessage = 'No emails entered'
         this.popUpDialog = true
         return
       }
       if (source == 'csv') {
-        this.showConfirmation('Are you sure you want to delete users using the selected CSV?')
-          .then((confirmed) => {
-            if (confirmed) this.deleteUsersUsingCSV();
-            
-          });
-      }
-      else if (source == 'input') {
-        this.showConfirmation('Are you sure you want to delete users using the entered emails?')
-          .then((confirmed) => {
-            if (confirmed) this.deleteUsersUsingInput();
-            
-          });
+        this.showConfirmation('Are you sure you want to delete users using the selected CSV?').then(
+          (confirmed) => {
+            if (confirmed) this.deleteUsersUsingCSV()
+          }
+        )
+      } else if (source == 'input') {
+        this.showConfirmation(
+          'Are you sure you want to delete users using the entered emails?'
+        ).then((confirmed) => {
+          if (confirmed) this.deleteUsersUsingInput()
+        })
       }
     },
     showConfirmation(message: string): Promise<boolean> {
       return new Promise((resolve) => {
-        this.confirmationMessage = message;
-        this.confirmationDialog = true;
+        this.confirmationMessage = message
+        this.confirmationDialog = true
 
         this.confirmAction = () => {
-          this.confirmationDialog = false;
-          this.loading = true; // Show the loading bar
-          this.popUpDialog = true;
-          resolve(true);
-        };
+          this.confirmationDialog = false
+          this.loading = true // Show the loading bar
+          this.popUpDialog = true
+          resolve(true)
+        }
 
         this.cancelAction = () => {
-          this.confirmationDialog = false;
-          this.loading = false; // Show the loading bar
-          this.popUpDialog = false;
-          resolve(false);
-        };
-      });
+          this.confirmationDialog = false
+          this.loading = false // Show the loading bar
+          this.popUpDialog = false
+          resolve(false)
+        }
+      })
     },
     handleAddCsvUpload(event: Event) {
       const input = event.target as FileInput
