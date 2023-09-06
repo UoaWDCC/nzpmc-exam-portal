@@ -505,23 +505,20 @@ const enrolUsersInQuizMutation: Resolver<
         const userEmail = currentUser.email
         try {
             const user = await getUser(userID, userEmail)
-            console.log(user)
+            // TODO: enrol user
+            const newUserQuiz = await addUserQuiz(
+                user.id,
+                quizToEnrol,
+                quiz.openTime,
+                quiz.closeTime,
+            )
+            return newUserQuiz
         } catch (e) {
             console.error(e)
             console.error('User does not exist')
             // TODO: create the user etc
             return null
         }
-
-        // TODO: enrol user
-        const newUserQuiz = await addUserQuiz(
-            userID,
-            quizToEnrol,
-            quiz.openTime,
-            quiz.closeTime,
-        )
-
-        return newUserQuiz
     })
 
     const resolvedQuizzes = await Promise.all(addUserQuizPromises)

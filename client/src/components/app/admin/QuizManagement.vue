@@ -27,6 +27,8 @@
   <v-container class="quiz-management" fluid>
     <v-container fluid>
       <v-select
+        :disabled="loading"
+        v-model="quizIdInput"
         label="SELECT AN EXAM"
         :items="quizzes"
         item-title="name"
@@ -34,17 +36,20 @@
         @update:model-value="updateQuizID"
       ></v-select>
 
-      <v-btn size="large" color="secondary">
+      <v-btn :disabled="loading" size="large" color="secondary" @click="createAndGoToExam">
         ADD NEW EXAM
         <v-icon end icon="mdi-plus-box-outline"></v-icon>
       </v-btn>
     </v-container>
 
     <v-container fluid class="mt-8 bg-grey-lighten-2 pa-10">
-      <div class="d-flex">
-        <h2 class="me-auto">
-          EXAM: <span class="text-h6 ml-2">{{ quizName }}</span>
-        </h2>
+      <div class="d-flex mb-5">
+        <div class="me-auto">
+          <h2>
+            EXAM: <span class="text-h6 ml-2">{{ quizName }}</span>
+          </h2>
+          <p><b>Last Modified: </b>{{ quizLastModified }}</p>
+        </div>
         <v-text-field
           label="ID"
           :model-value="quizIdInput"
@@ -53,63 +58,101 @@
           readonly
         ></v-text-field>
       </div>
-
-      <v-text-field label="Exam Name" :model-value="quizName"></v-text-field>
+      <v-text-field
+        label="Exam Name"
+        :disabled="loading"
+        @change="handleNameChange"
+        :model-value="quizName"
+      ></v-text-field>
       <v-textarea
         label="Description"
         auto-grow
-        model-value="Example Description"
+        @change="handleDescriptionChange"
+        :disabled="loading"
+        :model-value="quizDescription"
         rows="3"
         clearable
       ></v-textarea>
 
       <v-divider :thickness="3" class="pa-5" />
 
-      <v-text-field label="Exam Time (minutes)" :model-value="60"></v-text-field>
+      <v-text-field
+        type="number"
+        @change="handleDurationChange"
+        :disabled="loading"
+        label="Exam Time (minutes)"
+        :model-value="quizDurationMinutes"
+      ></v-text-field>
 
       <v-divider :thickness="3" class="pa-5" />
 
       <v-row>
         <v-col cols="12" sm="6">
-          <v-text-field label="Start Date" prepend-inner-icon="mdi-calendar-range"></v-text-field>
           <v-text-field
-            label="Start Time"
+            :disabled="loading"
+            label="Open Date"
+            type="date"
+            prepend-inner-icon="mdi-calendar-range"
+            @change="handleOpenDateChange"
+            :model-value="quizStartDate"
+          ></v-text-field>
+          <v-text-field
+            label="Open Time"
+            :disabled="loading"
+            type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
+            @change="handleOpenTimeChange"
+            :model-value="quizStartTime"
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6">
-          <v-text-field label="End Date" prepend-inner-icon="mdi-calendar-range"></v-text-field>
           <v-text-field
-            label="End Time"
+            label="Close Date"
+            :disabled="loading"
+            type="date"
+            :model-value="quizEndDate"
+            @change="handleCloseDateChange"
+            prepend-inner-icon="mdi-calendar-range"
+          ></v-text-field>
+          <v-text-field
+            label="Close Time"
+            :disabled="loading"
+            type="time"
             prepend-inner-icon="mdi-clock-time-eight-outline"
+            @change="handleCloseTimeChange"
+            :model-value="quizEndTime"
           ></v-text-field>
         </v-col>
       </v-row>
 
       <v-container fluid class="px-0">
-        <v-btn size="large" color="blue-darken-2"
+        <v-btn size="large" :disabled="loading" color="blue-darken-2"
           >EDIT QUESTIONS<v-icon end icon="mdi-cog"></v-icon
         ></v-btn>
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn block size="large" color="white"
+        <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading"
           >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
         ></v-btn>
-        <v-btn block size="large" color="blue-darken-2" class="mt-3"
+        <v-file-input ref="csvUploadZone" class="d-none" type="file" @change="handleCsvUpload" />
+        <v-btn
+          @click="downloadUserQuizzes"
+          block
+          size="large"
+          color="blue-darken-2"
+          class="mt-3"
+          :disabled="loading"
           >DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn
         >
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn block size="large" color="secondary">GRADE EXAM</v-btn>
-        <v-btn block size="large" color="secondary" class="mt-3">RELEASE RESULTS</v-btn>
+        <v-btn block size="large" :disabled="loading" color="secondary">GRADE EXAM</v-btn>
+        <v-btn block size="large" :disabled="loading" color="secondary" class="mt-3"
+          >RELEASE RESULTS</v-btn
+        >
       </v-container>
-
-      <v-btn @click="enrollUserIntoQuiz">Enroll User into Quiz</v-btn>
-
-      <v-divider />
-      <v-btn @click="downloadUserQuizzes">Download User Quizzes</v-btn>
     </v-container>
   </v-container>
 </template>
@@ -118,7 +161,18 @@
 import { defineComponent } from 'vue'
 import type { User } from '@/components/app/admin/UserManagement.vue'
 import { AllQuizIDQuery } from '@/gql/queries/quiz'
-import { downloadUserQuizzesCsvQuery } from '@/utils/quizManagement'
+import {
+  debounce,
+  downloadUserQuizzesCsvQuery,
+  editQuizMutation,
+  getQuizInfoQuery,
+  createEmptyExamMutation,
+  formatDateToDate,
+  type editQuizInput,
+  formatDateToTime,
+  enrolUsersInQuizFromCSV
+} from '@/utils/quizManagement'
+import type { EditQuizInput, QuizModel } from '@nzpmc-exam-portal/common'
 
 export type UserQuiz = {
   user: User
@@ -134,7 +188,9 @@ export default defineComponent({
       quizIdInput: '',
       loading: false,
       popUpDialog: false,
-      popUpMessage: ''
+      popUpMessage: '',
+      selectedQuiz: undefined as QuizModel,
+      uploadedCsv: null
     }
   },
 
@@ -151,25 +207,184 @@ export default defineComponent({
           }
         }
       },
-      fetchPolicy: 'cache-and-network'
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true
     }
   },
   computed: {
     quizName() {
       return this.quizzes.find((quiz) => quiz.id === this.quizIdInput)?.name ?? '(no exam selected)'
+    },
+    quizDescription() {
+      return this.selectedQuiz ? this.selectedQuiz.description : ``
+    },
+    quizDurationMinutes() {
+      return this.selectedQuiz ? this.selectedQuiz.duration / 60 : ``
+    },
+
+    quizStartDate() {
+      if (this.selectedQuiz !== undefined) {
+        const date = new Date(this.selectedQuiz.openTime)
+        return formatDateToDate(date)
+      }
+      return ``
+    },
+    quizEndDate() {
+      if (this.selectedQuiz !== undefined) {
+        const date = new Date(this.selectedQuiz.closeTime)
+        return formatDateToDate(date)
+      }
+      return ``
+    },
+    quizStartTime() {
+      if (this.selectedQuiz !== undefined) {
+        const date = new Date(this.selectedQuiz.openTime)
+        return formatDateToTime(date)
+      }
+      return ``
+    },
+    quizEndTime() {
+      if (this.selectedQuiz !== undefined) {
+        const date = new Date(this.selectedQuiz.closeTime)
+        return formatDateToTime(date)
+      }
+      return ``
+    },
+    quizLastModified() {
+      if (this.selectedQuiz !== undefined) {
+        const date = new Date(this.selectedQuiz.modified)
+        return date.toLocaleString()
+      }
+      return `(no exam selected)`
     }
   },
   methods: {
-    updateQuizID(id) {
+    async updateQuizID(id: string) {
+      this.loading = true
+      this.$refs.csvUploadZone.reset()
       this.quizIdInput = id
+      await this.fetchQuizInfo()
+      this.loading = false
+    },
+    handleDescriptionChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { description: currentValue })
+      }
+    },
+    handleNameChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { name: currentValue })
+      }
+    },
+    handleDurationChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        // multiply by 60 to convert to seconds
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, {
+          duration: 60 * parseInt(currentValue)
+        })
+      }
+    },
+    handleOpenDateChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        const currentOpenDate = this.updateDateFromString(currentValue, this.selectedQuiz.openTime)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { openTime: currentOpenDate })
+      }
+    },
+    handleOpenTimeChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        const currentOpenTime = this.updateTimeFromString(currentValue, this.selectedQuiz.openTime)
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { openTime: currentOpenTime })
+      }
+    },
+    handleCloseTimeChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        const currentCloseTime = this.updateTimeFromString(
+          currentValue,
+          this.selectedQuiz.closeTime
+        )
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentCloseTime })
+      }
+    },
+    handleCloseDateChange(event: Event) {
+      const currentValue: string = event.target.value
+      if (this.selectedQuiz !== undefined) {
+        const currentCloseDate = this.updateDateFromString(
+          currentValue,
+          this.selectedQuiz.closeTime
+        )
+        this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentCloseDate })
+      }
+    },
+    async handleCsvUpload(e) {
+      this.uploadedCsv = e.target.files[0]
+      this.loading = true
+      await enrolUsersInQuizFromCSV(this.$apollo, this.quizIdInput, this.uploadedCsv)
+      this.loading = false
+    },
+    updateDateFromString(currentValue: string, currentTimeString: string) {
+      const date = new Date(currentValue)
+      const currentDate = new Date(currentTimeString)
+      currentDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
+      return currentDate
+    },
+    updateTimeFromString(currentValue: string, currentTimeString: string) {
+      const currentDate = new Date(currentTimeString)
+      const split = currentValue.split(':')
+      const hour = parseInt(split[0])
+      const minutes = parseInt(split[1])
+      currentDate.setHours(hour)
+      currentDate.setMinutes(minutes)
+      return currentDate
+    },
+    async createAndGoToExam() {
+      this.loading = true
+      const res = await createEmptyExamMutation(this.$apollo)
+      const id = res.id
+      await this.editAndUpdateSelectedQuiz(id, { name: id })
+      await this.updateQuizID(id)
+      this.loading = false
+    },
+    async editAndUpdateSelectedQuiz(id: string, input: editQuizInput) {
+      const debouncedEdit = debounce(editQuizMutation)
+      this.loading = true
+      const res = await debouncedEdit(this.$apollo, id, input)
+      this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
+      if (input.name !== undefined) {
+        await this.$apollo.queries.userQuizzes.refetch()
+      }
+      this.loading = false
     },
     async enrollUserIntoQuiz() {
       try {
-        // TODO: Add your logic to enroll a user into the quiz here
+        if (this.selectedQuiz !== undefined) {
+          this.loading = true
+          window.addEventListener(
+            'focus',
+            () => {
+              this.loading = false
+            },
+            { once: true }
+          )
+          this.$refs.csvUploadZone.click()
+        }
         console.log('User enrolled into the quiz')
       } catch (error) {
         console.error('Failed to enroll user into the quiz:', error)
       }
+    },
+
+    async fetchQuizInfo() {
+      try {
+        const quiz = await getQuizInfoQuery(this.$apollo, this.quizIdInput)
+        this.selectedQuiz = quiz
+        return
+      } catch (error) {}
     },
 
     async downloadUserQuizzes() {
@@ -201,10 +416,12 @@ export default defineComponent({
 .container .v-divider {
   margin-top: 2rem;
 }
+
 .quiz-management {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Updated to left-aligned */
+  align-items: flex-start;
+  /* Updated to left-aligned */
 }
 
 .quiz-management h2 {
@@ -217,7 +434,8 @@ export default defineComponent({
 
 .quiz-management .text-field {
   width: 100%;
-  margin: 1rem 0; /* Added spacing above and below the input box */
+  margin: 1rem 0;
+  /* Added spacing above and below the input box */
 }
 
 .quiz-management v-divider {

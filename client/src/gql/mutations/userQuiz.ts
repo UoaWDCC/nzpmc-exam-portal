@@ -37,3 +37,10 @@ export const SubmitUserQuizQuestionsMutation = gql`
     }
   }
 `
+export const EnrolUsersInQuizMutation = gql`
+  mutation EnrolUsersInQuiz($users: [UsersInput!]!, $quizId: ID!) {
+    enrolUsersInQuiz(users: $users, quizID: $quizId) {
+      id
+    }
+  }
+`

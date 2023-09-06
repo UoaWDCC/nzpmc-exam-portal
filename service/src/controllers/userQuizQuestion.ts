@@ -20,7 +20,7 @@ const getUserQuizQuestion = async (
     let quizQuestion
 
     if (expired) {
-        throw new UserQuizExpiredError()
+        // throw new UserQuizExpiredError()
     }
 
     await runTransaction(async (tran) => {
@@ -312,7 +312,7 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
         const expired =
             (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
         if (expired) {
-            throw new UserQuizExpiredError()
+            // throw new UserQuizExpiredError()
         }
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
