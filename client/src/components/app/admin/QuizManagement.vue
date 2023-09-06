@@ -137,7 +137,7 @@
       </v-row>
 
       <v-container fluid class="px-0">
-        <v-btn size="large" :disabled="loading" color="blue-darken-2"
+        <v-btn size="large" :disabled="loading" color="blue-darken-2" @click="showEditQuestionPopUp"
           >EDIT QUESTIONS<v-icon end icon="mdi-cog"></v-icon
         ></v-btn>
       </v-container>
@@ -173,6 +173,7 @@ import { defineComponent } from 'vue'
 import type { User } from '@/components/app/admin/UserManagement.vue'
 import { AllQuizIDQuery } from '@/gql/queries/quiz'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
+import type { Student } from '@/utils/csv_parser'
 import {
   debounce,
   downloadUserQuizzesCsvQuery,
@@ -191,17 +192,34 @@ export type UserQuiz = {
   score: number
 }
 
+export interface IData {
+  quizzes: QuizModel[]
+  quizIdInput: string,
+  loading: boolean,
+  popUpDialog: boolean,
+  popUpMessage: string,
+  selectedQuiz: QuizModel | undefined,
+  uploadedCsv: any,
+  confirmationDialog: boolean,
+  confirmationMessage: string,
+  confirmAction: Function,
+  cancelAction: Function
+  error:string
+}
+
+
 export default defineComponent({
   name: 'QuizManagement',
 
-  data() {
+  data(): IData {
     return {
       quizzes: [],
       quizIdInput: '',
       loading: false,
+      error : '',
       popUpDialog: false,
       popUpMessage: '',
-      selectedQuiz: undefined as QuizModel,
+      selectedQuiz: undefined,
       uploadedCsv: null,
       confirmationDialog: false,
       confirmationMessage: '',
@@ -337,6 +355,19 @@ export default defineComponent({
         this.editAndUpdateSelectedQuiz(this.selectedQuiz.id, { closeTime: currentCloseDate })
       }
     },
+    showEditQuestionPopUp() {
+      // TODO: Implement this
+      if (this.selectedQuiz === undefined) {
+        this.popUpMessage = 'No quiz selected'
+        this.popUpDialog = true
+        return
+      }
+      else {
+        // this.$router.push(`/admin/quiz/${this.selectedQuiz.id}/edit`)
+        this.popUpMessage = 'This feature is not yet implemented'
+        this.popUpDialog = true
+      }
+    },
     async showEnrolUsersConfirmation() {
       console.log(this.uploadedCsv)
 
@@ -347,12 +378,11 @@ export default defineComponent({
       }
 
       // Trigger the confirmation dialog immediately upon file selection
-      this.showConfirmation('Are you sure you want to add users using the selected CSV?').then(
+      this.showConfirmation("Are you sure you want to add users using the selected CSV?\n\nThis will OVERWRITE the list of enrolled users in the system with the users in the file. Users that aren't registered in the system yet will be created and existing users will be updated. Please download the currently enrolled users before proceeding if you wish to retain a record.").then(
         async (confirmed) => {
           if (confirmed) {
             try {
               this.loading = true
-
               const students = await parseCSVPapaparse(this.uploadedCsv)
               const enrolledUsers = await enrolUsersInQuizFromCSV(
                 this.$apollo,
@@ -395,7 +425,7 @@ export default defineComponent({
         }
       })
     },
-    async handleCsvUpload(e) {
+    async handleCsvUpload(e: any) {
       this.uploadedCsv = e.target.files[0]
       await this.showEnrolUsersConfirmation()
     },
@@ -434,6 +464,11 @@ export default defineComponent({
     },
     async enrollUserIntoQuiz() {
       try {
+        if (this.selectedQuiz === undefined) {
+          this.popUpMessage = 'No quiz selected'
+          this.popUpDialog = true
+          return
+        }
         if (this.selectedQuiz !== undefined) {
           this.loading = true
           window.addEventListener(
@@ -464,6 +499,11 @@ export default defineComponent({
 
     async downloadUserQuizzes() {
       try {
+        if (this.selectedQuiz === undefined) {
+          this.popUpMessage = 'No quiz selected'
+          this.popUpDialog = true
+          return
+        }
         const success = await downloadUserQuizzesCsvQuery(this.$apollo, this.quizIdInput) // waits for the query to finish
 
         this.popUpMessage = 'Downloaded user quizzes for quiz id: ' + this.quizIdInput
@@ -527,6 +567,7 @@ export default defineComponent({
 .popup-text {
   font-size: 1.5rem;
   text-align: center;
+  white-space: pre-line;
 }
 .popup-button {
   margin: 0 auto;
