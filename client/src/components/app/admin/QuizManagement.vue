@@ -206,7 +206,7 @@ export default defineComponent({
       confirmationDialog: false,
       confirmationMessage: '',
       confirmAction: () => {},
-      cancelAction: () => {},
+      cancelAction: () => {}
     }
   },
 
@@ -338,64 +338,66 @@ export default defineComponent({
       }
     },
     async showEnrolUsersConfirmation() {
+      console.log(this.uploadedCsv)
 
-    console.log(this.uploadedCsv);
+      if (this.uploadedCsv == undefined || this.uploadedCsv.size == undefined) {
+        this.popUpMessage = 'No CSV file selected'
+        this.popUpDialog = true
+        return
+      }
 
-    if (this.uploadedCsv == undefined || this.uploadedCsv.size == undefined) {
-      this.popUpMessage = 'No CSV file selected';
-      this.popUpDialog = true;
-      return;
-    }
+      // Trigger the confirmation dialog immediately upon file selection
+      this.showConfirmation('Are you sure you want to add users using the selected CSV?').then(
+        async (confirmed) => {
+          if (confirmed) {
+            try {
+              this.loading = true
 
-    // Trigger the confirmation dialog immediately upon file selection
-    this.showConfirmation('Are you sure you want to add users using the selected CSV?')
-      .then(async (confirmed) => {
-        if (confirmed) {
-          try {
-          this.loading = true
-            
-          const students = await parseCSVPapaparse(this.uploadedCsv)
-          const enrolledUsers = await enrolUsersInQuizFromCSV(this.$apollo, this.quizIdInput, this.uploadedCsv).then((res) => res.enrolUsersInQuiz);
-          console.log(enrolledUsers)
-          console.log(`Enrolled users: ${enrolledUsers.length} / ${students.length}`)
-          this.popUpMessage = `Enrolled users: ${enrolledUsers.length} / ${students.length}`;
-          this.popUpDialog = true;
-          } catch (error) {
-            console.error('Failed to enroll users into the quiz:', error)
-            this.popUpMessage = 'Failed to enroll students';
-            this.popUpDialog = true;
-          }
-          finally {
-            this.loading = false
+              const students = await parseCSVPapaparse(this.uploadedCsv)
+              const enrolledUsers = await enrolUsersInQuizFromCSV(
+                this.$apollo,
+                this.quizIdInput,
+                this.uploadedCsv
+              ).then((res) => res.enrolUsersInQuiz)
+              console.log(enrolledUsers)
+              console.log(`Enrolled users: ${enrolledUsers.length} / ${students.length}`)
+              this.popUpMessage = `Enrolled users: ${enrolledUsers.length} / ${students.length}`
+              this.popUpDialog = true
+            } catch (error) {
+              console.error('Failed to enroll users into the quiz:', error)
+              this.popUpMessage = 'Failed to enroll students'
+              this.popUpDialog = true
+            } finally {
+              this.loading = false
+            }
           }
         }
-      });
+      )
     },
 
     showConfirmation(message: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      this.confirmationMessage = message;
-      this.confirmationDialog = true;
+      return new Promise((resolve) => {
+        this.confirmationMessage = message
+        this.confirmationDialog = true
 
-      this.confirmAction = () => {
-        this.confirmationDialog = false;
-        this.loading = true; // Show the loading bar
-        this.popUpDialog = true;
-        resolve(true);
-      };
+        this.confirmAction = () => {
+          this.confirmationDialog = false
+          this.loading = true // Show the loading bar
+          this.popUpDialog = true
+          resolve(true)
+        }
 
-      this.cancelAction = () => {
-        this.confirmationDialog = false;
-        this.loading = false; // Show the loading bar
-        this.popUpDialog = false;
-        resolve(false);
-      };
-    });
+        this.cancelAction = () => {
+          this.confirmationDialog = false
+          this.loading = false // Show the loading bar
+          this.popUpDialog = false
+          resolve(false)
+        }
+      })
     },
     async handleCsvUpload(e) {
-      this.uploadedCsv = e.target.files[0];
-      await this.showEnrolUsersConfirmation();
-
+      this.uploadedCsv = e.target.files[0]
+      await this.showEnrolUsersConfirmation()
     },
     updateDateFromString(currentValue: string, currentTimeString: string) {
       const date = new Date(currentValue)
@@ -443,15 +445,12 @@ export default defineComponent({
           )
 
           this.$refs.csvUploadZone.click()
-
         }
       } catch (error) {
         console.error('Failed to enroll user into the quiz:', error)
-      }
-      finally {
-        this.uploadedCsv = null;
-        this.$refs.csvUploadZone.reset();
-
+      } finally {
+        this.uploadedCsv = null
+        this.$refs.csvUploadZone.reset()
       }
     },
 
