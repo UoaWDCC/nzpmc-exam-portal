@@ -468,7 +468,7 @@ export default defineComponent({
 
         this.popUpMessage = 'Downloaded user quizzes for quiz id: ' + this.quizIdInput
         if (!success) {
-          this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput
+          this.popUpMessage = 'No user quizzes found for: ' + this.quizIdInput
         }
 
         this.popUpDialog = true
