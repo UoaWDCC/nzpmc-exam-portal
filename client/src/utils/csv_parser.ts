@@ -11,7 +11,7 @@ export type Student = {
   firstName?: string
   middleName?: string
   surname?: string
-  email: string
+  email?: string
   yearLevel: number
   heardFrom: string
   reasonForTaking: string
@@ -24,7 +24,7 @@ export type Student = {
   teacherCategory?: string
   island: Island
   city?: string
-  id: string
+  id?: string
 }
 
 export async function parseCSVPapaparse(file: File) {

@@ -12,7 +12,7 @@ const getUser = async (
     email?: string | null,
 ): Promise<Schema.User> => {
     let user: User | null = null
-    if (id) {
+    if (id && id.trim().length !== 0) {
         try {
             user = await UserRepository.findById(id)
             return packUser(user)
