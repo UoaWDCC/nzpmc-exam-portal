@@ -65,7 +65,7 @@ const addFirebaseUser = async (
 ): Promise<auth.UserRecord> => {
     // Check DisplayName
     let profileImgName: string
-    if (!displayName) {
+    if (!displayName || displayName.trim() === ``) {
         displayName = `${firstName} ${lastName}`
         profileImgName = `${firstName}+${lastName}`
     } else {
@@ -86,7 +86,7 @@ const addFirebaseUser = async (
     console.log(photoURL)
 
     // Generate random password for user if password is not set
-    if (!password) {
+    if (!password || password.trim() === '') {
         const min = 8,
             max = 12
         const passwordLength = Math.floor(Math.random() * (max - min + 1) + min)

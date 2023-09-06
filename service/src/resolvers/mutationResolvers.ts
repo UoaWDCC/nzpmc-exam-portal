@@ -505,7 +505,6 @@ const enrolUsersInQuizMutation: Resolver<
         const userEmail = currentUser.email
         try {
             const user = await getUser(userID, userEmail)
-            // TODO: enrol user
             const newUserQuiz = await addUserQuiz(
                 user.id,
                 quizToEnrol,
@@ -513,11 +512,41 @@ const enrolUsersInQuizMutation: Resolver<
                 quiz.closeTime,
             )
             return newUserQuiz
-        } catch (e) {
-            console.error(e)
+        } catch (NotFoundError) {
             console.error('User does not exist')
-            // TODO: create the user etc
-            return null
+            const { firstName, lastName, yearLevel } = currentUser
+            try {
+                const firebaseUser = await addFirebaseUser(
+                    '',
+                    firstName!,
+                    lastName || ``,
+                    '',
+                    userEmail!,
+                    '',
+                )
+                const { uid, displayName, photoURL } = firebaseUser
+                await addUser(
+                    uid,
+                    displayName,
+                    userEmail!,
+                    photoURL!,
+                    firstName!,
+                    lastName || ``,
+                    yearLevel || ``,
+                    'user',
+                )
+                console.error('User created')
+                const newUserQuiz = await addUserQuiz(
+                    uid,
+                    quizToEnrol,
+                    quiz.openTime,
+                    quiz.closeTime,
+                )
+                return newUserQuiz
+            } catch (Error) {
+                console.log(Error)
+                return null
+            }
         }
     })
 
