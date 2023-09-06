@@ -68,7 +68,7 @@
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">ADD USERS</h2>
     <div class="d-flex">
       <v-file-input
-        ref="csvUpload"
+        ref="csvAddUpload"
         @change="handleAddCsvUpload"
         @click:clear="handleAddCsvUpload"
         accept=".csv"
@@ -86,7 +86,7 @@
     <h2 class="text-h5 text-decoration-underline font-weight-bold mb-5">DELETE USERS</h2>
     <div class="d-flex">
       <v-file-input
-        ref="csvUpload"
+        ref="csvDeleteUpload"
         @change="handleDeleteCsvUpload"
         accept=".csv"
         label="UPLOAD CSV TO DELETE USERS"
@@ -344,7 +344,10 @@ export default {
           console.log('Failed to add users')
         } finally {
           this.loading = false // Hide the loading bar
-          this.progress = 0
+          this.addCsv = undefined
+          this.progress = 0;
+          this.$refs.csvAddUpload.reset()
+
         }
       } else {
         this.popUpMessage = 'No CSV file selected'
@@ -425,6 +428,11 @@ export default {
           console.log('Failed to delete users')
         } finally {
           this.loading = false // Hide the loading bar
+          this.deleteCsv = undefined
+          this.progress = 0;
+          this.$refs.csvDeleteUpload.reset()
+
+
         }
       } else {
         this.popUpMessage = 'No CSV file selected'
