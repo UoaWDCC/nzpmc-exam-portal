@@ -102,22 +102,44 @@ const getUserQuizzesByQuizID = async (
             (q) => q.quizID,
             quizID,
         ).find()
+        const userQuizzesPack: (PackUserQuiz | null)[] = await Promise.all(
+            userQuizzes.map(async (userQuiz): Promise<PackUserQuiz | null> => {
+                try {
+                    const user = await getUser(userQuiz.userID)
+                    if (!user) {
+                        // User doesn't exist, skip processing for this userQuiz
+                        return null
+                    }
 
-        const userQuizzesPack: PackUserQuiz[] = await Promise.all(
-            userQuizzes.map(
-                async (userQuiz): Promise<PackUserQuiz> => ({
-                    userID: (await getUser(userQuiz.userID)).id,
-                    quiz: await QuizTranRepository.findById(userQuiz.quizID),
-                    userQuiz,
-                    expired:
+                    const userID = user.id
+                    const quiz = await QuizTranRepository.findById(
+                        userQuiz.quizID,
+                    )
+                    const expired =
                         (userQuiz.closeTime &&
                             userQuiz.closeTime < new Date()) ??
-                        true,
-                }),
-            ),
+                        true
+
+                    return {
+                        userID,
+                        quiz,
+                        userQuiz,
+                        expired,
+                    }
+                } catch (error) {
+                    // Handle the error for this specific element, e.g., log it or return a default value
+                    console.error(`Error processing userQuiz: ${error.message}`)
+                    return null // Return null to skip processing for this userQuiz
+                }
+            }),
         )
 
-        return packUserQuizzes(userQuizzesPack)
+        // Remove null values from the array
+        const filteredUserQuizzesPack: PackUserQuiz[] = userQuizzesPack.filter(
+            (pack): pack is PackUserQuiz => pack !== null,
+        )
+        console.log(filteredUserQuizzesPack)
+        return packUserQuizzes(filteredUserQuizzesPack)
     })
 }
 
