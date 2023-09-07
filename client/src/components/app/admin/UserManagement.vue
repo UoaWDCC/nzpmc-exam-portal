@@ -241,13 +241,13 @@ export default {
         this.popUpDialog = true
         return
       }
-      this.showConfirmation('Are you sure you want to add users using the selected CSV?\n\nThis will add the users in the file to the list of registered users in the system and OVERWRITE any users already listed in the system.').then(
-        (confirmed) => {
-          if (confirmed) {
-            this.addUsersWithCsv()
-          }
+      this.showConfirmation(
+        'Are you sure you want to add users using the selected CSV?\n\nThis will add the users in the file to the list of registered users in the system and OVERWRITE any users already listed in the system.'
+      ).then((confirmed) => {
+        if (confirmed) {
+          this.addUsersWithCsv()
         }
-      )
+      })
     },
     showDeleteUsersConfirmation(source: 'csv' | 'input') {
       if (source == 'csv' && (this.deleteCsv == undefined || this.deleteCsv.size == undefined)) {
@@ -260,11 +260,11 @@ export default {
         return
       }
       if (source == 'csv') {
-        this.showConfirmation("Are you sure you want to delete users using the selected CSV?\n\nThis will DELETE any users in the file from the list of registered users in the system. Any users in the file that aren't in the system will be ignored.").then(
-          (confirmed) => {
-            if (confirmed) this.deleteUsersUsingCSV()
-          }
-        )
+        this.showConfirmation(
+          "Are you sure you want to delete users using the selected CSV?\n\nThis will DELETE any users in the file from the list of registered users in the system. Any users in the file that aren't in the system will be ignored."
+        ).then((confirmed) => {
+          if (confirmed) this.deleteUsersUsingCSV()
+        })
       } else if (source == 'input') {
         this.showConfirmation(
           "Are you sure you want to delete users using the entered emails?\n\nThis will DELETE any users in the file from the list of registered users in the system. Any users in the file that aren't in the system will be ignored."

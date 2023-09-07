@@ -194,19 +194,18 @@ export type UserQuiz = {
 
 export interface IData {
   quizzes: QuizModel[]
-  quizIdInput: string,
-  loading: boolean,
-  popUpDialog: boolean,
-  popUpMessage: string,
-  selectedQuiz: QuizModel | undefined,
-  uploadedCsv: any,
-  confirmationDialog: boolean,
-  confirmationMessage: string,
-  confirmAction: Function,
+  quizIdInput: string
+  loading: boolean
+  popUpDialog: boolean
+  popUpMessage: string
+  selectedQuiz: QuizModel | undefined
+  uploadedCsv: any
+  confirmationDialog: boolean
+  confirmationMessage: string
+  confirmAction: Function
   cancelAction: Function
-  error:string
+  error: string
 }
-
 
 export default defineComponent({
   name: 'QuizManagement',
@@ -216,7 +215,7 @@ export default defineComponent({
       quizzes: [],
       quizIdInput: '',
       loading: false,
-      error : '',
+      error: '',
       popUpDialog: false,
       popUpMessage: '',
       selectedQuiz: undefined,
@@ -361,8 +360,7 @@ export default defineComponent({
         this.popUpMessage = 'No quiz selected'
         this.popUpDialog = true
         return
-      }
-      else {
+      } else {
         // this.$router.push(`/admin/quiz/${this.selectedQuiz.id}/edit`)
         this.popUpMessage = 'This feature is not yet implemented'
         this.popUpDialog = true
@@ -378,31 +376,31 @@ export default defineComponent({
       }
 
       // Trigger the confirmation dialog immediately upon file selection
-      this.showConfirmation("Are you sure you want to add users using the selected CSV?\n\nThis will OVERWRITE the list of enrolled users in the system with the users in the file. Users that aren't registered in the system yet will be created and existing users will be updated. Please download the currently enrolled users before proceeding if you wish to retain a record.").then(
-        async (confirmed) => {
-          if (confirmed) {
-            try {
-              this.loading = true
-              const students = await parseCSVPapaparse(this.uploadedCsv)
-              const enrolledUsers = await enrolUsersInQuizFromCSV(
-                this.$apollo,
-                this.quizIdInput,
-                this.uploadedCsv
-              ).then((res) => res.enrolUsersInQuiz)
-              console.log(enrolledUsers)
-              console.log(`Enrolled users: ${enrolledUsers.length} / ${students.length}`)
-              this.popUpMessage = `Enrolled users: ${enrolledUsers.length} / ${students.length}`
-              this.popUpDialog = true
-            } catch (error) {
-              console.error('Failed to enroll users into the quiz:', error)
-              this.popUpMessage = 'Failed to enroll students'
-              this.popUpDialog = true
-            } finally {
-              this.loading = false
-            }
+      this.showConfirmation(
+        "Are you sure you want to add users using the selected CSV?\n\nThis will OVERWRITE the list of enrolled users in the system with the users in the file. Users that aren't registered in the system yet will be created and existing users will be updated. Please download the currently enrolled users before proceeding if you wish to retain a record."
+      ).then(async (confirmed) => {
+        if (confirmed) {
+          try {
+            this.loading = true
+            const students = await parseCSVPapaparse(this.uploadedCsv)
+            const enrolledUsers = await enrolUsersInQuizFromCSV(
+              this.$apollo,
+              this.quizIdInput,
+              this.uploadedCsv
+            ).then((res) => res.enrolUsersInQuiz)
+            console.log(enrolledUsers)
+            console.log(`Enrolled users: ${enrolledUsers.length} / ${students.length}`)
+            this.popUpMessage = `Enrolled users: ${enrolledUsers.length} / ${students.length}`
+            this.popUpDialog = true
+          } catch (error) {
+            console.error('Failed to enroll users into the quiz:', error)
+            this.popUpMessage = 'Failed to enroll students'
+            this.popUpDialog = true
+          } finally {
+            this.loading = false
           }
         }
-      )
+      })
     },
 
     showConfirmation(message: string): Promise<boolean> {

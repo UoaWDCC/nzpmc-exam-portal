@@ -131,21 +131,20 @@ export const downloadUserQuizzesCsvQuery = async (
   quizId: string
 ): Promise<boolean> => {
   try {
-    console.log("Performing getting user quizzes query")
+    console.log('Performing getting user quizzes query')
     const query = await apollo.query({
       query: GetUserQuizzesListQuery,
       variables: {
         // additional parameters to pass to the query
-        quizId: quizId,
+        quizId: quizId
       },
       fetchPolicy: 'network-only'
-
     })
     console.log(query)
     const userQuizList: UserQuiz[] = query.data.userQuizzesByQuizID // Assuming the response contains an array of UserQuiz objects
     console.log(userQuizList.length) // debug print
-    if (userQuizList.length == 0) { 
-      console.log("No user quizzes found")
+    if (userQuizList.length == 0) {
+      console.log('No user quizzes found')
       return false
     }
     // converts from multi-level to single level object
