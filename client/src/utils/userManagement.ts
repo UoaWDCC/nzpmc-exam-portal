@@ -68,13 +68,12 @@ export const downloadUsersCsvQuery = async (
 ): Promise<boolean> => {
   try {
     const query = await apollo.query({
-      query: GetUserListQuery
-      // Add any necessary variables for the query
+      query: GetUserListQuery,
+      fetchPolicy: 'network-only'
     })
 
     const userList: User[] = query.data.users.users // Assuming the response contains an array of user objects
-    //console.log(userList) // debug print
-
+    console.log(userList.length)
     // TODO: Test edge case (no users in the database)
 
     // Generate column headers from the User type properties
@@ -89,7 +88,6 @@ export const downloadUsersCsvQuery = async (
         return values.filter((_, index) => Object.keys(user)[index] !== '__typename').join(',')
       })
       .join('\n')}`
-    console.log(csvContent)
 
     // Create a Blob with the CSV content
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
