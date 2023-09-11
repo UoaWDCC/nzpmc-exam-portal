@@ -254,7 +254,7 @@ const deleteUserQuiz = async (quizid: string, userid: string) => {
         let userQuizID: string | null = null // Initialize with a default value
         let querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> | null = null
         console.log(`Deleting for user ${userid} and quiz ${quizid}`)
-        if (quizid === null && userid !== null) {
+        if (quizid == "all" && userid !== null) {
             // delete all userquizs for a user
             querySnapshot = await firestore
                 .collection('UserQuizs')

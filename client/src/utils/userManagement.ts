@@ -53,10 +53,12 @@ export const deleteUserMutation = async (
     const deleteUserQuizzesMutation = await apollo.mutate({
       mutation: UnenrolUsersFromQuizMutation,
       variables: {
-        users: {
-          id: mutation.data.deleteUser.id,
-        },
-        quizId: null
+        users: [
+          {
+            id: mutation.data.deleteUser.id
+          }
+        ],
+        quizId: "all"
       }
     })
     console.log("Deleted user quizzes")
