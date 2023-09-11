@@ -145,7 +145,7 @@
 
 <script lang="ts">
 import {
-  deleteUsersMutation,
+  deleteUserMutation,
   addUserMutation,
   successMessage,
   downloadUsersCsvQuery
@@ -422,7 +422,7 @@ export default {
           this.students = await parseCSVPapaparse(this.deleteCsv)
 
           const deletionPromises = this.students.map(async (student) => {
-            const success = await deleteUsersMutation(this.$apollo, student.email)
+            const success = await deleteUserMutation(this.$apollo, student.email)
             console.log(`Delete success: ${success} for ${student.email}`)
             return success
           })
