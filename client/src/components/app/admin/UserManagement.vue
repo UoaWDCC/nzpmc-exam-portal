@@ -97,7 +97,6 @@
         label="UPLOAD CSV TO DELETE USERS"
         prepend-icon="mdi-paperclip"
       ></v-file-input>
-
       <v-btn
         @click="showDeleteUsersConfirmation('csv')"
         color="secondary"

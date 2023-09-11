@@ -90,7 +90,9 @@ export const enrolUsersInQuizFromCSV = async (
     console.log(students)
     const studentEmails = students.map((student) => ({
       id: student.id ? student.id : ``,
-      email: student.email
+      email: student.email,
+      firstName: student.firstName,
+      lastName: student.surname
     }))
     const mutation = await apollo.mutate({
       mutation: EnrolUsersInQuizMutation,

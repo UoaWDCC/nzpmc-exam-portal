@@ -28,6 +28,7 @@ const getUser = async (
         ).findOne()
     }
 
+    console.log(user)
     if (!user) {
         throw new NotFoundError(`User id ${id} doesn't exist`)
     }
