@@ -146,7 +146,7 @@
         <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading"
           >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
         ></v-btn>
-        <v-file-input ref="csvUploadZone" class="d-none" type="file" @input="handleCsvUpload" />
+        <v-file-input ref="csvUploadZone" class="d-none" type="file" accept=".csv" @input="handleCsvUpload" />
         <v-btn
           @click="downloadUserQuizzes"
           block
