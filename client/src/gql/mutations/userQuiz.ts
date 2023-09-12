@@ -44,3 +44,8 @@ export const EnrolUsersInQuizMutation = gql`
     }
   }
 `
+export const UnenrolUsersFromQuizMutation = gql`
+  mutation UnenrolUsersFromQuiz($users: [UsersInput!]!, $quizId: ID!) {
+    unenrolUsersFromQuiz(users: $users, quizID: $quizId)
+  }
+`

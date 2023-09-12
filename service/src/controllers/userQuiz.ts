@@ -251,12 +251,23 @@ const deleteUserQuiz = async (quizid: string, userid: string) => {
     try {
         // Query 'userquizs' collection with the given parameters
         let userQuizID: string | null = null // Initialize with a default value
-
-        const querySnapshot = await firestore
-            .collection('UserQuizs')
-            .where('quizID', '==', quizid)
-            .where('userID', '==', userid)
-            .get()
+        let querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> | null =
+            null
+        console.log(`Deleting for user ${userid} and quiz ${quizid}`)
+        if (quizid == 'all' && userid !== null) {
+            // delete all userquizs for a user
+            querySnapshot = await firestore
+                .collection('UserQuizs')
+                .where('userID', '==', userid)
+                .get()
+        } else {
+            // delete a user quiz for a given quiz and user
+            querySnapshot = await firestore
+                .collection('UserQuizs')
+                .where('quizID', '==', quizid)
+                .where('userID', '==', userid)
+                .get()
+        }
 
         // Delete each matching document
         const deletePromises: Promise<WriteResult>[] = []
@@ -273,8 +284,8 @@ const deleteUserQuiz = async (quizid: string, userid: string) => {
             console.log('No matching documents found.')
             return null
         }
-
         console.log('Documents successfully deleted!')
+        console.log(`Amount of deleted quizzes: ${deletePromises.length}`)
         return userQuizID
     } catch (error) {
         console.error('Error deleting documents:', error)

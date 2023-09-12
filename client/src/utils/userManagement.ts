@@ -2,6 +2,7 @@ import type { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { AddUserMutation } from '../gql/mutations/addUsers'
 import { GetUserListQuery } from '../gql/queries/userList'
 import { DeleteUserMutation } from '../gql/mutations/deleteUsers'
+import { UnenrolUsersFromQuizMutation } from '../gql/mutations/userQuiz'
 
 export const addUserMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
@@ -35,7 +36,7 @@ export const addUserMutation = async (
   }
 }
 
-export const deleteUsersMutation = async (
+export const deleteUserMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   email: string
 ): Promise<boolean> => {
@@ -47,6 +48,21 @@ export const deleteUsersMutation = async (
       }
     })
     const deletedEmail = mutation.data.deleteUser.email
+    // delete all associated user quizzes
+    console.log('Trying to delete user quizzes')
+    const deleteUserQuizzesMutation = await apollo.mutate({
+      mutation: UnenrolUsersFromQuizMutation,
+      variables: {
+        users: [
+          {
+            id: mutation.data.deleteUser.id
+          }
+        ],
+        quizId: 'all'
+      }
+    })
+    console.log('Deleted user quizzes')
+    console.log(deleteUserQuizzesMutation.data)
     return deletedEmail === email.toLowerCase()
   } catch (e) {
     console.error(e)

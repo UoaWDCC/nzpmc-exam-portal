@@ -145,7 +145,7 @@
 
 <script lang="ts">
 import {
-  deleteUsersMutation,
+  deleteUserMutation,
   addUserMutation,
   successMessage,
   downloadUsersCsvQuery
@@ -384,7 +384,7 @@ export default {
         this.loading = true // Show the loading bar
         this.popUpDialog = true
         const deletionPromises = this.currentEmails.map(async (email: string) => {
-          const success = await deleteUsersMutation(this.$apollo, email)
+          const success = await deleteUserMutation(this.$apollo, email)
           console.log(`Delete success: ${success} for ${email}`)
 
           if (success) {
@@ -422,7 +422,7 @@ export default {
           this.students = await parseCSVPapaparse(this.deleteCsv)
 
           const deletionPromises = this.students.map(async (student) => {
-            const success = await deleteUsersMutation(this.$apollo, student.email)
+            const success = await deleteUserMutation(this.$apollo, student.email)
             console.log(`Delete success: ${success} for ${student.email}`)
             return success
           })
