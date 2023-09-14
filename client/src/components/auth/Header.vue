@@ -1,14 +1,15 @@
 <template>
     <div class="align-center auth-header d-flex header">
-        <v-btn id="back-button" v-if="showBack" icon flat @click="$emit('back')">
-            <v-icon color="secondary" size="40">mdi-chevron-left</v-icon>
-        </v-btn>
-
         <div class="header__text">
             <div class="header__text__title">{{ title }}</div>
             <div class="header__text__caption">{{ text }}</div>
         </div>
     </div>
+
+    <v-btn id="back-button" v-if="showBack" icon flat @click="$emit('back')">
+        <v-icon color="secondary" size="40">mdi-chevron-left</v-icon>
+    </v-btn>
+
 </template>
 
 <script lang="ts">
@@ -49,10 +50,8 @@ export default {
 }
 
 #back-button {
-    position: absolute;
-    top: 29.7%;
-    left: 38%;
-    transform: translate(-50%, -50%);
-
+    position: relative;
+    bottom: 200px;
+    right: 10px;
 }
 </style>
