@@ -8,7 +8,6 @@ import { parseCSVPapaparse } from './csv_parser'
 import { EnrolUsersInQuizMutation } from '@/gql/mutations/userQuiz'
 import { UnenrolUsersFromQuizMutation } from '@/gql/mutations/userQuiz'
 
-
 export type editQuizInput = {
   description?: string
   duration?: number
@@ -98,12 +97,12 @@ export const enrolUsersInQuizFromCSV = async (
     }))
 
     console.log(`Unenrolling all users from quiz ${quizId}`)
-    const deleteMutation = await apollo.mutate({ 
+    const deleteMutation = await apollo.mutate({
       mutation: UnenrolUsersFromQuizMutation,
       variables: {
         users: [
           {
-            id: "all"
+            id: 'all'
           }
         ],
         quizId: quizId
