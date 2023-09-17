@@ -260,7 +260,15 @@ const deleteUserQuiz = async (quizid: string, userid: string) => {
                 .collection('UserQuizs')
                 .where('userID', '==', userid)
                 .get()
-        } else {
+        }
+        else if (quizid !== null && userid == 'all') {
+            // delete all userquizs for a quiz
+            querySnapshot = await firestore
+                .collection('UserQuizs')
+                .where('quizID', '==', quizid)
+                .get()
+        }
+         else {
             // delete a user quiz for a given quiz and user
             querySnapshot = await firestore
                 .collection('UserQuizs')

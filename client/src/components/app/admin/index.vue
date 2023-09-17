@@ -46,7 +46,7 @@ export default {
       store: useMainStore(),
       currentTab: 'Quiz Management', // Default to Quiz Management tab
       tabs: [
-        { value: 'QuizManagement', label: 'Quiz Management', component: QuizManagement },
+        { value: 'QuizManagement', label: 'Exam Management', component: QuizManagement },
         { value: 'UserManagement', label: 'User Management', component: UserManagement }
       ]
     }
