@@ -2,10 +2,7 @@ import type { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { AddUserMutation } from '../gql/mutations/addUsers'
 import { GetUserListQuery } from '../gql/queries/userList'
 import { DeleteUserMutation } from '../gql/mutations/deleteUsers'
-import type { User } from '@/components/app/admin/UserManagement.vue'
-import { GetUserWithEmailQuery } from '@/gql/queries/user'
-const DEFAULT_PHOTO_URL =
-  'https://www.google.com/url?sa=i&url=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F49917726%2Fretrieving-default-image-all-url-profile-picture-from-facebook-graph-api&psig=AOvVaw1lWm0yfLpY9NU3R3KLDP7M&ust=1686548570967000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCOj_5ZTBuv8CFQAAAAAdAAAAABAE'
+import { UnenrolUsersFromQuizMutation } from '../gql/mutations/userQuiz'
 
 export const addUserMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
@@ -38,24 +35,39 @@ export const addUserMutation = async (
     return false
   }
 }
-export const deleteUsersMutation = async (
+
+export const deleteUserMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   email: string
-  ): Promise<boolean> => {
-    try {
-      const mutation = await apollo.mutate({
-        mutation: DeleteUserMutation,
-        variables: {
-          deleteUserEmail: email
-        }
-      })
-      const deletedEmail = mutation.data.deleteUser.email
-      return deletedEmail === email.toLowerCase()
-    } 
-    catch (e) {
-      console.error(e)
-      return false
-    }
+): Promise<boolean> => {
+  try {
+    const mutation = await apollo.mutate({
+      mutation: DeleteUserMutation,
+      variables: {
+        deleteUserEmail: email
+      }
+    })
+    const deletedEmail = mutation.data.deleteUser.email
+    // delete all associated user quizzes
+    console.log('Trying to delete user quizzes')
+    const deleteUserQuizzesMutation = await apollo.mutate({
+      mutation: UnenrolUsersFromQuizMutation,
+      variables: {
+        users: [
+          {
+            id: mutation.data.deleteUser.id
+          }
+        ],
+        quizId: 'all'
+      }
+    })
+    console.log('Deleted user quizzes')
+    console.log(deleteUserQuizzesMutation.data)
+    return deletedEmail === email.toLowerCase()
+  } catch (e) {
+    console.error(e)
+    return false
+  }
 }
 
 export const successMessage = (successfulEmails: string[]): string => {
@@ -72,13 +84,12 @@ export const downloadUsersCsvQuery = async (
 ): Promise<boolean> => {
   try {
     const query = await apollo.query({
-      query: GetUserListQuery
-      // Add any necessary variables for the query
+      query: GetUserListQuery,
+      fetchPolicy: 'network-only'
     })
 
     const userList: User[] = query.data.users.users // Assuming the response contains an array of user objects
-    //console.log(userList) // debug print
-
+    console.log(userList.length)
     // TODO: Test edge case (no users in the database)
 
     // Generate column headers from the User type properties
@@ -93,7 +104,6 @@ export const downloadUsersCsvQuery = async (
         return values.filter((_, index) => Object.keys(user)[index] !== '__typename').join(',')
       })
       .join('\n')}`
-    console.log(csvContent)
 
     // Create a Blob with the CSV content
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })

@@ -7,16 +7,28 @@
 }
 </style>
 <template>
-  <AppExamTopbarTimer />
+  <AppExamTopbarTimer :duration="duration" :quizStart="quizStart" :userQuizId="userQuizId" />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
     <v-divider color="white" thickness="3" class="border-opacity-100 mb-5" />
     <v-list-item-group v-model="selected" color="primary">
-      <AppExamSidebarLink v-for="(question, index) in questions" :id="question.id" :key="index" :number="index + 1"
-        :answered="question.userAnswer !== null" :flagged="question.flag" />
+      <AppExamSidebarLink
+        v-for="(question, index) in questions"
+        :id="question.id"
+        :key="index"
+        :number="index + 1"
+        :answered="question.userAnswer !== null"
+        :flagged="question.flag"
+      />
     </v-list-item-group>
   </v-list>
-  <v-btn color="secondary" :disabled="submitting" v-on:click="submitQuiz()" variant="flat"
-    id="submit-button">Submit</v-btn>
+  <v-btn
+    color="secondary"
+    :disabled="examStore.submitting"
+    v-on:click="submitQuiz()"
+    variant="flat"
+    id="submit-button"
+    >Submit</v-btn
+  >
 </template>
 
 <script lang="ts">
@@ -25,7 +37,7 @@ import AppExamSidebarLink from './SidebarLink.vue'
 import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
-import { onMounted } from 'vue'
+import { useExamStore } from './examStore'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 const SIDEBAR_WIDTH = 56
@@ -48,47 +60,51 @@ export default {
             'userAnswer' in question
         )
       }
+    },
+    duration: {
+      type: Number,
+      required: true
+    },
+    quizStart: {
+      required: true
+    },
+    userQuizId: {
+      required: true
     }
   },
   methods: {
     submitQuiz() {
-      console.log("clicek")
+      console.log('clicek')
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {
           input: {
-            userQuizID: this.$route.params.quizID,
+            userQuizID: this.$route.params.quizID
           }
         }
       })
-      this.submitting = true;
+      this.examStore.submitting = true
       mutation
         .then(() => {
           this.$router.push({
             name: 'AppExams'
-
           })
-          this.submitting = false;
         })
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
         })
-
     }
-
   },
 
   data() {
     return {
       SIDEBAR_WIDTH,
-      submitting: false,
-
+      examStore: useExamStore(),
       selected: 0
     }
   },
   computed: {
-    ...mapWritableState(useMainStore, ['snackbarQueue']),
-
+    ...mapWritableState(useMainStore, ['snackbarQueue'])
   },
 
   watch: {
@@ -105,8 +121,6 @@ export default {
           })
       }
     }
-
   }
-
 }
 </script>

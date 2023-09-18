@@ -1,7 +1,6 @@
 import gql from 'graphql-tag'
 import {
   UserQuizFragment,
-  UserQuizQuestionFragment,
   UserQuizFullQuestionFragment,
   UserQuizOptionFragment
 } from '@/gql/fragments/userQuiz'

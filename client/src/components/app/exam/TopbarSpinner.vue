@@ -1,22 +1,18 @@
 <template>
-    <v-tooltip
-        v-if="loading"
-        bottom
-        class="app-exam-topbar-spinner ml-2 text-no-wrap"
-    >
-        <template #activator="{ on, attrs }">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-                class="flex-shrink-0 mr-2"
-                :size="24"
-                v-bind="attrs"
-                v-on="on"
-            ></v-progress-circular>
-        </template>
+  <v-tooltip v-if="loading" bottom class="app-exam-topbar-spinner ml-2 text-no-wrap">
+    <template #activator="{ on, attrs }">
+      <v-progress-circular
+        indeterminate
+        color="primary"
+        class="flex-shrink-0 mr-2"
+        :size="24"
+        v-bind="attrs"
+        v-on="on"
+      ></v-progress-circular>
+    </template>
 
-        <span>Saving</span>
-    </v-tooltip>
+    <span>Saving</span>
+  </v-tooltip>
 </template>
 
 <script lang="ts">
@@ -24,42 +20,40 @@ import { mapWritableState } from 'pinia'
 import { useExamStore } from './examStore'
 
 export default {
-    name: 'AppExamTopbarSpinner',
+  name: 'AppExamTopbarSpinner',
 
-    data() {
-        return {
-            currentPromises: [] as Promise<any>[],
-        }
-    },
+  data() {
+    return {
+      currentPromises: [] as Promise<any>[]
+    }
+  },
 
-    computed: {
-        // Get state from Pinia store
-        ...mapWritableState(useExamStore, ['unresolvedQuestionPromises']),
+  computed: {
+    // Get state from Pinia store
+    ...mapWritableState(useExamStore, ['unresolvedQuestionPromises']),
 
-        loading() {
-            return this.currentPromises.length > 0
-        },
-    },
+    loading() {
+      return this.currentPromises.length > 0
+    }
+  },
 
-    watch: {
-        unresolvedQuestionPromises: {
-            handler(v) {
-                v.forEach((promise: Promise<any>) => {
-                    // Move promise from store to local state
-                    this.currentPromises.push(promise)
+  watch: {
+    unresolvedQuestionPromises: {
+      handler(v) {
+        v.forEach((promise: Promise<any>) => {
+          // Move promise from store to local state
+          this.currentPromises.push(promise)
 
-                    // Wait for promise to resolve or fail
-                    promise.finally(() => {
-                        // Remove promise from currentPromises array
-                        this.currentPromises = this.currentPromises.filter(
-                            (p) => p !== promise,
-                        )
-                    })
-                })
-            },
+          // Wait for promise to resolve or fail
+          promise.finally(() => {
+            // Remove promise from currentPromises array
+            this.currentPromises = this.currentPromises.filter((p) => p !== promise)
+          })
+        })
+      },
 
-            immediate: true,
-        },
-    },
+      immediate: true
+    }
+  }
 }
 </script>

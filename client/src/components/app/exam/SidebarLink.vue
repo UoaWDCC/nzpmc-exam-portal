@@ -1,8 +1,13 @@
 <template>
-  <v-list-item :to="{
-    name: 'AppExamQuestion',
-    params: { quizID: $route.params.quizID, questionID: id }
-  }" link :active-class="'selected-question-overlay'" class="question-link-container">
+  <v-list-item
+    :to="{
+      name: 'AppExamQuestion',
+      params: { quizID: $route.params.quizID, questionID: id }
+    }"
+    link
+    :active-class="'selected-question-overlay'"
+    class="question-link-container"
+  >
     <v-container class="text-and-icon-container">
       <v-icon class="corner-icon" :color="flagColour(flagged)"> mdi-flag </v-icon>
       <v-list-item-content>
@@ -46,7 +51,6 @@ export default {
   #answered-icon {
     margin-left: auto;
   }
-
 }
 
 .v-navigation-drawer .v-list-item .corner-icon {

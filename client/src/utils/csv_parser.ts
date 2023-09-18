@@ -1,5 +1,3 @@
-import * as fs from 'fs'
-import * as path from 'path'
 import { parse } from 'papaparse'
 
 // Island enums for error checking
@@ -10,25 +8,26 @@ enum Island {
 
 // TODO: This type will eventually be replaced by a DTO class as defined in common
 export type Student = {
-  firstName: string
-  middleName: string
-  surname: string
-  email: string
+  firstName?: string
+  middleName?: string
+  surname?: string
+  email?: string
   yearLevel: number
   heardFrom: string
   reasonForTaking: string
   teacherCode: string
-  teacherName: string
+  teacherName?: string
   teacherEmail: string
-  schoolName: string
+  schoolName?: string
   schoolAddress: string
   phoneNumber: string
-  teacherCategory: string
+  teacherCategory?: string
   island: Island
-  city: string
+  city?: string
+  id?: string
 }
 
-export async function parseCSVPapaparse(file) {
+export async function parseCSVPapaparse(file: File) {
   return new Promise<Student[]>((resolve, reject) => {
     const students: Student[] = []
 
@@ -38,7 +37,7 @@ export async function parseCSVPapaparse(file) {
       const csvData = reader.result
       const parsedData = parse(csvData, { header: true }).data
 
-      parsedData.forEach((record) => {
+      parsedData.forEach((record: any) => {
         const {
           StudentFirstName: firstName,
           StudentMiddleName: middleName,
@@ -55,7 +54,8 @@ export async function parseCSVPapaparse(file) {
           PhoneNumber: phoneNumber,
           TeacherCategory: teacherCategory,
           Island: island,
-          City: city
+          City: city,
+          id: id
         } = record
 
         //TODO make error checking less harsh
@@ -84,9 +84,9 @@ export async function parseCSVPapaparse(file) {
           reject(new Error(`Invalid phone number: ${phoneNumber}`))
           return
         }
-		*/
+    */
 
-        if (!email) return
+        if (!email && !id) return
         // Create the student object instance
         const student: Student = {
           firstName: toTitleCase(firstName),
@@ -104,9 +104,9 @@ export async function parseCSVPapaparse(file) {
           phoneNumber: phoneNumber,
           teacherCategory: toTitleCase(teacherCategory),
           island: toTitleCase(island) as Island,
-          city: toTitleCase(city)
+          city: toTitleCase(city),
+          id: id
         }
-
         students.push(student)
       })
 
@@ -223,25 +223,26 @@ export async function parseCSV(filename: string): Promise<Student[]> {
 */
 
 // Error checking functions
-function isValidIsland(islandValue: string): boolean {
-  return Object.values(Island).includes(islandValue as Island)
-}
+// function isValidIsland(islandValue: string): boolean {
+//   return Object.values(Island).includes(islandValue as Island)
+// }
 
-function isValidYearLevel(yearLevel: number): boolean {
-  return yearLevel >= 1 && yearLevel <= 13
-}
+// function isValidYearLevel(yearLevel: number): boolean {
+//   return yearLevel >= 1 && yearLevel <= 13
+// }
 
-function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email)
-}
+// function isValidEmail(email: string): boolean {
+//   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+//   return emailRegex.test(email)
+// }
 
-function isValidPhoneNumber(phoneNumber: string): boolean {
-  return phoneNumber.length === 10
-}
+// function isValidPhoneNumber(phoneNumber: string): boolean {
+//   return phoneNumber.length === 10
+// }
 
 // This function will capitalise words if they were passed through in lowercase
-function toTitleCase(str: string): string {
+function toTitleCase(str?: string): string | undefined {
+  if (!str) return undefined
   return str.toLowerCase().replace(/(?:^|\s)\w/g, (match) => {
     return match.toUpperCase()
   })

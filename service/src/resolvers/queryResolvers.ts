@@ -3,7 +3,6 @@ import {
     getQuiz,
     getUser,
     getUserQuiz,
-    getUserQuizbyQuizID,
     getUserQuizzesByQuizID,
     getUserQuizzes,
     getUsersPagination,
@@ -131,7 +130,7 @@ const userQuizQuery: Resolver<
 
     if (!context.user.admin) {
         // If the quiz isn't started yet, throw error
-        if (!userQuiz.startTime) throw new AuthenticationError()
+        if (!userQuiz.openTime) throw new AuthenticationError()
         userQuiz.score = undefined
     }
     return userQuiz
@@ -158,8 +157,8 @@ const userQuizzesByQuizIDQuerry: Resolver<
     if (context.user === undefined || !context.user.admin) {
         throw new AuthenticationError()
     }
-    const id: string = args.quizID;
-    return getUserQuizzesByQuizID(id);
+    const id: string = args.quizID
+    return getUserQuizzesByQuizID(id)
 }
 
 const queryResolvers: QueryResolvers = {

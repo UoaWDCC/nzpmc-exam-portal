@@ -1,39 +1,35 @@
 name: Lint
 
-on: pull_request
+on: 
+  push:
+    branches:
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!main'     # excludes main
 
 jobs:
-    run-linters:
-        name: Run linters
-        runs-on: ubuntu-latest
-        defaults:
-          run:
-            working-directory: ./exam-portal-frontend
+  eslint:
+    name: Run eslint scanning
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+           ref: ${{ github.ref }}
+           fetch-depth: 0
+           submodules: recursive 
 
-        steps:
-            - name: Check out Git repository
-              uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: yarn
 
-            # - uses: actions/cache@v2
-            #   with:
-            #       path: ~/.npm
-            #       key: ${{ runner.os }}-node14-${{ hashFiles('**/package-lock.json') }}
-            #       restore-keys: |
-            #           ${{ runner.os }}-node14-
-
-            # - name: Set up Node.js
-            #   uses: actions/setup-node@v2
-            #   with:
-            #       node-version: 14
-            # - name: Upgrade npm 🎉
-            #   run: npm install -g npm@7
-
-            # # ESLint and Prettier must be in `package.json`
-            # - name: Install Node.js dependencies
-            #   run: npm ci --no-optional
- 
-            # - name: Run linters
-            #   uses: wearerequired/lint-action@v1
-            #   with:
-            #       eslint: true
-            #       prettier: true
+      - name: Run ESLint
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint: true
+          eslint_extensions: js,ts,jsx,tsx
+          prettier: true
+          auto_fix: true

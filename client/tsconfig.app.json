@@ -10,8 +10,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": [
-      "vuetify"
-    ] 
+    "types": ["vuetify"]
   }
 }

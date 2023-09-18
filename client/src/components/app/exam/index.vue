@@ -1,5 +1,6 @@
 <template>
   <div class="app-exam">
+    <AppSubmittingOverlay />
     <v-scroll-y-reverse-transition>
       <v-alert v-if="error" type="error" class="mx-3 my-6">
         {{ $errorMessage }}
@@ -15,7 +16,13 @@
         <AppExamSidebarLoader v-if="loading" />
 
         <v-scroll-y-reverse-transition>
-          <AppExamSidebar v-if="data" :questions="data.questions" />
+          <AppExamSidebar
+            v-if="data"
+            :questions="data.questions"
+            :duration="data.duration"
+            :quizStart="data.quizStart"
+            :userQuizId="data.id"
+          />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
 
@@ -37,10 +44,12 @@ import AppExamTopbar from './Topbar.vue'
 import AppExamSidebarLoader from './SidebarLoader.vue'
 import AppExamQuestionLoader from './Question/Loader.vue'
 import AppExamSidebar from './Sidebar.vue'
+import AppSubmittingOverlay from './SubmittingOverlay.vue'
 import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
 import { defineComponent } from 'vue'
 import { TOOLBAR_HEIGHT } from '@/helpers'
 import type { UserQuizModel } from '@nzpmc-exam-portal/common'
+import { watch } from 'vue'
 
 export default defineComponent({
   name: 'AppExam',
@@ -56,6 +65,7 @@ export default defineComponent({
     AppExamTopbar,
     AppExamSidebarLoader,
     AppExamQuestionLoader,
+    AppSubmittingOverlay,
     AppExamSidebar
   },
 
@@ -85,6 +95,14 @@ export default defineComponent({
     }
   },
 
+  methods: {
+    redirectToExams() {
+      if (this.data?.submitted) {
+        this.$router.push({ name: 'AppExams' })
+      }
+    }
+  },
+
   apollo: {
     name: {
       query: UserQuizQuery,
@@ -100,12 +118,27 @@ export default defineComponent({
         } else {
           if (data) {
             this.data = data.userQuiz
+            const currentQuestions = data?.userQuiz.questions
+            console.log(this.$route.params.questionID)
+            if (this.$route.params.questionID === undefined) {
+              this.$router.push({
+                name: 'AppExamQuestion',
+                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
+              })
+            }
             console.log(data)
           }
         }
       },
       fetchPolicy: 'network-only',
       notifyOnNetworkStatusChange: true
+    }
+  },
+  watch: {
+    'data.submitted': function (newVal, oldVal) {
+      if (newVal) {
+        this.redirectToExams()
+      }
     }
   }
 })
@@ -128,6 +161,7 @@ export default defineComponent({
   padding-right: 0;
   padding-bottom: 0;
   max-width: 100vw;
+
   .question-container {
     padding: 0;
     justify-self: flex-end;

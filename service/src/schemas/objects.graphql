@@ -37,8 +37,8 @@ type Quiz {
     duration: Int
     question(id: ID!): Question
     questions: [Question]
-    startTime: DateTime
-    endTime: DateTime
+    openTime: DateTime
+    closeTime: DateTime
     created: DateTime
     modified: DateTime
 }
@@ -54,9 +54,10 @@ type UserQuiz {
     question(id: ID!): UserQuizQuestion
     questions: [UserQuizQuestion]
     score: Int
+    quizStart: Int
     submitted: Boolean
-    startTime: DateTime
-    endTime: DateTime
+    openTime: DateTime
+    closeTime: DateTime
     created: DateTime
     modified: DateTime
 }

@@ -4,13 +4,13 @@ import {
     packUserQuiz,
     packUserQuizzes,
 } from '../mappers/userQuizMapper'
-import { Quiz, UserQuiz, User } from '../models'
+import { Quiz, UserQuiz } from '../models'
 import { NotFoundError } from '../utils/errors'
 import { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { addUserQuizQuestion } from './userQuizQuestion'
 import { getUser } from './user'
 import { firestore } from '../utils/firebase'
-import { WriteResult } from '@google-cloud/firestore'
+import { Firestore, WriteResult } from '@google-cloud/firestore'
 
 const UserQuizRepository = getRepository(UserQuiz)
 
@@ -23,7 +23,7 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
 
         const expired =
-            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+            (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
 
         return packUserQuiz({
             userID: userQuiz.userID,
@@ -52,7 +52,7 @@ const getUserQuizbyQuizID = async (quizID: string): Promise<UserQuizModel> => {
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
 
         const expired =
-            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+            (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
 
         return packUserQuiz({
             userID: userQuiz.userID,
@@ -80,7 +80,8 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
-                        (userQuiz.endTime && userQuiz.endTime < new Date()) ??
+                        (userQuiz.closeTime &&
+                            userQuiz.closeTime < new Date()) ??
                         true,
                 }),
             ),
@@ -101,21 +102,44 @@ const getUserQuizzesByQuizID = async (
             (q) => q.quizID,
             quizID,
         ).find()
+        const userQuizzesPack: (PackUserQuiz | null)[] = await Promise.all(
+            userQuizzes.map(async (userQuiz): Promise<PackUserQuiz | null> => {
+                try {
+                    const user = await getUser(userQuiz.userID)
+                    if (!user) {
+                        // User doesn't exist, skip processing for this userQuiz
+                        return null
+                    }
 
-        const userQuizzesPack: PackUserQuiz[] = await Promise.all(
-            userQuizzes.map(
-                async (userQuiz): Promise<PackUserQuiz> => ({
-                    userID: (await getUser(userQuiz.userID)).id,
-                    quiz: await QuizTranRepository.findById(userQuiz.quizID),
-                    userQuiz,
-                    expired:
-                        (userQuiz.endTime && userQuiz.endTime < new Date()) ??
-                        true,
-                }),
-            ),
+                    const userID = user.id
+                    const quiz = await QuizTranRepository.findById(
+                        userQuiz.quizID,
+                    )
+                    const expired =
+                        (userQuiz.closeTime &&
+                            userQuiz.closeTime < new Date()) ??
+                        true
+
+                    return {
+                        userID,
+                        quiz,
+                        userQuiz,
+                        expired,
+                    }
+                } catch (error) {
+                    // Handle the error for this specific element, e.g., log it or return a default value
+                    console.error(`Error processing userQuiz: ${error.message}`)
+                    return null // Return null to skip processing for this userQuiz
+                }
+            }),
         )
 
-        return packUserQuizzes(userQuizzesPack)
+        // Remove null values from the array
+        const filteredUserQuizzesPack: PackUserQuiz[] = userQuizzesPack.filter(
+            (pack): pack is PackUserQuiz => pack !== null,
+        )
+        console.log(filteredUserQuizzesPack)
+        return packUserQuizzes(filteredUserQuizzesPack)
     })
 }
 
@@ -133,7 +157,8 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
                     quiz: await QuizTranRepository.findById(userQuiz.quizID),
                     userQuiz,
                     expired:
-                        (userQuiz.endTime && userQuiz.endTime < new Date()) ??
+                        (userQuiz.closeTime &&
+                            userQuiz.closeTime < new Date()) ??
                         true,
                 }),
             ),
@@ -146,19 +171,36 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
 const addUserQuiz = async (
     userID: string,
     quizID: string,
-    startTime: Date,
-    endTime: Date,
+    openTime: Date,
+    closeTime: Date,
 ): Promise<UserQuizModel> => {
+    //first check if userquiz already exists
+    const firestore = new Firestore()
+
+    const userQuizzesCollection = firestore.collection('UserQuizs')
+
+    const query = userQuizzesCollection
+        .where('quizID', '==', quizID)
+        .where('userID', '==', userID)
+        .limit(1)
+    const snapshot = await query.get()
+    console.log(snapshot.docs[0])
+    if (!snapshot.empty) {
+        return await getUserQuiz(snapshot.docs[0].id)
+    }
+
     const userQuiz = new UserQuiz()
 
     userQuiz.userID = userID
     userQuiz.quizID = quizID
-    if (startTime && endTime) {
-        userQuiz.startTime = startTime
-        userQuiz.endTime = endTime
+    if (openTime && closeTime) {
+        userQuiz.openTime = openTime
+        userQuiz.closeTime = closeTime
     }
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
+    userQuiz.quizStart = null
+    userQuiz.submitted = false
 
     UserQuizRepository.create(userQuiz)
 
@@ -170,7 +212,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ; (await questions.find()).map((question) => {
+        ;(await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
@@ -180,10 +222,11 @@ const addUserQuiz = async (
 
 const editUserQuiz = async (
     userQuizID: string,
+    quizStart?: number,
     score?: number,
-    startTime?: Date,
-    endTime?: Date,
-    submitted?: boolean
+    openTime?: Date,
+    closeTime?: Date,
+    submitted?: boolean,
 ): Promise<UserQuizModel> => {
     await UserQuizRepository.runTransaction(async (tran) => {
         const userQuiz = await tran.findById(userQuizID)
@@ -192,8 +235,9 @@ const editUserQuiz = async (
         }
 
         userQuiz.score = score ? score : userQuiz.score
-        userQuiz.startTime = startTime ? startTime : userQuiz.startTime
-        userQuiz.endTime = endTime ? endTime : userQuiz.endTime
+        userQuiz.openTime = openTime ? openTime : userQuiz.openTime
+        userQuiz.closeTime = closeTime ? closeTime : userQuiz.closeTime
+        userQuiz.quizStart = quizStart ? quizStart : userQuiz.quizStart
         // default value false if document doesn't have a submitted flag
         userQuiz.submitted = submitted ? submitted : userQuiz.submitted ?? false
         userQuiz.modified = new Date()
@@ -207,12 +251,29 @@ const deleteUserQuiz = async (quizid: string, userid: string) => {
     try {
         // Query 'userquizs' collection with the given parameters
         let userQuizID: string | null = null // Initialize with a default value
-
-        const querySnapshot = await firestore
-            .collection('UserQuizs')
-            .where('quizID', '==', quizid)
-            .where('userID', '==', userid)
-            .get()
+        let querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> | null =
+            null
+        console.log(`Deleting for user ${userid} and quiz ${quizid}`)
+        if (quizid == 'all' && userid !== null) {
+            // delete all userquizs for a user
+            querySnapshot = await firestore
+                .collection('UserQuizs')
+                .where('userID', '==', userid)
+                .get()
+        } else if (quizid !== null && userid == 'all') {
+            // delete all userquizs for a quiz
+            querySnapshot = await firestore
+                .collection('UserQuizs')
+                .where('quizID', '==', quizid)
+                .get()
+        } else {
+            // delete a user quiz for a given quiz and user
+            querySnapshot = await firestore
+                .collection('UserQuizs')
+                .where('quizID', '==', quizid)
+                .where('userID', '==', userid)
+                .get()
+        }
 
         // Delete each matching document
         const deletePromises: Promise<WriteResult>[] = []
@@ -229,8 +290,8 @@ const deleteUserQuiz = async (quizid: string, userid: string) => {
             console.log('No matching documents found.')
             return null
         }
-
         console.log('Documents successfully deleted!')
+        console.log(`Amount of deleted quizzes: ${deletePromises.length}`)
         return userQuizID
     } catch (error) {
         console.error('Error deleting documents:', error)
@@ -242,7 +303,7 @@ const setUserQuizScore = (
     userQuizID: string,
     score: number,
 ): Promise<UserQuizModel> => {
-    return editUserQuiz(userQuizID, score, undefined, undefined)
+    return editUserQuiz(userQuizID, undefined, score, undefined, undefined)
 }
 
 export {

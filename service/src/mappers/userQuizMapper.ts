@@ -17,6 +17,7 @@ const packUserQuiz = ({
     return {
         userID,
         expired,
+        quizStart: userQuiz.quizStart ?? undefined,
         id: userQuiz.id,
         name: quiz.name,
         quizID: userQuiz.quizID,
@@ -24,8 +25,8 @@ const packUserQuiz = ({
         duration: quiz.duration,
         score: userQuiz.score ?? undefined,
         submitted: userQuiz.submitted,
-        startTime: userQuiz.startTime,
-        endTime: userQuiz.endTime,
+        openTime: userQuiz.openTime,
+        closeTime: userQuiz.closeTime,
         created: userQuiz.created,
         modified: userQuiz.modified,
     }
