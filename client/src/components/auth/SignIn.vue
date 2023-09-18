@@ -164,7 +164,7 @@ export default {
 #forgot-password {
   text-align: center;
   position: relative;
-  top: 35px;
+  top: 43px;
   left: 120px;
   font-size: small;
   box-shadow: none;
