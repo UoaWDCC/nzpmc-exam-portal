@@ -6,6 +6,7 @@ import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 import { CreateExamMutation, EditQuizMutation } from '@/gql/mutations/quiz'
 import { parseCSVPapaparse } from './csv_parser'
 import { EnrolUsersInQuizMutation } from '@/gql/mutations/userQuiz'
+import { UnenrolUsersFromQuizMutation } from '@/gql/mutations/userQuiz'
 
 export type editQuizInput = {
   description?: string
@@ -94,15 +95,29 @@ export const enrolUsersInQuizFromCSV = async (
       firstName: student.firstName,
       lastName: student.surname
     }))
-    const mutation = await apollo.mutate({
+
+    console.log(`Unenrolling all users from quiz ${quizId}`)
+    const deleteMutation = await apollo.mutate({
+      mutation: UnenrolUsersFromQuizMutation,
+      variables: {
+        users: [
+          {
+            id: 'all'
+          }
+        ],
+        quizId: quizId
+      }
+    })
+
+    const enrolMutation = await apollo.mutate({
       mutation: EnrolUsersInQuizMutation,
       variables: {
         users: studentEmails,
         quizId: quizId
       }
     })
-    console.log(mutation.data)
-    return mutation.data
+    console.log(enrolMutation.data)
+    return enrolMutation.data
   } catch (error) {
     return error
   }
