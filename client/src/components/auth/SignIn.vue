@@ -162,13 +162,13 @@ export default {
 }
 
 #forgot-password {
-    text-align: center;
-    position: relative;
-    top: 43px;
-    left: 120px;
-    font-size: small;
-    box-shadow: none;
-    padding-right: 115px;
+  text-align: center;
+  position: relative;
+  top: 43px;
+  left: 120px;
+  font-size: small;
+  box-shadow: none;
+  padding-right: 115px;
 }
 
 #forgot-password:hover {
