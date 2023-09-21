@@ -49,9 +49,14 @@
         </div>
       </v-row>
       <div class="options-area">
-        <AppExamQuestionOptions :options="question.options" :answer="question.userAnswer ? question.userAnswer.id : null"
-          :question-number="questionNumber" />
-        <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat">Next Question</v-btn>
+        <AppExamQuestionOptions
+          :options="question.options"
+          :answer="question.userAnswer ? question.userAnswer.id : null"
+          :question-number="questionNumber"
+        />
+        <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat"
+          >Next Question</v-btn
+        >
         <v-btn id="submit-button" v-on:click="submitQuiz()" variant="flat">Submit Exam</v-btn>
       </div>
     </v-container>
