@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       converter: new Converter(),
-      htmlContent: '<strong>This is bold text.</strong>'
+      htmlContent: ''
     }
   },
 
@@ -26,7 +26,6 @@ export default {
 
   methods: {
     parsed() {
-      this.htmlContent = ''
       const latexRegex = /\$(\$?)(.*?)\1\$/g
       const imageRegex = /!\[([^\]]*)\]\(([^\)]+)\)/g
 
