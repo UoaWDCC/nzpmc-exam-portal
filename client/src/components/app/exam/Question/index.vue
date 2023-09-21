@@ -4,11 +4,13 @@
   overflow-x: hidden;
   justify-self: flex-end;
   padding-bottom: 0;
+
   #next-question-button {
     background-color: $examDarkBlue;
     color: $white;
     margin: auto;
   }
+
   .options-area {
     display: flex;
     flex-direction: column;
@@ -37,10 +39,7 @@
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
-          <AppExamQuestionFlagButton
-            :flagged="question.flag"
-            :question-number="questionNumber"
-          />
+          <AppExamQuestionFlagButton :flagged="question.flag" :question-number="questionNumber" />
         </div>
       </v-row>
       <div class="options-area">
@@ -49,17 +48,18 @@
           :answer="question.userAnswer ? question.userAnswer.id : null"
           :question-number="questionNumber"
         />
-        <v-btn id="next-question-button" variant="flat">Next Question</v-btn>
+        <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat"
+          >Next Question</v-btn
+        >
       </div>
     </v-container>
   </v-scroll-y-reverse-transition>
 </template>
 
 <script lang="ts">
-import { UserQuizFullQuestionQuery, UserQuizQuery } from '@/gql/queries/userQuiz'
+import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamQuestionOptions from './Options.vue'
 import AppExamQuestionFlagButton from './FlagButton.vue'
-import AppExamQuestionLoader from './Loader.vue'
 import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
 
@@ -69,10 +69,8 @@ export default {
   components: {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
-    AppExamQuestionLoader,
     DisplayText
   },
-
   data(): {
     error: any
     quizData: any
@@ -82,7 +80,6 @@ export default {
       quizData: undefined
     }
   },
-
   computed: {
     questionNumber() {
       if (this.quizData) {
@@ -91,20 +88,33 @@ export default {
           this.quizData.questions.findIndex((question: Question) => question.id === questionID) + 1
         )
       }
-
       return null
     },
     question() {
       if (this.quizData) {
         const questionID = this.$route.params.questionID
-        const question = this.quizData.questions.find((question: Question) => question.id === questionID);
+        const question = this.quizData.questions.find(
+          (question: Question) => question.id === questionID
+        )
         console.log(question)
-        return question;
+        return question
       }
 
       return null
     }
-    
+  },
+  methods: {
+    nextQuestion() {
+      if (this.questionNumber) {
+        const nextQuestionIndex = this.questionNumber // index will use exact same value because it has 1 added to it
+        const nextQuestionID = this.quizData.questions[nextQuestionIndex].id
+        console.log(nextQuestionID)
+        this.$router.push({
+          name: 'AppExamQuestion',
+          params: { quizID: this.$route.params.quizID, questionID: nextQuestionID }
+        })
+      }
+    }
   },
 
   apollo: {
@@ -115,7 +125,7 @@ export default {
           quizID: this.$route.params.quizID
         }
       },
-      result({ data, error, loading }) {
+      result({ data, error }) {
         if (error) {
           this.error = error.message
         } else {

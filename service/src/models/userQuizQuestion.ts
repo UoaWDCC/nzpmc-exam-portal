@@ -4,6 +4,7 @@ class UserQuizQuestion {
     questionID!: string
 
     answerID: string | null = null
+    quizStarted: number | null = null
 
     flag = false
     firstViewed: Date | null = null

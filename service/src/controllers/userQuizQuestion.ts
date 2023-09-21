@@ -20,7 +20,7 @@ const getUserQuizQuestion = async (
     let quizQuestion
 
     if (expired) {
-        throw new UserQuizExpiredError()
+        // throw new UserQuizExpiredError()
     }
 
     await runTransaction(async (tran) => {
@@ -128,7 +128,8 @@ const addUserQuizQuestion = async (
             throw new NotFoundError()
         }
 
-        expired = (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+        expired =
+            (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
@@ -164,7 +165,7 @@ const editUserQuizQuestion = async (
     userQuizID: string,
     questionID: string,
     optionID?: string,
-    flag?: boolean,
+    flag: boolean | undefined = undefined,
 ): Promise<UserQuizQuestionModel> => {
     let expired = true
     return runTransaction(async (tran) => {
@@ -176,7 +177,8 @@ const editUserQuizQuestion = async (
             throw new NotFoundError()
         }
 
-        expired = (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+        expired =
+            (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)
         if (!quiz || !quiz.questions) {
@@ -199,8 +201,9 @@ const editUserQuizQuestion = async (
         userQuizQuestion.firstViewed = new Date()
         userQuizQuestion.lastAnswered = new Date()
         userQuizQuestion.modified = new Date()
-        userQuizQuestion.flag = flag ?? userQuizQuestion.flag
-
+        userQuizQuestion.flag =
+            flag !== undefined ? flag : userQuizQuestion.flag
+        console.log(flag)
         const newUserQuizQuestion = await userQuiz.questions.create(
             userQuizQuestion,
         )
@@ -307,9 +310,9 @@ const getUserAnswers = (userQuizID: string): Promise<UserAnswers> => {
         }
 
         const expired =
-            (userQuiz.endTime && userQuiz.endTime < new Date()) ?? true
+            (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
         if (expired) {
-            throw new UserQuizExpiredError()
+            // throw new UserQuizExpiredError()
         }
 
         const quiz = await QuizTranRepository.findById(userQuiz.quizID)

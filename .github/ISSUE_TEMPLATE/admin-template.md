@@ -1,7 +1,7 @@
 ---
 name: Admin Template
 about: For new admin issues
-title: '000 Issue Title'
+title: 'Topic: Title'
 labels: ''
 assignees: ''
 

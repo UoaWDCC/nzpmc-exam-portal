@@ -17,19 +17,19 @@ const getAllQuizzes = async (): Promise<Schema.Quiz[]> => {
 }
 
 const addQuiz = async (
-    name: string,
-    description: string,
-    duration: number,
-    startTime: Date,
-    endTime: Date,
+    name?: string | null,
+    description?: string | null,
+    duration?: number | null,
+    openTime?: Date | null,
+    closeTime?: Date | null,
 ): Promise<Schema.Quiz> => {
     const quiz = new Quiz()
 
-    quiz.name = name
-    quiz.description = description
-    quiz.duration = duration
-    quiz.startTime = startTime
-    quiz.endTime = endTime
+    quiz.name = name ?? ``
+    quiz.description = description ?? ``
+    quiz.duration = duration ?? 69
+    quiz.openTime = openTime ?? new Date()
+    quiz.closeTime = closeTime ?? new Date()
 
     const newQuiz = await QuizRepository.create(quiz)
 
@@ -41,8 +41,8 @@ const editQuiz = async (
     name?: string,
     description?: string,
     duration?: number,
-    startTime?: Date,
-    endTime?: Date,
+    openTime?: Date,
+    closeTime?: Date,
     questionIDsOrder?: string[],
 ): Promise<Schema.Quiz> => {
     return QuizRepository.runTransaction(async (tran) => {
@@ -54,8 +54,8 @@ const editQuiz = async (
         quiz.name = name ? name : quiz.name
         quiz.description = description ? description : quiz.description
         quiz.duration = duration ? duration : quiz.duration
-        quiz.startTime = startTime ? startTime : quiz.startTime
-        quiz.endTime = endTime ? endTime : quiz.endTime
+        quiz.openTime = openTime ? openTime : quiz.openTime
+        quiz.closeTime = closeTime ? closeTime : quiz.closeTime
         quiz.questionIDsOrder = questionIDsOrder
             ? questionIDsOrder
             : quiz.questionIDsOrder

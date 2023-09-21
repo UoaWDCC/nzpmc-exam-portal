@@ -1,7 +1,7 @@
 ---
 name: Dev Template
 about: For new dev issues
-title: '000 Issue Title'
+title: 'Topic: Title'
 labels: ''
 assignees: ''
 

@@ -31,11 +31,11 @@ input EditUserInput {
 }
 
 input AddQuizInput {
-    name: String!
-    description: String!
-    duration: Int!
-    startTime: DateTime!
-    endTime: DateTime!
+    name: String
+    description: String
+    duration: Int
+    openTime: DateTime
+    closeTime: DateTime
 }
 
 input EditQuizInput {
@@ -43,8 +43,8 @@ input EditQuizInput {
     name: String
     description: String
     duration: Int
-    startTime: DateTime
-    endTime: DateTime
+    openTime: DateTime
+    closeTime: DateTime
 }
 
 input AddQuestionInput {
@@ -100,8 +100,9 @@ input SubmissionInput {
 input EditUserQuizInput {
     userQuizID: ID!
     score: Int
-    startTime: DateTime
-    endTime: DateTime
+    quizStart: Int
+    openTime: DateTime
+    closeTime: DateTime
 }
 
 input ImageUploadInput {
@@ -122,7 +123,7 @@ input EditOrderQuestionInput {
     quizID: ID!
 }
 input UsersInput {
-	id: ID!
+    id: ID!
     displayName: String
     email: String
     emailVerified: String

@@ -3,7 +3,7 @@ import { packUser, packUsers } from '../mappers/userMapper'
 import { User } from '../models'
 import * as Schema from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
-import { admin, firestore } from '../utils/firebase'
+import { admin } from '../utils/firebase'
 
 const UserRepository = getRepository(User)
 
@@ -12,11 +12,13 @@ const getUser = async (
     email?: string | null,
 ): Promise<Schema.User> => {
     let user: User | null = null
-    if (id) {
+    if (id && id.trim().length !== 0) {
         try {
             user = await UserRepository.findById(id)
             return packUser(user)
-        } catch (e) {}
+        } catch (e) {
+            // Do nothing
+        }
     }
 
     if (email) {
@@ -26,6 +28,7 @@ const getUser = async (
         ).findOne()
     }
 
+    console.log(user)
     if (!user) {
         throw new NotFoundError(`User id ${id} doesn't exist`)
     }
@@ -56,7 +59,7 @@ const getUsersPagination = async (
     // This is dependent that the user has a display name, first name, last name, or email
     // For testing purposes this may not always be the case.
     const finalUsers = sortedUsers.filter(
-        (user: any) =>
+        (user: User) =>
             user.displayName
                 .trim()
                 .toLowerCase()
@@ -77,10 +80,10 @@ const getUsersPagination = async (
     }
 }
 
-const sortUsersList = (users: any, key: string, isDescending: boolean) => {
+const sortUsersList = (users: User[], key: string, isDescending: boolean) => {
     // This is sorting on a key. The key may not exist for all users. (Though it should)
-    const sortedUsers = users.sort((user1: any, user2: any) => {
-        user1[key].trim().localeCompare(user2[key].trim(), undefined, {
+    const sortedUsers = users.sort((user1: User, user2: User) => {
+        return user1[key].trim().localeCompare(user2[key].trim(), undefined, {
             sensitivity: 'accent',
         })
     })
@@ -91,9 +94,13 @@ const sortUsersList = (users: any, key: string, isDescending: boolean) => {
     }
 }
 
-const sortUsersYearLevel = (users: any, key: string, isDescending: boolean) => {
-    const sortedUsers = users.sort((user1: any, user2: any) => {
-        parseInt(user1[key].trim()) - parseInt(user2[key].trim())
+const sortUsersYearLevel = (
+    users: User[],
+    key: string,
+    isDescending: boolean,
+) => {
+    const sortedUsers = users.sort((user1: User, user2: User) => {
+        return parseInt(user1[key].trim()) - parseInt(user2[key].trim())
     })
     if (isDescending) {
         return sortedUsers.reverse()
@@ -102,8 +109,11 @@ const sortUsersYearLevel = (users: any, key: string, isDescending: boolean) => {
     }
 }
 
-const caseInsensitiveSort = (orderBy: Schema.UsersOrderByInput, users: any) => {
-    let sortedUsers: any
+const caseInsensitiveSort = (
+    orderBy: Schema.UsersOrderByInput,
+    users: User[],
+) => {
+    let sortedUsers: User[]
     let key: string
     if (orderBy.displayName) {
         key = 'displayName'
@@ -234,7 +244,9 @@ const editUser = async (
         user.yearLevel = yearLevel ? yearLevel : user.yearLevel
         user.role = role ? role : user.role
         user.modified = new Date()
-
+        admin.auth().updateUser(id, {
+            displayName: displayName ? displayName : user.displayName,
+        })
         await tran.update(user)
 
         return user

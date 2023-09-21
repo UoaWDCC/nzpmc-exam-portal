@@ -1,33 +1,36 @@
 <template>
-    <v-form ref="form" v-model="valid" :disabled="loading" class="auth-email" @submit="nextPanel">
-        <AuthHeader title="Authenticate" text="Enter your email to sign in or sign up" />
+  <v-form ref="form" v-model="valid" :disabled="loading" class="auth-email" @submit="nextPanel">
+    <AuthHeader title="Authentication" text="Please enter your email to sign in." />
 
-        <div class="pb-4 px-4">
-            <v-text-field v-model="currentEmail" label="Email" placeholder="john.smith@example.com" type="email"
-                autocomplete="username" hide-details="auto" :rules="[
-                    (v: string) => !!v || 'This is required',
-                    (v: string) =>
-                        emailRegex.test(v) ||
-                        'Please enter a valid email address',
-                ]" required autofocus></v-text-field>
+    <div class="text-subtitle-1 font-weight-black px-4">Email</div>
 
-            <input type="password" autocomplete="current-password" label="Password" style="height: 0" tabindex="-1" />
-        </div>
+    <div class="pb-4 px-4">
+      <input
+        class="email"
+        v-model="currentEmail"
+        type="email"
+        autocomplete="username"
+        hide-details="auto"
+        required
+        autofocus
+      />
+    </div>
 
-        <v-expand-transition>
-            <v-alert v-if="error" type="error" dismissible class="mx-4">{{
-                error
-            }}</v-alert>
-        </v-expand-transition>
+    <v-expand-transition>
+      <v-alert v-if="error" type="error" dismissible class="mx-4">
+        {{ error }}
+      </v-alert>
+    </v-expand-transition>
 
-        <div class="d-flex justify-end pb-4 px-4">
-            <v-btn id="continue-button" type="submit" :disabled="!valid || loading" :loading="loading">
-                <span>C o n t i n u e →</span>
+    <div class="align-center d-flex justify-space-between pb-4 px-4">
+      <!-- check for validity -->
+      <v-btn id="continue-button" type="submit" :disabled="loading" :loading="loading">
+        <span>Continue</span>
 
-                <v-icon right dark>mdi-arrow-right</v-icon>
-            </v-btn>
-        </div>
-    </v-form>
+        <v-icon color="white">mdi-arrow-right</v-icon>
+      </v-btn>
+    </div>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -36,89 +39,90 @@ import { fetchSignInMethodsForEmail } from 'firebase/auth'
 import AuthHeader from './Header.vue'
 
 export interface IData {
-    valid: boolean | null
-    loading: boolean
-    error: string | null
+  valid: boolean | null
+  loading: boolean
+  error: string | null
 
-    currentEmail: string
-    emailRegex: RegExp
+  currentEmail: string
+  emailRegex: RegExp
 }
 
 export default {
-    name: 'AuthEmail',
+  name: 'AuthEmail',
 
-    components: { AuthHeader },
+  components: { AuthHeader },
 
-    props: {
-        email: {
-            type: String,
-            required: true,
-        },
-    },
+  props: {
+    email: {
+      type: String,
+      required: true
+    }
+  },
 
-    data(): IData {
-        return {
-            // Form
-            valid: null,
-            loading: false,
-            error: null,
+  data(): IData {
+    return {
+      // Form
+      valid: null,
+      loading: false,
+      error: null,
 
-            currentEmail: this.email,
-            emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        }
-    },
+      currentEmail: this.email,
+      emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    }
+  },
 
-    watch: {
-        currentEmail(v) {
-            this.$emit('update-email', v)
-        },
-    },
+  watch: {
+    currentEmail(v) {
+      this.$emit('update-email', v)
+    }
+  },
 
-    mounted() {
-        // Automatically go to sign in or sign up page if email given in params
-        this.$nextTick(() => {
-            if (this.$route.query.email && (this.$refs["form"] as HTMLFormElement).validate()) {
-                this.nextPanel()
-                this.$router.replace({
-                    query: { ...this.$route.query, email: undefined },
-                })
-            }
+  mounted() {
+    // Automatically go to sign in page if email given in params
+    this.$nextTick(() => {
+      if (this.$route.query.email && (this.$refs['form'] as HTMLFormElement).validate()) {
+        this.nextPanel()
+        this.$router.replace({
+          query: { ...this.$route.query, email: undefined }
         })
-    },
+      }
+    })
+  },
 
-    methods: {
-        // Show the sign up or sign in form
-        nextPanel(e) {
-			if (e) e.preventDefault()
-            // Determine if account exists
-            this.loading = true
-            this.error = null
+  methods: {
+    // Show the sign in form
+    nextPanel(e) {
+      if (e) e.preventDefault()
+      // Determine if account exists
+      this.loading = true
+      this.error = null
 
-            fetchSignInMethodsForEmail(auth, this.email)
-                .then((methods) => {
-                    // Success
-                    if (methods.length > 0) {
-                        this.$emit('go', 'SignIn')
-                    } else {
-                        this.$emit('go', 'SignUp')
-                    }
-                })
-                .catch((error) => {
-                    // An error occurred
-                    switch (error.code) {
-                        case 'auth/invalid-email':
-                            this.error = 'The email address is not valid.'
-                            break
-                        default:
-                            this.error = "This is an error message"
-                    }
-                })
-                .finally(() => {
-                    // Clean up loading state
-                    this.loading = false
-                })
-        },
-    },
+      fetchSignInMethodsForEmail(auth, this.email)
+        .then((methods) => {
+          // Success
+          if (methods.length > 0) {
+            this.$emit('go', 'SignIn')
+            // Non-existing email
+          } else {
+            this.error = 'An account associated with this email address does not exist.'
+          }
+        })
+        .catch((error) => {
+          // An error occurred
+          switch (error.code) {
+            case 'auth/invalid-email':
+              this.error = 'Please enter a valid email address.'
+              break
+            default:
+              this.error = 'This is an error message.'
+          }
+        })
+        .finally(() => {
+          // Clean up loading state
+          this.loading = false
+        })
+    }
+  }
 }
 </script>
 
@@ -126,15 +130,26 @@ export default {
 @import '@/styles/globals.scss';
 
 #continue-button {
-    background-color: $secondary;
-    width: max(25vw, 20vh);
-    height: 7vh;
-    margin: 3vh 10 3vh 0;
+  background-color: $secondary;
+  width: max(25vw, 20vh);
+  height: 6vh;
+  border-radius: 18px;
+  letter-spacing: 6px;
+  margin-top: 15px;
 }
 
 #continue-button span {
-    color: $white;
-    font-size:medium;
+  color: $white;
+  font-size: medium;
 }
 
+.email {
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 15px;
+  width: 315px;
+  height: 7vh;
+  text-align: center;
+  font-size: large;
+}
 </style>

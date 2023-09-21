@@ -1,19 +1,18 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 export const GetUserListQuery = gql`
-query Query {
+  query Query {
     users {
-        users {
-            id
-            email
-            displayName
-            photoURL
-            firstName
-            lastName
-            yearLevel
-            role
-            }
+      users {
+        id
+        email
+        displayName
+        photoURL
+        firstName
+        lastName
+        yearLevel
+        role
+      }
     }
   }
-  
-`;
+`

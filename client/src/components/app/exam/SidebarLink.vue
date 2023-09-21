@@ -13,6 +13,9 @@
       <v-list-item-content>
         <v-list-item-title>Question {{ number }}</v-list-item-title>
       </v-list-item-content>
+      <v-icon class="corner-icon" id="answered-icon" :color="flagColour(answered)">
+        {{ answered ? 'mdi-check-circle' : 'mdi-circle' }}
+      </v-icon>
     </v-container>
   </v-list-item>
 </template>
@@ -30,7 +33,7 @@ export default {
   methods: {
     flagColour(flagged: boolean): string {
       if (flagged) {
-        return 'red'
+        return 'secondary'
       } else {
         return 'white'
       }
@@ -44,6 +47,10 @@ export default {
   display: flex;
   gap: 0.5rem;
   padding: 0;
+
+  #answered-icon {
+    margin-left: auto;
+  }
 }
 
 .v-navigation-drawer .v-list-item .corner-icon {
@@ -56,14 +63,17 @@ export default {
   clip: revert;
   vertical-align: baseline;
 }
+
 .question-link-container {
   min-height: 30px;
   color: white;
   background-color: $examLightBlue;
 }
+
 .selected-question-overlay {
   background-color: $primary;
 }
+
 .app-exam-sidebar-link {
   display: flex;
 }

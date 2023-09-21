@@ -9,8 +9,8 @@ describe('Quiz', () => {
         quiz.name = 'example quiz'
         quiz.description = 'example description'
         quiz.duration = 60
-        quiz.startTime = new Date()
-        quiz.endTime = new Date()
+        quiz.openTime = new Date()
+        quiz.closeTime = new Date()
 
         const quizDocument = await QuizRepository.create(quiz)
         const readQuizDocument = await QuizRepository.findById(quizDocument.id)
@@ -23,8 +23,8 @@ describe('Quiz', () => {
         quiz.name = 'example quiz'
         quiz.description = 'example description'
         quiz.duration = 60
-        quiz.startTime = new Date()
-        quiz.endTime = new Date()
+        quiz.openTime = new Date()
+        quiz.closeTime = new Date()
 
         const quizDocument = await QuizRepository.create(quiz)
 

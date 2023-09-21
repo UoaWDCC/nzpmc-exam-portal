@@ -18,8 +18,8 @@ class AuthenticationError extends AuthError {
 }
 
 class NotFoundError extends ForbiddenError {
-    constructor(message: string = 'Not found') {
-        super(message);
+    constructor(message = 'Not found') {
+        super(message)
     }
 }
 

@@ -3,7 +3,6 @@ import {
     getQuiz,
     getUser,
     getUserQuiz,
-    getUserQuizbyQuizID,
     getUserQuizzesByQuizID,
     getUserQuizzes,
     getUsersPagination,
@@ -34,7 +33,7 @@ const userQuery: Resolver<
     unknown,
     UserContext,
     Partial<QueryUserArgs>
-> = async (_parents, {userID, userEmail}, _context) => {
+> = async (_parents, { userID, userEmail }, _context) => {
     return await getUser(userID, userEmail)
 }
 const usersQuery: Resolver<
@@ -123,7 +122,7 @@ const userQuizQuery: Resolver<
     }
     // This was wrong getUserQuiz takes argument userQuizID not quizID
     //const userQuiz = await getUserQuiz(args.quizID)
-    const userQuiz = await getUserQuizbyQuizID(args.quizID)
+    const userQuiz = await getUserQuiz(args.quizID)
     const user = await getUser(userQuiz.userID)
 
     if (user.id !== context.user.uid && !context.user.admin)
@@ -131,7 +130,7 @@ const userQuizQuery: Resolver<
 
     if (!context.user.admin) {
         // If the quiz isn't started yet, throw error
-        if (!userQuiz.startTime) throw new AuthenticationError()
+        if (!userQuiz.openTime) throw new AuthenticationError()
         userQuiz.score = undefined
     }
     return userQuiz
@@ -158,8 +157,8 @@ const userQuizzesByQuizIDQuerry: Resolver<
     if (context.user === undefined || !context.user.admin) {
         throw new AuthenticationError()
     }
-    const id: string = args.quizID;
-    return getUserQuizzesByQuizID(id);
+    const id: string = args.quizID
+    return getUserQuizzesByQuizID(id)
 }
 
 const queryResolvers: QueryResolvers = {
