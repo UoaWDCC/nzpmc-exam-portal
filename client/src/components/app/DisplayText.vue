@@ -31,7 +31,7 @@ export default {
 
       const latexStrings = []
       const imageSubstrings = []
-      let match;
+      let match
       while ((match = latexRegex.exec(this.text.replace(/\$\$/gi, '$'))) !== null) {
         latexStrings.push('$' + match[2] + '$')
       }
@@ -41,7 +41,7 @@ export default {
       }
 
       let html = '<div>'
-      let workingString = this.text.replace(/\$\$/gi, '$').replace(imageRegex, "");
+      let workingString = this.text.replace(/\$\$/gi, '$').replace(imageRegex, '')
 
       latexStrings.forEach((latexString) => {
         const parts = workingString.split(latexString)
@@ -54,8 +54,8 @@ export default {
       })
 
       html += `<p>${workingString}</p></div>`
-      imageSubstrings.forEach(img => {
-        html += img;
+      imageSubstrings.forEach((img) => {
+        html += img
       })
 
       this.htmlContent = this.converter.makeHtml(html)
