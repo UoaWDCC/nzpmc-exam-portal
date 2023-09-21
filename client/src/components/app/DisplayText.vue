@@ -72,4 +72,8 @@ img {
   margin: 0 auto;
   display: block;
 }
+
+.question-form {
+  display: flex;
+}
 </style>
