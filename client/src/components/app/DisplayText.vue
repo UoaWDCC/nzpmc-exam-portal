@@ -26,7 +26,7 @@ export default {
 
   methods: {
     parsed() {
-      this.htmlContent = ""
+      this.htmlContent = ''
       const regex = /\$(\$?)(.*?)\1\$/g
 
       const latexStrings = []
@@ -55,12 +55,12 @@ export default {
       this.$nextTick(() => {
         document.querySelectorAll('.latex').forEach((node) => {
           let latex = node.textContent
-          let convertedLatex = latex?.slice(1, -1);
+          let convertedLatex = latex?.slice(1, -1)
           katex.render(convertedLatex, node, {
             throwOnError: false
           })
         })
-      });
+      })
     }
   }
 }
