@@ -79,7 +79,7 @@ export default {
   data(): {
     error: any
     quizData: any
-    examStore: Store // see if this actually works
+    examStore: any
   } {
     return {
       error: null,
