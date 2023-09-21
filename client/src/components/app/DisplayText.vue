@@ -27,20 +27,26 @@ export default {
   methods: {
     parsed() {
       this.htmlContent = ''
-      const regex = /\$(\$?)(.*?)\1\$/g
+      const latexRegex = /\$(\$?)(.*?)\1\$/g
+      const imageRegex = /!\[([^\]]*)\]\(([^\)]+)\)/g
 
       const latexStrings = []
-      let match
-      while ((match = regex.exec(this.text.replace(/\$\$/gi, '$'))) !== null) {
+      const imageSubstrings = []
+      let match;
+      while ((match = latexRegex.exec(this.text.replace(/\$\$/gi, '$'))) !== null) {
         latexStrings.push('$' + match[2] + '$')
       }
 
-      let html = ''
-      let workingString = this.text.replace(/\$\$/gi, '$')
+      while ((match = imageRegex.exec(this.text.replace(/\$\$/gi, '$'))) !== null) {
+        imageSubstrings.push(match[0])
+      }
+
+      let html = '<div>'
+      let workingString = this.text.replace(/\$\$/gi, '$').replace(imageRegex, "");
 
       latexStrings.forEach((latexString) => {
         const parts = workingString.split(latexString)
-        html += parts[0] //add non latex part
+        html += `${parts[0]}` //add non latex part
 
         //add the latex part
         html += `<div class="latex">${latexString}</div>`
@@ -48,7 +54,10 @@ export default {
         workingString = parts[1]
       })
 
-      html += workingString
+      html += `<p>${workingString}</p></div>`
+      imageSubstrings.forEach(img => {
+        html += img;
+      })
 
       this.htmlContent = this.converter.makeHtml(html)
 
@@ -74,6 +83,13 @@ img {
 }
 
 .question-form {
-  display: flex;
+  > div {
+    display: flex;
+  }
+}
+
+.latex {
+  margin-left: 5px;
+  margin-right: 5px;
 }
 </style>
