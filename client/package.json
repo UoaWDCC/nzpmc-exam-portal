@@ -21,7 +21,7 @@
     "csv-parse": "^5.3.10",
     "csv-writer": "^1.6.0",
     "firebase": "^9.20.0",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "papaparse": "^5.4.1",
     "pinia": "^2.0.32",
