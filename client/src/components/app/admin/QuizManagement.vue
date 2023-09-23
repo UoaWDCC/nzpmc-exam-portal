@@ -366,7 +366,7 @@ export default defineComponent({
         this.popUpDialog = true
         return
       } else {
-        // this.$router.push(`/admin/quiz/${this.selectedQuiz.id}/edit`)
+        this.$router.push({ name: 'AppExam', params: { quizID: this.selectedQuiz.id } })
         this.popUpMessage = 'This feature is not yet implemented'
         this.popUpDialog = true
       }
