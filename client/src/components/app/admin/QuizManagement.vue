@@ -481,7 +481,7 @@ export default defineComponent({
             },
             { once: true }
           )
-          
+
           this.$refs.csvUploadZone.click()
         }
       } catch (error) {
