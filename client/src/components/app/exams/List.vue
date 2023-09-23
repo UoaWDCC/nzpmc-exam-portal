@@ -36,11 +36,11 @@
         />
       </div>
 
-      <div v-if="pastExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
+      <div v-if="pastExams.length || submittedExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
         <h2 class="mb-6 text-h5">Past Exams</h2>
 
         <AppExamsInfoCard
-          v-for="exam in pastExams"
+          v-for="exam in pastExams.concat(submittedExams)"
           :key="exam.id"
           :title="exam.name"
           :description="exam.description"
@@ -49,19 +49,7 @@
           :close-time="exam.closeTime"
         />
       </div>
-      <div v-if="submittedExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
-        <h2 class="mb-6 text-h5">Submitted Exams</h2>
-
-        <AppExamsInfoCard
-          v-for="exam in submittedExams"
-          :key="exam.id"
-          :title="exam.name"
-          :description="exam.description"
-          :duration="exam.duration"
-          :open-time="exam.openTime"
-          :close-time="exam.closeTime"
-        />
-      </div>
+      
     </div>
   </div>
 </template>
