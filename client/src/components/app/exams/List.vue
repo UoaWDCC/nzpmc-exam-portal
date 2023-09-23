@@ -36,7 +36,11 @@
         />
       </div>
 
-      <div v-if="pastExams.length || submittedExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
+      <div
+        v-if="pastExams.length || submittedExams.length"
+        class="flex-grow-1 mb-n3"
+        style="min-width: 50%"
+      >
         <h2 class="mb-6 text-h5">Past Exams</h2>
 
         <AppExamsInfoCard
@@ -49,7 +53,6 @@
           :close-time="exam.closeTime"
         />
       </div>
-      
     </div>
   </div>
 </template>
