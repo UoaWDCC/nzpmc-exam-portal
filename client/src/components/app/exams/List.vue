@@ -1,4 +1,3 @@
-
 <template>
   <div class="app-exams-list">
     <v-alert v-if="!userQuizzes.length" type="info" class="my-6">
@@ -16,19 +15,14 @@
         :close-time="exam.closeTime"
         :to="{ name: 'AppExam', params: { quizID: exam.id } }"
         :containerClass="'primaryContainer'"
-
       />
     </div>
 
-    <div
-      v-if="upcomingExams.length || pastExams.length"
-      class="d-flex my-6"
-      style="gap: 24px"
-    >
-      <div v-if="upcomingExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%" >
+    <div v-if="upcomingExams.length || pastExams.length" class="d-flex my-6" style="gap: 24px">
+      <div v-if="upcomingExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
         <h2 class="mb-6 text-h5">Upcoming Exams</h2>
 
-        <AppExamsInfoCard 
+        <AppExamsInfoCard
           v-for="exam in upcomingExams"
           :key="exam.id"
           :title="exam.name"
@@ -37,15 +31,13 @@
           :open-time="exam.openTime"
           :close-time="exam.closeTime"
           :containerClass="'primaryContainer'"
-
-
         />
       </div>
 
       <div v-if="pastExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
         <h2 class="mb-6 text-h5">Past Exams</h2>
 
-        <AppExamsLinkCard 
+        <AppExamsLinkCard
           v-for="exam in pastExams"
           :key="exam.id"
           :title="exam.name"
@@ -54,7 +46,7 @@
           :open-time="exam.openTime"
           :close-time="exam.closeTime"
           :to="{ name: 'AppExam', params: { quizID: exam.id } }"
-          :containerClass="'secondaryContainer'" 
+          :containerClass="'secondaryContainer'"
         />
       </div>
     </div>
@@ -118,8 +110,10 @@ export default {
     // Exams that finished
     pastExams() {
       console.log(this.userQuizzes.filter((quiz) => new Date() >= new Date(quiz.closeTime)))
-      return this.userQuizzes.filter((quiz) => { return (new Date() >= new Date(quiz.closeTime) || quiz.submitted)})
-    },
+      return this.userQuizzes.filter((quiz) => {
+        return new Date() >= new Date(quiz.closeTime) || quiz.submitted
+      })
+    }
     // submitted exams
     // submittedExams() {
     //   return this.userQuizzes.filter(

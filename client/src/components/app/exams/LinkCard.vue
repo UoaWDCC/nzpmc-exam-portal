@@ -8,22 +8,19 @@
 
 .secondaryContainer {
   background-color: $secondary;
-  color:black;
+  color: black;
   padding: 1rem;
   display: flex;
 }
 
-.primaryContainer:hover, .secondaryContainer:hover {
+.primaryContainer:hover,
+.secondaryContainer:hover {
   opacity: 0.96;
 }
-
-
-
-
 </style>
 <template>
   <router-link class="app-exams-link-card d-block mb-3 text-decoration-none" :to="to">
-    <v-sheet v-ripple :class=containerClass elevation="1">
+    <v-sheet v-ripple :class="containerClass" elevation="1">
       <div class="flex-grow-1">
         <h3>{{ title }}</h3>
 
@@ -53,7 +50,7 @@ export default {
     closeTime: { type: String, required: true },
     // Router link to the exam
     to: { type: Object, required: true },
-    containerClass: {type: String, required: true}
+    containerClass: { type: String, required: true }
   },
 
   methods: {
