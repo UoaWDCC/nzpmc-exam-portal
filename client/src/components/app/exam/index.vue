@@ -49,6 +49,10 @@ import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
 import { defineComponent } from 'vue'
 import { TOOLBAR_HEIGHT } from '@/helpers'
 import type { UserQuizModel } from '@nzpmc-exam-portal/common'
+import { useMainStore } from '@/stores/main'
+import { GetQuizInfoQuery } from '@/gql/queries/quiz'
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted } from 'vue'
 
 export default defineComponent({
   name: 'AppExam',
@@ -79,6 +83,7 @@ export default defineComponent({
   },
 
   data(): {
+    store: any
     data: UserQuizModel | undefined
     loading: boolean
     error: any
@@ -86,6 +91,7 @@ export default defineComponent({
     TOOLBAR_HEIGHT: number
   } {
     return {
+      store: useMainStore(),
       TOOLBAR_HEIGHT,
       routeTransition: VSlideXTransition,
       data: undefined,
@@ -99,39 +105,48 @@ export default defineComponent({
       if (this.data?.submitted) {
         this.$router.push({ name: 'AppExams' })
       }
-    }
-  },
+    },
+    async fetchData() {
+      const isAdminAndEdit = useMainStore().userIsAdmin && useRoute().query.edit === 'true'
+      const queryType = isAdminAndEdit ? GetQuizInfoQuery : UserQuizQuery
+      const quizId = this.$route.params.quizID
+      const questionId = this.$route.params.questionID
 
-  apollo: {
-    name: {
-      query: UserQuizQuery,
-      variables() {
-        return { quizID: this.$route.params.quizID }
-      },
+      try {
+        this.loading = true
+        const { data } = await this.$apollo.query({
+          query: queryType,
+          variables: {
+            quizId
+          },
+          fetchPolicy: 'network-only',
+          notifyOnNetworkStatusChange: true
+        })
 
-      result({ data, error, loading }) {
-        this.loading = loading
-        if (error) {
-          console.log(this.$route.params.quizID)
-          this.error = error.message
-        } else {
-          if (data) {
-            this.data = data.userQuiz
-            const currentQuestions = data?.userQuiz.questions
-            console.log(this.$route.params.questionID)
-            if (this.$route.params.questionID === undefined) {
-              this.$router.push({
-                name: 'AppExamQuestion',
-                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
-              })
-            }
-            console.log(data)
+        if (data) {
+          this.data = isAdminAndEdit ? data.quiz : data.userQuiz
+          const currentQuestions = data.userQuiz?.questions
+
+          if (questionId === undefined && currentQuestions?.length > 0) {
+            this.$router.push({
+              name: 'AppExamQuestion',
+              params: {
+                quizID: quizId,
+                questionID: currentQuestions[0].id
+              }
+            })
           }
         }
-      },
-      fetchPolicy: 'network-only',
-      notifyOnNetworkStatusChange: true
+      } catch (error) {
+        console.error(error)
+        this.error = error.message
+      } finally {
+        this.loading = false
+      }
     }
+  },
+  created() {
+    this.fetchData() // Call the method to fetch data when the component is created
   },
   watch: {
     'data.submitted': function (newVal) {
