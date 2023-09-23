@@ -1,18 +1,29 @@
 <style scoped lang="scss">
-.container {
+.primaryContainer {
   background-color: $primary;
   color: white;
   padding: 1rem;
   display: flex;
 }
 
-.container:hover {
+.secondaryContainer {
+  background-color: $secondary;
+  color:black;
+  padding: 1rem;
+  display: flex;
+}
+
+.primaryContainer:hover, .secondaryContainer:hover {
   opacity: 0.96;
 }
+
+
+
+
 </style>
 <template>
   <router-link class="app-exams-link-card d-block mb-3 text-decoration-none" :to="to">
-    <v-sheet v-ripple class="container" elevation="1">
+    <v-sheet v-ripple :class=containerClass elevation="1">
       <div class="flex-grow-1">
         <h3>{{ title }}</h3>
 
@@ -41,7 +52,8 @@ export default {
     openTime: { type: String, required: true },
     closeTime: { type: String, required: true },
     // Router link to the exam
-    to: { type: Object, required: true }
+    to: { type: Object, required: true },
+    containerClass: {type: String, required: true}
   },
 
   methods: {
