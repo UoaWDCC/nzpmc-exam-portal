@@ -33,6 +33,22 @@
         </span>
       </v-card>
     </v-item>
+    <v-item>
+      <v-card
+        elevation="1"
+        :dark="active"
+        :color="active ? '#03a9f5' : 'white'"
+        :ripple="!isAdminAndEdit"
+        class="align-center d-flex mb-3"
+        @click=""
+        @keyup.enter="!isAdminAndEdit && toggle"
+      >
+        <v-icon class="ml-4 my-4">
+          {{ 'mdi-plus-circle' }}
+        </v-icon>
+        <span class="d-block pa-4" style="width: calc(100% - 3.5rem)"> Add New Question </span>
+      </v-card>
+    </v-item>
   </v-item-group>
 </template>
 
