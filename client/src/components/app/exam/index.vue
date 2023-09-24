@@ -13,8 +13,6 @@
 
     <v-container v-if="data || loading" class="exam-and-sidebar-container">
       <v-navigation-drawer class="sidebar-container" permanent clipped left mini-variant>
-        <AppExamSidebarLoader v-if="loading" />
-
         <v-scroll-y-reverse-transition>
           <AppExamSidebar
             v-if="data"
