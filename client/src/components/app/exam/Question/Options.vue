@@ -32,6 +32,7 @@
           ></v-text-field>
           <span v-else>{{ option.option }}</span>
         </span>
+        <v-icon class="mr-4 my-4"> {{ 'mdi-check-circle' }} </v-icon>
       </v-card>
     </v-item>
     <v-item>
