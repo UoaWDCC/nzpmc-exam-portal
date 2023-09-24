@@ -122,8 +122,6 @@ export default {
         .finally(() => {
           // Ensure selected state is synced with server
           console.log('Success')
-          console.log(this.answer)
-          this.setSelected(this.answer)
         })
     }
   },
