@@ -76,6 +76,7 @@ export default {
       mutation
         .then(() => {
           this.currentFlagged = !this.currentFlagged
+          this.$emit('flag-changed')
           console.log('flagged')
         })
         .catch(() => {

@@ -39,7 +39,11 @@
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
-          <AppExamQuestionFlagButton :flagged="question.flag" :question-number="questionNumber" />
+          <AppExamQuestionFlagButton
+            @flag-changed="$emit('flag-changed')"
+            :flagged="question.flag"
+            :question-number="questionNumber"
+          />
         </div>
       </v-row>
       <div class="options-area">

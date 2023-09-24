@@ -28,7 +28,7 @@
 
       <div v-if="data" class="question-container" style="overflow: hidden">
         <component :is="routeTransition" hide-on-leave>
-          <router-view :key="$route.params.questionID" />
+          <router-view @flag-changed="fetchData" :key="$route.params.questionID" />
         </component>
       </div>
     </v-container>
@@ -112,7 +112,7 @@ export default defineComponent({
         this.loading = true
         const { data } = await this.$apollo.query({
           query: this.queryType,
-
+          fetchPolicy: 'network-only',
           variables: this.isAdminAndEdit ? { quizId } : { quizID: quizId },
           notifyOnNetworkStatusChange: true
         })
