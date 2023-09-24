@@ -68,6 +68,7 @@ import AppExamQuestionFlagButton from './FlagButton.vue'
 import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
 import quizEditingMixin from '@/utils/quizEditingMixin'
+import { onMounted } from 'vue'
 
 export default {
   name: 'AppExamQuestion',
@@ -148,7 +149,9 @@ export default {
   },
 
   created() {
-    this.fetchData('cache-first')
+    onMounted(async () => {
+      this.fetchData('cache-first')
+    })
   }
 }
 </script>

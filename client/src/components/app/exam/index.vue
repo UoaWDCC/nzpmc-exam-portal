@@ -148,7 +148,9 @@ export default defineComponent({
   watch: {
     'data.questions': function () {
       // refresh on changes to reflect firebase
-      this.fetchData()
+      onMounted(async () => {
+        this.fetchData()
+      })
     },
     'data.submitted': function (newVal) {
       if (newVal) {
