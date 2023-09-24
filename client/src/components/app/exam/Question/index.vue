@@ -62,24 +62,25 @@ import AppExamQuestionOptions from './Options.vue'
 import AppExamQuestionFlagButton from './FlagButton.vue'
 import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 
 export default {
   name: 'AppExamQuestion',
+  mixins: [quizEditingMixin],
 
   components: {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
     DisplayText
   },
-  data(): {
-    error: any
-    quizData: any
-  } {
+
+  data() {
     return {
       error: null,
       quizData: undefined
     }
   },
+
   computed: {
     questionNumber() {
       if (this.quizData) {
@@ -103,10 +104,11 @@ export default {
       return null
     }
   },
+
   methods: {
-    nextQuestion() {
+    async nextQuestion() {
       if (this.questionNumber) {
-        const nextQuestionIndex = this.questionNumber // index will use exact same value because it has 1 added to it
+        const nextQuestionIndex = this.questionNumber - 1 // subtract 1 to get the correct index
         const nextQuestionID = this.quizData.questions[nextQuestionIndex].id
         console.log(nextQuestionID)
         this.$router.push({
@@ -114,27 +116,29 @@ export default {
           params: { quizID: this.$route.params.quizID, questionID: nextQuestionID }
         })
       }
+    },
+    async fetchData() {
+      try {
+        const { data } = await this.$apollo.query({
+          query: this.queryType,
+          variables: {
+            quizId: this.$route.params.quizID
+          },
+          fetchPolicy: 'cache-first',
+          notifyOnNetworkStatusChange: true
+        })
+
+        if (data) {
+          this.quizData = this.isAdminAndEdit ? data.quiz : data.userQuiz
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
   },
 
-  apollo: {
-    quizData: {
-      query: UserQuizQuery,
-      variables() {
-        return {
-          quizID: this.$route.params.quizID
-        }
-      },
-      result({ data, error }) {
-        if (error) {
-          this.error = error.message
-        } else {
-          if (data) this.quizData = data.userQuiz
-        }
-      },
-      fetchPolicy: 'cache-and-network',
-      notifyOnNetworkStatusChange: true
-    }
+  created() {
+    this.fetchData()
   }
 }
 </script>
