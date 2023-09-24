@@ -40,6 +40,24 @@
     id="submit-button"
     >Submit</v-btn
   >
+  <v-btn
+    color="secondary"
+    :disabled="examStore.submitting"
+    v-if="isAdminAndEditing"
+    v-on:click=""
+    variant="flat"
+    id="submit-button"
+    >Add New Question</v-btn
+  >
+  <v-btn
+    color="secondary"
+    :disabled="examStore.submitting"
+    v-if="isAdminAndEditing"
+    v-on:click=""
+    variant="flat"
+    id="submit-button"
+    >Exit Editor</v-btn
+  >
 </template>
 
 <script lang="ts">
