@@ -116,7 +116,7 @@ export default defineComponent({
           query: this.queryType,
 
           variables: this.isAdminAndEdit ? { quizId } : { quizID: quizId },
-          fetchPolicy: 'cache-first',
+          fetchPolicy: 'network-only',
           notifyOnNetworkStatusChange: true
         })
 

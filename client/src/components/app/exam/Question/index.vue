@@ -117,18 +117,19 @@ export default {
         })
       }
     },
-    async fetchData() {
+    async fetchData(fetchPolicy: 'network-only' | 'cache-first') {
       const quizId = this.$route.params.quizID
       try {
         const { data } = await this.$apollo.query({
           query: this.queryType,
           variables: this.isAdminAndEdit ? { quizId } : { quizID: quizId },
-          fetchPolicy: 'cache-first',
+          fetchPolicy,
           notifyOnNetworkStatusChange: true
         })
 
         if (data) {
           this.quizData = this.isAdminAndEdit ? data.quiz : data.userQuiz
+          console.log(this.quizData)
         }
       } catch (error) {
         console.error(error)
@@ -136,13 +137,13 @@ export default {
     }
   },
   watch: {
-    quizData: function (q) {
-      this.fetchData()
+    quizData: function () {
+      this.fetchData('network-only')
     }
   },
 
   created() {
-    this.fetchData()
+    this.fetchData('cache-first')
   }
 }
 </script>
