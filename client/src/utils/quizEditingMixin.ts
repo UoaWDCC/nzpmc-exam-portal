@@ -7,9 +7,12 @@ import { EditQuestionMutation } from '@/gql/mutations/quizQuestion'
 
 export default {
   computed: {
+    route() {
+      return useRoute()
+    },
     isAdminAndEditing() {
       return (
-        useRoute() !== undefined && useMainStore().userIsAdmin && useRoute().query.edit === 'true'
+        this.route !== undefined && useMainStore().userIsAdmin && this.route.query.edit === 'true'
       )
     },
     isEditingQuizQuery() {
@@ -17,10 +20,16 @@ export default {
     },
     queryType() {
       return this.isAdminAndEditing ? GetQuizInfoQuery : UserQuizQuery
+    },
+    quizID() {
+      return this.route.params.quizID
+    },
+    questionID() {
+      return this.route.params.questionID
     }
   },
   methods: {
-    async editQuiz(
+    async editQuestionInfo(
       apollo: ApolloClient<NormalizedCacheObject>,
       inputs: {
         questionID: string
@@ -35,15 +44,19 @@ export default {
         const mutation = await apollo.mutate({
           mutation: EditQuestionMutation,
           variables: {
-            id: questionID,
-            quizID,
-            topics,
-            imageURI,
-            question: questionDescription
+            input: {
+              id: questionID,
+              quizID,
+              topics,
+              imageURI,
+              question: questionDescription
+            }
           }
         })
-        if (mutation.data) return true
-        else return false
+        if (mutation.data) {
+          console.log(mutation.data)
+          return true
+        } else return false
       } catch (e) {
         console.error(e)
         return false

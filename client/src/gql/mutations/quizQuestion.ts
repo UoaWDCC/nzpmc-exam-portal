@@ -4,6 +4,7 @@ export const EditQuestionMutation = gql`
   mutation EditQuestion($input: EditQuestionInput!) {
     editQuestion(input: $input) {
       id
+      modified
     }
   }
 `
