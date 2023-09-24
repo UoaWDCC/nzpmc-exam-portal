@@ -7,7 +7,7 @@ export default {
       return useMainStore().userIsAdmin && useRoute().query.edit === 'true'
     },
     isEditingQuizQuery() {
-      return { edit: this.isAdminAndEdit() ? 'true' : undefined }
+      return { edit: this.isAdminAndEdit ? 'true' : undefined }
     }
   }
 }
