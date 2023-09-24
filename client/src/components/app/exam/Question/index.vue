@@ -118,12 +118,11 @@ export default {
       }
     },
     async fetchData() {
+      const quizId = this.$route.params.quizID
       try {
         const { data } = await this.$apollo.query({
           query: this.queryType,
-          variables: {
-            quizId: this.$route.params.quizID
-          },
+          variables: this.isAdminAndEdit ? { quizId } : { quizID: quizId },
           fetchPolicy: 'cache-first',
           notifyOnNetworkStatusChange: true
         })
@@ -134,6 +133,11 @@ export default {
       } catch (error) {
         console.error(error)
       }
+    }
+  },
+  watch: {
+    quizData: function (q) {
+      this.fetchData()
     }
   },
 

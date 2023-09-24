@@ -107,17 +107,15 @@ export default defineComponent({
       }
     },
     async fetchData() {
-      const queryType = this.isAdminAndEdit ? GetQuizInfoQuery : UserQuizQuery
       const quizId = this.$route.params.quizID
       const questionId = this.$route.params.questionID
 
       try {
         this.loading = true
         const { data } = await this.$apollo.query({
-          query: queryType,
-          variables: {
-            quizId
-          },
+          query: this.queryType,
+
+          variables: this.isAdminAndEdit ? { quizId } : { quizID: quizId },
           fetchPolicy: 'network-only',
           notifyOnNetworkStatusChange: true
         })
@@ -149,6 +147,10 @@ export default defineComponent({
     this.fetchData() // Call the method to fetch data when the component is created
   },
   watch: {
+    'data.questions': function () {
+      // refresh on changes to reflect firebase
+      this.fetchData()
+    },
     'data.submitted': function (newVal) {
       if (newVal) {
         this.redirectToExams()
