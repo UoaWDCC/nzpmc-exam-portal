@@ -53,7 +53,7 @@
     color="secondary"
     :disabled="examStore.submitting"
     v-if="isAdminAndEditing"
-    v-on:click=""
+    v-on:click="exitEditor()"
     variant="flat"
     id="submit-button"
     >Exit Editor</v-btn
@@ -125,6 +125,11 @@ export default {
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
         })
+    },
+    exitEditor() {
+      this.$router.push({
+        name: 'AppAdmin'
+      })
     }
   },
 
