@@ -118,6 +118,7 @@ export default {
         console.log(nextQuestionID)
         this.$router.push({
           name: 'AppExamQuestion',
+          query: this.isEditingQuizQuery,
           params: { quizID: this.$route.params.quizID, questionID: nextQuestionID }
         })
       }

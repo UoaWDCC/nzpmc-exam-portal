@@ -97,6 +97,7 @@ export default {
           this.$router.push({
             name: 'AppExams'
           })
+          this.examStore.submitting = false
         })
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
