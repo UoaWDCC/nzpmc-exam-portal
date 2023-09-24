@@ -116,13 +116,14 @@ export default defineComponent({
           query: this.queryType,
 
           variables: this.isAdminAndEdit ? { quizId } : { quizID: quizId },
-          fetchPolicy: 'network-only',
+          fetchPolicy: 'cache-first',
           notifyOnNetworkStatusChange: true
         })
 
         if (data) {
           this.data = this.isAdminAndEdit ? data.quiz : data.userQuiz
-          const currentQuestions = data.userQuiz?.questions
+          console.log(this.data)
+          const currentQuestions = this.data?.questions
 
           if (questionId === undefined && currentQuestions?.length > 0) {
             this.$router.push({
