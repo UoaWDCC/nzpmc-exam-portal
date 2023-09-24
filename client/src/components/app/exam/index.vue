@@ -51,11 +51,11 @@ import { TOOLBAR_HEIGHT } from '@/helpers'
 import type { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { useMainStore } from '@/stores/main'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
-import { useRoute, useRouter } from 'vue-router'
-import { onMounted } from 'vue'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 
 export default defineComponent({
   name: 'AppExam',
+  mixins: [quizEditingMixin],
 
   metaInfo() {
     return {
@@ -80,11 +80,6 @@ export default defineComponent({
         ? VSlideXReverseTransition
         : VSlideXTransition
     next()
-  },
-  computed: {
-    isAdminAndEdit() {
-      return useMainStore().userIsAdmin && useRoute().query.edit === 'true'
-    }
   },
 
   data(): {
@@ -137,7 +132,8 @@ export default defineComponent({
               params: {
                 quizID: quizId,
                 questionID: currentQuestions[0].id
-              }
+              },
+              query: this.isEditingQuizQuery
             })
           }
         }

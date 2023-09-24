@@ -24,6 +24,7 @@
   <v-btn
     color="secondary"
     :disabled="examStore.submitting"
+    v-if="!isAdminAndEdit"
     v-on:click="submitQuiz()"
     variant="flat"
     id="submit-button"
@@ -40,9 +41,11 @@ import type { PropType } from 'vue'
 import { useExamStore } from './examStore'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 const SIDEBAR_WIDTH = 56
 export default {
   name: 'AppExamSidebar',
+  mixins: [quizEditingMixin],
 
   components: { AppExamSidebarLink, AppExamTopbarTimer },
 
