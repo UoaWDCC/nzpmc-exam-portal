@@ -1,7 +1,6 @@
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import { useMainStore } from '@/stores/main'
-import { watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 export default {
@@ -17,5 +16,6 @@ export default {
     queryType() {
       return this.isAdminAndEditing ? GetQuizInfoQuery : UserQuizQuery
     }
-  }
+  },
+  methods: {}
 }
