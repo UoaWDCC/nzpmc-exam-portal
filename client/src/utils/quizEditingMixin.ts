@@ -17,5 +17,13 @@ export default {
       return this.isAdminAndEditing ? GetQuizInfoQuery : UserQuizQuery
     }
   },
-  methods: {}
+  methods: {
+    async editQuiz(inputs: {
+      questionID: string
+      quizID: string
+      topics?: string
+      imageURI?: string
+      questionDescription?: string
+    }) {}
+  }
 }
