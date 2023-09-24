@@ -1,12 +1,15 @@
 <template>
-  <div v-html="parsed"></div>
+  <v-textarea :model-value="text" v-if="isAdminAndEdit"></v-textarea>
+  <div v-else v-html="parsed"></div>
 </template>
 
 <script lang="ts">
+import quizEditingMixin from '@/utils/quizEditingMixin'
 import { Converter } from 'showdown'
 
 export default {
   name: 'AppDisplayText',
+  mixins: [quizEditingMixin],
 
   props: {
     text: { type: String, required: true }

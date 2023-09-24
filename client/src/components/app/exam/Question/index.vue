@@ -40,6 +40,7 @@
       <v-row>
         <div class="align-center d-flex mb-3">
           <AppExamQuestionFlagButton
+            v-if="!isAdminAndEdit"
             @flag-changed="$emit('flag-changed')"
             :flagged="question.flag"
             :question-number="questionNumber"
