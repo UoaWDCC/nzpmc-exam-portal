@@ -81,6 +81,11 @@ export default defineComponent({
         : VSlideXTransition
     next()
   },
+  computed: {
+    isAdminAndEdit() {
+      return useMainStore().userIsAdmin && useRoute().query.edit === 'true'
+    }
+  },
 
   data(): {
     store: any
@@ -107,8 +112,7 @@ export default defineComponent({
       }
     },
     async fetchData() {
-      const isAdminAndEdit = useMainStore().userIsAdmin && useRoute().query.edit === 'true'
-      const queryType = isAdminAndEdit ? GetQuizInfoQuery : UserQuizQuery
+      const queryType = this.isAdminAndEdit ? GetQuizInfoQuery : UserQuizQuery
       const quizId = this.$route.params.quizID
       const questionId = this.$route.params.questionID
 
@@ -124,7 +128,7 @@ export default defineComponent({
         })
 
         if (data) {
-          this.data = isAdminAndEdit ? data.quiz : data.userQuiz
+          this.data = this.isAdminAndEdit ? data.quiz : data.userQuiz
           const currentQuestions = data.userQuiz?.questions
 
           if (questionId === undefined && currentQuestions?.length > 0) {
