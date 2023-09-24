@@ -108,7 +108,7 @@ export default {
   methods: {
     async nextQuestion() {
       if (this.questionNumber) {
-        const nextQuestionIndex = this.questionNumber - 1 // subtract 1 to get the correct index
+        const nextQuestionIndex = this.questionNumber // subtract 1 to get the correct index
         const nextQuestionID = this.quizData.questions[nextQuestionIndex].id
         console.log(nextQuestionID)
         this.$router.push({
@@ -129,7 +129,6 @@ export default {
 
         if (data) {
           this.quizData = this.isAdminAndEdit ? data.quiz : data.userQuiz
-          console.log(this.quizData)
         }
       } catch (error) {
         console.error(error)
@@ -137,7 +136,7 @@ export default {
     }
   },
   watch: {
-    quizData: function () {
+    'quizData.questions': function () {
       this.fetchData('network-only')
     }
   },
