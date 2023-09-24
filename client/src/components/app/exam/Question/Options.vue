@@ -18,7 +18,7 @@
         @click="!isAdminAndEdit && toggle"
         @keyup.enter="!isAdminAndEdit && toggle"
       >
-        <h3 v-if="isAdminAndEdit" class="ml-4 my-4">{{ index }}.</h3>
+        <h3 v-if="isAdminAndEdit" class="ml-4 my-4">{{ index + 1 }}.</h3>
         <v-icon v-else class="ml-4 my-4">
           {{ isSelected(option.id) ? 'mdi-check-circle' : 'mdi-checkbox-blank-circle-outline' }}
         </v-icon>
