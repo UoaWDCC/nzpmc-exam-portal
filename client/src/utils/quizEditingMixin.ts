@@ -7,9 +7,7 @@ export default {
   computed: {
     isAdminAndEdit() {
       return (
-        useRoute().query !== undefined &&
-        useMainStore().userIsAdmin &&
-        useRoute().query.edit === 'true'
+        useRoute() !== undefined && useMainStore().userIsAdmin && useRoute().query.edit === 'true'
       )
     },
     isEditingQuizQuery() {

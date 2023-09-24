@@ -138,7 +138,7 @@ export default {
   },
   watch: {
     quizData: function () {
-      this.fetchData('network-only')
+      //this.fetchData('network-only')
     }
   },
 
