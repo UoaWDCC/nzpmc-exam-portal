@@ -8,21 +8,28 @@
 </style>
 <template>
   <v-item-group v-model="selected" class="options-container">
-    <v-item v-for="option in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
+    <v-item v-for="(option, index) in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
       <v-card
         elevation="1"
         :dark="active"
         :color="active ? '#03a9f5' : 'white'"
+        :ripple="!isAdminAndEdit"
         class="align-center d-flex mb-3"
-        @click="toggle"
-        @keyup.enter="toggle"
+        @click="!isAdminAndEdit && toggle"
+        @keyup.enter="!isAdminAndEdit && toggle"
       >
-        <v-icon class="ml-4 my-4">
+        <h3 v-if="isAdminAndEdit" class="ml-4 my-4">{{ index }}.</h3>
+        <v-icon v-else class="ml-4 my-4">
           {{ isSelected(option.id) ? 'mdi-check-circle' : 'mdi-checkbox-blank-circle-outline' }}
         </v-icon>
 
         <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
-          {{ option.option }}
+          <v-text-field
+            :disabled="false"
+            :model-value="option.option"
+            v-if="isAdminAndEdit"
+          ></v-text-field>
+          <span v-else>{{ option.option }}</span>
         </span>
       </v-card>
     </v-item>
@@ -36,10 +43,12 @@ import { useMainStore } from '@/stores/main'
 import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 
 export default {
   name: 'AppExamQuestionOptions',
 
+  mixins: [quizEditingMixin],
   props: {
     // Unselected answers
     options: {
