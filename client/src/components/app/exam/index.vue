@@ -36,7 +36,6 @@
 </template>
 
 <script lang="ts">
-import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamTopbarLoader from './TopbarLoader.vue'
 import AppExamTopbar from './Topbar.vue'
 import AppExamSidebarLoader from './SidebarLoader.vue'
@@ -48,7 +47,7 @@ import { defineComponent } from 'vue'
 import { TOOLBAR_HEIGHT } from '@/helpers'
 import type { UserQuizModel } from '@nzpmc-exam-portal/common'
 import { useMainStore } from '@/stores/main'
-import { GetQuizInfoQuery } from '@/gql/queries/quiz'
+import { onMounted } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
 
 export default defineComponent({
@@ -142,7 +141,9 @@ export default defineComponent({
     }
   },
   created() {
-    this.fetchData() // Call the method to fetch data when the component is created
+    onMounted(async () => {
+      this.fetchData() // Call the method to fetch data when the component is created
+    })
   },
   watch: {
     'data.questions': function () {
