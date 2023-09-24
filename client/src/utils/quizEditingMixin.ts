@@ -6,16 +6,16 @@ import { useRoute } from 'vue-router'
 
 export default {
   computed: {
-    isAdminAndEdit() {
+    isAdminAndEditing() {
       return (
         useRoute() !== undefined && useMainStore().userIsAdmin && useRoute().query.edit === 'true'
       )
     },
     isEditingQuizQuery() {
-      return { edit: this.isAdminAndEdit ? 'true' : undefined }
+      return { edit: this.isAdminAndEditing ? 'true' : undefined }
     },
     queryType() {
-      return this.isAdminAndEdit ? GetQuizInfoQuery : UserQuizQuery
+      return this.isAdminAndEditing ? GetQuizInfoQuery : UserQuizQuery
     }
   }
 }

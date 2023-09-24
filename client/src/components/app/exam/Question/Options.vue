@@ -13,12 +13,12 @@
         elevation="1"
         :dark="active"
         :color="active ? '#03a9f5' : 'white'"
-        :ripple="!isAdminAndEdit"
+        :ripple="!isAdminAndEditing"
         class="align-center d-flex mb-3"
-        @click="!isAdminAndEdit && toggle"
-        @keyup.enter="!isAdminAndEdit && toggle"
+        @click="!isAdminAndEditing && toggle"
+        @keyup.enter="!isAdminAndEditing && toggle"
       >
-        <h3 v-if="isAdminAndEdit" class="ml-4 my-4">{{ index + 1 }}.</h3>
+        <h3 v-if="isAdminAndEditing" class="ml-4 my-4">{{ index + 1 }}.</h3>
         <v-icon v-else class="ml-4 my-4">
           {{ isSelected(option.id) ? 'mdi-check-circle' : 'mdi-checkbox-blank-circle-outline' }}
         </v-icon>
@@ -28,7 +28,7 @@
             variant="underlined"
             :disabled="false"
             :model-value="option.option"
-            v-if="isAdminAndEdit"
+            v-if="isAdminAndEditing"
           ></v-text-field>
           <span v-else>{{ option.option }}</span>
         </span>
@@ -40,10 +40,10 @@
         elevation="1"
         :dark="active"
         :color="active ? '#03a9f5' : 'white'"
-        :ripple="!isAdminAndEdit"
+        :ripple="!isAdminAndEditing"
         class="align-center d-flex mb-3"
         @click=""
-        @keyup.enter="!isAdminAndEdit && toggle"
+        @keyup.enter="!isAdminAndEditing && toggle"
       >
         <v-icon class="ml-4 my-4">
           {{ 'mdi-plus-circle' }}

@@ -8,13 +8,18 @@
 </style>
 <template>
   <AppExamTopbarTimer
-    v-if="!isAdminAndEdit"
+    v-if="!isAdminAndEditing"
     :duration="duration"
     :quizStart="quizStart"
     :userQuizId="userQuizId"
   />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
-    <v-divider v-if="!isAdminAndEdit" color="white" thickness="3" class="border-opacity-100 mb-5" />
+    <v-divider
+      v-if="!isAdminAndEditing"
+      color="white"
+      thickness="3"
+      class="border-opacity-100 mb-5"
+    />
     <v-list-item-group v-model="selected" color="primary">
       <AppExamSidebarLink
         v-for="(question, index) in questions"
@@ -29,7 +34,7 @@
   <v-btn
     color="secondary"
     :disabled="examStore.submitting"
-    v-if="!isAdminAndEdit"
+    v-if="!isAdminAndEditing"
     v-on:click="submitQuiz()"
     variant="flat"
     id="submit-button"

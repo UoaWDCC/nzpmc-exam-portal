@@ -1,5 +1,5 @@
 <template>
-  <v-textarea :model-value="text" v-if="isAdminAndEdit"></v-textarea>
+  <v-textarea :model-value="text" v-if="isAdminAndEditing"></v-textarea>
   <div v-else v-html="parsed"></div>
 </template>
 

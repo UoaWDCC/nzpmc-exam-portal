@@ -40,7 +40,7 @@
       <v-row>
         <div class="align-center d-flex mb-3">
           <AppExamQuestionFlagButton
-            v-if="!isAdminAndEdit"
+            v-if="!isAdminAndEditing"
             @flag-changed="$emit('flag-changed')"
             :flagged="question.flag"
             :question-number="questionNumber"
@@ -129,13 +129,13 @@ export default {
       try {
         const { data } = await this.$apollo.query({
           query: this.queryType,
-          variables: this.isAdminAndEdit ? { quizId } : { quizID: quizId },
+          variables: this.isAdminAndEditing ? { quizId } : { quizID: quizId },
           fetchPolicy,
           notifyOnNetworkStatusChange: true
         })
 
         if (data) {
-          this.quizData = this.isAdminAndEdit ? data.quiz : data.userQuiz
+          this.quizData = this.isAdminAndEditing ? data.quiz : data.userQuiz
         }
       } catch (error) {
         console.error(error)

@@ -112,12 +112,12 @@ export default defineComponent({
         const { data } = await this.$apollo.query({
           query: this.queryType,
           fetchPolicy: 'network-only',
-          variables: this.isAdminAndEdit ? { quizId } : { quizID: quizId },
+          variables: this.isAdminAndEditing ? { quizId } : { quizID: quizId },
           notifyOnNetworkStatusChange: true
         })
 
         if (data) {
-          this.data = this.isAdminAndEdit ? data.quiz : data.userQuiz
+          this.data = this.isAdminAndEditing ? data.quiz : data.userQuiz
           console.log(this.data)
           const currentQuestions = this.data?.questions
 

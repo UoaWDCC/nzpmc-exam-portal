@@ -63,7 +63,7 @@ export default {
   },
 
   mounted() {
-    if (this.isAdminAndEdit) {
+    if (this.isAdminAndEditing) {
       //dont care if we are editing
       return
     }
