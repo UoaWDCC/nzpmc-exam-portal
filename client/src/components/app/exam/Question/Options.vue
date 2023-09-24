@@ -25,6 +25,7 @@
 
         <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
           <v-text-field
+            variant="underlined"
             :disabled="false"
             :model-value="option.option"
             v-if="isAdminAndEdit"
