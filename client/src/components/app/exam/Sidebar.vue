@@ -43,11 +43,17 @@
   <v-btn
     color="secondary"
     :disabled="examStore.submitting"
+    class="white--text"
     v-if="isAdminAndEditing"
     v-on:click="addNewQuestion()"
     variant="flat"
+    append-icon="mdi-plus-box"
     id="submit-button"
-    >Add New Question</v-btn
+  >
+    <template v-slot:append>
+      <v-icon color="white"></v-icon>
+    </template>
+    <span class="text-white">Add New Question</span></v-btn
   >
   <v-btn
     color="secondary"
@@ -56,7 +62,8 @@
     v-on:click="exitEditor()"
     variant="flat"
     id="submit-button"
-    >Exit Editor</v-btn
+  >
+    <span class="text-white">Exit Editor</span></v-btn
   >
 </template>
 
