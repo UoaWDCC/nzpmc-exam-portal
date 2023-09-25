@@ -27,6 +27,7 @@
           <v-text-field
             variant="underlined"
             :disabled="false"
+            @change="handleOptionDescriptionChange(option.id, $event)"
             :model-value="option.option"
             v-if="isAdminAndEditing"
           ></v-text-field>
@@ -62,6 +63,7 @@ import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
+import { debounce } from '@/utils/quizManagement'
 
 export default {
   name: 'AppExamQuestionOptions',
@@ -154,6 +156,17 @@ export default {
   },
 
   methods: {
+    handleOptionDescriptionChange(optionID: string, event: Event) {
+      const currentDescription: string = event.target.value
+      debounce(
+        this.editQuestionOptionInfo(this.$apollo.getClient(), {
+          id: optionID,
+          questionID: this.questionID,
+          quizID: this.quizID,
+          optionDescription: currentDescription
+        })
+      )
+    },
     // Ensure the selected state is synced with the server
     setSelected(answerID: any) {
       this.selected = this.sortedOptions.findIndex((option) => option.id === answerID)
