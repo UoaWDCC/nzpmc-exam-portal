@@ -29,7 +29,7 @@
             :hint="'Modified: ' + option.modified"
             persistent-hint
             variant="underlined"
-            @input="handleOptionDescriptionChange(option.id, $event)"
+            @change="handleOptionDescriptionChange(option.id, $event)"
             :model-value="option.option"
             v-if="isAdminAndEditing"
           ></v-text-field>

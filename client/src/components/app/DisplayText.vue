@@ -1,7 +1,7 @@
 <template>
   <v-textarea
     :model-value="text"
-    @input="handleDescriptionChange"
+    @change="handleDescriptionChange"
     v-if="isAdminAndEditing"
   ></v-textarea>
   <div v-else v-html="parsed"></div>

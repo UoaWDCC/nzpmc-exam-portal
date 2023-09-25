@@ -151,7 +151,7 @@
           class="d-none"
           type="file"
           accept=".csv"
-          @input="handleCsvUpload"
+          @change="handleCsvUpload"
         />
         <v-btn
           @click="downloadUserQuizzes"
