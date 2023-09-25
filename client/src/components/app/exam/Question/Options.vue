@@ -33,13 +33,13 @@
           ></v-text-field>
           <span v-else>{{ option.option }}</span>
         </span>
-        <v-icon
+        <v-btn
+          elevation="0"
           v-if="isAdminAndEditing"
           :color="isCorrectAnswer(option.id) ? 'accent' : 'secondary'"
+          :icon="option.id === correctAnswerID ? 'mdi-check-circle' : 'mdi-cancel'"
           class="mr-4 my-4"
-        >
-          {{ option.id === correctAnswerID ? 'mdi-check-circle' : 'mdi-cancel' }}
-        </v-icon>
+        />
       </v-card>
     </v-item>
     <v-item>
