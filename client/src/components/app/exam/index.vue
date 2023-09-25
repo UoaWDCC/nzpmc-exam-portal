@@ -29,7 +29,11 @@
 
       <div v-if="data" class="question-container" style="overflow: hidden">
         <component :is="routeTransition" hide-on-leave>
-          <router-view @flag-changed="fetchData" :key="$route.params.questionID" />
+          <router-view
+            @question-deleted="fetchData"
+            @flag-changed="fetchData"
+            :key="$route.params.questionID"
+          />
         </component>
       </div>
     </v-container>

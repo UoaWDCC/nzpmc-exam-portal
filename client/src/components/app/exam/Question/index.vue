@@ -115,17 +115,21 @@ export default {
 
   methods: {
     async deleteCurrentQuestion() {
-      await this.deleteQuestion(this.$apollo.getClient(), {
-        quizID: this.quizID,
-        questionID: this.questionID
-      })
-      this.$router.push({
-        name: 'AppExam',
-        params: {
-          quizID: this.quizID
-        },
-        query: this.uriQueryType
-      })
+      try {
+        await this.deleteQuestion(this.$apollo.getClient(), {
+          quizID: this.quizID,
+          questionID: this.questionID
+        })
+      } finally {
+        this.$emit('question-deleted')
+        this.$router.push({
+          name: 'AppExam',
+          params: {
+            quizID: this.quizID
+          },
+          query: this.uriQueryType
+        })
+      }
     },
     async nextQuestion() {
       if (this.questionNumber) {
