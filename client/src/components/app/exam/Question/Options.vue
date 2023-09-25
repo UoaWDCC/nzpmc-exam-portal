@@ -26,6 +26,8 @@
 
         <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
           <v-text-field
+            :hint="'Modified: ' + option.modified"
+            persistent-hint
             variant="underlined"
             @change="handleOptionDescriptionChange(option.id, $event)"
             :model-value="option.option"
@@ -43,7 +45,7 @@
         />
       </v-card>
     </v-item>
-    <v-item>
+    <v-item v-if="isAdminAndEditing">
       <v-card
         elevation="1"
         :ripple="!isAdminAndEditing"
@@ -61,6 +63,7 @@
 </template>
 
 <script lang="ts">
+import { formatDateToDate } from '@/utils/quizManagement'
 import { mapWritableState } from 'pinia'
 import { useExamStore } from '@/components/app/exam/examStore'
 import { useMainStore } from '@/stores/main'
