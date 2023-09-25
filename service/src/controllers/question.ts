@@ -27,6 +27,12 @@ const getQuestions = async (quizID: string): Promise<QuestionModel[]> => {
     })
 }
 
+const setQuestionAnswer = async (input: {
+    quizID: string
+    questionID: string
+    newAnswerOptionID: string
+}) => {}
+
 const getQuestion = async (
     quizID: string,
     questionID: string,
