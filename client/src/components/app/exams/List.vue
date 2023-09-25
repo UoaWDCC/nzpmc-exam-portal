@@ -13,7 +13,7 @@
         :duration="exam.duration"
         :open-time="exam.openTime"
         :close-time="exam.closeTime"
-        :to="{ name: 'AppExam', params: { quizID: exam.id } }"
+        :to="{ name: 'AppPreExam', params: { quizID: exam.id } }"
       />
     </div>
 
