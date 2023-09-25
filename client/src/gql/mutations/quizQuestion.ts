@@ -16,3 +16,12 @@ export const EditOptionMutation = gql`
     }
   }
 `
+
+export const AddOptionMutation = gql`
+  mutation AddOption($input: AddOptionInput!) {
+    addOption(input: $input) {
+      id
+      modified
+    }
+  }
+`

@@ -42,6 +42,7 @@
           <AppExamQuestionFlagButton
             v-if="!isAdminAndEditing"
             @flag-changed="$emit('flag-changed')"
+            @option-added="fetchData"
             :flagged="question.flag"
             :question-number="questionNumber"
           />

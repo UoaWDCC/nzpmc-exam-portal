@@ -43,7 +43,7 @@
         :color="active ? '#03a9f5' : 'white'"
         :ripple="!isAdminAndEditing"
         class="align-center d-flex mb-3"
-        @click=""
+        @click="addNewOption"
         @keyup.enter="!isAdminAndEditing && toggle"
       >
         <v-icon class="ml-4 my-4">
@@ -63,6 +63,7 @@ import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
+import { AddOptionMutation } from '@/gql/mutations/quizQuestion'
 import { debounce } from '@/utils/quizManagement'
 
 export default {
@@ -166,6 +167,19 @@ export default {
           optionDescription: currentDescription
         })
       )
+    },
+    async addNewOption() {
+      await this.$apollo.mutate({
+        mutation: AddOptionMutation,
+        variables: {
+          input: {
+            option: 'New Option',
+            questionID: this.questionID,
+            quizID: this.quizID
+          }
+        }
+      })
+      this.$emit('option-added')
     },
     // Ensure the selected state is synced with the server
     setSelected(answerID: any) {
