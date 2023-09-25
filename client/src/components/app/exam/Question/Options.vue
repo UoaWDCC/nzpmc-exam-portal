@@ -33,8 +33,12 @@
           ></v-text-field>
           <span v-else>{{ option.option }}</span>
         </span>
-        <v-icon v-if="isAdminAndEditing" color="accent" class="mr-4 my-4">
-          {{ option.id === correctAnswerID ? 'mdi-check-circle' : '' }}
+        <v-icon
+          v-if="isAdminAndEditing"
+          :color="isCorrectAnswer(option.id) ? 'accent' : 'secondary'"
+          class="mr-4 my-4"
+        >
+          {{ option.id === correctAnswerID ? 'mdi-check-circle' : 'mdi-cancel' }}
         </v-icon>
       </v-card>
     </v-item>
@@ -164,6 +168,9 @@ export default {
   },
 
   methods: {
+    isCorrectAnswer(optionID: string) {
+      return optionID === this.correctAnswerID
+    },
     async handleOptionDescriptionChange(optionID: string, event: Event) {
       const currentDescription: string = event.target.value
       const debouncedEdit = debounce(this.editQuestionOptionInfo)
@@ -178,7 +185,7 @@ export default {
     },
     async handleCorrectAnswerChange(optionID: string, event: Event) {
       this.updating = true
-      if (optionID === this.correctAnswerID) {
+      if (this.isCorrectAnswer(optionID)) {
         return
       }
       await this.$apollo.mutate({
