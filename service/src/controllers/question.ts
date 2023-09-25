@@ -33,7 +33,14 @@ const setQuestionAnswer = async (input: {
     newAnswerOptionID: string
 }) => {
     const { quizID, questionID, newAnswerOptionID } = input
-    return getQuestion(quizID, questionID)
+
+    return await editQuestion(
+        quizID,
+        questionID,
+        undefined,
+        undefined,
+        newAnswerOptionID,
+    )
 }
 
 const getQuestion = async (
@@ -98,7 +105,7 @@ const editQuestion = async (
     id: string,
     q?: string,
     imageURI?: string,
-    answer?: string,
+    answerID?: string,
     topics?: string,
 ): Promise<QuestionModel> => {
     return runTransaction(async (tran) => {
@@ -118,16 +125,7 @@ const editQuestion = async (
         question.topics = topics ? topics : question.topics
         question.modified = new Date()
 
-        if (answer !== undefined && question.options) {
-            const answerObj = await question.options.findById(question.answerID)
-
-            if (answerObj === null) {
-                throw new NotFoundError()
-            }
-
-            answerObj.option = answer
-            await question.options.update(answerObj)
-        }
+        question.answerID = answerID ? answerID : ``
 
         quiz.questions.update(question)
 
