@@ -14,6 +14,7 @@
         :dark="active"
         :color="active ? '#03a9f5' : 'white'"
         :ripple="!isAdminAndEditing"
+        :disabled="updating"
         class="align-center d-flex mb-3"
         @click="!isAdminAndEditing ? toggle : handleCorrectAnswerChange(option.id, $event)"
         @keyup.enter="!isAdminAndEditing && toggle"
