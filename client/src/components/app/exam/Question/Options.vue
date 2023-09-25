@@ -16,7 +16,7 @@
         :ripple="!isAdminAndEditing"
         :disabled="updating"
         class="align-center d-flex mb-3"
-        @click="!isAdminAndEditing ? toggle : handleCorrectAnswerChange(option.id, $event)"
+        @click="!isAdminAndEditing && toggle"
         @keyup.enter="!isAdminAndEditing && toggle"
       >
         <h3 v-if="isAdminAndEditing" class="ml-4 my-4">{{ index + 1 }}.</h3>
