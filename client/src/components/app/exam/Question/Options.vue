@@ -36,6 +36,7 @@
         <v-btn
           elevation="0"
           v-if="isAdminAndEditing"
+          v-on:click="handleCorrectAnswerChange(option.id, $event)"
           :color="isCorrectAnswer(option.id) ? 'accent' : 'secondary'"
           :icon="option.id === correctAnswerID ? 'mdi-check-circle' : 'mdi-cancel'"
           class="mr-4 my-4"
