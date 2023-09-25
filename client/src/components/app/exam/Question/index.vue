@@ -42,7 +42,6 @@
           <AppExamQuestionFlagButton
             v-if="!isAdminAndEditing"
             @flag-changed="$emit('flag-changed')"
-            @option-added="fetchData"
             :flagged="question.flag"
             :question-number="questionNumber"
           />
@@ -50,6 +49,7 @@
       </v-row>
       <div class="options-area">
         <AppExamQuestionOptions
+          @option-added="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
           :question-number="questionNumber"
