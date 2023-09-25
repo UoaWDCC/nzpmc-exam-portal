@@ -209,10 +209,13 @@ const deleteOptionMutation: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,
     unknown,
     UserContext,
-    RequireFields<MutationDeleteOptionArgs, 'quizID' | 'id' | 'optionID'>
-> = async (_parent, { quizID, id, optionID }, _context) => {
-    const option = await getOptionByID(quizID, id, optionID)
-    deleteQuestionOption(quizID, id, optionID)
+    RequireFields<
+        MutationDeleteOptionArgs,
+        'quizID' | 'questionID' | 'optionID'
+    >
+> = async (_parent, { quizID, questionID, optionID }, _context) => {
+    const option = await getOptionByID(quizID, questionID, optionID)
+    deleteQuestionOption(quizID, questionID, optionID)
     return option
 }
 
