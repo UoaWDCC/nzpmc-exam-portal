@@ -34,31 +34,23 @@ export default {
     toggleEditAndPreviewMode() {
       const questionID = this.$route.params.questionID
       const quizID = this.$route.params.quizID
-      if (this.isAdminAndEditing) {
-        router.push({
-          path: '/',
-          name: 'AppExamQuestion',
-          params: {
-            questionID,
-            quizID
-          },
-          query: {
-            preview: 'true'
-          }
-        })
-      } else if (this.isAdminAndPreviewing) {
-        router.push({
-          path: '/',
-          name: 'AppExamQuestion',
-          params: {
-            questionID,
-            quizID
-          },
-          query: {
-            edit: 'true'
-          }
-        })
+
+      const routeParams = {
+        name: 'AppExamQuestion',
+        params: {
+          questionID,
+          quizID
+        },
+        query: {}
       }
+
+      if (this.isAdminAndEditing) {
+        routeParams.query = { preview: 'true' }
+      } else if (this.isAdminAndPreviewing) {
+        routeParams.query = { edit: 'true' }
+      }
+
+      router.push(routeParams)
     }
   },
 
