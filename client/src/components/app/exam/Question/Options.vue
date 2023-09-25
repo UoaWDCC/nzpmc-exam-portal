@@ -38,7 +38,7 @@
         <v-btn
           elevation="0"
           v-if="isAdminAndEditing"
-          v-on:click="handleCorrectAnswerChange(option.id, $event)"
+          v-on:click="handleCorrectAnswerChange(option.id)"
           :color="isCorrectAnswer(option.id) ? 'accent' : 'secondary'"
           :icon="isCorrectAnswer(option.id) ? 'mdi-check-circle' : 'mdi-cancel'"
           class="mr-4 my-4"
@@ -63,7 +63,6 @@
 </template>
 
 <script lang="ts">
-import { formatDateToDate } from '@/utils/quizManagement'
 import { mapWritableState } from 'pinia'
 import { useExamStore } from '@/components/app/exam/examStore'
 import { useMainStore } from '@/stores/main'
@@ -187,7 +186,7 @@ export default {
       })
       if (res) this.$emit('option-changed')
     },
-    async handleCorrectAnswerChange(optionID: string, event: Event) {
+    async handleCorrectAnswerChange(optionID: string) {
       if (this.isCorrectAnswer(optionID)) {
         return
       }

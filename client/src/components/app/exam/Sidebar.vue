@@ -78,7 +78,6 @@ import { useExamStore } from './examStore'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 import quizEditingMixin from '@/utils/quizEditingMixin'
-import router from '@/router'
 const SIDEBAR_WIDTH = 56
 export default {
   name: 'AppExamSidebar',
