@@ -31,7 +31,9 @@
     <v-container fluid v-if="quizData" class="question-container">
       <v-row>
         <h2 class="flex-grow-1 text-h5" style="line-height: 1">Question {{ questionNumber }}</h2>
-        <v-btn variant="flat" color="red" v-on:click="deleteCurrentQuestion">delete</v-btn>
+        <v-btn variant="flat" color="red" :disabled="updating" v-on:click="deleteCurrentQuestion"
+          >delete</v-btn
+        >
       </v-row>
       <v-row>
         <v-col>
@@ -85,7 +87,8 @@ export default {
   data() {
     return {
       error: null,
-      quizData: undefined
+      quizData: undefined,
+      updating: false
     }
   },
 
@@ -116,6 +119,7 @@ export default {
   methods: {
     async deleteCurrentQuestion() {
       try {
+        this.updating = true
         await this.deleteQuestion(this.$apollo.getClient(), {
           quizID: this.quizID,
           questionID: this.questionID
@@ -129,6 +133,7 @@ export default {
           },
           query: this.uriQueryType
         })
+        this.updating = false
       }
     },
     async nextQuestion() {
