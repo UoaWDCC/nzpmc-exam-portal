@@ -33,3 +33,11 @@ export const EditAnswerMutation = gql`
     }
   }
 `
+export const AddQuestionMutation = gql`
+  mutation AddQuestion($input: AddQuestionInput!) {
+    addQuestion(input: $input) {
+      id
+      modified
+    }
+  }
+`
