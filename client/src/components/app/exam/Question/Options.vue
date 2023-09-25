@@ -45,6 +45,7 @@
         class="align-center d-flex mb-3"
         @click="addNewOption"
         @keyup.enter="!isAdminAndEditing && toggle"
+        :disabled="updating"
       >
         <v-icon class="ml-4 my-4">
           {{ 'mdi-plus-circle' }}
@@ -99,7 +100,8 @@ export default {
 
   data() {
     return {
-      selected: null as any
+      selected: null as any,
+      updating: false
     }
   },
 
@@ -169,6 +171,7 @@ export default {
       )
     },
     async addNewOption() {
+      this.updating = true
       await this.$apollo.mutate({
         mutation: AddOptionMutation,
         variables: {
@@ -180,6 +183,7 @@ export default {
         }
       })
       this.$emit('option-added')
+      this.updating = false
     },
     // Ensure the selected state is synced with the server
     setSelected(answerID: any) {
