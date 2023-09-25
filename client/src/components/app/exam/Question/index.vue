@@ -52,6 +52,7 @@
           @option-changed="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
+          :correctAnswerID="isAdminAndEditing ? question.answer.id : null"
           :question-number="questionNumber"
         />
         <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat"
@@ -63,7 +64,6 @@
 </template>
 
 <script lang="ts">
-import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamQuestionOptions from './Options.vue'
 import AppExamQuestionFlagButton from './FlagButton.vue'
 import DisplayText from '@/components/app/DisplayText.vue'

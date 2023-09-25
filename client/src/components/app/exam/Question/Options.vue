@@ -26,14 +26,15 @@
         <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
           <v-text-field
             variant="underlined"
-            :disabled="false"
             @change="handleOptionDescriptionChange(option.id, $event)"
             :model-value="option.option"
             v-if="isAdminAndEditing"
           ></v-text-field>
           <span v-else>{{ option.option }}</span>
         </span>
-        <v-icon class="mr-4 my-4"> {{ 'mdi-check-circle' }} </v-icon>
+        <v-icon v-if="isAdminAndEditing" color="accent" class="mr-4 my-4">
+          {{ option.id === correctAnswerID ? 'mdi-check-circle' : '' }}
+        </v-icon>
       </v-card>
     </v-item>
     <v-item>
@@ -85,6 +86,9 @@ export default {
             typeof option.option === 'string'
         )
       }
+    },
+    correctAnswerID: {
+      required: false
     },
 
     // ID of the user's current answer
