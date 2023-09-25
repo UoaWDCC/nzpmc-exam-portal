@@ -38,6 +38,14 @@
         <v-btn
           elevation="0"
           v-if="isAdminAndEditing"
+          v-on:click="deleteOption(option.id)"
+          color="red"
+          icon="mdi-close"
+          class="mr-4 my-4"
+        />
+        <v-btn
+          elevation="0"
+          v-if="isAdminAndEditing"
           v-on:click="handleCorrectAnswerChange(option.id)"
           :color="isCorrectAnswer(option.id) ? 'accent' : 'secondary'"
           :icon="isCorrectAnswer(option.id) ? 'mdi-check-circle' : 'mdi-cancel'"
@@ -70,7 +78,11 @@ import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
-import { AddOptionMutation, EditAnswerMutation } from '@/gql/mutations/quizQuestion'
+import {
+  AddOptionMutation,
+  DeleteOptionMutation,
+  EditAnswerMutation
+} from '@/gql/mutations/quizQuestion'
 import { debounce } from '@/utils/quizManagement'
 
 export default {
@@ -185,6 +197,19 @@ export default {
         optionDescription: currentDescription
       })
       if (res) this.$emit('option-changed')
+    },
+    async deleteOption(optionID: string) {
+      this.updating = true
+      await this.$apollo.mutate({
+        mutation: DeleteOptionMutation,
+        variables: {
+          quizID: this.quizID,
+          questionID: this.questionID,
+          optionID
+        }
+      })
+      this.$emit('option-changed')
+      this.updating = false
     },
     async handleCorrectAnswerChange(optionID: string) {
       if (this.isCorrectAnswer(optionID)) {

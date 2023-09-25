@@ -43,8 +43,8 @@ export const AddQuestionMutation = gql`
 `
 
 export const DeleteQuestionMutation = gql`
-  mutation DeleteQuestion($quizId: ID!, $deleteQuestionId: ID!) {
-    deleteQuestion(quizID: $quizId, id: $deleteQuestionId) {
+  mutation DeleteQuestion($quizID: ID!, $deleteQuestionID: ID!) {
+    deleteQuestion(quizID: $quizID, id: $deleteQuestionID) {
       answer {
         id
       }
@@ -54,8 +54,8 @@ export const DeleteQuestionMutation = gql`
 `
 
 export const DeleteOptionMutation = gql`
-  mutation DeleteOption($quizId: ID!, $questionId: ID!, $optionId: ID!) {
-    deleteOption(quizID: $quizId, questionID: $questionId, optionID: $optionId) {
+  mutation DeleteOption($quizID: ID!, $questionID: ID!, $optionID: ID!) {
+    deleteOption(quizID: $quizID, questionID: $questionID, optionID: $optionID) {
       id
     }
   }
