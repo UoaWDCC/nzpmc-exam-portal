@@ -78,6 +78,7 @@ import { useExamStore } from './examStore'
 import { mapWritableState } from 'pinia'
 import { useMainStore } from '@/stores/main'
 import quizEditingMixin from '@/utils/quizEditingMixin'
+import router from '@/router'
 const SIDEBAR_WIDTH = 56
 export default {
   name: 'AppExamSidebar',
@@ -135,7 +136,7 @@ export default {
         })
     },
     async addNewQuestion() {
-      await this.$apollo.mutate({
+      const mutation = await this.$apollo.mutate({
         mutation: AddQuestionMutation,
         variables: {
           input: {
@@ -145,7 +146,9 @@ export default {
           }
         }
       })
-      this.$emit('question-added')
+      if (mutation.data) {
+        this.$emit('question-added')
+      }
     },
     exitEditor() {
       this.$router.push({
