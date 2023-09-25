@@ -15,7 +15,7 @@
         :color="active ? '#03a9f5' : 'white'"
         :ripple="!isAdminAndEditing"
         class="align-center d-flex mb-3"
-        @click="!isAdminAndEditing && toggle"
+        @click="!isAdminAndEditing ? toggle : handleCorrectAnswerChange(option.id, $event)"
         @keyup.enter="!isAdminAndEditing && toggle"
       >
         <h3 v-if="isAdminAndEditing" class="ml-4 my-4">{{ index + 1 }}.</h3>
@@ -65,7 +65,7 @@ import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
-import { AddOptionMutation } from '@/gql/mutations/quizQuestion'
+import { AddOptionMutation, EditAnswerMutation } from '@/gql/mutations/quizQuestion'
 import { debounce } from '@/utils/quizManagement'
 
 export default {
@@ -174,6 +174,24 @@ export default {
         optionDescription: currentDescription
       })
       if (res) this.$emit('option-changed')
+    },
+    async handleCorrectAnswerChange(optionID: string, event: Event) {
+      this.updating = true
+      if (optionID === this.correctAnswerID) {
+        return
+      }
+      await this.$apollo.mutate({
+        mutation: EditAnswerMutation,
+        variables: {
+          input: {
+            newAnswerOptionID: optionID,
+            questionID: this.questionID,
+            quizID: this.quizID
+          }
+        }
+      })
+      this.$emit('option-changed')
+      this.updating = false
     },
     async addNewOption() {
       this.updating = true
