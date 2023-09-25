@@ -138,6 +138,9 @@ export default {
 
     // Update server with new selected value
     selected(v) {
+      if (this.isAdminNotSittingExam) {
+        return
+      }
       // Cancel if answer has not been changed
       if (this.sortedOptions[v].id === this.answer) return
 

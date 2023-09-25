@@ -17,6 +17,7 @@ import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
 export default {
   name: 'AppExamTopbarLoader',
 
+  /*
   apollo: {
     userQuizzes: {
       query: UserQuizzesQuery,
@@ -34,6 +35,7 @@ export default {
       fetchPolicy: 'cache-and-network'
     }
   },
+  */
   data() {
     return {
       userQuiz: undefined

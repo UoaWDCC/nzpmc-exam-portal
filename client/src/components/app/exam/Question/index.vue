@@ -52,7 +52,7 @@
           @option-changed="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
-          :correctAnswerID="isAdminAndEditing ? question.answer.id : null"
+          :correctAnswerID="isAdminAndEditing ? question.answerID : null"
           :question-number="questionNumber"
         />
         <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat"

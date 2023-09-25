@@ -180,8 +180,8 @@ const editAnswerMutation: Resolver<
     const { quizID, questionID, newAnswerOptionID } = input
 
     const question = await getQuestion(quizID, questionID)
-
-    if (!question.answerID) {
+    console.log(question)
+    if (!question) {
         throw new NotFoundError()
     }
     if (question.answerID === newAnswerOptionID) {

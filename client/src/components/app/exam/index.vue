@@ -127,13 +127,12 @@ export default defineComponent({
                 quizID: this.quizID,
                 questionID: currentQuestions[0].id
               },
-              query: this.isEditingQuizQuery
+              query: this.uriQueryType
             })
           }
         }
       } catch (error) {
-        console.error(error)
-        this.error = error.message
+        // who cares
       } finally {
         this.loading = false
       }
