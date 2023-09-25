@@ -3,7 +3,7 @@ import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import { useMainStore } from '@/stores/main'
 import { useRoute } from 'vue-router'
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { EditQuestionMutation } from '@/gql/mutations/quizQuestion'
+import { EditOptionMutation, EditQuestionMutation } from '@/gql/mutations/quizQuestion'
 
 export default {
   computed: {
@@ -29,6 +29,37 @@ export default {
     }
   },
   methods: {
+    async editQuestionOptionInfo(
+      apollo: ApolloClient<NormalizedCacheObject>,
+      inputs: {
+        id: string
+        optionDescription: string
+        questionID: string
+        quizID: string
+      }
+    ) {
+      const { id, optionDescription, questionID, quizID } = inputs
+      try {
+        const mutation = await apollo.mutate({
+          mutation: EditOptionMutation,
+          variables: {
+            input: {
+              id,
+              option: optionDescription,
+              questionID,
+              quizID
+            }
+          }
+        })
+        if (mutation.data) {
+          console.log(mutation.data)
+        }
+        return true
+      } catch (e) {
+        console.error(e)
+        return false
+      }
+    },
     async editQuestionInfo(
       apollo: ApolloClient<NormalizedCacheObject>,
       inputs: {

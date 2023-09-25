@@ -8,3 +8,11 @@ export const EditQuestionMutation = gql`
     }
   }
 `
+export const EditOptionMutation = gql`
+  mutation EditOption($input: EditOptionInput!) {
+    editOption(input: $input) {
+      id
+      modified
+    }
+  }
+`
