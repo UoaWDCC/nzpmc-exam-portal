@@ -18,7 +18,8 @@ const routes = [
       {
         path: 'pre-exam/:quizID',
         name: 'AppPreExam',
-        component: () => import(/* webpackChunkName: "AppExamsChunk" */ '@/components/app/exam/preExam.vue')
+        component: () =>
+          import(/* webpackChunkName: "AppExamsChunk" */ '@/components/app/exam/preExam.vue')
       },
       {
         path: 'exam/:quizID',
