@@ -130,13 +130,13 @@ export default {
       try {
         const { data } = await this.$apollo.query({
           query: this.queryType,
-          variables: this.isAdminAndEditing ? { quizId } : { quizID: quizId },
+          variables: this.isAdminNotSittingExam ? { quizId } : { quizID: quizId },
           fetchPolicy,
           notifyOnNetworkStatusChange: true
         })
 
         if (data) {
-          this.quizData = this.isAdminAndEditing ? data.quiz : data.userQuiz
+          this.quizData = this.isAdminNotSittingExam ? data.quiz : data.userQuiz
         }
       } catch (error) {
         console.error(error)

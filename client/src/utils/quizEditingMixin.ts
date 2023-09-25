@@ -10,16 +10,35 @@ export default {
     route() {
       return useRoute()
     },
+    isAdmin() {
+      return useMainStore().userIsAdmin
+    },
+    isEditMode() {
+      return this.route.query.edit === 'true'
+    },
+    isPreviewMode() {
+      return this.route.query.preview === 'true'
+    },
     isAdminAndEditing() {
-      return (
-        this.route !== undefined && useMainStore().userIsAdmin && this.route.query.edit === 'true'
-      )
+      return this.route !== undefined && this.isAdmin && this.isEditMode
+    },
+    isAdminAndPreviewing() {
+      return this.route !== undefined && this.isAdmin && this.isPreviewMode
     },
     isEditingQuizQuery() {
       return { edit: this.isAdminAndEditing ? 'true' : undefined }
     },
+    isPreviewingQuery() {
+      return { preview: this.isAdminAndPreviewing ? 'true' : undefined }
+    },
+    isAdminNotSittingExam() {
+      return this.isAdminAndPreviewing || this.isAdminAndEditing
+    },
+    uriQueryType() {
+      return { ...this.isEditingQuizQuery, ...this.isPreviewingQuery }
+    },
     queryType() {
-      return this.isAdminAndEditing ? GetQuizInfoQuery : UserQuizQuery
+      return this.isAdminNotSittingExam ? GetQuizInfoQuery : UserQuizQuery
     },
     quizID() {
       return this.route.params.quizID

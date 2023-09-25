@@ -111,12 +111,12 @@ export default defineComponent({
           query: this.queryType,
           fetchPolicy: 'network-only',
           //dumb spelling error
-          variables: this.isAdminAndEditing ? { quizId: this.quizID } : { quizID: this.quizID },
+          variables: this.isAdminNotSittingExam ? { quizId: this.quizID } : { quizID: this.quizID },
           notifyOnNetworkStatusChange: true
         })
 
         if (data) {
-          this.data = this.isAdminAndEditing ? data.quiz : data.userQuiz
+          this.data = this.isAdminNotSittingExam ? data.quiz : data.userQuiz
           console.log(this.data)
           const currentQuestions = this.data?.questions
 

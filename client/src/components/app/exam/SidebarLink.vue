@@ -2,7 +2,7 @@
   <v-list-item
     :to="{
       name: 'AppExamQuestion',
-      query: isEditingQuizQuery,
+      query: uriQueryType,
       params: { quizID: $route.params.quizID, questionID: id }
     }"
     link
