@@ -44,7 +44,7 @@
     color="secondary"
     :disabled="examStore.submitting"
     v-if="isAdminAndEditing"
-    v-on:click=""
+    v-on:click="addNewQuestion()"
     variant="flat"
     id="submit-button"
     >Add New Question</v-btn
@@ -64,6 +64,7 @@
 import AppExamTopbarTimer from './TopbarTimer.vue'
 import AppExamSidebarLink from './SidebarLink.vue'
 import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
+import { AddQuestionMutation } from '@/gql/mutations/quizQuestion'
 import type { UserQuizQuestion } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import { useExamStore } from './examStore'
@@ -125,6 +126,19 @@ export default {
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
         })
+    },
+    async addNewQuestion() {
+      await this.$apollo.mutate({
+        mutation: AddQuestionMutation,
+        variables: {
+          input: {
+            question: 'New Question',
+            quizID: this.quizID,
+            topics: ''
+          }
+        }
+      })
+      this.$emit('question-added')
     },
     exitEditor() {
       this.$router.push({
