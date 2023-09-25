@@ -184,10 +184,10 @@ export default {
       if (res) this.$emit('option-changed')
     },
     async handleCorrectAnswerChange(optionID: string, event: Event) {
-      this.updating = true
       if (this.isCorrectAnswer(optionID)) {
         return
       }
+      this.updating = true
       await this.$apollo.mutate({
         mutation: EditAnswerMutation,
         variables: {
