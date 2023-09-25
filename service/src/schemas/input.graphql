@@ -78,7 +78,7 @@ input EditOptionInput {
 input EditAnswerInput {
     quizID: ID!
     questionID: ID!
-    option: String!
+    newAnswerOptionID: ID!
 }
 
 input AddUserQuizInput {

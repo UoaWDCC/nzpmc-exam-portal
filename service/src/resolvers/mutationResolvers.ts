@@ -68,6 +68,7 @@ import {
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
 import { deleteUserQuiz } from '../controllers/userQuiz'
+import { setQuestionAnswer } from '../controllers/question'
 
 const addOptionMutation: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,
@@ -176,20 +177,21 @@ const editAnswerMutation: Resolver<
     UserContext,
     RequireFields<MutationEditAnswerArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const { quizID, questionID, option } = input
+    const { quizID, questionID, newAnswerOptionID } = input
 
     const question = await getQuestion(quizID, questionID)
 
     if (!question.answerID) {
         throw new NotFoundError()
     }
-
-    return await editQuestionOption(
+    if (question.answerID === newAnswerOptionID) {
+        return question
+    }
+    return await setQuestionAnswer({
         quizID,
         questionID,
-        question.answerID,
-        option,
-    )
+        newAnswerOptionID,
+    })
 }
 
 const editOptionMutation: Resolver<

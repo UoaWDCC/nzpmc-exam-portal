@@ -31,7 +31,10 @@ const setQuestionAnswer = async (input: {
     quizID: string
     questionID: string
     newAnswerOptionID: string
-}) => {}
+}) => {
+    const { quizID, questionID, newAnswerOptionID } = input
+    return getQuestion(quizID, questionID)
+}
 
 const getQuestion = async (
     quizID: string,
@@ -213,5 +216,6 @@ export {
     addQuestion,
     editQuestion,
     swapQuestion,
+    setQuestionAnswer,
     deleteQuestion,
 }
