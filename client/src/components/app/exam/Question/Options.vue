@@ -159,16 +159,17 @@ export default {
   },
 
   methods: {
-    handleOptionDescriptionChange(optionID: string, event: Event) {
+    async handleOptionDescriptionChange(optionID: string, event: Event) {
       const currentDescription: string = event.target.value
-      debounce(
-        this.editQuestionOptionInfo(this.$apollo.getClient(), {
-          id: optionID,
-          questionID: this.questionID,
-          quizID: this.quizID,
-          optionDescription: currentDescription
-        })
-      )
+      const debouncedEdit = debounce(this.editQuestionOptionInfo)
+
+      const res = await debouncedEdit(this.$apollo.getClient(), {
+        id: optionID,
+        questionID: this.questionID,
+        quizID: this.quizID,
+        optionDescription: currentDescription
+      })
+      if (res) this.$emit('option-changed')
     },
     async addNewOption() {
       this.updating = true
@@ -182,7 +183,7 @@ export default {
           }
         }
       })
-      this.$emit('option-added')
+      this.$emit('option-changed')
       this.updating = false
     },
     // Ensure the selected state is synced with the server

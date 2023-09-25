@@ -49,7 +49,7 @@
       </v-row>
       <div class="options-area">
         <AppExamQuestionOptions
-          @option-added="fetchData('network-only')"
+          @option-changed="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
           :question-number="questionNumber"
