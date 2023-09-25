@@ -45,12 +45,9 @@
     <v-item>
       <v-card
         elevation="1"
-        :dark="active"
-        :color="active ? '#03a9f5' : 'white'"
         :ripple="!isAdminAndEditing"
         class="align-center d-flex mb-3"
         @click="addNewOption"
-        @keyup.enter="!isAdminAndEditing && toggle"
         :disabled="updating"
       >
         <v-icon class="ml-4 my-4">
