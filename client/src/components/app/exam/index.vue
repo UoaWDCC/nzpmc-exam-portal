@@ -104,15 +104,13 @@ export default defineComponent({
       }
     },
     async fetchData() {
-      const quizId = this.$route.params.quizID
-      const questionId = this.$route.params.questionID
-
       try {
         this.loading = true
         const { data } = await this.$apollo.query({
           query: this.queryType,
           fetchPolicy: 'network-only',
-          variables: this.isAdminAndEditing ? { quizId } : { quizID: quizId },
+          //dumb spelling error
+          variables: this.isAdminAndEditing ? { quizId: this.quizID } : { quizID: this.quizID },
           notifyOnNetworkStatusChange: true
         })
 
@@ -121,11 +119,11 @@ export default defineComponent({
           console.log(this.data)
           const currentQuestions = this.data?.questions
 
-          if (questionId === undefined && currentQuestions?.length > 0) {
+          if (this.questionID === undefined && currentQuestions?.length > 0) {
             this.$router.push({
               name: 'AppExamQuestion',
               params: {
-                quizID: quizId,
+                quizID: this.quizID,
                 questionID: currentQuestions[0].id
               },
               query: this.isEditingQuizQuery
