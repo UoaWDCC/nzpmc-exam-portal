@@ -31,6 +31,7 @@
     <v-container fluid v-if="quizData" class="question-container">
       <v-row>
         <h2 class="flex-grow-1 text-h5" style="line-height: 1">Question {{ questionNumber }}</h2>
+        <v-btn variant="flat" color="red" v-on:click="deleteCurrentQuestion">delete</v-btn>
       </v-row>
       <v-row>
         <v-col>
@@ -113,6 +114,19 @@ export default {
   },
 
   methods: {
+    async deleteCurrentQuestion() {
+      await this.deleteQuestion(this.$apollo.getClient(), {
+        quizID: this.quizID,
+        questionID: this.questionID
+      })
+      this.$router.push({
+        name: 'AppExam',
+        params: {
+          quizID: this.quizID
+        },
+        query: this.uriQueryType
+      })
+    },
     async nextQuestion() {
       if (this.questionNumber) {
         const nextQuestionIndex = this.questionNumber // subtract 1 to get the correct index

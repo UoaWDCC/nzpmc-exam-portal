@@ -110,7 +110,6 @@
         label="Enter Emails (separate with ',')"
         ref="emailsToDelete"
         @change="handleEmailInputChange"
-        @change="handleEmailInputChange"
         clearable
       >
         <template v-slot:details>

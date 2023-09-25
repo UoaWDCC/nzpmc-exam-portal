@@ -43,8 +43,8 @@ export const AddQuestionMutation = gql`
 `
 
 export const DeleteQuestionMutation = gql`
-  mutation DeleteQuestion($quizID: ID!, $deleteQuestionID: ID!) {
-    deleteQuestion(quizID: $quizID, id: $deleteQuestionID) {
+  mutation DeleteQuestion($quizID: ID!, $questionID: ID!) {
+    deleteQuestion(quizID: $quizID, id: $questionID) {
       answer {
         id
       }
