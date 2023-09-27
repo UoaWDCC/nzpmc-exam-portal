@@ -90,7 +90,7 @@ export default {
             typeof quiz.openTime === 'string' &&
             'quizID' in quiz &&
             typeof quiz.quizID === 'string' &&
-            'score' in quiz && 
+            'score' in quiz &&
             typeof quiz.score === 'number' &&
             'submitted' in quiz &&
             typeof quiz.submitted === 'boolean'

@@ -2,7 +2,7 @@ import { Quiz, UserQuiz, UserQuizQuestion } from '../models'
 import { getUserQuiz, setUserQuizScore } from './userQuiz'
 import { runTransaction } from 'fireorm'
 import * as Schema from '@nzpmc-exam-portal/common'
-import { NotFoundError, UserQuizExpiredError } from '../utils/errors'
+import { NotFoundError } from '../utils/errors'
 import {
     PackQuizQuestion,
     packUserQuizQuestion,
