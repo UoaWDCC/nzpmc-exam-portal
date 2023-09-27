@@ -50,6 +50,10 @@ export default {
     closeTime: { type: String, required: true },
     // Router link to the exam
     to: { type: Object, required: true },
+    exam: {
+      type: Object,
+      required: true
+    },
     containerClass: { type: String, required: true }
   },
 

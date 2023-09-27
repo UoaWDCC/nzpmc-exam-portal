@@ -7,12 +7,10 @@
       <div class="exam-dates">
         <div class="date-info">
           <p>OPENS:</p>
-          <p>{{ examOpenDate }}</p>
           <p>{{ examOpenTime }}</p>
         </div>
         <div class="date-info">
           <p>CLOSES:</p>
-          <p>{{ examCloseDate }}</p>
           <p>{{ examCloseTime }}</p>
         </div>
       </div>
@@ -49,26 +47,32 @@
   </div>
 </template>
 <script lang="ts">
+import type { Quiz, UserQuiz } from '@nzpmc-exam-portal/common';
+import type { PropType } from 'vue';
+import { useMainStore } from '@/stores/main';
+import { GetQuizInfoQuery } from '@/gql/queries/quiz';
+import { UserQuizQuery } from '@/gql/queries/userQuiz';
+
 export default {
-  name: 'AppExams',
+  name: 'AppPreExam',
+  
   data(): any {
     return {
       // TODO: get this information from the exam
-      examName: 'NZPMC EXAM 1',
-      examDescription:
-        'this is a description of the quiz, it contains information about what the quiz will be like. Some other random information is contained here. I don’t really know what to write. You are allowed a calculator, you cannot access the internet or use a smart device.',
-      examOpenDate: '22/02/2023',
-      examCloseDate: '25/02/2023',
-      examOpenTime: '14:00',
-      examCloseTime: '24:00',
-      examDuration: '1 hour, 30 minutes',
-      examID: this.$route.params.quizID, // this is the correct quizID, grab exam info using this
-
+      exam: null,
+      examName: '',
+      examDescription: '',
+      examOpenTime: '',
+      examCloseTime: '',
+      examDuration: '',
+      examID: this.$route.params.quizID,
       examCompleted: false,
       examMarked: false,
-      examTimeUsed: '1 hour, 12 minutes',
-      numberOfQuestions: 20,
-      correctAnswers: 15
+      examTimeUsed: '',
+      numberOfQuestions: 0,
+      correctAnswers: 0,
+      refetchNeeded: false,
+      userQuiz: null
     }
   },
   computed: {
@@ -77,8 +81,103 @@ export default {
     },
     examScorePercentage(): string {
       return ((this.correctAnswers / this.numberOfQuestions) * 100).toFixed(2) + '%'
-    }
+    },
+  },
+
+  apollo: {
+    userQuiz: {
+      query: UserQuizQuery,
+      skip() {
+        return !this.refetchNeeded;
+      },
+      variables() {
+        return {
+          quizID: this.$route.params.quizID, // Pass the quizID parameter
+        };
+      },
+      result({ data, error, loading }) {
+        this.loading = loading
+        this.loadingUserQuiz = loading;
+        if (error) {
+          this.error = error.message
+        } else {
+          if (data) {
+            this.userQuiz = data.userQuiz
+            console.log(this.userQuiz)
+
+
+          }
+        }
+      },
+      notifyOnNetworkStatusChange: true
+    },
+
+    quiz: {
+      query: GetQuizInfoQuery,
+      skip() {
+        return this.userQuiz === null;
+      },
+      variables() {
+        return {
+          quizId: this.userQuiz.quizID, // Pass the quizID parameter
+        };
+      },
+      result({data, error, loading }) {
+        this.loadingQuiz = loading;
+        this.loading = loading
+          if (data) {
+            console.log(data.quiz)
+            this.exam = data.quiz
+            this.updateExamInfo()
+          }
+      },
+      notifyOnNetworkStatusChange: true
+    },
+
+  },
+  mounted() {
+    this.updateExamInfo();
+  },
+
+  methods: {
+    updateExamInfo() {
+      if (this.exam === null) {
+        this.exam = useMainStore().selectedExam
+      }
+      console.log(this.exam)
+      if (this.exam !== null) {
+        this.examName = this.exam.name || '';
+        this.examDescription = this.exam.description || '';
+        this.examOpenTime = this.convertToNZST(this.exam.openTime) || '';
+        this.examCloseTime = this.convertToNZST(this.exam.closeTime) || '';
+        this.examDuration = `${this.exam.duration} minutes` || '';
+        this.examCompleted = this.exam.submitted || false;
+        // this.examMarked = this.exam.marked || false;
+        this.examTimeUsed = this.exam.duration || '';
+        this.numberOfQuestions = this.exam.numberOfQuestions || 0;
+        this.correctAnswers = this.exam.correctAnswers || 0;
+      }
+      else {
+        //have to refetch info using apollo
+        this.refetchNeeded = true;
+      }
+    },
+
+    convertToNZST(isoDateString: any) {
+    console.log(isoDateString)
+    const date = new Date(isoDateString);
+    
+    // Set the time zone to "Pacific/Auckland" (New Zealand Standard Time)
+    const options = { timeZone: 'Pacific/Auckland' };
+    
+    // Convert the date to a string using the New Zealand time zone
+    const nzstDateString = date.toLocaleString('en-NZ', options);
+    console.log(nzstDateString)
+    
+    return nzstDateString;
   }
+}
+
 }
 </script>
 

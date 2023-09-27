@@ -1,4 +1,5 @@
 <template>
+  
   <div class="app-exams-list">
     <v-alert v-if="!userQuizzes.length" type="info" class="my-6">
       You're not enrolled in any exam.
@@ -6,17 +7,19 @@
 
     <div v-if="currentExams.length" class="my-6">
       <AppExamsLinkCard
-        v-for="exam in currentExams"
+      v-for="exam in currentExams"
         :key="exam.id"
         :title="exam.name"
         :description="exam.description"
         :duration="exam.duration"
         :open-time="exam.openTime"
         :close-time="exam.closeTime"
-        :to="{ name: 'AppPreExam', params: { quizID: exam.id } }"
+        :to="{ name: 'AppPreExam', params: { quizID: exam.id} }"
         :containerClass="'primaryContainer'"
+        @click="selectExam(exam)"
       />
-    </div>
+</div>
+
 
     <div v-if="upcomingExams.length || pastExams.length" class="d-flex my-6" style="gap: 24px">
       <div v-if="upcomingExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
@@ -31,6 +34,8 @@
           :open-time="exam.openTime"
           :close-time="exam.closeTime"
           :containerClass="'primaryContainer'"
+          @click="selectExam(exam)"
+
         />
       </div>
 
@@ -45,8 +50,10 @@
           :duration="exam.duration"
           :open-time="exam.openTime"
           :close-time="exam.closeTime"
-          :to="{ name: 'AppExam', params: { quizID: exam.id } }"
+          :to="{ name: 'AppPreExam', params: { quizID: exam.id } }"
           :containerClass="'secondaryContainer'"
+          @click="selectExam(exam)"
+
         />
       </div>
     </div>
@@ -56,8 +63,9 @@
 <script lang="ts">
 import AppExamsLinkCard from './LinkCard.vue'
 import AppExamsInfoCard from './InfoCard.vue'
-import type { UserQuiz } from '@nzpmc-exam-portal/common'
+import type { Quiz, UserQuiz } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
+import { useMainStore } from '@/stores/main'
 
 export default {
   name: 'AppExamsList',
@@ -88,6 +96,11 @@ export default {
             typeof quiz.quizID === 'string'
         )
       }
+    }
+  },
+  methods: {
+    selectExam(exam: any) {
+      useMainStore().selectedExam = exam
     }
   },
 
