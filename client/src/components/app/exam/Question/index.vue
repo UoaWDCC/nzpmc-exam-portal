@@ -39,7 +39,11 @@
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
-          <AppExamQuestionFlagButton v-if="!review" :flagged="question.flag" :question-number="questionNumber" />
+          <AppExamQuestionFlagButton
+            v-if="!review"
+            :flagged="question.flag"
+            :question-number="questionNumber"
+          />
         </div>
       </v-row>
       <div class="options-area">
@@ -51,7 +55,11 @@
           :question-id="question.id"
           :review="review"
         />
-        <v-btn v-if="questionNumber < quizData.questions.length" id="next-question-button" v-on:click="nextQuestion()" variant="flat"
+        <v-btn
+          v-if="questionNumber < quizData.questions.length"
+          id="next-question-button"
+          v-on:click="nextQuestion()"
+          variant="flat"
           >Next Question</v-btn
         >
       </div>

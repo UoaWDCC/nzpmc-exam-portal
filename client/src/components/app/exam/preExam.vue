@@ -140,55 +140,56 @@ export default {
         this.exam = useMainStore().selectedExam
       }
       if (this.exam !== null) {
-        this.examName = this.exam.name || '';
-        this.examDescription = this.exam.description || '';
-        this.examOpenTime = this.convertToNZST(this.exam.openTime) || '';
-        this.examCloseTime = this.convertToNZST(this.exam.closeTime) || '';
-        this.examDuration = `${this.exam.duration} minutes` || '';
+        this.examName = this.exam.name || ''
+        this.examDescription = this.exam.description || ''
+        this.examOpenTime = this.convertToNZST(this.exam.openTime) || ''
+        this.examCloseTime = this.convertToNZST(this.exam.closeTime) || ''
+        this.examDuration = `${this.exam.duration} minutes` || ''
         try {
-          this.examCompleted = this.exam.submitted || this.userQuiz.submitted || this.exam.closeTime < new Date().toISOString() ? true : false
-        }
-        catch {
+          this.examCompleted =
+            this.exam.submitted ||
+            this.userQuiz.submitted ||
+            this.exam.closeTime < new Date().toISOString()
+              ? true
+              : false
+        } catch {
           this.examCompleted = this.exam.closeTime < new Date().toISOString() ? true : false
         }
         console.log(this.examCompleted)
         // this should be later changed to check if the exam has been marked
-        this.examMarked = this.exam.score > 0 ? true : false;
+        this.examMarked = this.exam.score > 0 ? true : false
         // this.examMarked = this.exam.score
 
         if (this.examCompleted) {
-          const hours = Math.floor(this.exam.duration / 60);
-          const minutes = this.exam.duration % 60;
-          this.examTimeUsed = `${hours} hours, ${minutes} minutes`; // this might be using the wrong duration?
-          this.numberOfQuestions = this.exam.questions.length || 0;
-          this.correctAnswers = this.exam.score || 0;
+          const hours = Math.floor(this.exam.duration / 60)
+          const minutes = this.exam.duration % 60
+          this.examTimeUsed = `${hours} hours, ${minutes} minutes` // this might be using the wrong duration?
+          this.numberOfQuestions = this.exam.questions.length || 0
+          this.correctAnswers = this.exam.score || 0
           if (this.exam.score != null) {
-            this.examMarked = true;
+            this.examMarked = true
           }
+        } else {
         }
-          else {
-        }
-        this.loading = false;
-      }
-      else {
+        this.loading = false
+      } else {
         //have to refetch info using apollo
         this.refetchNeeded = true
       }
     },
 
     convertToNZST(isoDateString: any) {
-      const date = new Date(isoDateString);
+      const date = new Date(isoDateString)
 
       // Set the time zone to "Pacific/Auckland" (New Zealand Standard Time)
-      const options = { timeZone: 'Pacific/Auckland' };
+      const options = { timeZone: 'Pacific/Auckland' }
 
       // Convert the date to a string using the New Zealand time zone
-      const nzstDateString = date.toLocaleString('en-NZ', options).replace(',', '');
+      const nzstDateString = date.toLocaleString('en-NZ', options).replace(',', '')
 
-      return nzstDateString;
+      return nzstDateString
+    }
   }
-}
-
 }
 </script>
 

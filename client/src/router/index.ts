@@ -34,7 +34,7 @@ const routes = [
             props: (route) => ({
               quizID: route.params.quizID,
               questionID: route.params.questionID,
-              review: route.meta.review, // Pass the review value as a prop
+              review: route.meta.review // Pass the review value as a prop
             }),
             component: () =>
               import(
