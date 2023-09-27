@@ -16,6 +16,12 @@ const routes = [
           import(/* webpackChunkName: "AppExamsChunk" */ '@/components/app/exams/index.vue')
       },
       {
+        path: 'pre-exam/:quizID',
+        name: 'AppPreExam',
+        component: () =>
+          import(/* webpackChunkName: "AppExamsChunk" */ '@/components/app/exam/preExam.vue')
+      },
+      {
         path: 'exam/:quizID',
         name: 'AppExam',
         // Load in same chunk as the exams route for better reliability
