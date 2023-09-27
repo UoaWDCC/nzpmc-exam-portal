@@ -93,7 +93,11 @@ export default {
             'openTime' in quiz &&
             typeof quiz.openTime === 'string' &&
             'quizID' in quiz &&
-            typeof quiz.quizID === 'string'
+            typeof quiz.quizID === 'string' &&
+            'score' in quiz && 
+            typeof quiz.score === 'number' &&
+            'submitted' in quiz &&
+            typeof quiz.submitted === 'boolean'
         )
       }
     }
@@ -122,6 +126,7 @@ export default {
 
     // Exams that finished
     pastExams() {
+      console.log(this.userQuizzes)
       console.log(this.userQuizzes.filter((quiz) => new Date() >= new Date(quiz.closeTime)))
       return this.userQuizzes.filter((quiz) => {
         return new Date() >= new Date(quiz.closeTime) || quiz.submitted

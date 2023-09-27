@@ -19,9 +19,11 @@
           <AppExamSidebar
             v-if="data"
             :questions="data.questions"
-            :duration="data.duration"
             :quizStart="data.quizStart"
             :userQuizId="data.id"
+            :review="review"
+
+            
           />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
@@ -80,6 +82,7 @@ export default defineComponent({
 
   data(): {
     data: UserQuizModel | undefined
+    review: boolean
     loading: boolean
     error: any
     routeTransition: any
@@ -90,7 +93,8 @@ export default defineComponent({
       routeTransition: VSlideXTransition,
       data: undefined,
       loading: false,
-      error: null
+      error: null,
+      review: false
     }
   },
 
@@ -136,7 +140,8 @@ export default defineComponent({
   watch: {
     'data.submitted': function (newVal) {
       if (newVal) {
-        this.redirectToExams()
+        // this.redirectToExams()
+        this.review = true;
       }
     }
   }

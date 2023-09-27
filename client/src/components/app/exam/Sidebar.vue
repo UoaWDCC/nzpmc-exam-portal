@@ -7,7 +7,7 @@
 }
 </style>
 <template>
-  <AppExamTopbarTimer :duration="duration" :quizStart="quizStart" :userQuizId="userQuizId" />
+  <AppExamTopbarTimer v-if="!review" :duration="duration" :quizStart="quizStart" :userQuizId="userQuizId" />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
     <v-divider color="white" thickness="3" class="border-opacity-100 mb-5" />
     <v-list-item-group v-model="selected" color="primary">
@@ -70,11 +70,15 @@ export default {
     },
     userQuizId: {
       required: true
+    },
+    review: {
+      type: Boolean,
+      required:true
     }
   },
   methods: {
     submitQuiz() {
-      console.log('clicek')
+      console.log('click')
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {

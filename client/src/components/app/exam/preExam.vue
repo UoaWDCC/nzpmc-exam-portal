@@ -151,11 +151,27 @@ export default {
         this.examOpenTime = this.convertToNZST(this.exam.openTime) || '';
         this.examCloseTime = this.convertToNZST(this.exam.closeTime) || '';
         this.examDuration = `${this.exam.duration} minutes` || '';
-        this.examCompleted = this.exam.submitted || false;
-        // this.examMarked = this.exam.marked || false;
-        this.examTimeUsed = this.exam.duration || '';
-        this.numberOfQuestions = this.exam.numberOfQuestions || 0;
-        this.correctAnswers = this.exam.correctAnswers || 0;
+        this.examCompleted = this.exam.submitted || this.exam.closeTime < new Date().toISOString() ? true : false;
+        // this should be later changed to check if the exam has been marked
+        this.examMarked = this.exam.score > 0 ? true : false;
+        // this.examMarked = this.exam.score
+        console.log(this.exam.score)
+        console.log(this.examCompleted)
+        console.log(this.examMarked)
+
+        if (this.examCompleted) {
+          const hours = Math.floor(this.exam.duration / 60);
+          const minutes = this.exam.duration % 60;
+          this.examTimeUsed = `${hours} hours, ${minutes} minutes`; // this might be using the wrong duration?
+          this.numberOfQuestions = this.exam.questions.length || 0;
+          this.correctAnswers = this.exam.score || 0;
+          if (this.exam.score != null) {
+            this.examMarked = true;
+          }
+        }
+          else {
+          console.log(this.numberOfQuestions)
+        }
       }
       else {
         //have to refetch info using apollo
@@ -164,17 +180,17 @@ export default {
     },
 
     convertToNZST(isoDateString: any) {
-    console.log(isoDateString)
-    const date = new Date(isoDateString);
-    
-    // Set the time zone to "Pacific/Auckland" (New Zealand Standard Time)
-    const options = { timeZone: 'Pacific/Auckland' };
-    
-    // Convert the date to a string using the New Zealand time zone
-    const nzstDateString = date.toLocaleString('en-NZ', options);
-    console.log(nzstDateString)
-    
-    return nzstDateString;
+      console.log(isoDateString)
+      const date = new Date(isoDateString);
+      
+      // Set the time zone to "Pacific/Auckland" (New Zealand Standard Time)
+      const options = { timeZone: 'Pacific/Auckland' };
+      
+      // Convert the date to a string using the New Zealand time zone
+      const nzstDateString = date.toLocaleString('en-NZ', options).replace(',', '');
+      console.log(nzstDateString)
+      
+      return nzstDateString;
   }
 }
 
