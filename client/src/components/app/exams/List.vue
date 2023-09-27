@@ -122,8 +122,6 @@ export default {
 
     // Exams that finished
     pastExams() {
-      console.log(this.userQuizzes)
-      console.log(this.userQuizzes.filter((quiz) => new Date() >= new Date(quiz.closeTime)))
       return this.userQuizzes.filter((quiz) => {
         return new Date() >= new Date(quiz.closeTime) || quiz.submitted
       })

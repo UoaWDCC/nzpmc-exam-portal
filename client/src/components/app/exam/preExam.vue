@@ -1,5 +1,6 @@
 <template>
-  <div class="pre-exam">
+  <AppExamQuestionLoader v-if="loading" />
+  <div v-if="!loading" class="pre-exam">
     <v-btn :to="{ name: 'AppExams' }" id="back-btn" icon="mdi-arrow-left" variant="tonal"></v-btn>
     <h1>{{ examName }}</h1>
     <div class="description-section">
@@ -47,15 +48,16 @@
   </div>
 </template>
 <script lang="ts">
-import type { Quiz, UserQuiz } from '@nzpmc-exam-portal/common'
-import type { PropType } from 'vue'
 import { useMainStore } from '@/stores/main'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
+import AppExamQuestionLoader from './Question/Loader.vue'
 
 export default {
   name: 'AppPreExam',
-
+  components: {
+    AppExamQuestionLoader
+  },
   data(): any {
     return {
       // TODO: get this information from the exam
@@ -72,7 +74,8 @@ export default {
       numberOfQuestions: 0,
       correctAnswers: 0,
       refetchNeeded: false,
-      userQuiz: null
+      userQuiz: null,
+      loading: true
     }
   },
   computed: {
@@ -96,8 +99,6 @@ export default {
         }
       },
       result({ data, error, loading }) {
-        this.loading = loading
-        this.loadingUserQuiz = loading
         if (error) {
           this.error = error.message
         } else {
@@ -121,10 +122,7 @@ export default {
         }
       },
       result({ data, error, loading }) {
-        this.loadingQuiz = loading
-        this.loading = loading
         if (data) {
-          console.log(data.quiz)
           this.exam = data.quiz
           this.updateExamInfo()
         }
@@ -141,20 +139,22 @@ export default {
       if (this.exam === null) {
         this.exam = useMainStore().selectedExam
       }
-      console.log(this.exam)
       if (this.exam !== null) {
         this.examName = this.exam.name || '';
         this.examDescription = this.exam.description || '';
         this.examOpenTime = this.convertToNZST(this.exam.openTime) || '';
         this.examCloseTime = this.convertToNZST(this.exam.closeTime) || '';
         this.examDuration = `${this.exam.duration} minutes` || '';
-        this.examCompleted = this.exam.submitted || this.exam.closeTime < new Date().toISOString() ? true : false;
+        try {
+          this.examCompleted = this.exam.submitted || this.userQuiz.submitted || this.exam.closeTime < new Date().toISOString() ? true : false
+        }
+        catch {
+          this.examCompleted = this.exam.closeTime < new Date().toISOString() ? true : false
+        }
+        console.log(this.examCompleted)
         // this should be later changed to check if the exam has been marked
         this.examMarked = this.exam.score > 0 ? true : false;
         // this.examMarked = this.exam.score
-        console.log(this.exam.score)
-        console.log(this.examCompleted)
-        console.log(this.examMarked)
 
         if (this.examCompleted) {
           const hours = Math.floor(this.exam.duration / 60);
@@ -167,8 +167,8 @@ export default {
           }
         }
           else {
-          console.log(this.numberOfQuestions)
         }
+        this.loading = false;
       }
       else {
         //have to refetch info using apollo
@@ -177,7 +177,6 @@ export default {
     },
 
     convertToNZST(isoDateString: any) {
-      console.log(isoDateString)
       const date = new Date(isoDateString);
 
       // Set the time zone to "Pacific/Auckland" (New Zealand Standard Time)
@@ -185,7 +184,6 @@ export default {
 
       // Convert the date to a string using the New Zealand time zone
       const nzstDateString = date.toLocaleString('en-NZ', options).replace(',', '');
-      console.log(nzstDateString)
 
       return nzstDateString;
   }

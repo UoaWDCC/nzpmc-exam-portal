@@ -119,6 +119,13 @@ export default defineComponent({
           if (data) {
             this.data = data.userQuiz
             const currentQuestions = data?.userQuiz.questions
+            // check if there are any questions
+            if (currentQuestions.length === 0) {
+              this.$router.push({
+                name: 'AppExams'
+              })
+              return
+            }
             if (this.$route.params.questionID === undefined) {
               this.$router.push({
                 name: 'AppExamQuestion',
@@ -133,12 +140,30 @@ export default defineComponent({
     }
   },
   watch: {
-    'data.submitted': function (newVal) {
-      if (newVal) {
-        // this.redirectToExams()
+    'data.score': function (newVal) {
+      // this needs to be changed to an isMarked boolean
+      console.log(newVal)
+      console.log(newVal > 0)
+      console.log(this.review)
+      if (newVal == null) {
+        this.redirectToExams()
+      }
+      if (newVal > 0) {
         this.review = true
       }
-    }
+      else {
+        this.review = false
+        this.redirectToExams()
+      }
+    },
+    // 'data.submitted': function (newVal) {
+    //   if (newVal) {
+    //     console.log(this.review)
+    //     if (this.review === false) {
+    //     // this.redirectToExams()
+    //     }
+    //   }
+    // }
   }
 })
 </script>
