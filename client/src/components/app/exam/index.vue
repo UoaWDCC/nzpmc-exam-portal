@@ -129,7 +129,7 @@ export default defineComponent({
             if (this.$route.params.questionID === undefined) {
               this.$router.push({
                 name: 'AppExamQuestion',
-                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id}
+                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
               })
             }
           }
@@ -150,12 +150,11 @@ export default defineComponent({
       }
       if (newVal > 0) {
         this.review = true
-      }
-      else {
+      } else {
         this.review = false
         this.redirectToExams()
       }
-    },
+    }
     // 'data.submitted': function (newVal) {
     //   if (newVal) {
     //     console.log(this.review)

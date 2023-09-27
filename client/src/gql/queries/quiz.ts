@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import {UserQuizOptionFragment} from '@/gql/fragments/userQuiz'
+import { UserQuizOptionFragment } from '@/gql/fragments/userQuiz'
 
 export const AllQuizIDQuery = gql`
   query Quizzes {
@@ -30,7 +30,9 @@ export const GetQuizInfoQuery = gql`
         }
         created
         modified
-        answer {...UserQuizOptionFragment}
+        answer {
+          ...UserQuizOptionFragment
+        }
       }
       openTime
       closeTime

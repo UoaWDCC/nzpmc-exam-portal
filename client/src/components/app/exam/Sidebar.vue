@@ -26,7 +26,8 @@
       />
     </v-list-item-group>
   </v-list>
-  <v-btn v-if="!review"
+  <v-btn
+    v-if="!review"
     color="secondary"
     :disabled="examStore.submitting || review"
     v-on:click="submitQuiz()"

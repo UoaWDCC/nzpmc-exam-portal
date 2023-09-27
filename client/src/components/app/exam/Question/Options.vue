@@ -5,13 +5,10 @@
   column-gap: 1rem;
   width: 100%;
 }
-
-
 </style>
 <template>
-
   <v-item-group v-if="options && quizData" v-model="selected" class="options-container">
-  <AppExamQuestionLoader v-if="loading" />
+    <AppExamQuestionLoader v-if="loading" />
 
     <v-item v-for="option in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
       <v-card
@@ -102,7 +99,7 @@ export default {
       query: GetQuizInfoQuery,
       variables() {
         return {
-          quizId: this.quizId,
+          quizId: this.quizId
         }
       },
       result({ data, error, loading }) {
@@ -159,7 +156,7 @@ export default {
         })
     }
   },
- 
+
   methods: {
     // Ensure the selected state is synced with the server
     setSelected(answerID: any) {
@@ -171,33 +168,28 @@ export default {
       return this.selected === this.sortedOptions.findIndex((option) => option.id === optionId)
     },
 
-    getCardColor(option:any) {
+    getCardColor(option: any) {
       if (this.review) {
         try {
-          const currentQuestion = this.quizData.questions.find((question: any) => question.id === this.questionId)
+          const currentQuestion = this.quizData.questions.find(
+            (question: any) => question.id === this.questionId
+          )
           if (option.id == currentQuestion.answer.id) {
             return 'green'
-          }
-          else if (option.id == this.answer) {
+          } else if (option.id == this.answer) {
             return 'red-darken-4'
-          }
-          else {
+          } else {
             return 'white'
           }
-        }
-        catch{
+        } catch {
           // now you might be thinking this may seem redundant
           // but it isn't - Aaron
           // (if there is an error it recalls the function)
         }
-        
+      } else {
+        return option ? 'white' : '#03a9f5'
       }
-      else {
-        return option ? 'white': '#03a9f5' 
-      }
-    },
-    
+    }
   }
-
 }
 </script>
