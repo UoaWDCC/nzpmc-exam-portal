@@ -28,11 +28,11 @@
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
 
-      <AppExamQuestionLoader v-if="isLoading" />
+      <AppExamQuestionLoader v-if="loading" />
 
       <div v-if="data" class="question-container" style="overflow: hidden">
         <component :is="routeTransition" hide-on-leave>
-          <router-view :key="$route.params.questionID" />
+          <router-view :key="$route.params.questionID" :review="review" />
         </component>
       </div>
     </v-container>
@@ -116,20 +116,17 @@ export default defineComponent({
       result({ data, error, loading }) {
         this.loading = loading
         if (error) {
-          console.log(this.$route.params.quizID)
           this.error = error.message
         } else {
           if (data) {
             this.data = data.userQuiz
             const currentQuestions = data?.userQuiz.questions
-            console.log(this.$route.params.questionID)
             if (this.$route.params.questionID === undefined) {
               this.$router.push({
                 name: 'AppExamQuestion',
-                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
+                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id}
               })
             }
-            console.log(data)
           }
         }
       },

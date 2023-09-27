@@ -191,16 +191,6 @@ export default {
   }
 }
 
-      // Set the time zone to "Pacific/Auckland" (New Zealand Standard Time)
-      const options = { timeZone: 'Pacific/Auckland' }
-
-      // Convert the date to a string using the New Zealand time zone
-      const nzstDateString = date.toLocaleString('en-NZ', options)
-      console.log(nzstDateString)
-
-      return nzstDateString
-    }
-  }
 }
 </script>
 

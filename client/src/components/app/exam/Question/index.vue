@@ -39,7 +39,7 @@
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
-          <AppExamQuestionFlagButton :flagged="question.flag" :question-number="questionNumber" />
+          <AppExamQuestionFlagButton v-if="!review" :flagged="question.flag" :question-number="questionNumber" />
         </div>
       </v-row>
       <div class="options-area">
@@ -47,8 +47,11 @@
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
           :question-number="questionNumber"
+          :quiz-id="quizData.quizID"
+          :question-id="question.id"
+          :review="review"
         />
-        <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat"
+        <v-btn v-if="questionNumber < quizData.questions.length" id="next-question-button" v-on:click="nextQuestion()" variant="flat"
           >Next Question</v-btn
         >
       </div>
@@ -70,6 +73,9 @@ export default {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
     DisplayText
+  },
+  props: {
+    review: Boolean
   },
   data(): {
     error: any
@@ -96,7 +102,6 @@ export default {
         const question = this.quizData.questions.find(
           (question: Question) => question.id === questionID
         )
-        console.log(question)
         return question
       }
 
@@ -108,7 +113,6 @@ export default {
       if (this.questionNumber) {
         const nextQuestionIndex = this.questionNumber // index will use exact same value because it has 1 added to it
         const nextQuestionID = this.quizData.questions[nextQuestionIndex].id
-        console.log(nextQuestionID)
         this.$router.push({
           name: 'AppExamQuestion',
           params: { quizID: this.$route.params.quizID, questionID: nextQuestionID }

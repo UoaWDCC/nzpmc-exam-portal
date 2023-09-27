@@ -21,9 +21,9 @@
       />
     </v-list-item-group>
   </v-list>
-  <v-btn
+  <v-btn v-if="!review"
     color="secondary"
-    :disabled="examStore.submitting"
+    :disabled="examStore.submitting || review"
     v-on:click="submitQuiz()"
     variant="flat"
     id="submit-button"
@@ -79,6 +79,7 @@ export default {
   methods: {
     submitQuiz() {
       console.log('click')
+      if (this.review) return
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {

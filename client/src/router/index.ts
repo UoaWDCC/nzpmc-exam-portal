@@ -31,6 +31,11 @@ const routes = [
           {
             path: ':questionID',
             name: 'AppExamQuestion',
+            props: (route) => ({
+              quizID: route.params.quizID,
+              questionID: route.params.questionID,
+              review: route.meta.review, // Pass the review value as a prop
+            }),
             component: () =>
               import(
                 /* webpackChunkName: "AppExamsChunk" */ '@/components/app/exam/Question/index.vue'
