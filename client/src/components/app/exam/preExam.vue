@@ -47,15 +47,15 @@
   </div>
 </template>
 <script lang="ts">
-import type { Quiz, UserQuiz } from '@nzpmc-exam-portal/common';
-import type { PropType } from 'vue';
-import { useMainStore } from '@/stores/main';
-import { GetQuizInfoQuery } from '@/gql/queries/quiz';
-import { UserQuizQuery } from '@/gql/queries/userQuiz';
+import type { Quiz, UserQuiz } from '@nzpmc-exam-portal/common'
+import type { PropType } from 'vue'
+import { useMainStore } from '@/stores/main'
+import { GetQuizInfoQuery } from '@/gql/queries/quiz'
+import { UserQuizQuery } from '@/gql/queries/userQuiz'
 
 export default {
   name: 'AppPreExam',
-  
+
   data(): any {
     return {
       // TODO: get this information from the exam
@@ -81,31 +81,29 @@ export default {
     },
     examScorePercentage(): string {
       return ((this.correctAnswers / this.numberOfQuestions) * 100).toFixed(2) + '%'
-    },
+    }
   },
 
   apollo: {
     userQuiz: {
       query: UserQuizQuery,
       skip() {
-        return !this.refetchNeeded;
+        return !this.refetchNeeded
       },
       variables() {
         return {
-          quizID: this.$route.params.quizID, // Pass the quizID parameter
-        };
+          quizID: this.$route.params.quizID // Pass the quizID parameter
+        }
       },
       result({ data, error, loading }) {
         this.loading = loading
-        this.loadingUserQuiz = loading;
+        this.loadingUserQuiz = loading
         if (error) {
           this.error = error.message
         } else {
           if (data) {
             this.userQuiz = data.userQuiz
             console.log(this.userQuiz)
-
-
           }
         }
       },
@@ -115,28 +113,27 @@ export default {
     quiz: {
       query: GetQuizInfoQuery,
       skip() {
-        return this.userQuiz === null;
+        return this.userQuiz === null
       },
       variables() {
         return {
-          quizId: this.userQuiz.quizID, // Pass the quizID parameter
-        };
+          quizId: this.userQuiz.quizID // Pass the quizID parameter
+        }
       },
-      result({data, error, loading }) {
-        this.loadingQuiz = loading;
+      result({ data, error, loading }) {
+        this.loadingQuiz = loading
         this.loading = loading
-          if (data) {
-            console.log(data.quiz)
-            this.exam = data.quiz
-            this.updateExamInfo()
-          }
+        if (data) {
+          console.log(data.quiz)
+          this.exam = data.quiz
+          this.updateExamInfo()
+        }
       },
       notifyOnNetworkStatusChange: true
-    },
-
+    }
   },
   mounted() {
-    this.updateExamInfo();
+    this.updateExamInfo()
   },
 
   methods: {
@@ -175,7 +172,7 @@ export default {
       }
       else {
         //have to refetch info using apollo
-        this.refetchNeeded = true;
+        this.refetchNeeded = true
       }
     },
 
@@ -194,6 +191,16 @@ export default {
   }
 }
 
+      // Set the time zone to "Pacific/Auckland" (New Zealand Standard Time)
+      const options = { timeZone: 'Pacific/Auckland' }
+
+      // Convert the date to a string using the New Zealand time zone
+      const nzstDateString = date.toLocaleString('en-NZ', options)
+      console.log(nzstDateString)
+
+      return nzstDateString
+    }
+  }
 }
 </script>
 
