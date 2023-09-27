@@ -97,6 +97,9 @@ export default {
   apollo: {
     quizData: {
       query: GetQuizInfoQuery,
+      skip() {
+        return !this.review
+      },
       variables() {
         return {
           quizId: this.quizId
