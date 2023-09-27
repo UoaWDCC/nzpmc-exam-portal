@@ -22,8 +22,6 @@
             :quizStart="data.quizStart"
             :userQuizId="data.id"
             :review="review"
-
-            
           />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
@@ -141,7 +139,7 @@ export default defineComponent({
     'data.submitted': function (newVal) {
       if (newVal) {
         // this.redirectToExams()
-        this.review = true;
+        this.review = true
       }
     }
   }
