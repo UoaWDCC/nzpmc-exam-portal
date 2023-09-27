@@ -128,9 +128,8 @@ export default {
 
     // Update server with new selected value
     selected(v) {
-      // Cancel if answer has not been changed
-      if (this.sortedOptions[v].id === this.answer) return
-
+      // Cancel if answer has not been changed or user is in review mode
+      if (this.sortedOptions[v].id === this.answer || this.review) return
       const mutation = this.$apollo.mutate({
         mutation: UserQuizUpdateAnswerMutation,
         variables: {
