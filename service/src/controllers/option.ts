@@ -41,13 +41,21 @@ const getOptionByID = async (
         if (!question || !question.options) {
             throw new NotFoundError()
         }
-
-        const option = await question.options.findById(optionID)
-        if (!option) {
-            throw new NotFoundError()
+        console.log(`The option id is ${optionID}`)
+        let option;
+        try {
+            option = await question.options.findById(optionID)
         }
+        catch (e) {
+            // handles if the option id is not found (used for querying usually answers)
+            option = new Option()
+            option.id = 'noID'
+            option.option = "there was no given option"
 
-        return packOption(option)
+        }
+        finally {
+            return packOption(option)
+        }
     })
 }
 

@@ -115,25 +115,25 @@ export default defineComponent({
         this.loading = loading
         if (error) {
           this.error = error.message
-        } else {
-          if (data) {
-            this.data = data.userQuiz
-            const currentQuestions = data?.userQuiz.questions
-            // check if there are any questions
-            if (currentQuestions.length === 0) {
-              this.$router.push({
-                name: 'AppExams'
-              })
-              return
-            }
-            if (this.$route.params.questionID === undefined) {
-              this.$router.push({
-                name: 'AppExamQuestion',
-                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
-              })
-            }
+        }
+        if (data) {
+          this.data = data.userQuiz
+          const currentQuestions = data?.userQuiz.questions
+          // check if there are any questions
+          if (currentQuestions.length === 0) {
+            this.$router.push({
+              name: 'AppExams'
+            })
+            return
+          }
+          if (this.$route.params.questionID === undefined) {
+            this.$router.push({
+              name: 'AppExamQuestion',
+              params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
+            })
           }
         }
+        
       },
       fetchPolicy: 'network-only',
       notifyOnNetworkStatusChange: true
@@ -142,9 +142,6 @@ export default defineComponent({
   watch: {
     'data.score': function (newVal) {
       // this needs to be changed to an isMarked boolean
-      console.log(newVal)
-      console.log(newVal > 0)
-      console.log(this.review)
       if (newVal == null) {
         this.redirectToExams()
       }

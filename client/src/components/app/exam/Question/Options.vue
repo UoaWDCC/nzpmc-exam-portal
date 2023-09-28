@@ -107,11 +107,14 @@ export default {
       },
       result({ data, error, loading }) {
         if (error) {
-        } else {
-          if (data && this.review) {
-            this.quizData = data.quiz
-          }
+          console.log("The answer ID is most likely invalid")
+        } 
+
+        if (data && this.review) {
+          console.log(data)
+          this.quizData = data.quiz
         }
+        
       }
     }
   },
