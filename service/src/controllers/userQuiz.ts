@@ -25,7 +25,6 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
 
         const expired =
             (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
-
         return packUserQuiz({
             userID: userQuiz.userID,
             quiz,
@@ -87,7 +86,7 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
                 }),
             ),
         )
-
+        console.log(userQuizzesPack)
         return packUserQuizzes(userQuizzesPack)
     })
 }
