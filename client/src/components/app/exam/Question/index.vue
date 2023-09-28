@@ -54,13 +54,20 @@
           :answer="question.userAnswer ? question.userAnswer.id : null"
           :question-number="questionNumber"
         />
-        <v-btn v-if="!isLastQuestion" id="next-question-button" v-on:click="nextQuestion()" variant="flat">Next Question</v-btn>
-        <v-btn v-else id="submit-button" v-on:click="submitQuiz()" variant="flat">Submit Exam</v-btn>
+        <v-btn
+          v-if="!isLastQuestion"
+          id="next-question-button"
+          v-on:click="nextQuestion()"
+          variant="flat"
+          >Next Question</v-btn
+        >
+        <v-btn v-else id="submit-button" v-on:click="submitQuiz()" variant="flat"
+          >Submit Exam</v-btn
+        >
       </div>
     </v-container>
   </v-scroll-y-reverse-transition>
 </template>
-
 
 <script lang="ts">
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
@@ -113,11 +120,11 @@ export default {
 
       return null
     },
-      isLastQuestion() {
+    isLastQuestion() {
       if (this.quizData && this.questionNumber !== null) {
-        return this.questionNumber === this.quizData.questions.length;
+        return this.questionNumber === this.quizData.questions.length
       }
-      return false;
+      return false
     }
   },
   methods: {
