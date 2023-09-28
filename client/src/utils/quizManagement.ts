@@ -3,7 +3,7 @@ import { GetUserQuizzesListQuery } from '../gql/queries/userQuizList'
 import type { UserQuiz } from '@/components/app/admin/QuizManagement.vue'
 import type { QuizModel } from '@nzpmc-exam-portal/common'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
-import { CreateExamMutation, EditQuizMutation } from '@/gql/mutations/quiz'
+import { CreateExamMutation, DeleteQuizMutation, EditQuizMutation } from '@/gql/mutations/quiz'
 import { parseCSVPapaparse } from './csv_parser'
 import { EnrolUsersInQuizMutation } from '@/gql/mutations/userQuiz'
 import { UnenrolUsersFromQuizMutation } from '@/gql/mutations/userQuiz'
@@ -53,6 +53,21 @@ export const createEmptyExamMutation = async (apollo: ApolloClient<NormalizedCac
     }
   })
   return mutation.data.addQuiz
+}
+
+export const deleteExam = async (apollo: ApolloClient<NormalizedCacheObject>, quizId: string) => {
+  try {
+    const mutation = await apollo.mutate({
+      mutation: DeleteQuizMutation,
+      variables: {
+        deleteQuizId: quizId
+      }
+    })
+    return mutation.data
+  } catch (error) {
+    console.log(error)
+    return error
+  }
 }
 
 export const editQuizMutation = async (
