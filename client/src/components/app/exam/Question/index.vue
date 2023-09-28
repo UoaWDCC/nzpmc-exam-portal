@@ -55,7 +55,7 @@
           :question-number="questionNumber"
         />
         <v-btn
-          v-if="!isLastQuestion"
+          v-if="questionNumber < quizData.questions.length"
           id="next-question-button"
           v-on:click="nextQuestion()"
           variant="flat"
@@ -77,7 +77,6 @@ import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
 import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import { useExamStore } from '../examStore'
-import type { Store } from 'pinia'
 
 export default {
   name: 'AppExamQuestion',
@@ -120,12 +119,6 @@ export default {
 
       return null
     },
-    isLastQuestion() {
-      if (this.quizData && this.questionNumber !== null) {
-        return this.questionNumber === this.quizData.questions.length
-      }
-      return false
-    }
   },
   methods: {
     nextQuestion() {
