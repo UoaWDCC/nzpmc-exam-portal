@@ -456,7 +456,7 @@ export default {
 
     async downloadUsersCsv() {
       try {
-        const data = downloadUsersCsvQuery(this.$apollo)
+        downloadUsersCsvQuery(this.$apollo.getClient())
         console.log('downloaded users csv')
         this.popUpMessage = 'Downloaded users csv'
         this.popUpDialog = true
