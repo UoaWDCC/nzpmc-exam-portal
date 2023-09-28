@@ -162,6 +162,14 @@
           :disabled="loading"
           >DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn
         >
+        <v-btn
+          @click="deleteCurrentExam"
+          block
+          size="large"
+          color="red"
+          class="mt-3"
+          :disabled="loading"
+          > DELETE CURRENT EXAM </v-btn>
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
@@ -189,7 +197,8 @@ import {
   formatDateToDate,
   type editQuizInput,
   formatDateToTime,
-  enrolUsersInQuizFromCSV
+  enrolUsersInQuizFromCSV,
+  deleteExam
 } from '@/utils/quizManagement'
 import type { EditQuizInput, QuizModel } from '@nzpmc-exam-portal/common'
 
@@ -454,6 +463,13 @@ export default defineComponent({
       const id = res.id
       await this.editAndUpdateSelectedQuiz(id, { name: id })
       await this.updateQuizID(id)
+      this.loading = false
+    },
+    async deleteCurrentExam() {
+      this.loading = true
+      const res = await deleteExam(this.$apollo, this.quizIdInput)
+      await this.updateQuizID("")
+      await this.$apollo.queries.userQuizzes.refetch()
       this.loading = false
     },
     async editAndUpdateSelectedQuiz(id: string, input: editQuizInput) {

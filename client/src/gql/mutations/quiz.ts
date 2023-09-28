@@ -14,3 +14,11 @@ export const CreateExamMutation = gql`
     }
   }
 `
+
+export const DeleteQuizMutation = gql`
+mutation DeleteQuiz($deleteQuizId: ID!) {
+  deleteQuiz(id: $deleteQuizId) {
+    id
+  }
+}
+` 
