@@ -133,7 +133,6 @@ export default defineComponent({
             })
           }
         }
-        
       },
       fetchPolicy: 'network-only',
       notifyOnNetworkStatusChange: true
