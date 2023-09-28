@@ -112,7 +112,7 @@ export const enrolUsersInQuizFromCSV = async (
     }))
 
     console.log(`Unenrolling all users from quiz ${quizId}`)
-    const deleteMutation = await apollo.mutate({
+    await apollo.mutate({
       mutation: UnenrolUsersFromQuizMutation,
       variables: {
         users: [

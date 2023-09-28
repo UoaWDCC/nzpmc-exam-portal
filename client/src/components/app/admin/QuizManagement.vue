@@ -189,7 +189,6 @@ import { defineComponent } from 'vue'
 import type { User } from '@/components/app/admin/UserManagement.vue'
 import { AllQuizIDQuery } from '@/gql/queries/quiz'
 import { parseCSVPapaparse } from '@/utils/csv_parser'
-import type { Student } from '@/utils/csv_parser'
 import {
   debounce,
   downloadUserQuizzesCsvQuery,
@@ -202,7 +201,7 @@ import {
   enrolUsersInQuizFromCSV,
   deleteExam
 } from '@/utils/quizManagement'
-import type { EditQuizInput, QuizModel } from '@nzpmc-exam-portal/common'
+import type { QuizModel } from '@nzpmc-exam-portal/common'
 
 export type UserQuiz = {
   user: User
@@ -513,10 +512,12 @@ export default defineComponent({
 
     async fetchQuizInfo() {
       try {
-        const quiz = await getQuizInfoQuery(this.$apollo, this.quizIdInput)
+        const quiz = await getQuizInfoQuery(this.$apollo.getClient(), this.quizIdInput)
         this.selectedQuiz = quiz
         return
-      } catch (error) {}
+      } catch (error) {
+        console.error('Failed to fetch quiz info:', error)
+      }
     },
 
     async downloadUserQuizzes() {

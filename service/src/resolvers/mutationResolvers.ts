@@ -518,19 +518,19 @@ const enrolUsersInQuizMutation: Resolver<
             try {
                 const firebaseUser = await addFirebaseUser(
                     '',
-                    firstName!,
-                    lastName || ``,
+                    firstName || '',
+                    lastName || '',
                     '',
-                    userEmail!,
+                    userEmail || '',
                     '',
                 )
                 const { uid, displayName, photoURL } = firebaseUser
                 await addUser(
                     uid,
                     displayName,
-                    userEmail!,
-                    photoURL!,
-                    firstName!,
+                    userEmail || '',
+                    photoURL || '',
+                    firstName || '',
                     lastName || ``,
                     yearLevel || ``,
                     'user',
