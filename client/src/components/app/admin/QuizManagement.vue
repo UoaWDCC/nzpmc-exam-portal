@@ -169,7 +169,9 @@
           color="red"
           class="mt-3"
           :disabled="loading"
-          > DELETE CURRENT EXAM </v-btn>
+        >
+          DELETE CURRENT EXAM
+        </v-btn>
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
@@ -468,7 +470,7 @@ export default defineComponent({
     async deleteCurrentExam() {
       this.loading = true
       const res = await deleteExam(this.$apollo, this.quizIdInput)
-      await this.updateQuizID("")
+      await this.updateQuizID('')
       await this.$apollo.queries.userQuizzes.refetch()
       this.loading = false
     },
