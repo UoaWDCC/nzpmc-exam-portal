@@ -86,7 +86,6 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
                 }),
             ),
         )
-        console.log(userQuizzesPack)
         return packUserQuizzes(userQuizzesPack)
     })
 }

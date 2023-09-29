@@ -57,7 +57,7 @@ export const createEmptyExamMutation = async (apollo: ApolloClient<NormalizedCac
 
 export const deleteExam = async (apollo: ApolloClient<NormalizedCacheObject>, quizId: string) => {
   try {
-    const deleteExamMutation = await apollo.mutate({
+    await apollo.mutate({
       mutation: DeleteQuizMutation,
       variables: {
         deleteQuizId: quizId
@@ -75,8 +75,6 @@ export const deleteExam = async (apollo: ApolloClient<NormalizedCacheObject>, qu
         quizId: quizId
       }
     })
-    console.log(`Deleted all user quizzes associated with exam ${quizId}`)
-    console.log(deleteUserQuizzesMutation.data)
 
     return deleteUserQuizzesMutation.data
   } catch (error) {

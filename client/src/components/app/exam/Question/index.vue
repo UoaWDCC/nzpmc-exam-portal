@@ -77,7 +77,6 @@ import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
 import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import { useExamStore } from '../examStore'
-import type { Store } from 'pinia'
 
 export default {
   name: 'AppExamQuestion',
@@ -114,7 +113,6 @@ export default {
         const question = this.quizData.questions.find(
           (question: Question) => question.id === questionID
         )
-        console.log(question)
         return question
       }
 
