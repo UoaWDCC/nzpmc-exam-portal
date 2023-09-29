@@ -64,9 +64,9 @@ const getUserQuizQuestions = async (
     let userQuiz
 
     // we allow for expired now to view past exams
-    // if (expired) {
-    //     throw new UserQuizExpiredError()
-    // }
+    if (expired) {
+        // throw new UserQuizExpiredError()
+    }
 
     await runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)

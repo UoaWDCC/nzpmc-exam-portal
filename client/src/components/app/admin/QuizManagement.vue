@@ -468,7 +468,7 @@ export default defineComponent({
     },
     async deleteCurrentExam() {
       this.loading = true
-      const res = await deleteExam(this.$apollo, this.quizIdInput)
+      await deleteExam(this.$apollo, this.quizIdInput)
       await this.updateQuizID('')
       await this.$apollo.queries.userQuizzes.refetch()
       this.loading = false

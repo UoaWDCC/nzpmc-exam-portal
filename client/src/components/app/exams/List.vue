@@ -59,7 +59,7 @@
 <script lang="ts">
 import AppExamsLinkCard from './LinkCard.vue'
 import AppExamsInfoCard from './InfoCard.vue'
-import type { Quiz, UserQuiz } from '@nzpmc-exam-portal/common'
+import type { UserQuiz } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import { useMainStore } from '@/stores/main'
 

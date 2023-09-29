@@ -68,7 +68,7 @@
           variant="flat"
           >Next Question</v-btn
         >
-        <v-btn v-else id="submit-button" v-on:click="submitQuiz()" variant="flat"
+        <v-btn v-else-if="!review" id="submit-button" v-on:click="submitQuiz()" variant="flat"
           >Submit Exam</v-btn
         >
       </div>
@@ -84,7 +84,6 @@ import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
 import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import { useExamStore } from '../examStore'
-import type { Store } from 'pinia'
 
 export default {
   name: 'AppExamQuestion',
@@ -148,7 +147,7 @@ export default {
       }
     },
     submitQuiz() {
-      console.log('clicek')
+      console.log('click')
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {
@@ -171,7 +170,7 @@ export default {
   },
 
   apollo: {
-    quizData: {
+    userQuiz: {
       query: UserQuizQuery,
       variables() {
         return {

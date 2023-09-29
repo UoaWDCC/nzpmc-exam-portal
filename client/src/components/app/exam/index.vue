@@ -105,7 +105,7 @@ export default defineComponent({
   },
 
   apollo: {
-    name: {
+    userQuiz: {
       query: UserQuizQuery,
       variables() {
         return { quizID: this.$route.params.quizID }

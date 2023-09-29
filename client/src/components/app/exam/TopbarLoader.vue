@@ -25,7 +25,6 @@ export default {
         if (error) {
           console.error(error.message)
         } else {
-          console.log(data)
           if (data) {
             data.userQuizzes.find((quiz) => quiz.id === this.$route.params.quizID)
           }

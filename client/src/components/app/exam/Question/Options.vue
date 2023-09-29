@@ -40,7 +40,6 @@ import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
-import { UserQuizFullQuestionQuery, UserQuizQuery } from '@/gql/queries/userQuiz'
 
 export default {
   name: 'AppExamQuestionOptions',
@@ -95,7 +94,7 @@ export default {
     }
   },
   apollo: {
-    quizData: {
+    quiz: {
       query: GetQuizInfoQuery,
       skip() {
         return !this.review
@@ -105,13 +104,12 @@ export default {
           quizId: this.quizId
         }
       },
-      result({ data, error, loading }) {
+      result({ data, error}) {
         if (error) {
           console.log('The answer ID is most likely invalid')
         }
 
         if (data && this.review) {
-          console.log(data)
           this.quizData = data.quiz
         }
       }

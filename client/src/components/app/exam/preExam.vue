@@ -98,7 +98,7 @@ export default {
           quizID: this.$route.params.quizID // Pass the quizID parameter
         }
       },
-      result({ data, error, loading }) {
+      result({ data, error}) {
         if (error) {
           this.error = error.message
         } else {
@@ -121,7 +121,10 @@ export default {
           quizId: this.userQuiz.quizID // Pass the quizID parameter
         }
       },
-      result({ data, error, loading }) {
+      result({ data, error }) {
+        if (error) {
+          this.error = error.message
+        }
         if (data) {
           this.exam = data.quiz
           this.updateExamInfo()
@@ -155,7 +158,6 @@ export default {
         } catch {
           this.examCompleted = this.exam.closeTime < new Date().toISOString() ? true : false
         }
-        console.log(this.examCompleted)
         // this should be later changed to check if the exam has been marked
         this.examMarked = this.exam.score > 0 ? true : false
         // this.examMarked = this.exam.score
@@ -169,8 +171,7 @@ export default {
           if (this.exam.score != null) {
             this.examMarked = true
           }
-        } else {
-        }
+        } 
         this.loading = false
       } else {
         //have to refetch info using apollo
