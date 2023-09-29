@@ -98,7 +98,7 @@ export default {
           quizID: this.$route.params.quizID // Pass the quizID parameter
         }
       },
-      result({ data, error}) {
+      result({ data, error }) {
         if (error) {
           this.error = error.message
         } else {
@@ -171,7 +171,7 @@ export default {
           if (this.exam.score != null) {
             this.examMarked = true
           }
-        } 
+        }
         this.loading = false
       } else {
         //have to refetch info using apollo

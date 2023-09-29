@@ -104,7 +104,7 @@ export default {
           quizId: this.quizId
         }
       },
-      result({ data, error}) {
+      result({ data, error }) {
         if (error) {
           console.log('The answer ID is most likely invalid')
         }
