@@ -11,6 +11,12 @@
     margin: auto;
   }
 
+  #submit-button {
+    background-color: $secondary;
+    color: $white;
+    margin: auto;
+  }
+
   .options-area {
     display: flex;
     flex-direction: column;
@@ -63,8 +69,15 @@
           :correctAnswerID="isAdminAndEditing ? question.answerID : null"
           :question-number="questionNumber"
         />
-        <v-btn id="next-question-button" v-on:click="nextQuestion()" variant="flat"
+        <v-btn
+          v-if="questionNumber < quizData.questions.length"
+          id="next-question-button"
+          v-on:click="nextQuestion()"
+          variant="flat"
           >Next Question</v-btn
+        >
+        <v-btn v-else id="submit-button" v-on:click="submitQuiz()" variant="flat"
+          >Submit Exam</v-btn
         >
       </div>
     </v-container>
@@ -78,6 +91,8 @@ import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
 import quizEditingMixin from '@/utils/quizEditingMixin'
 import { onMounted } from 'vue'
+import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
+import { useExamStore } from '../examStore'
 
 export default {
   name: 'AppExamQuestion',
@@ -88,12 +103,17 @@ export default {
     AppExamQuestionFlagButton,
     DisplayText
   },
-
-  data() {
+  data(): {
+    error: any
+    quizData: any
+    examStore: any
+    updating: boolean
+  } {
     return {
       error: null,
       quizData: undefined,
-      updating: false
+      updating: false,
+      examStore: useExamStore()
     }
   },
 
@@ -113,7 +133,6 @@ export default {
         const question = this.quizData.questions.find(
           (question: Question) => question.id === questionID
         )
-        console.log(question)
         return question
       }
 
@@ -153,6 +172,28 @@ export default {
         })
       }
     },
+    submitQuiz() {
+      console.log('clicek')
+      const mutation = this.$apollo.mutate({
+        mutation: SubmitUserQuizQuestionsMutation,
+        variables: {
+          input: {
+            userQuizID: this.$route.params.quizID
+          }
+        }
+      })
+      this.examStore.submitting = true
+      mutation
+        .then(() => {
+          this.$router.push({
+            name: 'AppExams'
+          })
+        })
+        .catch(() => {
+          this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
+        })
+    },
+
     async fetchData(fetchPolicy: 'network-only' | 'cache-first') {
       const quizId = this.$route.params.quizID
       try {
