@@ -38,14 +38,7 @@ export default {
           questionDescription: currentDescription
         })
       )
-    }
-  },
-
-  mounted() {
-    this.parsed()
-  },
-
-  methods: {
+    },
     parsed() {
       const latexRegex = /\$(\$?)(.*?)\1\$/g
       const imageRegex = /!\[([^\]]*)\]\(([^\)]+)\)/g
@@ -91,6 +84,10 @@ export default {
         })
       })
     }
+  },
+
+  mounted() {
+    this.parsed()
   }
 }
 </script>
@@ -105,6 +102,7 @@ img {
 .question-form {
   > div {
     display: flex;
+    flex-direction: column;
   }
 }
 
