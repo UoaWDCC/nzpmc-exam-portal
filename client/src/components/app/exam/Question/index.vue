@@ -127,12 +127,7 @@ export default {
       }
 
       return null
-    },
-    isLastQuestion() {
-      if (this.quizData && this.questionNumber !== null) {
-        return this.questionNumber === this.quizData.questions.length
-      }
-      return false
+
     }
   },
   methods: {
