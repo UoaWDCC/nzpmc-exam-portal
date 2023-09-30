@@ -55,7 +55,7 @@
           :question-number="questionNumber"
         />
         <v-btn
-          v-if="!isLastQuestion"
+          v-if="questionNumber < quizData.questions.length"
           id="next-question-button"
           v-on:click="nextQuestion()"
           variant="flat"
@@ -117,12 +117,7 @@ export default {
       }
 
       return null
-    },
-    isLastQuestion() {
-      if (this.quizData && this.questionNumber !== null) {
-        return this.questionNumber === this.quizData.questions.length
-      }
-      return false
+
     }
   },
   methods: {
