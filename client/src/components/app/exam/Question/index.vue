@@ -63,7 +63,8 @@
       </v-row>
       <div class="options-area">
         <AppExamQuestionOptions
-          @option-changed="fetchData('network-only')"
+          @option-changed="updateOption"
+          @ready-to-fetch="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
           :correctAnswerID="isAdminAndEditing ? question.answerID : null"
@@ -141,6 +142,37 @@ export default {
   },
 
   methods: {
+    updateOption(optionID: string) {
+      const localOptionDescription = localStorage.getItem(`${optionID}`)
+      if (localOptionDescription) {
+        console.log(localOptionDescription)
+        const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
+        let questionIndex = -1
+        let optionIndex = -1
+
+        for (let i = 0; i < temporaryQuizData.questions.length; i++) {
+          const question = temporaryQuizData.questions[i]
+          for (let j = 0; j < question.options.length; j++) {
+            const option = question.options[j]
+            if (option.id === optionID) {
+              option.option = localOptionDescription
+
+              questionIndex = i
+              optionIndex = j
+
+              break
+            }
+          }
+          if (optionIndex !== -1) {
+            break
+          }
+        }
+        temporaryQuizData.questions[questionIndex].options[optionIndex].option =
+          localOptionDescription
+        this.quizData = temporaryQuizData
+        localStorage.setItem('localQuiz', JSON.stringify(this.quizData))
+      }
+    },
     async deleteCurrentQuestion() {
       try {
         this.updating = true
@@ -173,7 +205,6 @@ export default {
       }
     },
     submitQuiz() {
-      console.log('clicek')
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {
@@ -214,11 +245,16 @@ export default {
   },
   watch: {
     'quizData.questions': function () {
-      this.fetchData('network-only')
+      //this.fetchData('network-only')
     }
   },
 
   created() {
+    const cachedQuiz = localStorage.getItem('localQuiz')
+    if (cachedQuiz) {
+      this.quizData = JSON.parse(cachedQuiz)
+      return
+    }
     onMounted(async () => {
       this.fetchData('cache-first')
     })

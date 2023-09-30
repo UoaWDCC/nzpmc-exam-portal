@@ -64,7 +64,7 @@
         <v-icon class="ml-4 my-4">
           {{ 'mdi-plus-circle' }}
         </v-icon>
-        <span class="d-block pa-4" style="width: calc(100% - 3.5rem)"> Add New Question </span>
+        <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">Add New Answer</span>
       </v-card>
     </v-item>
   </v-item-group>
@@ -87,7 +87,7 @@ import { debounce } from '@/utils/quizManagement'
 
 export default {
   name: 'AppExamQuestionOptions',
-
+  emits: ['option-changed', 'ready-to-fetch'],
   mixins: [quizEditingMixin],
   props: {
     // Unselected answers
@@ -190,13 +190,17 @@ export default {
       const currentDescription: string = event.target.value
       const debouncedEdit = debounce(this.editQuestionOptionInfo)
 
+      localStorage.setItem(`${optionID}`, currentDescription)
+      this.$emit('option-changed', optionID)
       const res = await debouncedEdit(this.$apollo.getClient(), {
         id: optionID,
         questionID: this.questionID,
         quizID: this.quizID,
         optionDescription: currentDescription
       })
-      if (res) this.$emit('option-changed')
+      if (res) {
+        this.$emit('ready-to-fetch')
+      }
     },
     async deleteOption(optionID: string) {
       this.updating = true
