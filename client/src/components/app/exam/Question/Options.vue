@@ -190,8 +190,7 @@ export default {
       const currentDescription: string = event.target.value
       const debouncedEdit = debounce(this.editQuestionOptionInfo)
 
-      localStorage.setItem(`${optionID}`, currentDescription)
-      this.$emit('option-changed', optionID)
+      this.$emit('option-changed', { optionID: optionID, optionDescription: currentDescription })
       const res = await debouncedEdit(this.$apollo.getClient(), {
         id: optionID,
         questionID: this.questionID,

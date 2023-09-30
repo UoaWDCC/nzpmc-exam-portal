@@ -63,7 +63,7 @@
       </v-row>
       <div class="options-area">
         <AppExamQuestionOptions
-          @option-changed="updateOption"
+          @option-changed="storeOptionChangesLocally"
           @ready-to-fetch="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
@@ -142,11 +142,18 @@ export default {
   },
 
   methods: {
-    updateOption(optionID: string) {
-      const localOptionDescription = localStorage.getItem(`${optionID}`)
-      if (localOptionDescription) {
-        console.log(localOptionDescription)
+    updateQuestion(inputs: { questionID: string; questionDescription: string }) {
+      if (inputs) {
+        const { questionID } = inputs
+        const localQuestionDescription = inputs.questionDescription
         const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
+      }
+    },
+    storeOptionChangesLocally(inputs: { optionID: string; optionDescription: string }) {
+      if (inputs) {
+        const { optionID } = inputs
+        const localOptionDescription = inputs.optionDescription
+        const temporaryQuizData = this.quizData
         let questionIndex = -1
         let optionIndex = -1
 
