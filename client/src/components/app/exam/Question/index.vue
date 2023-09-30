@@ -113,11 +113,11 @@ export default {
         const question = this.quizData.questions.find(
           (question: Question) => question.id === questionID
         )
-        console.log(question)
         return question
       }
 
       return null
+
     }
   },
   methods: {

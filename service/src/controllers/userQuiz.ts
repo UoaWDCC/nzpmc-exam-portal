@@ -11,6 +11,7 @@ import { addUserQuizQuestion } from './userQuizQuestion'
 import { getUser } from './user'
 import { firestore } from '../utils/firebase'
 import { Firestore, WriteResult } from '@google-cloud/firestore'
+import { firestore as FirebaseFirestore } from 'firebase-admin'
 
 const UserQuizRepository = getRepository(UserQuiz)
 
@@ -24,7 +25,6 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
 
         const expired =
             (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
-
         return packUserQuiz({
             userID: userQuiz.userID,
             quiz,
@@ -86,7 +86,6 @@ const getUserQuizzes = async (userID: string): Promise<UserQuizModel[]> => {
                 }),
             ),
         )
-
         return packUserQuizzes(userQuizzesPack)
     })
 }
@@ -254,13 +253,13 @@ const deleteUserQuiz = async (quizid: string, userid: string) => {
         let querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> | null =
             null
         console.log(`Deleting for user ${userid} and quiz ${quizid}`)
-        if (quizid == 'all' && userid !== null) {
+        if (quizid === 'all' && userid !== null) {
             // delete all userquizs for a user
             querySnapshot = await firestore
                 .collection('UserQuizs')
                 .where('userID', '==', userid)
                 .get()
-        } else if (quizid !== null && userid == 'all') {
+        } else if (quizid !== null && userid === 'all') {
             // delete all userquizs for a quiz
             querySnapshot = await firestore
                 .collection('UserQuizs')

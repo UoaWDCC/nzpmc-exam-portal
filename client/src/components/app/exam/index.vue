@@ -49,7 +49,6 @@ import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
 import { defineComponent } from 'vue'
 import { TOOLBAR_HEIGHT } from '@/helpers'
 import type { UserQuizModel } from '@nzpmc-exam-portal/common'
-import { watch } from 'vue'
 
 export default defineComponent({
   name: 'AppExam',
@@ -135,7 +134,7 @@ export default defineComponent({
     }
   },
   watch: {
-    'data.submitted': function (newVal, oldVal) {
+    'data.submitted': function (newVal) {
       if (newVal) {
         this.redirectToExams()
       }

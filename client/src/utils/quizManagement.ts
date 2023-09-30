@@ -3,7 +3,7 @@ import { GetUserQuizzesListQuery } from '../gql/queries/userQuizList'
 import type { UserQuiz } from '@/components/app/admin/QuizManagement.vue'
 import type { QuizModel } from '@nzpmc-exam-portal/common'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
-import { CreateExamMutation, EditQuizMutation } from '@/gql/mutations/quiz'
+import { CreateExamMutation, DeleteQuizMutation, EditQuizMutation } from '@/gql/mutations/quiz'
 import { parseCSVPapaparse } from './csv_parser'
 import { EnrolUsersInQuizMutation } from '@/gql/mutations/userQuiz'
 import { UnenrolUsersFromQuizMutation } from '@/gql/mutations/userQuiz'
@@ -55,6 +55,34 @@ export const createEmptyExamMutation = async (apollo: ApolloClient<NormalizedCac
   return mutation.data.addQuiz
 }
 
+export const deleteExam = async (apollo: ApolloClient<NormalizedCacheObject>, quizId: string) => {
+  try {
+    await apollo.mutate({
+      mutation: DeleteQuizMutation,
+      variables: {
+        deleteQuizId: quizId
+      }
+    })
+
+    const deleteUserQuizzesMutation = await apollo.mutate({
+      mutation: UnenrolUsersFromQuizMutation,
+      variables: {
+        users: [
+          {
+            id: 'all'
+          }
+        ],
+        quizId: quizId
+      }
+    })
+
+    return deleteUserQuizzesMutation.data
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+
 export const editQuizMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
   quizId: string,
@@ -97,7 +125,7 @@ export const enrolUsersInQuizFromCSV = async (
     }))
 
     console.log(`Unenrolling all users from quiz ${quizId}`)
-    const deleteMutation = await apollo.mutate({
+    await apollo.mutate({
       mutation: UnenrolUsersFromQuizMutation,
       variables: {
         users: [
