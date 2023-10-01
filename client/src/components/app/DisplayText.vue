@@ -48,7 +48,7 @@ export default {
     },
     parsed() {
       const latexRegex = /\$(\$?)(.*?)\1\$/g
-      const imageRegex = /!\[([^\]]*)\]\(([^\)]+)\)/g
+      const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g
 
       const latexStrings = []
       const imageSubstrings = []
