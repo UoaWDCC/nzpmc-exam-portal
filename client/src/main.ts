@@ -50,7 +50,7 @@ onAuthStateChanged(auth, async (user) => {
 
   if (user) {
     onLogin(apolloProvider.defaultClient, await user.getIdToken(true)).then(async () => {
-      console.log(user)
+      // console.log(user)
       const currentUserIdToken = await user.getIdTokenResult()
       const userIsAdmin = currentUserIdToken.claims.admin === true
       updateUserState(store, user, userIsAdmin)

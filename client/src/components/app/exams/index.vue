@@ -75,10 +75,9 @@ export default {
           this.error = error.message
         } else {
           if (data) this.userQuizzes = data.userQuizzes
-          console.log(data.userQuizzes)
         }
-      },
-      fetchPolicy: 'network-only'
+      }
+      // fetchPolicy: 'network-only' // this is kinda annoying (it makes loading the slow and realistically we wont be needing this)
     }
   }
 }

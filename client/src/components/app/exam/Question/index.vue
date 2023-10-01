@@ -45,7 +45,11 @@
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
-          <AppExamQuestionFlagButton :flagged="question.flag" :question-number="questionNumber" />
+          <AppExamQuestionFlagButton
+            v-if="!review"
+            :flagged="question.flag"
+            :question-number="questionNumber"
+          />
         </div>
       </v-row>
       <div class="options-area">
@@ -53,6 +57,9 @@
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
           :question-number="questionNumber"
+          :quiz-id="quizData.quizID"
+          :question-id="question.id"
+          :review="review"
         />
         <v-btn
           v-if="questionNumber < quizData.questions.length"
@@ -61,7 +68,7 @@
           variant="flat"
           >Next Question</v-btn
         >
-        <v-btn v-else id="submit-button" v-on:click="submitQuiz()" variant="flat"
+        <v-btn v-else-if="!review" id="submit-button" v-on:click="submitQuiz()" variant="flat"
           >Submit Exam</v-btn
         >
       </div>
@@ -85,6 +92,9 @@ export default {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
     DisplayText
+  },
+  props: {
+    review: Boolean
   },
   data(): {
     error: any
@@ -124,7 +134,6 @@ export default {
       if (this.questionNumber) {
         const nextQuestionIndex = this.questionNumber // index will use exact same value because it has 1 added to it
         const nextQuestionID = this.quizData.questions[nextQuestionIndex].id
-        console.log(nextQuestionID)
         this.$router.push({
           name: 'AppExamQuestion',
           params: { quizID: this.$route.params.quizID, questionID: nextQuestionID }
@@ -132,7 +141,7 @@ export default {
       }
     },
     submitQuiz() {
-      console.log('clicek')
+      console.log('click')
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {
@@ -155,7 +164,7 @@ export default {
   },
 
   apollo: {
-    quizData: {
+    userQuiz: {
       query: UserQuizQuery,
       variables() {
         return {
