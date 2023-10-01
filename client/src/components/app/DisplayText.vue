@@ -17,6 +17,7 @@ import { debounce } from '@/utils/quizManagement'
 
 export default {
   name: 'AppDisplayText',
+  emits: ['question-changed', 'ready-to-fetch'],
   mixins: [quizEditingMixin],
   props: {
     text: { type: String, required: true }
@@ -29,15 +30,21 @@ export default {
     }
   },
   methods: {
-    handleDescriptionChange(event: Event) {
+    async handleDescriptionChange(event: Event) {
       const currentDescription: string = event.target.value
-      debounce(
-        this.editQuestionInfo(this.$apollo.getClient(), {
-          questionID: this.questionID,
-          quizID: this.quizID,
-          questionDescription: currentDescription
-        })
-      )
+      this.$emit('question-changed', {
+        questionID: this.questionID,
+        questionDescription: currentDescription
+      })
+      const debouncedEdit = debounce(this.editQuestionInfo)
+      const res = await debouncedEdit(this.$apollo.getClient(), {
+        questionID: this.questionID,
+        quizID: this.quizID,
+        questionDescription: currentDescription
+      })
+      if (res) {
+        this.$emit('ready-to-fetch')
+      }
     },
     parsed() {
       const latexRegex = /\$(\$?)(.*?)\1\$/g

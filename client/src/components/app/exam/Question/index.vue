@@ -48,7 +48,11 @@
       </v-row>
       <v-row>
         <v-col>
-          <DisplayText :text="question.question" />
+          <DisplayText
+            @question-changed="storeQuestionChangesLocally"
+            @ready-to-fetch="fetchData('network-only')"
+            :text="question.question"
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -142,11 +146,17 @@ export default {
   },
 
   methods: {
-    updateQuestion(inputs: { questionID: string; questionDescription: string }) {
+    storeQuestionChangesLocally(inputs: { questionID: string; questionDescription: string }) {
       if (inputs) {
         const { questionID } = inputs
         const localQuestionDescription = inputs.questionDescription
-        const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
+        const temporaryQuizData = this.quizData
+        const questionIndex = temporaryQuizData.questions.findIndex(
+          (question: Question) => question.id === questionID
+        )
+        temporaryQuizData.questions[questionIndex].question = localQuestionDescription
+        this.quizData = temporaryQuizData
+        localStorage.setItem('localQuiz', JSON.stringify(this.quizData))
       }
     },
     storeOptionChangesLocally(inputs: { optionID: string; optionDescription: string }) {
