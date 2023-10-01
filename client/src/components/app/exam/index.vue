@@ -108,6 +108,20 @@ export default defineComponent({
         this.$router.push({ name: 'AppExams' })
       }
     },
+    loadFirstQuestion() {
+      const currentQuestions = this.data?.questions
+
+      if (this.questionID === undefined && currentQuestions?.length > 0) {
+        this.$router.push({
+          name: 'AppExamQuestion',
+          params: {
+            quizID: this.quizID,
+            questionID: currentQuestions[0].id
+          },
+          query: this.uriQueryType
+        })
+      }
+    },
     syncLocalChanges() {
       const localQuizData = localStorage.getItem(`${this.quizID}`)
       if (localQuizData) {
@@ -128,18 +142,8 @@ export default defineComponent({
         if (data) {
           this.data = this.isAdminNotSittingExam ? data.quiz : data.userQuiz
           console.log(this.data)
-          const currentQuestions = this.data?.questions
 
-          if (this.questionID === undefined && currentQuestions?.length > 0) {
-            this.$router.push({
-              name: 'AppExamQuestion',
-              params: {
-                quizID: this.quizID,
-                questionID: currentQuestions[0].id
-              },
-              query: this.uriQueryType
-            })
-          }
+          this.loadFirstQuestion()
           localStorage.setItem(`${this.quizID}`, JSON.stringify(this.data))
         }
       } catch (error) {
@@ -153,6 +157,7 @@ export default defineComponent({
     const cachedQuiz = localStorage.getItem(`${this.quizID}`)
     if (cachedQuiz) {
       this.data = JSON.parse(cachedQuiz)
+      this.loadFirstQuestion()
       return
     }
     onMounted(async () => {
