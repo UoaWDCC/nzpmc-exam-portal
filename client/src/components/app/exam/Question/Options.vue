@@ -221,7 +221,7 @@ export default {
     async handleCorrectAnswerChange(optionID: string) {
       let newCorrectAnswerOptionID = optionID
       if (this.isCorrectAnswer(optionID)) {
-        newCorrectAnswerOptionID = ''
+        newCorrectAnswerOptionID = 'none-selected'
       }
       this.$emit('correct-answer-changed', {
         questionID: this.questionID,
