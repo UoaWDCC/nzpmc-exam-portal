@@ -12,10 +12,9 @@
       <v-card
         elevation="1"
         :dark="active"
-        :color="active ? '#03a9f5' : 'white'"
+        :color="getCardColor(option)"
         :ripple="!isAdminAndEditing"
         :disabled="updating || review"
-        :color="getCardColor(option)"
         class="align-center d-flex mb-3"
         @click="!isAdminAndEditing && setSelected(option.id)"
         @keyup.enter="!isAdminAndEditing && toggle"
@@ -79,6 +78,7 @@ import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
+import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 import {
   AddOptionMutation,
   DeleteOptionMutation,
@@ -129,7 +129,7 @@ export default {
   data() {
     return {
       selected: null as any,
-      updating: false
+      updating: false,
       quizData: true as any
     }
   },
@@ -185,7 +185,7 @@ export default {
       if (!this.sortedOptions[v]) return
       const selectedID = this.sortedOptions[v].id
       // Cancel if answer has not been changed
-      if (selectedID === this.answer ||this.review) return
+      if (selectedID === this.answer || this.review) return
 
       this.$emit('user-question-changed', { questionID: this.questionID, userAnswerID: selectedID })
       const mutation = this.$apollo.mutate({

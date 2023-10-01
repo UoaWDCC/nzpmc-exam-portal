@@ -57,10 +57,13 @@
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
-          <AppExamQuestionFlagButton <<<<<<< HEAD v-if="!isAdminAndEditing"
-          @flag-changed="storeQuestionChangesLocally" @ready-to-fetch="fetchData('network-only')"
-          ======= v-if="!review" >>>>>>> main :flagged="question.flag"
-          :question-number="questionNumber" />
+          <AppExamQuestionFlagButton
+            v-if="!isAdminAndEditing && !review"
+            @flag-changed="storeQuestionChangesLocally"
+            @ready-to-fetch="fetchData('network-only')"
+            :flagged="question.flag"
+            :question-number="questionNumber"
+          />
         </div>
       </v-row>
       <div class="options-area">
