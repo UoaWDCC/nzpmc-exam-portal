@@ -7,12 +7,15 @@
 }
 </style>
 <template>
-  <v-item-group v-model="selected" class="options-container">
+  <v-item-group v-if="options && quizData" v-model="selected" class="options-container">
+    <AppExamQuestionLoader v-if="loading" />
+
     <v-item v-for="option in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
       <v-card
         elevation="1"
         :dark="active"
-        :color="active ? '#03a9f5' : 'white'"
+        :color="getCardColor(option)"
+        :disabled="review"
         class="align-center d-flex mb-3"
         @click="toggle"
         @keyup.enter="toggle"
@@ -36,11 +39,15 @@ import { useMainStore } from '@/stores/main'
 import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
+import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 
 export default {
   name: 'AppExamQuestionOptions',
-
+  components: {
+    AppExamQuestionLoader: () => import('./Loader.vue')
+  },
   props: {
+    review: Boolean,
     // Unselected answers
     options: {
       type: Object as PropType<Option[]>,
@@ -64,12 +71,15 @@ export default {
       }
     },
 
-    questionNumber: { type: Number, required: true }
+    questionNumber: { type: Number, required: true },
+    questionId: { type: String, required: true },
+    quizId: { type: String, required: true }
   },
 
   data() {
     return {
-      selected: null as any
+      selected: null as any,
+      quizData: true as any
     }
   },
 
@@ -81,6 +91,28 @@ export default {
     // Sorted options and answer
     sortedOptions(): Option[] {
       return [...this.options].sort((a, b) => (a.id > b.id ? 1 : -1))
+    }
+  },
+  apollo: {
+    quiz: {
+      query: GetQuizInfoQuery,
+      skip() {
+        return !this.review
+      },
+      variables() {
+        return {
+          quizId: this.quizId
+        }
+      },
+      result({ data, error }) {
+        if (error) {
+          console.log('The answer ID is most likely invalid')
+        }
+
+        if (data && this.review) {
+          this.quizData = data.quiz
+        }
+      }
     }
   },
 
@@ -96,9 +128,8 @@ export default {
 
     // Update server with new selected value
     selected(v) {
-      // Cancel if answer has not been changed
-      if (this.sortedOptions[v].id === this.answer) return
-
+      // Cancel if answer has not been changed or user is in review mode
+      if (this.sortedOptions[v].id === this.answer || this.review) return
       const mutation = this.$apollo.mutate({
         mutation: UserQuizUpdateAnswerMutation,
         variables: {
@@ -137,6 +168,29 @@ export default {
     // Check if an option is selected
     isSelected(optionId: string): boolean {
       return this.selected === this.sortedOptions.findIndex((option) => option.id === optionId)
+    },
+
+    getCardColor(option: any) {
+      if (this.review) {
+        try {
+          const currentQuestion = this.quizData.questions.find(
+            (question: any) => question.id === this.questionId
+          )
+          if (option.id == currentQuestion.answerID) {
+            return 'green'
+          } else if (option.id == this.answer) {
+            return 'red-darken-4'
+          } else {
+            return 'white'
+          }
+        } catch {
+          // now you might be thinking this may seem redundant
+          // but it isn't - Aaron
+          // (if there is an error it recalls the function)
+        }
+      } else {
+        return option ? 'white' : '#03a9f5'
+      }
     }
   }
 }

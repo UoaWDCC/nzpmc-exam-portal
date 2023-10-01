@@ -13,15 +13,13 @@
         :duration="exam.duration"
         :open-time="exam.openTime"
         :close-time="exam.closeTime"
-        :to="{ name: 'AppExam', params: { quizID: exam.id } }"
+        :to="{ name: 'AppPreExam', params: { quizID: exam.id } }"
+        :containerClass="'primaryContainer'"
+        @click="selectExam(exam)"
       />
     </div>
 
-    <div
-      v-if="upcomingExams.length || pastExams.length || submittedExams.length"
-      class="d-flex my-6"
-      style="gap: 24px"
-    >
+    <div v-if="upcomingExams.length || pastExams.length" class="d-flex my-6" style="gap: 24px">
       <div v-if="upcomingExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
         <h2 class="mb-6 text-h5">Upcoming Exams</h2>
 
@@ -33,13 +31,15 @@
           :duration="exam.duration"
           :open-time="exam.openTime"
           :close-time="exam.closeTime"
+          :containerClass="'primaryContainer'"
+          @click="selectExam(exam)"
         />
       </div>
 
       <div v-if="pastExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
         <h2 class="mb-6 text-h5">Past Exams</h2>
 
-        <AppExamsInfoCard
+        <AppExamsLinkCard
           v-for="exam in pastExams"
           :key="exam.id"
           :title="exam.name"
@@ -47,19 +47,9 @@
           :duration="exam.duration"
           :open-time="exam.openTime"
           :close-time="exam.closeTime"
-        />
-      </div>
-      <div v-if="submittedExams.length" class="flex-grow-1 mb-n3" style="min-width: 50%">
-        <h2 class="mb-6 text-h5">Submitted Exams</h2>
-
-        <AppExamsInfoCard
-          v-for="exam in submittedExams"
-          :key="exam.id"
-          :title="exam.name"
-          :description="exam.description"
-          :duration="exam.duration"
-          :open-time="exam.openTime"
-          :close-time="exam.closeTime"
+          :to="{ name: 'AppPreExam', params: { quizID: exam.id } }"
+          :containerClass="'secondaryContainer'"
+          @click="selectExam(exam)"
         />
       </div>
     </div>
@@ -98,9 +88,18 @@ export default {
             'openTime' in quiz &&
             typeof quiz.openTime === 'string' &&
             'quizID' in quiz &&
-            typeof quiz.quizID === 'string'
+            typeof quiz.quizID === 'string' &&
+            'score' in quiz &&
+            typeof quiz.score === 'number' &&
+            'submitted' in quiz &&
+            typeof quiz.submitted === 'boolean'
         )
       }
+    }
+  },
+  methods: {
+    selectExam(exam: any) {
+      localStorage.setItem(`${exam.id}-pre-exam`, JSON.stringify(exam))
     }
   },
 
@@ -122,14 +121,16 @@ export default {
 
     // Exams that finished
     pastExams() {
-      return this.userQuizzes.filter((quiz) => new Date() >= new Date(quiz.closeTime))
-    },
-    // submitted exams
-    submittedExams() {
-      return this.userQuizzes.filter(
-        (quiz) => quiz.submitted !== undefined && quiz.submitted === true
-      )
+      return this.userQuizzes.filter((quiz) => {
+        return new Date() >= new Date(quiz.closeTime) || quiz.submitted
+      })
     }
+    // submitted exams
+    // submittedExams() {
+    //   return this.userQuizzes.filter(
+    //     (quiz) => quiz.submitted !== undefined && quiz.submitted === true
+    //   )
+    // }
   }
 }
 </script>

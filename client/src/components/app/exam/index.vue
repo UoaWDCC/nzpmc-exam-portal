@@ -19,18 +19,18 @@
           <AppExamSidebar
             v-if="data"
             :questions="data.questions"
-            :duration="data.duration"
             :quizStart="data.quizStart"
             :userQuizId="data.id"
+            :review="review"
           />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
 
-      <AppExamQuestionLoader v-if="isLoading" />
+      <AppExamQuestionLoader v-if="loading" />
 
       <div v-if="data" class="question-container" style="overflow: hidden">
         <component :is="routeTransition" hide-on-leave>
-          <router-view :key="$route.params.questionID" />
+          <router-view :key="$route.params.questionID" :review="review" />
         </component>
       </div>
     </v-container>
@@ -80,6 +80,7 @@ export default defineComponent({
 
   data(): {
     data: UserQuizModel | undefined
+    review: boolean
     loading: boolean
     error: any
     routeTransition: any
@@ -90,7 +91,8 @@ export default defineComponent({
       routeTransition: VSlideXTransition,
       data: undefined,
       loading: false,
-      error: null
+      error: null,
+      review: false
     }
   },
 
@@ -103,7 +105,7 @@ export default defineComponent({
   },
 
   apollo: {
-    name: {
+    userQuiz: {
       query: UserQuizQuery,
       variables() {
         return { quizID: this.$route.params.quizID }
@@ -112,20 +114,23 @@ export default defineComponent({
       result({ data, error, loading }) {
         this.loading = loading
         if (error) {
-          console.log(this.$route.params.quizID)
           this.error = error.message
-        } else {
-          if (data) {
-            this.data = data.userQuiz
-            const currentQuestions = data?.userQuiz.questions
-            console.log(this.$route.params.questionID)
-            if (this.$route.params.questionID === undefined) {
-              this.$router.push({
-                name: 'AppExamQuestion',
-                params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
-              })
-            }
-            console.log(data)
+        }
+        if (data) {
+          this.data = data.userQuiz
+          const currentQuestions = data?.userQuiz.questions
+          // check if there are any questions
+          if (currentQuestions.length === 0) {
+            this.$router.push({
+              name: 'AppExams'
+            })
+            return
+          }
+          if (this.$route.params.questionID === undefined) {
+            this.$router.push({
+              name: 'AppExamQuestion',
+              params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
+            })
           }
         }
       },
@@ -134,11 +139,26 @@ export default defineComponent({
     }
   },
   watch: {
-    'data.submitted': function (newVal) {
-      if (newVal) {
+    'data.score': function (newVal) {
+      // this needs to be changed to an isMarked boolean
+      if (newVal == null) {
+        this.redirectToExams()
+      }
+      if (newVal > 0) {
+        this.review = true
+      } else {
+        this.review = false
         this.redirectToExams()
       }
     }
+    // 'data.submitted': function (newVal) {
+    //   if (newVal) {
+    //     console.log(this.review)
+    //     if (this.review === false) {
+    //     // this.redirectToExams()
+    //     }
+    //   }
+    // }
   }
 })
 </script>

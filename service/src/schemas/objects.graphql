@@ -18,6 +18,7 @@ type Question {
     imageURI: String
     topics: String # should be enum
     answer: Option
+    answerID: ID!
     options: [Option]
     created: DateTime
     modified: DateTime
@@ -42,7 +43,6 @@ type Quiz {
     created: DateTime
     modified: DateTime
 }
-
 
 type UserQuiz {
     id: ID!

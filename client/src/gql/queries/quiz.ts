@@ -19,14 +19,9 @@ export const GetQuizInfoQuery = gql`
       questions {
         id
         question
+        answerID
         imageURI
         topics
-        answer {
-          id
-          option
-          created
-          modified
-        }
         options {
           id
           option
