@@ -4,6 +4,7 @@ import { Question, Quiz } from '../models'
 import Option from '../models/option'
 import { QuestionModel } from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
+import { editQuiz } from './quiz'
 
 const QuizRepository = getRepository(Quiz)
 
@@ -74,7 +75,6 @@ const addQuestion = async (
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
-        console.log(quiz)
         const question = new Question()
 
         question.question = q
@@ -94,7 +94,20 @@ const addQuestion = async (
 
         newQuestion.answerID = newAnswer.id
 
+        const questionOrder = quiz.questionIDsOrder
+        questionOrder.push(newQuestion.id)
+
         await quiz.questions.update(newQuestion)
+
+        editQuiz(
+            quizID,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            questionOrder,
+        )
 
         return packQuestion({ quizID, question: newQuestion })
     })
