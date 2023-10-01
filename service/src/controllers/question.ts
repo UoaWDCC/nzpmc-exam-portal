@@ -74,7 +74,7 @@ const addQuestion = async (
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
-
+        console.log(quiz)
         const question = new Question()
 
         question.question = q

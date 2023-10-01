@@ -167,7 +167,7 @@ export default {
       }
 
       this.quizData = temporaryQuizData
-      localStorage.setItem('localQuiz', JSON.stringify(this.quizData))
+      localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
     },
     storeOptionChangesLocally(inputs: { optionID: string; optionDescription: string }) {
       if (inputs) {
@@ -197,7 +197,7 @@ export default {
         temporaryQuizData.questions[questionIndex].options[optionIndex].option =
           localOptionDescription
         this.quizData = temporaryQuizData
-        localStorage.setItem('localQuiz', JSON.stringify(this.quizData))
+        localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
       }
     },
     async deleteCurrentQuestion() {
@@ -277,7 +277,7 @@ export default {
   },
 
   created() {
-    const cachedQuiz = localStorage.getItem('localQuiz')
+    const cachedQuiz = localStorage.getItem(`${this.quizID}`)
     if (cachedQuiz) {
       this.quizData = JSON.parse(cachedQuiz)
       return
