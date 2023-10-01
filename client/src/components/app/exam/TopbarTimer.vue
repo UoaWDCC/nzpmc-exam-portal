@@ -4,14 +4,17 @@
   color: white;
   padding: 5px 16px;
 }
+
 #timer-heading {
   font-weight: 500;
 }
+
 #time-text {
   font-size: 3rem;
   font-weight: 900;
 }
 </style>
+
 <template>
   <v-container class="container">
     <p id="timer-heading">TIME LEFT</p>
@@ -31,14 +34,14 @@ export default {
   data() {
     return {
       examStore: useExamStore(),
-      secondsRemaining: null,
+      secondsRemaining: this.quizDuration * 60,
       startEpoch: this.quizStart as number | null,
       timer: null as unknown as ReturnType<typeof setInterval>
     }
   },
 
   props: {
-    duration: {
+    quizDuration: {
       type: Number,
       required: true
     },
@@ -99,13 +102,14 @@ export default {
 
   methods: {
     startTimer() {
-      this.timer = setInterval(this.updateTimer, 1000)
+      this.updateTimer()
+      this.timer = setInterval(this.updateTimer, 50) // 50 ms is minimum guarenteed browser refresh rate
     },
 
     updateTimer() {
       const currentTimeSeconds = Math.floor(Date.now() / 1000)
       const elapsedSeconds = currentTimeSeconds - this.startEpoch!
-      this.secondsRemaining = this.duration.valueOf() * 60 - elapsedSeconds
+      this.secondsRemaining = this.quizDuration.valueOf() * 60 - elapsedSeconds
 
       if (this.secondsRemaining <= 0) {
         this.secondsRemaining = 0

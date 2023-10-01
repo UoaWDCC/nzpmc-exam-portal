@@ -9,7 +9,7 @@
 <template>
   <AppExamTopbarTimer
     v-if="!review"
-    :duration="duration"
+    :quizDuration="quizDuration"
     :quizStart="quizStart"
     :userQuizId="userQuizId"
   />
@@ -67,7 +67,7 @@ export default {
         )
       }
     },
-    duration: {
+    quizDuration: {
       type: Number,
       required: true
     },

@@ -21,6 +21,7 @@
             :questions="data.questions"
             :quizStart="data.quizStart"
             :userQuizId="data.id"
+            :quizDuration="data.duration"
             :review="review"
           />
         </v-scroll-y-reverse-transition>
