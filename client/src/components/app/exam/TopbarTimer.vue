@@ -10,7 +10,8 @@
 }
 
 #time-text {
-  font-size: 3rem;
+  font-family: $mono;
+  font-size: 2.5rem;
   font-weight: 900;
 }
 </style>
