@@ -159,6 +159,9 @@ export default defineComponent({
         this.redirectToExams()
       }
     }
+  },
+  unmounted() {
+    localStorage.removeItem(`${this.quizID}`)
   }
 })
 </script>
