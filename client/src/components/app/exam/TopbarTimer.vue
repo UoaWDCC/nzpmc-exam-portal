@@ -61,7 +61,7 @@ export default {
       return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${
         (seconds < 10 ? '0' : '') + seconds
       }`
-    }, 
+    },
     ...mapWritableState(useMainStore, ['snackbarQueue'])
   },
 
@@ -113,24 +113,24 @@ export default {
 
         // submit on timeout
         const mutation = this.$apollo.mutate({
-        mutation: SubmitUserQuizQuestionsMutation,
-        variables: {
-          input: {
-            userQuizID: this.$route.params.quizID
+          mutation: SubmitUserQuizQuestionsMutation,
+          variables: {
+            input: {
+              userQuizID: this.$route.params.quizID
+            }
           }
-        }
-      })
-      this.examStore.submitting = true
-      mutation
-        .then(() => {
-          this.$router.push({
-            name: 'AppExams'
+        })
+        this.examStore.submitting = true
+        mutation
+          .then(() => {
+            this.$router.push({
+              name: 'AppExams'
+            })
           })
-        })
-        .catch(() => {
-          this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
-        })
-    }
+          .catch(() => {
+            this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
+          })
+      }
     },
 
     stopTimer() {
