@@ -68,6 +68,7 @@
       <div class="options-area">
         <AppExamQuestionOptions
           @option-changed="storeOptionChangesLocally"
+          @correct-answer-changed="storeQuestionChangesLocally"
           @ready-to-fetch="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
@@ -146,24 +147,33 @@ export default {
   },
 
   methods: {
-    storeQuestionChangesLocally(inputs: { questionID: string; questionDescription: string }) {
-      if (inputs) {
-        const { questionID } = inputs
-        const localQuestionDescription = inputs.questionDescription
-        const temporaryQuizData = this.quizData
-        const questionIndex = temporaryQuizData.questions.findIndex(
-          (question: Question) => question.id === questionID
-        )
+    storeQuestionChangesLocally(inputs: {
+      questionID: string
+      questionDescription?: string
+      correctAnswerID?: string
+    }) {
+      const { questionID, questionDescription, correctAnswerID } = inputs
+      const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
+      const questionIndex = temporaryQuizData.questions.findIndex(
+        (question: Question) => question.id === questionID
+      )
+      if (questionDescription) {
+        const localQuestionDescription = questionDescription
         temporaryQuizData.questions[questionIndex].question = localQuestionDescription
-        this.quizData = temporaryQuizData
-        localStorage.setItem('localQuiz', JSON.stringify(this.quizData))
       }
+
+      if (correctAnswerID) {
+        temporaryQuizData.questions[questionIndex].answerID = correctAnswerID
+      }
+
+      this.quizData = temporaryQuizData
+      localStorage.setItem('localQuiz', JSON.stringify(this.quizData))
     },
     storeOptionChangesLocally(inputs: { optionID: string; optionDescription: string }) {
       if (inputs) {
         const { optionID } = inputs
         const localOptionDescription = inputs.optionDescription
-        const temporaryQuizData = this.quizData
+        const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
         let questionIndex = -1
         let optionIndex = -1
 

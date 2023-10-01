@@ -87,7 +87,7 @@ import { debounce } from '@/utils/quizManagement'
 
 export default {
   name: 'AppExamQuestionOptions',
-  emits: ['option-changed', 'ready-to-fetch'],
+  emits: ['correct-answer-changed', 'option-changed', 'ready-to-fetch'],
   mixins: [quizEditingMixin],
   props: {
     // Unselected answers
@@ -215,22 +215,25 @@ export default {
       this.updating = false
     },
     async handleCorrectAnswerChange(optionID: string) {
+      let newCorrectAnswerOptionID = optionID
       if (this.isCorrectAnswer(optionID)) {
-        return
+        newCorrectAnswerOptionID = ''
       }
-      this.updating = true
+      this.$emit('correct-answer-changed', {
+        questionID: this.questionID,
+        correctAnswerID: newCorrectAnswerOptionID
+      })
       await this.$apollo.mutate({
         mutation: EditAnswerMutation,
         variables: {
           input: {
-            newAnswerOptionID: optionID,
+            newAnswerOptionID: newCorrectAnswerOptionID,
             questionID: this.questionID,
             quizID: this.quizID
           }
         }
       })
-      this.$emit('option-changed')
-      this.updating = false
+      this.$emit('ready-to-fetch')
     },
     async addNewOption() {
       this.updating = true
@@ -244,7 +247,7 @@ export default {
           }
         }
       })
-      this.$emit('option-changed')
+      this.$emit('ready-to-fetch')
       this.updating = false
     },
     // Ensure the selected state is synced with the server
