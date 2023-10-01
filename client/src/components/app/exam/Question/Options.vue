@@ -176,7 +176,7 @@ export default {
           const currentQuestion = this.quizData.questions.find(
             (question: any) => question.id === this.questionId
           )
-          if (option.id == currentQuestion.answer.id) {
+          if (option.id == currentQuestion.answerID) {
             return 'green'
           } else if (option.id == this.answer) {
             return 'red-darken-4'
