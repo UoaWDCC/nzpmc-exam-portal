@@ -13,7 +13,6 @@ export const useMainStore = defineStore('mainStore', {
     displayName: '' as string,
 
     // App snackbar notifications
-    snackbarQueue: [] as string[],
-    selectedExam: null as Object | null
+    snackbarQueue: [] as string[]
   })
 })

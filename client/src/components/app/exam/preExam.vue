@@ -48,7 +48,6 @@
   </div>
 </template>
 <script lang="ts">
-import { useMainStore } from '@/stores/main'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamQuestionLoader from './Question/Loader.vue'
@@ -114,7 +113,7 @@ export default {
     quiz: {
       query: GetQuizInfoQuery,
       skip() {
-        return this.userQuiz === null
+        return !this.userQuiz
       },
       variables() {
         return {
@@ -139,10 +138,13 @@ export default {
 
   methods: {
     updateExamInfo() {
-      if (this.exam === null) {
-        this.exam = useMainStore().selectedExam
+      if (!this.exam) {
+        const cachedExam = localStorage.getItem(`${this.$route.params.quizID}-pre-exam`)
+        if (cachedExam) {
+          this.exam = JSON.parse(cachedExam)
+        }
       }
-      if (this.exam !== null) {
+      if (this.exam) {
         this.examName = this.exam.name || ''
         this.examDescription = this.exam.description || ''
         this.examOpenTime = this.convertToNZST(this.exam.openTime) || ''
@@ -179,13 +181,12 @@ export default {
       }
     },
 
-    convertToNZST(isoDateString: any) {
-      const date = new Date(isoDateString)
-
+    convertToNZST(isoDateString: string) {
       // Set the time zone to "Pacific/Auckland" (New Zealand Standard Time)
       const options = { timeZone: 'Pacific/Auckland' }
 
       // Convert the date to a string using the New Zealand time zone
+      const date = new Date(isoDateString)
       const nzstDateString = date.toLocaleString('en-NZ', options).replace(',', '')
 
       return nzstDateString

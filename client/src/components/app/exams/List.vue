@@ -61,7 +61,6 @@ import AppExamsLinkCard from './LinkCard.vue'
 import AppExamsInfoCard from './InfoCard.vue'
 import type { UserQuiz } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
-import { useMainStore } from '@/stores/main'
 
 export default {
   name: 'AppExamsList',
@@ -100,7 +99,7 @@ export default {
   },
   methods: {
     selectExam(exam: any) {
-      useMainStore().selectedExam = exam
+      localStorage.setItem(`${exam.id}-pre-exam`, JSON.stringify(exam))
     }
   },
 
