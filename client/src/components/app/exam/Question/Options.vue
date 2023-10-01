@@ -9,30 +9,58 @@
 <template>
   <v-item-group v-model="selected" class="options-container">
     <v-item v-for="(option, index) in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
-      <v-card elevation="1" :dark="active" :color="getCardColor(option)" :ripple="!isAdminAndEditing"
-        :disabled="updating || review" class="align-center d-flex mb-3"
-        @click="!isAdminAndEditing && setSelected(option.id)" @keyup.enter="!isAdminAndEditing && toggle">
+      <v-card
+        elevation="1"
+        :dark="active"
+        :color="getCardColor(option)"
+        :ripple="!isAdminAndEditing"
+        :disabled="updating || review"
+        class="align-center d-flex mb-3"
+        @click="!isAdminAndEditing && setSelected(option.id)"
+        @keyup.enter="!isAdminAndEditing && toggle"
+      >
         <h3 v-if="isAdminAndEditing" class="ml-4 my-4">{{ index + 1 }}.</h3>
         <v-icon v-else class="ml-4 my-4">
           {{ isSelected(option.id) ? 'mdi-check-circle' : 'mdi-checkbox-blank-circle-outline' }}
         </v-icon>
 
         <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
-          <v-text-field :hint="'Modified: ' + option.modified" persistent-hint variant="underlined"
-            @change="handleOptionDescriptionChange(option.id, $event)" :model-value="option.option"
-            v-if="isAdminAndEditing"></v-text-field>
+          <v-text-field
+            :hint="'Modified: ' + option.modified"
+            persistent-hint
+            variant="underlined"
+            @change="handleOptionDescriptionChange(option.id, $event)"
+            :model-value="option.option"
+            v-if="isAdminAndEditing"
+          ></v-text-field>
           <span v-else>{{ option.option }}</span>
         </span>
-        <v-btn elevation="0" v-if="isAdminAndEditing" v-on:click="deleteOption(option.id)" color="red" icon="mdi-close"
-          class="mr-4 my-4" />
-        <v-btn elevation="0" v-if="isAdminAndEditing" v-on:click="handleCorrectAnswerChange(option.id)"
+        <v-btn
+          elevation="0"
+          v-if="isAdminAndEditing"
+          v-on:click="deleteOption(option.id)"
+          color="red"
+          icon="mdi-close"
+          class="mr-4 my-4"
+        />
+        <v-btn
+          elevation="0"
+          v-if="isAdminAndEditing"
+          v-on:click="handleCorrectAnswerChange(option.id)"
           :color="isCorrectAnswer(option.id) ? 'accent' : 'secondary'"
-          :icon="isCorrectAnswer(option.id) ? 'mdi-check-circle' : 'mdi-cancel'" class="mr-4 my-4" />
+          :icon="isCorrectAnswer(option.id) ? 'mdi-check-circle' : 'mdi-cancel'"
+          class="mr-4 my-4"
+        />
       </v-card>
     </v-item>
     <v-item v-if="isAdminAndEditing">
-      <v-card elevation="1" :ripple="!isAdminAndEditing" class="align-center d-flex mb-3" @click="addNewOption"
-        :disabled="updating">
+      <v-card
+        elevation="1"
+        :ripple="!isAdminAndEditing"
+        class="align-center d-flex mb-3"
+        @click="addNewOption"
+        :disabled="updating"
+      >
         <v-icon class="ml-4 my-4">
           {{ 'mdi-plus-circle' }}
         </v-icon>
