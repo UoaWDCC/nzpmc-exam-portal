@@ -264,15 +264,11 @@ export default {
 
         if (data) {
           this.quizData = this.isAdminNotSittingExam ? data.quiz : data.userQuiz
+          localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
         }
       } catch (error) {
         console.error(error)
       }
-    }
-  },
-  watch: {
-    'quizData.questions': function () {
-      //this.fetchData('network-only')
     }
   },
 
@@ -283,7 +279,7 @@ export default {
       return
     }
     onMounted(async () => {
-      this.fetchData('cache-first')
+      await this.fetchData('network-only')
     })
   }
 }

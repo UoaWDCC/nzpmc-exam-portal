@@ -211,7 +211,7 @@ export default {
           optionID
         }
       })
-      this.$emit('option-changed')
+      this.$emit('ready-to-fetch')
       this.updating = false
     },
     async handleCorrectAnswerChange(optionID: string) {
