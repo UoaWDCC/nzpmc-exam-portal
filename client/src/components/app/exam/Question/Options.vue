@@ -16,7 +16,7 @@
         :ripple="!isAdminAndEditing"
         :disabled="updating"
         class="align-center d-flex mb-3"
-        @click="!isAdminAndEditing && toggle"
+        @click="!isAdminAndEditing && setSelected(option.id)"
         @keyup.enter="!isAdminAndEditing && toggle"
       >
         <h3 v-if="isAdminAndEditing" class="ml-4 my-4">{{ index + 1 }}.</h3>
@@ -87,7 +87,7 @@ import { debounce } from '@/utils/quizManagement'
 
 export default {
   name: 'AppExamQuestionOptions',
-  emits: ['correct-answer-changed', 'option-changed', 'ready-to-fetch'],
+  emits: ['correct-answer-changed', 'user-answer-changed', 'option-changed', 'ready-to-fetch'],
   mixins: [quizEditingMixin],
   props: {
     // Unselected answers
@@ -152,16 +152,19 @@ export default {
       if (this.isAdminNotSittingExam) {
         return
       }
+      if (!this.sortedOptions[v]) return
+      const selectedID = this.sortedOptions[v].id
       // Cancel if answer has not been changed
-      if (this.sortedOptions[v].id === this.answer) return
+      if (selectedID === this.answer) return
 
+      this.$emit('user-answer-changed', { questionID: this.questionID, userAnswerID: selectedID })
       const mutation = this.$apollo.mutate({
         mutation: UserQuizUpdateAnswerMutation,
         variables: {
           input: {
             userQuizID: this.$route.params.quizID,
             questionID: this.$route.params.questionID,
-            answerID: v >= 0 ? this.sortedOptions[v].id : ''
+            answerID: v >= 0 ? selectedID : ''
           }
         }
       })
@@ -178,6 +181,7 @@ export default {
         .finally(() => {
           // Ensure selected state is synced with server
           console.log('Success')
+          this.$emit('ready-to-fetch')
         })
     }
   },

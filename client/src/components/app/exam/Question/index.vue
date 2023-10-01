@@ -69,6 +69,7 @@
         <AppExamQuestionOptions
           @option-changed="storeOptionChangesLocally"
           @correct-answer-changed="storeQuestionChangesLocally"
+          @user-answer-changed="storeQuestionChangesLocally"
           @ready-to-fetch="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
@@ -151,8 +152,9 @@ export default {
       questionID: string
       questionDescription?: string
       correctAnswerID?: string
+      userAnswerID?: string
     }) {
-      const { questionID, questionDescription, correctAnswerID } = inputs
+      const { questionID, questionDescription, correctAnswerID, userAnswerID } = inputs
       const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
       const questionIndex = temporaryQuizData.questions.findIndex(
         (question: Question) => question.id === questionID
@@ -166,14 +168,19 @@ export default {
         temporaryQuizData.questions[questionIndex].answerID = correctAnswerID
       }
 
+      if (userAnswerID) {
+        temporaryQuizData.questions[questionIndex].userAnswer.id = userAnswerID
+      }
+
       this.quizData = temporaryQuizData
       localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
     },
-    storeOptionChangesLocally(inputs: { optionID: string; optionDescription: string }) {
+    storeOptionChangesLocally(inputs: { optionID: string; optionDescription?: string }) {
       if (inputs) {
         const { optionID } = inputs
         const localOptionDescription = inputs.optionDescription
         const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
+
         let questionIndex = -1
         let optionIndex = -1
 
@@ -194,8 +201,12 @@ export default {
             break
           }
         }
-        temporaryQuizData.questions[questionIndex].options[optionIndex].option =
-          localOptionDescription
+
+        if (localOptionDescription) {
+          temporaryQuizData.questions[questionIndex].options[optionIndex].option =
+            localOptionDescription
+        }
+
         this.quizData = temporaryQuizData
         localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
       }
