@@ -31,7 +31,7 @@
         <component :is="routeTransition" hide-on-leave>
           <router-view
             @question-deleted="fetchData"
-            @flag-changed="fetchData"
+            @local-changes-made="syncLocalChanges"
             :key="$route.params.questionID"
           />
         </component>
@@ -108,6 +108,12 @@ export default defineComponent({
         this.$router.push({ name: 'AppExams' })
       }
     },
+    syncLocalChanges() {
+      const localQuizData = localStorage.getItem(`${this.quizID}`)
+      if (localQuizData) {
+        this.data = JSON.parse(localQuizData)
+      }
+    },
     async fetchData() {
       try {
         this.loading = true
@@ -134,6 +140,7 @@ export default defineComponent({
               query: this.uriQueryType
             })
           }
+          localStorage.setItem(`${this.quizID}`, JSON.stringify(this.data))
         }
       } catch (error) {
         // who cares
@@ -143,17 +150,16 @@ export default defineComponent({
     }
   },
   created() {
+    const cachedQuiz = localStorage.getItem(`${this.quizID}`)
+    if (cachedQuiz) {
+      this.data = JSON.parse(cachedQuiz)
+      return
+    }
     onMounted(async () => {
       this.fetchData() // Call the method to fetch data when the component is created
     })
   },
   watch: {
-    'data.questions': function () {
-      // refresh on changes to reflect firebase
-      onMounted(async () => {
-        this.fetchData()
-      })
-    },
     'data.submitted': function (newVal) {
       if (newVal) {
         this.redirectToExams()

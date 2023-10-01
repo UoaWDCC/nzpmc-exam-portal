@@ -87,7 +87,7 @@ import { debounce } from '@/utils/quizManagement'
 
 export default {
   name: 'AppExamQuestionOptions',
-  emits: ['correct-answer-changed', 'user-answer-changed', 'option-changed', 'ready-to-fetch'],
+  emits: ['correct-answer-changed', 'user-question-changed', 'option-changed', 'ready-to-fetch'],
   mixins: [quizEditingMixin],
   props: {
     // Unselected answers
@@ -157,7 +157,7 @@ export default {
       // Cancel if answer has not been changed
       if (selectedID === this.answer) return
 
-      this.$emit('user-answer-changed', { questionID: this.questionID, userAnswerID: selectedID })
+      this.$emit('user-question-changed', { questionID: this.questionID, userAnswerID: selectedID })
       const mutation = this.$apollo.mutate({
         mutation: UserQuizUpdateAnswerMutation,
         variables: {

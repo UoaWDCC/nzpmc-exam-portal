@@ -65,13 +65,15 @@ export default {
       let workingString = this.text.replace(/\$\$/gi, '$').replace(imageRegex, '')
 
       latexStrings.forEach((latexString) => {
-        const parts = workingString.split(latexString)
-        html += `${parts[0]}` //add non latex part
+        if (workingString) {
+          const parts = workingString.split(latexString)
+          html += `${parts[0]}` //add non latex part
 
-        //add the latex part
-        html += `<div class="latex">${latexString}</div>`
+          //add the latex part
+          html += `<div class="latex">${latexString}</div>`
 
-        workingString = parts[1]
+          workingString = parts[1]
+        }
       })
 
       html += `<p>${workingString}</p></div>`

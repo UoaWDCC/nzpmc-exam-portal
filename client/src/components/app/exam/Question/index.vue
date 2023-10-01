@@ -59,7 +59,8 @@
         <div class="align-center d-flex mb-3">
           <AppExamQuestionFlagButton
             v-if="!isAdminAndEditing"
-            @flag-changed="$emit('flag-changed')"
+            @flag-changed="storeQuestionChangesLocally"
+            @ready-to-fetch="fetchData('network-only')"
             :flagged="question.flag"
             :question-number="questionNumber"
           />
@@ -69,7 +70,7 @@
         <AppExamQuestionOptions
           @option-changed="storeOptionChangesLocally"
           @correct-answer-changed="storeQuestionChangesLocally"
-          @user-answer-changed="storeQuestionChangesLocally"
+          @user-question-changed="storeQuestionChangesLocally"
           @ready-to-fetch="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
@@ -104,7 +105,7 @@ import { useExamStore } from '../examStore'
 export default {
   name: 'AppExamQuestion',
   mixins: [quizEditingMixin],
-
+  emits: ['local-changes-made'],
   components: {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
@@ -153,8 +154,9 @@ export default {
       questionDescription?: string
       correctAnswerID?: string
       userAnswerID?: string
+      flag?: boolean
     }) {
-      const { questionID, questionDescription, correctAnswerID, userAnswerID } = inputs
+      const { questionID, questionDescription, correctAnswerID, userAnswerID, flag } = inputs
       const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
       const questionIndex = temporaryQuizData.questions.findIndex(
         (question: Question) => question.id === questionID
@@ -169,11 +171,19 @@ export default {
       }
 
       if (userAnswerID) {
+        if (!temporaryQuizData.questions[questionIndex].userAnswer) {
+          temporaryQuizData.questions[questionIndex].userAnswer = {}
+        }
         temporaryQuizData.questions[questionIndex].userAnswer.id = userAnswerID
+      }
+
+      if (flag !== undefined) {
+        temporaryQuizData.questions[questionIndex].flag = flag
       }
 
       this.quizData = temporaryQuizData
       localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
+      this.$emit('local-changes-made')
     },
     storeOptionChangesLocally(inputs: { optionID: string; optionDescription?: string }) {
       if (inputs) {
@@ -209,6 +219,7 @@ export default {
 
         this.quizData = temporaryQuizData
         localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
+        this.$emit('local-changes-made')
       }
     },
     async deleteCurrentQuestion() {

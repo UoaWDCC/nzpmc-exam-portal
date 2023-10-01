@@ -25,6 +25,7 @@ import { UserQuizUpdateFlagMutation } from '@/gql/mutations/userQuiz'
 export default {
   name: 'AppExamQuestionFlagButton',
 
+  emits: ['flag-changed', 'ready-to-fetch'],
   props: {
     flagged: Boolean,
 
@@ -58,14 +59,15 @@ export default {
     // Toggle flag state
     toggle() {
       // Set new flag state, will be reverted if mutation fails
-      console.log(this.currentFlagged)
+      const newFlag = !this.flagged
+      this.$emit('flag-changed', { questionID: this.$route.params.questionID, flag: newFlag })
       const mutation = this.$apollo.mutate({
         mutation: UserQuizUpdateFlagMutation,
         variables: {
           input: {
             userQuizID: this.$route.params.quizID,
             questionID: this.$route.params.questionID,
-            flag: !this.currentFlagged
+            flag: newFlag
           }
         }
       })
@@ -75,9 +77,7 @@ export default {
 
       mutation
         .then(() => {
-          this.currentFlagged = !this.currentFlagged
-          this.$emit('flag-changed')
-          console.log('flagged')
+          this.$emit('ready-to-fetch')
         })
         .catch(() => {
           this.snackbarQueue.push(
