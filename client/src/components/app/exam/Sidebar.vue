@@ -8,7 +8,7 @@
 </style>
 <template>
   <AppExamTopbarTimer
-    v-if="!isAdminAndEditing"
+    v-if="!isAdminAndEditing && !review"
     :duration="duration"
     :quizStart="quizStart"
     :userQuizId="userQuizId"
@@ -32,9 +32,9 @@
     </v-list-item-group>
   </v-list>
   <v-btn
+    v-if="!review && !isAdminAndEditing"
     color="secondary"
-    :disabled="examStore.submitting"
-    v-if="!isAdminAndEditing"
+    :disabled="examStore.submitting || review"
     v-on:click="submitQuiz()"
     variant="flat"
     id="submit-button"
@@ -109,11 +109,16 @@ export default {
     },
     userQuizId: {
       required: true
+    },
+    review: {
+      type: Boolean,
+      required: true
     }
   },
   methods: {
     submitQuiz() {
-      console.log('clicek')
+      console.log('click')
+      if (this.review) return
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {

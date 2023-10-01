@@ -2,6 +2,7 @@ import gql from 'graphql-tag'
 import {
   UserQuizFragment,
   UserQuizFullQuestionFragment,
+  UserQuizQuestionFragment,
   UserQuizOptionFragment
 } from '@/gql/fragments/userQuiz'
 
@@ -10,9 +11,13 @@ export const UserQuizzesQuery = gql`
     userQuizzes {
       submitted
       ...UserQuizFragment
+      questions {
+        ...UserQuizQuestionFragment
+      }
     }
   }
   ${UserQuizFragment}
+  ${UserQuizQuestionFragment}
 `
 
 export const UserQuizQuery = gql`

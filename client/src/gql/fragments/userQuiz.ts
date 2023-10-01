@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 
+// this will need marked tag soon
 export const UserQuizFragment = gql`
   fragment UserQuizFragment on UserQuiz {
     id
@@ -11,6 +12,8 @@ export const UserQuizFragment = gql`
     closeTime
     quizStart
     submitted
+    score
+    created
   }
 `
 

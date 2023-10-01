@@ -14,7 +14,8 @@
         :dark="active"
         :color="active ? '#03a9f5' : 'white'"
         :ripple="!isAdminAndEditing"
-        :disabled="updating"
+        :disabled="updating || review"
+        :color="getCardColor(option)"
         class="align-center d-flex mb-3"
         @click="!isAdminAndEditing && setSelected(option.id)"
         @keyup.enter="!isAdminAndEditing && toggle"
@@ -89,7 +90,11 @@ export default {
   name: 'AppExamQuestionOptions',
   emits: ['correct-answer-changed', 'user-question-changed', 'option-changed', 'ready-to-fetch'],
   mixins: [quizEditingMixin],
+  components: {
+    AppExamQuestionLoader: () => import('./Loader.vue')
+  },
   props: {
+    review: Boolean,
     // Unselected answers
     options: {
       type: Object as PropType<Option[]>,
@@ -116,13 +121,16 @@ export default {
       }
     },
 
-    questionNumber: { type: Number, required: true }
+    questionNumber: { type: Number, required: true },
+    questionId: { type: String, required: true },
+    quizId: { type: String, required: true }
   },
 
   data() {
     return {
       selected: null as any,
       updating: false
+      quizData: true as any
     }
   },
 
@@ -134,6 +142,28 @@ export default {
     // Sorted options and answer
     sortedOptions(): Option[] {
       return [...this.options].sort((a, b) => (a.id > b.id ? 1 : -1))
+    }
+  },
+  apollo: {
+    quiz: {
+      query: GetQuizInfoQuery,
+      skip() {
+        return !this.review
+      },
+      variables() {
+        return {
+          quizId: this.quizId
+        }
+      },
+      result({ data, error }) {
+        if (error) {
+          console.log('The answer ID is most likely invalid')
+        }
+
+        if (data && this.review) {
+          this.quizData = data.quiz
+        }
+      }
     }
   },
 
@@ -155,7 +185,7 @@ export default {
       if (!this.sortedOptions[v]) return
       const selectedID = this.sortedOptions[v].id
       // Cancel if answer has not been changed
-      if (selectedID === this.answer) return
+      if (selectedID === this.answer ||this.review) return
 
       this.$emit('user-question-changed', { questionID: this.questionID, userAnswerID: selectedID })
       const mutation = this.$apollo.mutate({
@@ -262,6 +292,29 @@ export default {
     // Check if an option is selected
     isSelected(optionId: string): boolean {
       return this.selected === this.sortedOptions.findIndex((option) => option.id === optionId)
+    },
+
+    getCardColor(option: any) {
+      if (this.review) {
+        try {
+          const currentQuestion = this.quizData.questions.find(
+            (question: any) => question.id === this.questionId
+          )
+          if (option.id == currentQuestion.answerID) {
+            return 'green'
+          } else if (option.id == this.answer) {
+            return 'red-darken-4'
+          } else {
+            return 'white'
+          }
+        } catch {
+          // now you might be thinking this may seem redundant
+          // but it isn't - Aaron
+          // (if there is an error it recalls the function)
+        }
+      } else {
+        return option ? 'white' : '#03a9f5'
+      }
     }
   }
 }

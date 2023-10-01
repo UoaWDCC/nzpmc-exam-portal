@@ -57,13 +57,10 @@
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
-          <AppExamQuestionFlagButton
-            v-if="!isAdminAndEditing"
-            @flag-changed="storeQuestionChangesLocally"
-            @ready-to-fetch="fetchData('network-only')"
-            :flagged="question.flag"
-            :question-number="questionNumber"
-          />
+          <AppExamQuestionFlagButton <<<<<<< HEAD v-if="!isAdminAndEditing"
+          @flag-changed="storeQuestionChangesLocally" @ready-to-fetch="fetchData('network-only')"
+          ======= v-if="!review" >>>>>>> main :flagged="question.flag"
+          :question-number="questionNumber" />
         </div>
       </v-row>
       <div class="options-area">
@@ -76,6 +73,9 @@
           :answer="question.userAnswer ? question.userAnswer.id : null"
           :correctAnswerID="isAdminAndEditing ? question.answerID : null"
           :question-number="questionNumber"
+          :quiz-id="quizData.quizID"
+          :question-id="question.id"
+          :review="review"
         />
         <v-btn
           v-if="questionNumber < quizData.questions.length"
@@ -85,7 +85,7 @@
           >Next Question</v-btn
         >
         <v-btn
-          v-else-if="!isAdminNotSittingExam"
+          v-else-if="!isAdminNotSittingExam && !review"
           id="submit-button"
           v-on:click="submitQuiz()"
           variant="flat"
@@ -114,6 +114,9 @@ export default {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
     DisplayText
+  },
+  props: {
+    review: Boolean
   },
   data(): {
     error: any
@@ -249,7 +252,6 @@ export default {
       if (this.questionNumber) {
         const nextQuestionIndex = this.questionNumber // subtract 1 to get the correct index
         const nextQuestionID = this.quizData.questions[nextQuestionIndex].id
-        console.log(nextQuestionID)
         this.$router.push({
           name: 'AppExamQuestion',
           query: this.isEditingQuizQuery,

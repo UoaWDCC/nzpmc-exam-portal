@@ -17,15 +17,15 @@
           <AppExamSidebar
             v-if="data"
             :questions="data.questions"
-            :duration="data.duration"
             :quizStart="data.quizStart"
             :userQuizId="data.id"
             @question-added="fetchData"
+            :review="review"
           />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
 
-      <AppExamQuestionLoader v-if="isLoading" />
+      <AppExamQuestionLoader v-if="loading" />
 
       <div v-if="data" class="question-container" style="overflow: hidden">
         <component :is="routeTransition" hide-on-leave>
@@ -33,6 +33,7 @@
             @question-deleted="fetchData"
             @local-changes-made="syncLocalChanges"
             :key="$route.params.questionID"
+            :review="review"
           />
         </component>
       </div>
@@ -87,6 +88,7 @@ export default defineComponent({
   data(): {
     store: any
     data: UserQuizModel | undefined
+    review: boolean
     loading: boolean
     error: any
     routeTransition: any
@@ -98,7 +100,8 @@ export default defineComponent({
       routeTransition: VSlideXTransition,
       data: undefined,
       loading: false,
-      error: null
+      error: null,
+      review: false
     }
   },
 
@@ -165,8 +168,15 @@ export default defineComponent({
     })
   },
   watch: {
-    'data.submitted': function (newVal) {
-      if (newVal) {
+    'data.score': function (newVal) {
+      // this needs to be changed to an isMarked boolean
+      if (newVal == null) {
+        this.redirectToExams()
+      }
+      if (newVal > 0) {
+        this.review = true
+      } else {
+        this.review = false
         this.redirectToExams()
       }
     }
