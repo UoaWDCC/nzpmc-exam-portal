@@ -84,7 +84,11 @@
           variant="flat"
           >Next Question</v-btn
         >
-        <v-btn v-else id="submit-button" v-on:click="submitQuiz()" variant="flat"
+        <v-btn
+          v-else-if="!isAdminNotSittingExam"
+          id="submit-button"
+          v-on:click="submitQuiz()"
+          variant="flat"
           >Submit Exam</v-btn
         >
       </div>
@@ -105,7 +109,7 @@ import { useExamStore } from '../examStore'
 export default {
   name: 'AppExamQuestion',
   mixins: [quizEditingMixin],
-  emits: ['local-changes-made'],
+  emits: ['local-changes-made', 'question-deleted'],
   components: {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
