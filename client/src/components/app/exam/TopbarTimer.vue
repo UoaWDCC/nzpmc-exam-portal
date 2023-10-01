@@ -20,13 +20,17 @@
 </template>
 
 <script lang="ts">
-import { EditUserQuiz } from '@/gql/mutations/userQuiz'
+import { EditUserQuiz, SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
+import { useExamStore } from './examStore'
+import { mapWritableState } from 'pinia'
+import { useMainStore } from '@/stores/main'
 
 export default {
   name: 'AppExamTopbarTimer',
 
   data() {
     return {
+      examStore: useExamStore(),
       secondsRemaining: null,
       startEpoch: this.quizStart as number | null,
       timer: null as unknown as ReturnType<typeof setInterval>
@@ -57,7 +61,8 @@ export default {
       return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${
         (seconds < 10 ? '0' : '') + seconds
       }`
-    }
+    }, 
+    ...mapWritableState(useMainStore, ['snackbarQueue'])
   },
 
   mounted() {
@@ -105,7 +110,27 @@ export default {
       if (this.secondsRemaining <= 0) {
         this.secondsRemaining = 0
         this.stopTimer()
-      }
+
+        // submit on timeout
+        const mutation = this.$apollo.mutate({
+        mutation: SubmitUserQuizQuestionsMutation,
+        variables: {
+          input: {
+            userQuizID: this.$route.params.quizID
+          }
+        }
+      })
+      this.examStore.submitting = true
+      mutation
+        .then(() => {
+          this.$router.push({
+            name: 'AppExams'
+          })
+        })
+        .catch(() => {
+          this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
+        })
+    }
     },
 
     stopTimer() {
