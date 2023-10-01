@@ -214,9 +214,24 @@ const deleteQuestion = async (quizID: string, questionID: string) => {
     return runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
         const quiz = await QuizTranRepository.findById(quizID)
+        const questionOrderArray = quiz.questionIDsOrder
+        // delete question to be deleted
+        const updatedQuestionOrderArray = questionOrderArray.filter(
+            (id) => id !== questionID,
+        )
+
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
+        editQuiz(
+            quizID,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            updatedQuestionOrderArray,
+        )
         return quiz.questions.delete(questionID)
     })
 }
