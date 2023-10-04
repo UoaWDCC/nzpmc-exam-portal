@@ -13,14 +13,13 @@
 
     <v-container v-if="data || loading" class="exam-and-sidebar-container">
       <v-navigation-drawer class="sidebar-container" permanent clipped left mini-variant>
-        <AppExamSidebarLoader v-if="loading" />
-
         <v-scroll-y-reverse-transition>
           <AppExamSidebar
             v-if="data"
             :questions="data.questions"
             :quizStart="data.quizStart"
             :userQuizId="data.id"
+            @question-added="fetchData"
             :review="review"
           />
         </v-scroll-y-reverse-transition>
@@ -30,7 +29,12 @@
 
       <div v-if="data" class="question-container" style="overflow: hidden">
         <component :is="routeTransition" hide-on-leave>
-          <router-view :key="$route.params.questionID" :review="review" />
+          <router-view
+            @question-deleted="fetchData"
+            @local-changes-made="syncLocalChanges"
+            :key="$route.params.questionID"
+            :review="review"
+          />
         </component>
       </div>
     </v-container>
@@ -38,7 +42,6 @@
 </template>
 
 <script lang="ts">
-import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamTopbarLoader from './TopbarLoader.vue'
 import AppExamTopbar from './Topbar.vue'
 import AppExamSidebarLoader from './SidebarLoader.vue'
@@ -49,9 +52,13 @@ import { VSlideXTransition, VSlideXReverseTransition } from 'vuetify/components'
 import { defineComponent } from 'vue'
 import { TOOLBAR_HEIGHT } from '@/helpers'
 import type { UserQuizModel } from '@nzpmc-exam-portal/common'
+import { useMainStore } from '@/stores/main'
+import { onMounted } from 'vue'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 
 export default defineComponent({
   name: 'AppExam',
+  mixins: [quizEditingMixin],
 
   metaInfo() {
     return {
@@ -79,6 +86,7 @@ export default defineComponent({
   },
 
   data(): {
+    store: any
     data: UserQuizModel | undefined
     review: boolean
     loading: boolean
@@ -87,6 +95,7 @@ export default defineComponent({
     TOOLBAR_HEIGHT: number
   } {
     return {
+      store: useMainStore(),
       TOOLBAR_HEIGHT,
       routeTransition: VSlideXTransition,
       data: undefined,
@@ -101,42 +110,62 @@ export default defineComponent({
       if (this.data?.submitted) {
         this.$router.push({ name: 'AppExams' })
       }
+    },
+    loadFirstQuestion() {
+      const currentQuestions = this.data?.questions
+
+      if (this.questionID === undefined && currentQuestions?.length > 0) {
+        this.$router.push({
+          name: 'AppExamQuestion',
+          params: {
+            quizID: this.quizID,
+            questionID: currentQuestions[0].id
+          },
+          query: this.uriQueryType
+        })
+      }
+    },
+    syncLocalChanges() {
+      const localQuizData = localStorage.getItem(`${this.quizID}`)
+      if (localQuizData) {
+        this.data = JSON.parse(localQuizData)
+      }
+    },
+    async fetchData() {
+      try {
+        this.loading = true
+        const { data } = await this.$apollo.query({
+          query: this.queryType,
+          fetchPolicy: 'network-only',
+          //dumb spelling error
+          variables: this.isAdminNotSittingExam ? { quizId: this.quizID } : { quizID: this.quizID },
+          notifyOnNetworkStatusChange: true
+        })
+
+        if (data) {
+          this.data = this.isAdminNotSittingExam ? data.quiz : data.userQuiz
+          console.log(this.data)
+
+          this.loadFirstQuestion()
+          localStorage.setItem(`${this.quizID}`, JSON.stringify(this.data))
+        }
+      } catch (error) {
+        // who cares
+      } finally {
+        this.loading = false
+      }
     }
   },
-
-  apollo: {
-    userQuiz: {
-      query: UserQuizQuery,
-      variables() {
-        return { quizID: this.$route.params.quizID }
-      },
-
-      result({ data, error, loading }) {
-        this.loading = loading
-        if (error) {
-          this.error = error.message
-        }
-        if (data) {
-          this.data = data.userQuiz
-          const currentQuestions = data?.userQuiz.questions
-          // check if there are any questions
-          if (currentQuestions.length === 0) {
-            this.$router.push({
-              name: 'AppExams'
-            })
-            return
-          }
-          if (this.$route.params.questionID === undefined) {
-            this.$router.push({
-              name: 'AppExamQuestion',
-              params: { quizID: this.$route.params.quizID, questionID: currentQuestions[0].id }
-            })
-          }
-        }
-      },
-      fetchPolicy: 'network-only',
-      notifyOnNetworkStatusChange: true
+  created() {
+    const cachedQuiz = localStorage.getItem(`${this.quizID}`)
+    if (cachedQuiz) {
+      this.data = JSON.parse(cachedQuiz)
+      this.loadFirstQuestion()
+      return
     }
+    onMounted(async () => {
+      this.fetchData() // Call the method to fetch data when the component is created
+    })
   },
   watch: {
     'data.score': function (newVal) {
@@ -151,14 +180,9 @@ export default defineComponent({
         this.redirectToExams()
       }
     }
-    // 'data.submitted': function (newVal) {
-    //   if (newVal) {
-    //     console.log(this.review)
-    //     if (this.review === false) {
-    //     // this.redirectToExams()
-    //     }
-    //   }
-    // }
+  },
+  unmounted() {
+    localStorage.removeItem(`${this.quizID}`)
   }
 })
 </script>

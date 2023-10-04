@@ -37,16 +37,30 @@
     <v-container fluid v-if="quizData" class="question-container">
       <v-row>
         <h2 class="flex-grow-1 text-h5" style="line-height: 1">Question {{ questionNumber }}</h2>
+        <v-btn
+          v-if="isAdminAndEditing"
+          variant="flat"
+          color="red"
+          :disabled="updating"
+          v-on:click="deleteCurrentQuestion"
+          >delete</v-btn
+        >
       </v-row>
       <v-row>
         <v-col>
-          <DisplayText :text="question.question" />
+          <DisplayText
+            @question-changed="storeQuestionChangesLocally"
+            @ready-to-fetch="fetchData('network-only')"
+            :text="question.question"
+          />
         </v-col>
       </v-row>
       <v-row>
         <div class="align-center d-flex mb-3">
           <AppExamQuestionFlagButton
-            v-if="!review"
+            v-if="!isAdminAndEditing && !review"
+            @flag-changed="storeQuestionChangesLocally"
+            @ready-to-fetch="fetchData('network-only')"
             :flagged="question.flag"
             :question-number="questionNumber"
           />
@@ -54,8 +68,13 @@
       </v-row>
       <div class="options-area">
         <AppExamQuestionOptions
+          @option-changed="storeOptionChangesLocally"
+          @correct-answer-changed="storeQuestionChangesLocally"
+          @user-question-changed="storeQuestionChangesLocally"
+          @ready-to-fetch="fetchData('network-only')"
           :options="question.options"
           :answer="question.userAnswer ? question.userAnswer.id : null"
+          :correctAnswerID="isAdminAndEditing ? question.answerID : null"
           :question-number="questionNumber"
           :quiz-id="quizData.quizID"
           :question-id="question.id"
@@ -68,7 +87,11 @@
           variant="flat"
           >Next Question</v-btn
         >
-        <v-btn v-else-if="!review" id="submit-button" v-on:click="submitQuiz()" variant="flat"
+        <v-btn
+          v-else-if="!isAdminNotSittingExam && !review"
+          id="submit-button"
+          v-on:click="submitQuiz()"
+          variant="flat"
           >Submit Exam</v-btn
         >
       </div>
@@ -77,17 +100,19 @@
 </template>
 
 <script lang="ts">
-import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamQuestionOptions from './Options.vue'
 import AppExamQuestionFlagButton from './FlagButton.vue'
 import DisplayText from '@/components/app/DisplayText.vue'
 import type { Question } from '@nzpmc-exam-portal/common'
+import quizEditingMixin from '@/utils/quizEditingMixin'
+import { onMounted } from 'vue'
 import { SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import { useExamStore } from '../examStore'
 
 export default {
   name: 'AppExamQuestion',
-
+  mixins: [quizEditingMixin],
+  emits: ['local-changes-made', 'question-deleted'],
   components: {
     AppExamQuestionOptions,
     AppExamQuestionFlagButton,
@@ -100,13 +125,16 @@ export default {
     error: any
     quizData: any
     examStore: any
+    updating: boolean
   } {
     return {
       error: null,
       quizData: undefined,
+      updating: false,
       examStore: useExamStore()
     }
   },
+
   computed: {
     questionNumber() {
       if (this.quizData) {
@@ -129,19 +157,112 @@ export default {
       return null
     }
   },
+
   methods: {
-    nextQuestion() {
+    storeQuestionChangesLocally(inputs: {
+      questionID: string
+      questionDescription?: string
+      correctAnswerID?: string
+      userAnswerID?: string
+      flag?: boolean
+    }) {
+      const { questionID, questionDescription, correctAnswerID, userAnswerID, flag } = inputs
+      const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
+      const questionIndex = temporaryQuizData.questions.findIndex(
+        (question: Question) => question.id === questionID
+      )
+      if (questionDescription) {
+        const localQuestionDescription = questionDescription
+        temporaryQuizData.questions[questionIndex].question = localQuestionDescription
+      }
+
+      if (correctAnswerID) {
+        temporaryQuizData.questions[questionIndex].answerID = correctAnswerID
+      }
+
+      if (userAnswerID) {
+        if (!temporaryQuizData.questions[questionIndex].userAnswer) {
+          temporaryQuizData.questions[questionIndex].userAnswer = {}
+        }
+        temporaryQuizData.questions[questionIndex].userAnswer.id = userAnswerID
+      }
+
+      if (flag !== undefined) {
+        temporaryQuizData.questions[questionIndex].flag = flag
+      }
+
+      this.quizData = temporaryQuizData
+      localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
+      this.$emit('local-changes-made')
+    },
+    storeOptionChangesLocally(inputs: { optionID: string; optionDescription?: string }) {
+      if (inputs) {
+        const { optionID } = inputs
+        const localOptionDescription = inputs.optionDescription
+        const temporaryQuizData = JSON.parse(JSON.stringify(this.quizData))
+
+        let questionIndex = -1
+        let optionIndex = -1
+
+        for (let i = 0; i < temporaryQuizData.questions.length; i++) {
+          const question = temporaryQuizData.questions[i]
+          for (let j = 0; j < question.options.length; j++) {
+            const option = question.options[j]
+            if (option.id === optionID) {
+              option.option = localOptionDescription
+
+              questionIndex = i
+              optionIndex = j
+
+              break
+            }
+          }
+          if (optionIndex !== -1) {
+            break
+          }
+        }
+
+        if (localOptionDescription) {
+          temporaryQuizData.questions[questionIndex].options[optionIndex].option =
+            localOptionDescription
+        }
+
+        this.quizData = temporaryQuizData
+        localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
+        this.$emit('local-changes-made')
+      }
+    },
+    async deleteCurrentQuestion() {
+      try {
+        this.updating = true
+        await this.deleteQuestion(this.$apollo.getClient(), {
+          quizID: this.quizID,
+          questionID: this.questionID
+        })
+      } finally {
+        this.$emit('question-deleted')
+        this.$router.push({
+          name: 'AppExam',
+          params: {
+            quizID: this.quizID
+          },
+          query: this.uriQueryType
+        })
+        this.updating = false
+      }
+    },
+    async nextQuestion() {
       if (this.questionNumber) {
-        const nextQuestionIndex = this.questionNumber // index will use exact same value because it has 1 added to it
+        const nextQuestionIndex = this.questionNumber // subtract 1 to get the correct index
         const nextQuestionID = this.quizData.questions[nextQuestionIndex].id
         this.$router.push({
           name: 'AppExamQuestion',
+          query: this.isEditingQuizQuery,
           params: { quizID: this.$route.params.quizID, questionID: nextQuestionID }
         })
       }
     },
     submitQuiz() {
-      console.log('click')
       const mutation = this.$apollo.mutate({
         mutation: SubmitUserQuizQuestionsMutation,
         variables: {
@@ -160,27 +281,37 @@ export default {
         .catch(() => {
           this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
         })
+    },
+
+    async fetchData(fetchPolicy: 'network-only' | 'cache-first') {
+      const quizId = this.$route.params.quizID
+      try {
+        const { data } = await this.$apollo.query({
+          query: this.queryType,
+          variables: this.isAdminNotSittingExam ? { quizId } : { quizID: quizId },
+          fetchPolicy,
+          notifyOnNetworkStatusChange: true
+        })
+
+        if (data) {
+          this.quizData = this.isAdminNotSittingExam ? data.quiz : data.userQuiz
+          localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quizData))
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
   },
 
-  apollo: {
-    userQuiz: {
-      query: UserQuizQuery,
-      variables() {
-        return {
-          quizID: this.$route.params.quizID
-        }
-      },
-      result({ data, error }) {
-        if (error) {
-          this.error = error.message
-        } else {
-          if (data) this.quizData = data.userQuiz
-        }
-      },
-      fetchPolicy: 'cache-and-network',
-      notifyOnNetworkStatusChange: true
+  created() {
+    const cachedQuiz = localStorage.getItem(`${this.quizID}`)
+    if (cachedQuiz) {
+      this.quizData = JSON.parse(cachedQuiz)
+      return
     }
+    onMounted(async () => {
+      await this.fetchData('network-only')
+    })
   }
 }
 </script>

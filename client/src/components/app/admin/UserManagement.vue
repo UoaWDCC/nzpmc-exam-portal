@@ -109,7 +109,6 @@
       <v-text-field
         label="Enter Emails (separate with ',')"
         ref="emailsToDelete"
-        @input="handleEmailInputChange"
         @change="handleEmailInputChange"
         clearable
       >

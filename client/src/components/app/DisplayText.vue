@@ -1,14 +1,24 @@
 <template>
-  <div v-html="htmlContent" class="question-form"></div>
+  <v-textarea
+    :model-value="text"
+    @change="handleDescriptionChange"
+    v-if="isAdminAndEditing"
+  ></v-textarea>
+  <div v-else v-html="htmlContent" class="question-form"></div>
 </template>
 
 <script lang="ts">
-import { Converter } from 'showdown'
 import 'katex/dist/katex.min.css'
+import quizEditingMixin from '@/utils/quizEditingMixin'
+import { Converter } from 'showdown'
 import katex from 'katex'
+
+import { debounce } from '@/utils/quizManagement'
 
 export default {
   name: 'AppDisplayText',
+  emits: ['question-changed', 'ready-to-fetch'],
+  mixins: [quizEditingMixin],
   props: {
     text: { type: String, required: true }
   },
@@ -19,15 +29,26 @@ export default {
       htmlContent: ''
     }
   },
-
-  mounted() {
-    this.parsed()
-  },
-
   methods: {
+    async handleDescriptionChange(event: Event) {
+      const currentDescription: string = event.target.value
+      this.$emit('question-changed', {
+        questionID: this.questionID,
+        questionDescription: currentDescription
+      })
+      const debouncedEdit = debounce(this.editQuestionInfo)
+      const res = await debouncedEdit(this.$apollo.getClient(), {
+        questionID: this.questionID,
+        quizID: this.quizID,
+        questionDescription: currentDescription
+      })
+      if (res) {
+        this.$emit('ready-to-fetch')
+      }
+    },
     parsed() {
       const latexRegex = /\$(\$?)(.*?)\1\$/g
-      const imageRegex = /!\[([^\]]*)\]\(([^\)]+)\)/g
+      const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g
 
       const latexStrings = []
       const imageSubstrings = []
@@ -44,13 +65,15 @@ export default {
       let workingString = this.text.replace(/\$\$/gi, '$').replace(imageRegex, '')
 
       latexStrings.forEach((latexString) => {
-        const parts = workingString.split(latexString)
-        html += `${parts[0]}` //add non latex part
+        if (workingString) {
+          const parts = workingString.split(latexString)
+          html += `${parts[0]}` //add non latex part
 
-        //add the latex part
-        html += `<div class="latex">${latexString}</div>`
+          //add the latex part
+          html += `<div class="latex">${latexString}</div>`
 
-        workingString = parts[1]
+          workingString = parts[1]
+        }
       })
 
       html += `<p>${workingString}</p></div>`
@@ -70,6 +93,17 @@ export default {
         })
       })
     }
+  },
+
+  mounted() {
+    this.parsed()
+  },
+  watch: {
+    text: {
+      handler() {
+        this.parsed()
+      }
+    }
   }
 }
 </script>
@@ -84,6 +118,7 @@ img {
 .question-form {
   > div {
     display: flex;
+    flex-direction: column;
   }
 }
 

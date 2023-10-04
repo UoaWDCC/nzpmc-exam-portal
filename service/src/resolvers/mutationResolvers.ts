@@ -68,6 +68,7 @@ import {
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
 import { deleteUserQuiz } from '../controllers/userQuiz'
+import { setQuestionAnswer } from '../controllers/question'
 
 const addOptionMutation: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,
@@ -176,20 +177,21 @@ const editAnswerMutation: Resolver<
     UserContext,
     RequireFields<MutationEditAnswerArgs, 'input'>
 > = async (_parent, { input }, _context) => {
-    const { quizID, questionID, option } = input
+    const { quizID, questionID, newAnswerOptionID } = input
 
     const question = await getQuestion(quizID, questionID)
-
-    if (!question.answerID) {
+    console.log(question)
+    if (!question) {
         throw new NotFoundError()
     }
-
-    return await editQuestionOption(
+    if (question.answerID === newAnswerOptionID) {
+        return question
+    }
+    return await setQuestionAnswer({
         quizID,
         questionID,
-        question.answerID,
-        option,
-    )
+        newAnswerOptionID,
+    })
 }
 
 const editOptionMutation: Resolver<
@@ -207,10 +209,13 @@ const deleteOptionMutation: Resolver<
     Maybe<ResolverTypeWrapper<Option>>,
     unknown,
     UserContext,
-    RequireFields<MutationDeleteOptionArgs, 'quizID' | 'id' | 'optionID'>
-> = async (_parent, { quizID, id, optionID }, _context) => {
-    const option = await getOptionByID(quizID, id, optionID)
-    deleteQuestionOption(quizID, id, optionID)
+    RequireFields<
+        MutationDeleteOptionArgs,
+        'quizID' | 'questionID' | 'optionID'
+    >
+> = async (_parent, { quizID, questionID, optionID }, _context) => {
+    const option = await getOptionByID(quizID, questionID, optionID)
+    deleteQuestionOption(quizID, questionID, optionID)
     return option
 }
 

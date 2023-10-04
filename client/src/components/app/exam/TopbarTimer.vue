@@ -21,9 +21,11 @@
 
 <script lang="ts">
 import { EditUserQuiz } from '@/gql/mutations/userQuiz'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 
 export default {
   name: 'AppExamTopbarTimer',
+  mixins: [quizEditingMixin],
 
   data() {
     return {
@@ -61,6 +63,10 @@ export default {
   },
 
   mounted() {
+    if (this.isAdminAndEditing) {
+      //dont care if we are editing
+      return
+    }
     if (!this.startEpoch) {
       //persist start time
       const currentTimeSeconds = Math.floor(Date.now() / 1000)

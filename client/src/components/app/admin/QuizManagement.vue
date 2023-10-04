@@ -151,7 +151,7 @@
           class="d-none"
           type="file"
           accept=".csv"
-          @input="handleCsvUpload"
+          @change="handleCsvUpload"
         />
         <v-btn
           @click="downloadUserQuizzes"
@@ -377,7 +377,11 @@ export default defineComponent({
         this.popUpDialog = true
         return
       } else {
-        // this.$router.push(`/admin/quiz/${this.selectedQuiz.id}/edit`)
+        this.$router.push({
+          name: 'AppExam',
+          params: { quizID: this.selectedQuiz.id },
+          query: { edit: 'true' }
+        })
         this.popUpMessage = 'This feature is not yet implemented'
         this.popUpDialog = true
       }
