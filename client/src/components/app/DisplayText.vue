@@ -1,5 +1,9 @@
 <template>
-  <v-textarea :model-value="text" @change="handleDescriptionChange" v-if="isAdminAndEditing"></v-textarea>
+  <v-textarea
+    :model-value="text"
+    @change="handleDescriptionChange"
+    v-if="isAdminAndEditing"
+  ></v-textarea>
   <div v-show="!isAdminAndEditing" v-html="htmlContent" class="question-form"></div>
 </template>
 
@@ -114,7 +118,7 @@ img {
 }
 
 .question-form {
-  >div {
+  > div {
     display: flex;
     flex-direction: column;
   }
