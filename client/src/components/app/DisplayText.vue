@@ -1,5 +1,9 @@
 <template>
-  <v-textarea :model-value="text" @change="handleDescriptionChange" v-if="isAdminAndEditing"></v-textarea>
+  <v-textarea
+    :model-value="text"
+    @change="handleDescriptionChange"
+    v-if="isAdminAndEditing"
+  ></v-textarea>
   <div v-show="!isAdminAndEditing" v-html="htmlContent" class="question-form"></div>
 </template>
 
@@ -79,7 +83,6 @@ export default {
 
       this.htmlContent = this.converter.makeHtml(html)
       this.renderLatex()
-
     },
     renderLatex() {
       this.$nextTick(() => {
@@ -93,18 +96,15 @@ export default {
         })
       })
     }
-
   },
 
   mounted() {
     this.parsed()
-
   },
   watch: {
     text: {
       handler() {
         this.parsed()
-
       }
     }
   }
@@ -119,7 +119,7 @@ img {
 }
 
 .question-form {
-  >div {
+  > div {
     display: flex;
     flex-direction: column;
   }
