@@ -1,10 +1,6 @@
 <template>
-  <v-textarea
-    :model-value="text"
-    @change="handleDescriptionChange"
-    v-if="isAdminAndEditing"
-  ></v-textarea>
-  <div v-else v-html="htmlContent" class="question-form"></div>
+  <v-textarea :model-value="text" @change="handleDescriptionChange" v-if="isAdminAndEditing"></v-textarea>
+  <div v-show="!isAdminAndEditing" v-html="htmlContent" class="question-form"></div>
 </template>
 
 <script lang="ts">
@@ -48,7 +44,8 @@ export default {
     },
     parsed() {
       const latexRegex = /\$(\$?)(.*?)\1\$/g
-      const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g
+      const imageRegex = /!\[([^\]]*)\]\(([^\)]+)\)/g
+
 
       const latexStrings = []
       const imageSubstrings = []
@@ -82,26 +79,33 @@ export default {
       })
 
       this.htmlContent = this.converter.makeHtml(html)
+      this.renderLatex()
 
+    },
+    renderLatex() {
       this.$nextTick(() => {
         document.querySelectorAll('.latex').forEach((node) => {
+          console.log('fuck all here')
           let latex = node.textContent
           let convertedLatex = latex?.slice(1, -1)
           katex.render(convertedLatex, node, {
-            throwOnError: false
+            throwOnError: true
           })
         })
       })
     }
+
   },
 
   mounted() {
     this.parsed()
+
   },
   watch: {
     text: {
       handler() {
         this.parsed()
+
       }
     }
   }
@@ -116,7 +120,7 @@ img {
 }
 
 .question-form {
-  > div {
+  >div {
     display: flex;
     flex-direction: column;
   }
