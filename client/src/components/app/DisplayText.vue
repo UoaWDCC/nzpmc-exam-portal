@@ -84,7 +84,6 @@ export default {
     renderLatex() {
       this.$nextTick(() => {
         document.querySelectorAll('.latex').forEach((node) => {
-          console.log('fuck all here')
           let latex = node.textContent
           let convertedLatex = latex?.slice(1, -1)
           katex.render(convertedLatex, node, {
