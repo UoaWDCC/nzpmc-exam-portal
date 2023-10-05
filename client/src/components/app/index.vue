@@ -1,5 +1,5 @@
 <template>
-  <MobilePlaceholder />
+  <!-- <MobilePlaceholder /> -->
   <div class="hide-for-mobile">
     <div class="app grey lighten-5">
       <AppLoadingScreen v-if="loadingMessage" :message="loadingMessage" />

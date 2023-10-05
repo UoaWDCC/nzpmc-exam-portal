@@ -1,5 +1,5 @@
 <template>
-  <MobilePlaceholder />
+  <!-- <MobilePlaceholder /> -->
   <div class="app-exams background--grey fill-height" style="overflow-y: auto">
     <v-container class="mt-10">
       <div class="my-6">

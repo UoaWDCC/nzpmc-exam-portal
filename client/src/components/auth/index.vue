@@ -4,7 +4,7 @@ import logoSvg from '@/assets/logo-auth.svg'
 
 <template>
   <div id="background">
-    <MobilePlaceHolder />
+    <!-- <MobilePlaceHolder /> -->
     <div class="hide-for-mobile">
       <div class="align-center auth background--blue d-flex justify-center primary">
         <v-sheet class="auth-container" elevation="2" max-width="100%" width="28rem">
