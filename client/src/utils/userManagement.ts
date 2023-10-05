@@ -111,7 +111,8 @@ export const downloadUsersCsvQuery = async (
     // Create a temporary link element
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.download = 'users.csv'
+    const currentDate = new Date().toISOString().slice(0, 10)
+    link.download = 'all-students_' + currentDate+ '.csv'
 
     // Programmatically click the link to trigger the download
     link.click()
