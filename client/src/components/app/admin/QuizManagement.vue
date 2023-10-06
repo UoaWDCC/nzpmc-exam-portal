@@ -15,7 +15,13 @@
       <v-card-title class="popup-headline">NZPMC Admin</v-card-title>
       <v-card-text class="popup-text">
         <div class="custom-progress">
-          <v-progress-circular v-if="loading" :size="100" :width="15" color="primary" indeterminate></v-progress-circular>
+          <v-progress-circular
+            v-if="loading"
+            :size="100"
+            :width="15"
+            color="primary"
+            indeterminate
+          ></v-progress-circular>
           <!-- <temp> -->
 
           <template v-else>
@@ -31,8 +37,15 @@
 
   <v-container class="quiz-management" fluid>
     <v-container fluid>
-      <v-select :disabled="loading" v-model="quizIdInput" label="SELECT AN EXAM" :items="quizzes" item-title="name"
-        item-value="id" @update:model-value="updateQuizID"></v-select>
+      <v-select
+        :disabled="loading"
+        v-model="quizIdInput"
+        label="SELECT AN EXAM"
+        :items="quizzes"
+        item-title="name"
+        item-value="id"
+        @update:model-value="updateQuizID"
+      ></v-select>
 
       <v-btn :disabled="loading" size="large" color="secondary" @click="createAndGoToExam">
         ADD NEW EXAM
@@ -48,57 +61,124 @@
           </h2>
           <p><b>Last Modified: </b>{{ quizLastModified }}</p>
         </div>
-        <v-text-field label="ID" :model-value="quizIdInput" class="id-input" density="comfortable"
-          readonly></v-text-field>
+        <v-text-field
+          label="ID"
+          :model-value="quizIdInput"
+          class="id-input"
+          density="comfortable"
+          readonly
+        ></v-text-field>
       </div>
-      <v-text-field label="Exam Name" :disabled="loading" @change="handleNameChange"
-        :model-value="quizName"></v-text-field>
-      <v-textarea label="Description" auto-grow @change="handleDescriptionChange" :disabled="loading"
-        :model-value="quizDescription" rows="3" clearable></v-textarea>
+      <v-text-field
+        label="Exam Name"
+        :disabled="loading"
+        @change="handleNameChange"
+        :model-value="quizName"
+      ></v-text-field>
+      <v-textarea
+        label="Description"
+        auto-grow
+        @change="handleDescriptionChange"
+        :disabled="loading"
+        :model-value="quizDescription"
+        rows="3"
+        clearable
+      ></v-textarea>
 
       <v-divider :thickness="3" class="pa-5" />
 
-      <v-text-field type="number" @change="handleDurationChange" :disabled="loading" label="Exam Time (minutes)"
-        :model-value="quizDurationMinutes"></v-text-field>
+      <v-text-field
+        type="number"
+        @change="handleDurationChange"
+        :disabled="loading"
+        label="Exam Time (minutes)"
+        :model-value="quizDurationMinutes"
+      ></v-text-field>
 
       <v-divider :thickness="3" class="pa-5" />
 
       <v-row>
         <v-col cols="12" sm="6">
-          <v-text-field :disabled="loading" label="Open Date" type="date" prepend-inner-icon="mdi-calendar-range"
-            @change="handleOpenDateChange" :model-value="quizStartDate"></v-text-field>
-          <v-text-field label="Open Time" :disabled="loading" type="time"
-            prepend-inner-icon="mdi-clock-time-eight-outline" @change="handleOpenTimeChange"
-            :model-value="quizStartTime"></v-text-field>
+          <v-text-field
+            :disabled="loading"
+            label="Open Date"
+            type="date"
+            prepend-inner-icon="mdi-calendar-range"
+            @change="handleOpenDateChange"
+            :model-value="quizStartDate"
+          ></v-text-field>
+          <v-text-field
+            label="Open Time"
+            :disabled="loading"
+            type="time"
+            prepend-inner-icon="mdi-clock-time-eight-outline"
+            @change="handleOpenTimeChange"
+            :model-value="quizStartTime"
+          ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6">
-          <v-text-field label="Close Date" :disabled="loading" type="date" :model-value="quizEndDate"
-            @change="handleCloseDateChange" prepend-inner-icon="mdi-calendar-range"></v-text-field>
-          <v-text-field label="Close Time" :disabled="loading" type="time"
-            prepend-inner-icon="mdi-clock-time-eight-outline" @change="handleCloseTimeChange"
-            :model-value="quizEndTime"></v-text-field>
+          <v-text-field
+            label="Close Date"
+            :disabled="loading"
+            type="date"
+            :model-value="quizEndDate"
+            @change="handleCloseDateChange"
+            prepend-inner-icon="mdi-calendar-range"
+          ></v-text-field>
+          <v-text-field
+            label="Close Time"
+            :disabled="loading"
+            type="time"
+            prepend-inner-icon="mdi-clock-time-eight-outline"
+            @change="handleCloseTimeChange"
+            :model-value="quizEndTime"
+          ></v-text-field>
         </v-col>
       </v-row>
 
       <v-container fluid class="px-0">
-        <v-btn size="large" :disabled="loading" color="blue-darken-2" @click="showEditQuestionPopUp">EDIT QUESTIONS<v-icon
-            end icon="mdi-cog"></v-icon></v-btn>
+        <v-btn size="large" :disabled="loading" color="blue-darken-2" @click="showEditQuestionPopUp"
+          >EDIT QUESTIONS<v-icon end icon="mdi-cog"></v-icon
+        ></v-btn>
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading">ENROLL STUDENTS TO EXAM
-          (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon></v-btn>
-        <v-file-input ref="csvUploadZone" class="d-none" type="file" accept=".csv" @change="handleCsvUpload" />
-        <v-btn @click="downloadUserQuizzes" block size="large" color="blue-darken-2" class="mt-3"
-          :disabled="loading">DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn>
-        <v-btn @click="deleteCurrentExam" block size="large" color="red" class="mt-3" :disabled="loading">
+        <v-btn @click="enrollUserIntoQuiz" block size="large" color="white" :disabled="loading"
+          >ENROLL STUDENTS TO EXAM (UPLOAD CSV)<v-icon end icon="mdi-paperclip"></v-icon
+        ></v-btn>
+        <v-file-input
+          ref="csvUploadZone"
+          class="d-none"
+          type="file"
+          accept=".csv"
+          @change="handleCsvUpload"
+        />
+        <v-btn
+          @click="downloadUserQuizzes"
+          block
+          size="large"
+          color="blue-darken-2"
+          class="mt-3"
+          :disabled="loading"
+          >DOWNLOAD USERS CSV OF CURRENT EXAM</v-btn
+        >
+        <v-btn
+          @click="deleteCurrentExam"
+          block
+          size="large"
+          color="red"
+          class="mt-3"
+          :disabled="loading"
+        >
           DELETE CURRENT EXAM
         </v-btn>
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
         <v-btn block size="large" :disabled="loading" color="secondary">GRADE EXAM</v-btn>
-        <v-btn block size="large" :disabled="loading" color="secondary" class="mt-3">RELEASE RESULTS</v-btn>
+        <v-btn block size="large" :disabled="loading" color="secondary" class="mt-3"
+          >RELEASE RESULTS</v-btn
+        >
       </v-container>
     </v-container>
   </v-container>
@@ -158,8 +238,8 @@ export default defineComponent({
       uploadedCsv: null,
       confirmationDialog: false,
       confirmationMessage: '',
-      confirmAction: () => { },
-      cancelAction: () => { }
+      confirmAction: () => {},
+      cancelAction: () => {}
     }
   },
 
