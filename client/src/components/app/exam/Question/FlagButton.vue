@@ -1,7 +1,13 @@
 <template>
   <v-tooltip left class="app-exam-question-flag-button">
     <template #activator="{ on, attrs }">
-      <v-btn icon :color="currentFlagged ? 'red' : undefined" v-bind="attrs" v-on="on" @click="toggle">
+      <v-btn
+        icon
+        :color="currentFlagged ? 'red' : undefined"
+        v-bind="attrs"
+        v-on="on"
+        @click="toggle"
+      >
         <v-icon>{{ currentFlagged ? 'mdi-flag' : 'mdi-flag-outline' }}</v-icon>
       </v-btn>
     </template>
@@ -70,11 +76,11 @@ export default {
       this.unresolvedQuestionPromises.push(mutation)
 
       mutation
-        .then(() => {
-        })
+        .then(() => {})
         .catch(() => {
           this.snackbarQueue.push(
-            `An error occured when ${this.flagged ? 'unflagging' : 'flagging'} Question ${this.questionNumber
+            `An error occured when ${this.flagged ? 'unflagging' : 'flagging'} Question ${
+              this.questionNumber
             }. Please check your connection and try again.`
           )
           this.$emit('ready-to-fetch')
