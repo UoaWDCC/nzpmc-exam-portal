@@ -505,12 +505,7 @@ const editOrderQuestionMutation: Resolver<
     return quiz
 }
 
-const gradeAllUserQuizzesForQuiz: Resolver<
-    Maybe<ResolverTypeWrapper<string>>,
-    unknown,
-    UserContext,
-    RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
-> = async (_parent, { quizID }, _context) => {
+const gradeAllUserQuizzesForQuiz: Resolver<ResolverTypeWrapper<string>, {}, unknown, RequireFields<MutationGradeAllUserQuizzesForQuizArgs, "quizID">> = async (_parent, { quizID }, _context) => {
     return ''
 }
 const enrolUsersInQuizMutation: Resolver<
@@ -631,6 +626,7 @@ const mutationResolvers: MutationResolvers = {
     editUserQuizQuestion: admin(editUserQuizQuestionMutation),
     enrolUsersInQuiz: admin(enrolUsersInQuizMutation),
     unenrolUsersFromQuiz: admin(unenrolUsersFromQuizMutation),
+    gradeAllUserQuizzesForQuiz: admin(gradeAllUserQuizzesForQuiz),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
     swapQuestion: admin(swapQuestionMutation),
