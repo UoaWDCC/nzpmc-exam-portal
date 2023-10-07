@@ -191,24 +191,26 @@ const gradeUserQuizzes = async (input: { quizID: string }) => {
             await Promise.all(gradingPromises)
         })
     } catch (error) {
-        console.error("Failed to grade user quizzes:", error)
+        console.error('Failed to grade user quizzes:', error)
     }
 }
 
-const gradeUserQuiz = (userQuestions?: UserQuizQuestion[], quizQuestions?: Question[]): number | null => {
+const gradeUserQuiz = (
+    userQuestions?: UserQuizQuestion[],
+    quizQuestions?: Question[],
+): number | null => {
     if (!userQuestions || !quizQuestions) {
         return null
     }
     let correctAnswerCount = 0
-    quizQuestions.forEach(question => {
-        if (userQuestions.find(q => q.answerID === question.answerID)) {
+    quizQuestions.forEach((question) => {
+        if (userQuestions.find((q) => q.answerID === question.answerID)) {
             correctAnswerCount++
         }
     })
     console.log(correctAnswerCount)
     return correctAnswerCount
 }
-
 
 const addUserQuiz = async (
     userID: string,
@@ -253,7 +255,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ; (await questions.find()).map((question) => {
+        ;(await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })

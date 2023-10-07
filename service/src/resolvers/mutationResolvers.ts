@@ -505,7 +505,12 @@ const editOrderQuestionMutation: Resolver<
     return quiz
 }
 
-const gradeAllUserQuizzesForQuiz: Resolver<ResolverTypeWrapper<string>, {}, unknown, RequireFields<MutationGradeAllUserQuizzesForQuizArgs, "quizID">> = async (_parent, { quizID }, _context) => {
+const gradeAllUserQuizzesForQuiz: Resolver<
+    ResolverTypeWrapper<string>,
+    {},
+    unknown,
+    RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
+> = async (_parent, { quizID }, _context) => {
     await gradeUserQuizzes({ quizID })
     return ''
 }
