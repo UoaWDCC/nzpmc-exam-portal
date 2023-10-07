@@ -171,13 +171,25 @@ const gradeUserQuizzes = async (input: { quizID: string }) => {
     const { quizID } = input
     runTransaction(async (tran) => {
         const UserQuizTranRepository = tran.getRepository(UserQuiz)
+        const QuizTranRepository = tran.getRepository(Quiz)
+        const quiz = await QuizTranRepository.findById(quizID)
+        const questions = await quiz.questions?.find()
+
         const userQuizzes = await UserQuizTranRepository.whereEqualTo(
             (q) => q.quizID,
             quizID,
         ).find()
         // TODO: grade all by comparing the answers with correct ones for quiz
-        userQuizzes.map((userQuiz) => {
-
+        userQuizzes.map(async (userQuiz) => {
+            let correctAnswers = 0
+            const userQuestions = await userQuiz.questions?.find()
+            questions?.map(question => {
+                if (userQuestions?.find(q => q.answerID === question.answerID)) {
+                    correctAnswers++
+                }
+            })
+            userQuiz.score = correctAnswers
+            UserQuizTranRepository.update(userQuiz)
         })
     })
 }
