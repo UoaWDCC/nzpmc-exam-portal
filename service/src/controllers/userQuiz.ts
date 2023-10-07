@@ -215,7 +215,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ;(await questions.find()).map((question) => {
+        ; (await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
@@ -244,7 +244,7 @@ const editUserQuiz = async (
         userQuiz.quizStart = quizStart ? quizStart : userQuiz.quizStart
         // default value false if document doesn't have the flags
         userQuiz.submitted = submitted ? submitted : userQuiz.submitted ?? false
-        userQuiz.released = released ? released : userQuiz.released ?? false
+        userQuiz.released = released ? released : userQuiz.released
         userQuiz.modified = new Date()
 
         tran.update(userQuiz)
