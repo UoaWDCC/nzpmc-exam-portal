@@ -4,9 +4,10 @@ import {
     packUserQuiz,
     packUserQuizzes,
 } from '../mappers/userQuizMapper'
-import { Quiz, UserQuiz } from '../models'
+import { Quiz, UserQuiz, UserQuizQuestion } from '../models'
 import { NotFoundError } from '../utils/errors'
 import { UserQuizModel } from '@nzpmc-exam-portal/common'
+import { Question } from '../models'
 import { addUserQuizQuestion } from './userQuizQuestion'
 import { getUser } from './user'
 import { firestore } from '../utils/firebase'
@@ -169,30 +170,45 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
 
 const gradeUserQuizzes = async (input: { quizID: string }) => {
     const { quizID } = input
-    runTransaction(async (tran) => {
-        const UserQuizTranRepository = tran.getRepository(UserQuiz)
-        const QuizTranRepository = tran.getRepository(Quiz)
-        const quiz = await QuizTranRepository.findById(quizID)
-        const questions = await quiz.questions?.find()
+    try {
+        await runTransaction(async (tran) => {
+            const UserQuizTranRepository = tran.getRepository(UserQuiz)
+            const QuizTranRepository = tran.getRepository(Quiz)
+            const quiz = await QuizTranRepository.findById(quizID)
+            const questions = await quiz.questions?.find()
 
-        const userQuizzes = await UserQuizTranRepository.whereEqualTo(
-            (q) => q.quizID,
-            quizID,
-        ).find()
-        // TODO: grade all by comparing the answers with correct ones for quiz
-        userQuizzes.map(async (userQuiz) => {
-            let correctAnswers = 0
-            const userQuestions = await userQuiz.questions?.find()
-            questions?.map(question => {
-                if (userQuestions?.find(q => q.answerID === question.answerID)) {
-                    correctAnswers++
-                }
+            const userQuizzes = await UserQuizTranRepository.whereEqualTo(
+                (q) => q.quizID,
+                quizID,
+            ).find()
+
+            const gradingPromises = userQuizzes.map(async (userQuiz) => {
+                const userQuestions = await userQuiz.questions?.find()
+                userQuiz.score = gradeUserQuiz(userQuestions, questions)
+                await UserQuizTranRepository.update(userQuiz)
             })
-            userQuiz.score = correctAnswers
-            UserQuizTranRepository.update(userQuiz)
+
+            await Promise.all(gradingPromises)
         })
-    })
+    } catch (error) {
+        console.error("Failed to grade user quizzes:", error)
+    }
 }
+
+const gradeUserQuiz = (userQuestions?: UserQuizQuestion[], quizQuestions?: Question[]): number | null => {
+    if (!userQuestions || !quizQuestions) {
+        return null
+    }
+    let correctAnswerCount = 0
+    quizQuestions.forEach(question => {
+        if (userQuestions.find(q => q.answerID === question.answerID)) {
+            correctAnswerCount++
+        }
+    })
+    console.log(correctAnswerCount)
+    return correctAnswerCount
+}
+
 
 const addUserQuiz = async (
     userID: string,
@@ -340,6 +356,7 @@ export {
     getUserQuizbyQuizID,
     getUserQuizzesByQuizID,
     getAllUserQuizzes,
+    gradeUserQuizzes,
     deleteUserQuiz,
     editUserQuiz,
     setUserQuizScore,

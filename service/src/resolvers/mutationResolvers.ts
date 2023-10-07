@@ -68,7 +68,7 @@ import {
     MutationUnenrolUsersFromQuizArgs,
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
-import { deleteUserQuiz } from '../controllers/userQuiz'
+import { deleteUserQuiz, gradeUserQuizzes } from '../controllers/userQuiz'
 import { setQuestionAnswer } from '../controllers/question'
 
 const addOptionMutation: Resolver<
@@ -506,6 +506,7 @@ const editOrderQuestionMutation: Resolver<
 }
 
 const gradeAllUserQuizzesForQuiz: Resolver<ResolverTypeWrapper<string>, {}, unknown, RequireFields<MutationGradeAllUserQuizzesForQuizArgs, "quizID">> = async (_parent, { quizID }, _context) => {
+    await gradeUserQuizzes({ quizID })
     return ''
 }
 const enrolUsersInQuizMutation: Resolver<
