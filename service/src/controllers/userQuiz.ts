@@ -206,7 +206,6 @@ const addUserQuiz = async (
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
     userQuiz.quizStart = null
-    userQuiz.submitted = false
 
     UserQuizRepository.create(userQuiz)
 
@@ -233,6 +232,7 @@ const editUserQuiz = async (
     openTime?: Date,
     closeTime?: Date,
     submitted?: boolean,
+    released?: boolean,
 ): Promise<UserQuizModel> => {
     await UserQuizRepository.runTransaction(async (tran) => {
         const userQuiz = await tran.findById(userQuizID)
@@ -244,8 +244,9 @@ const editUserQuiz = async (
         userQuiz.openTime = openTime ? openTime : userQuiz.openTime
         userQuiz.closeTime = closeTime ? closeTime : userQuiz.closeTime
         userQuiz.quizStart = quizStart ? quizStart : userQuiz.quizStart
-        // default value false if document doesn't have a submitted flag
+        // default value false if document doesn't have the flags
         userQuiz.submitted = submitted ? submitted : userQuiz.submitted ?? false
+        userQuiz.released = released ? released : userQuiz.released ?? false
         userQuiz.modified = new Date()
 
         tran.update(userQuiz)
