@@ -33,6 +33,7 @@ import {
     Image,
     Maybe,
     MutationAddOptionArgs,
+    MutationGradeAllUserQuizzesForQuizArgs,
     MutationAddQuestionArgs,
     MutationAddQuizArgs,
     MutationAddUserArgs,
@@ -496,6 +497,14 @@ const editOrderQuestionMutation: Resolver<
     return quiz
 }
 
+const gradeAllUserQuizzesForQuiz: Resolver<
+    Maybe<ResolverTypeWrapper<string>>,
+    unknown,
+    UserContext,
+    RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
+> = async (_parent, { quizID }, _context) => {
+    return ''
+}
 const enrolUsersInQuizMutation: Resolver<
     Array<ResolverTypeWrapper<UserQuizModel>>,
     unknown,
