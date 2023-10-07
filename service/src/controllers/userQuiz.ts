@@ -168,8 +168,18 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
 }
 
 const gradeUserQuizzes = async (input: { quizID: string }) => {
-    // TODO: find all usersquizzes under id
-    // TODO: grade all by comparing the answers with correct ones for quiz
+    const { quizID } = input
+    runTransaction(async (tran) => {
+        const UserQuizTranRepository = tran.getRepository(UserQuiz)
+        const userQuizzes = await UserQuizTranRepository.whereEqualTo(
+            (q) => q.quizID,
+            quizID,
+        ).find()
+        // TODO: grade all by comparing the answers with correct ones for quiz
+        userQuizzes.map((userQuiz) => {
+
+        })
+    })
 }
 
 const addUserQuiz = async (
@@ -215,7 +225,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ;(await questions.find()).map((question) => {
+        ; (await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
