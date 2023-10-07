@@ -202,6 +202,7 @@ import {
   deleteExam
 } from '@/utils/quizManagement'
 import type { QuizModel } from '@nzpmc-exam-portal/common'
+import { onMounted } from 'vue'
 
 export type UserQuiz = {
   user: User
@@ -253,6 +254,7 @@ export default defineComponent({
         } else {
           if (data) {
             this.quizzes = data.quizzes
+            onMounted(async () => {})
           }
         }
       },
@@ -312,6 +314,7 @@ export default defineComponent({
       this.loading = true
       this.$refs.csvUploadZone.reset()
       this.quizIdInput = id
+      this.$router.push({ query: { quizID: id } })
       await this.fetchQuizInfo()
       this.loading = false
     },
@@ -545,6 +548,12 @@ export default defineComponent({
         this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput
         this.popUpDialog = true
       }
+    }
+  },
+  mounted() {
+    const presetQuizID = this.$route.query.quizID
+    if (presetQuizID && typeof presetQuizID === 'string') {
+      this.updateQuizID(presetQuizID)
     }
   }
 })
