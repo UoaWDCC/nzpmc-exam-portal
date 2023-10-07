@@ -167,9 +167,7 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
     })
 }
 
-const gradeUserQuizzes = async (input: {
-    quizID: string
-}) => {
+const gradeUserQuizzes = async (input: { quizID: string }) => {
     // TODO: find all usersquizzes under id
     // TODO: grade all by comparing the answers with correct ones for quiz
 }
@@ -218,7 +216,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ; (await questions.find()).map((question) => {
+        ;(await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
