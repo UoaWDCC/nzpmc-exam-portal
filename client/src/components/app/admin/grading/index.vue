@@ -9,11 +9,22 @@
 }
 </style>
 <template>
-  <v-container class="app-admin-grading" fluid></v-container>
+  <v-container class="app-admin-grading" fluid v-if="isAdmin">
+    <v-btn color="secondary">Back</v-btn>
+  </v-container>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 export default defineComponent({
-  name: 'AppGrading'
+  name: 'AppGrading',
+  mixins: [quizEditingMixin],
+  mounted() {
+    if (!this.isAdmin) {
+      this.$router.push({
+        name: 'AppExams'
+      })
+    }
+  }
 })
 </script>
