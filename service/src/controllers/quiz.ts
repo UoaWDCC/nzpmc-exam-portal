@@ -1,6 +1,6 @@
-import { getRepository } from 'fireorm'
+import { getRepository, runTransaction } from 'fireorm'
 import { packQuiz, packQuizzes } from '../mappers/quizMapper'
-import { Quiz } from '../models'
+import { Quiz, UserQuiz } from '../models'
 import * as Schema from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
 
@@ -34,6 +34,34 @@ const addQuiz = async (
     const newQuiz = await QuizRepository.create(quiz)
 
     return await getQuiz(newQuiz.id)
+}
+
+const releaseQuiz = async (input: { quizID: string }) => {
+    const { quizID } = input
+    try {
+        await runTransaction(async (tran) => {
+            const UserQuizTranRepository = tran.getRepository(UserQuiz)
+            const QuizTranRepository = tran.getRepository(Quiz)
+            const quiz = await QuizTranRepository.findById(quizID)
+
+            const userQuizzes = await UserQuizTranRepository.whereEqualTo(
+                (q) => q.quizID,
+                quizID,
+            ).find()
+
+            const releasingPromises = userQuizzes.map(async (userQuiz) => {
+                userQuiz.released = true
+                await UserQuizTranRepository.update(userQuiz)
+            })
+
+            await Promise.all(releasingPromises)
+
+            quiz.released = true
+            await QuizTranRepository.update(quiz)
+        })
+    } catch (error) {
+        console.error('Failed to release user quizzes:', error)
+    }
 }
 
 const editQuiz = async (
@@ -72,4 +100,4 @@ const deleteQuiz = async (id: string): Promise<void> => {
     })
 }
 
-export { getAllQuizzes, getQuiz, addQuiz, editQuiz, deleteQuiz }
+export { getAllQuizzes, getQuiz, addQuiz, editQuiz, deleteQuiz, releaseQuiz }

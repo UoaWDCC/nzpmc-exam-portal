@@ -14,6 +14,7 @@ import {
     editUser,
     editUserQuiz,
     editUserQuizQuestion,
+    releaseQuiz,
     getUserQuiz,
     submitUserQuizQuestions,
     getUserAnswers,
@@ -34,6 +35,7 @@ import {
     Maybe,
     MutationAddOptionArgs,
     MutationGradeAllUserQuizzesForQuizArgs,
+    MutationReleaseAllUserQuizResultsForQuizArgs,
     MutationAddQuestionArgs,
     MutationAddQuizArgs,
     MutationAddUserArgs,
@@ -514,6 +516,15 @@ const gradeAllUserQuizzesForQuiz: Resolver<
     await gradeUserQuizzes({ quizID })
     return quizID
 }
+const releaseAllUserQuizResultsForQuiz: Resolver<
+    ResolverTypeWrapper<string>,
+    {},
+    unknown,
+    RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
+> = async (_parent, { quizID }, _context) => {
+    await releaseQuiz({ quizID })
+    return quizID
+}
 const enrolUsersInQuizMutation: Resolver<
     Array<ResolverTypeWrapper<UserQuizModel>>,
     unknown,
@@ -633,6 +644,7 @@ const mutationResolvers: MutationResolvers = {
     enrolUsersInQuiz: admin(enrolUsersInQuizMutation),
     unenrolUsersFromQuiz: admin(unenrolUsersFromQuizMutation),
     gradeAllUserQuizzesForQuiz: admin(gradeAllUserQuizzesForQuiz),
+    releaseAllUserQuizResultsForQuiz: admin(releaseAllUserQuizResultsForQuiz),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
     swapQuestion: admin(swapQuestionMutation),

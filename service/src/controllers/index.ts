@@ -13,7 +13,14 @@ import {
     editQuestionOption,
     deleteQuestionOption,
 } from './option'
-import { getAllQuizzes, getQuiz, addQuiz, editQuiz, deleteQuiz } from './quiz'
+import {
+    getAllQuizzes,
+    getQuiz,
+    addQuiz,
+    editQuiz,
+    deleteQuiz,
+    releaseQuiz,
+} from './quiz'
 import {
     getUser,
     getAllUsers,
@@ -70,6 +77,7 @@ export {
     editUserQuizQuestion,
     getOptionByID,
     getUserQuizQuestionOptions,
+    releaseQuiz,
     getUserQuizQuestionAnswer,
     addQuiz,
     getUserAnswers,
