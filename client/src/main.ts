@@ -19,7 +19,7 @@ import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
 const customTheme = {
   dark: false,
   colors: {
-    primary: '#03a9f4',
+    primary: '#151e33',
     secondary: '#ff9e01',
     accent: '#3f51b5',
     error: '#f44336',

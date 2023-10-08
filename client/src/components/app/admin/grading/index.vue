@@ -15,6 +15,8 @@
       @click="$router.push({ name: 'AppAdmin', query: { quizID: $route.query.quizID } })"
       >Back</v-btn
     >
+    <v-btn color="secondary">Grade Exam</v-btn>
+    <v-btn color="primary">Release Results</v-btn>
   </v-container>
 </template>
 <script lang="ts">
