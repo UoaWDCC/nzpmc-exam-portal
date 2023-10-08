@@ -71,7 +71,6 @@ export default {
       examTimeUsed: '',
       numberOfQuestions: 0,
       correctAnswers: 0,
-      refetchNeeded: false,
       loading: true
     }
   },
@@ -87,9 +86,6 @@ export default {
   apollo: {
     userQuiz: {
       query: UserQuizQuery,
-      skip() {
-        return !this.refetchNeeded
-      },
       variables() {
         return {
           quizID: this.$route.params.quizID // Pass the quizID parameter
@@ -106,6 +102,7 @@ export default {
               JSON.stringify(this.userQuiz)
             )
           }
+          this.updateExamInfo()
         }
       }
     }
@@ -146,10 +143,8 @@ export default {
           this.correctAnswers = this.userQuiz.score || 0
         }
         this.loading = false
-      } else {
-        //have to refetch info using apollo
-        this.refetchNeeded = true
       }
+      this.$apollo.queries.userQuiz.refetch()
     },
 
     convertToNZST(isoDateString: string) {
