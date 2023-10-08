@@ -101,7 +101,6 @@ export default {
         } else {
           if (data) {
             this.userQuiz = data.userQuiz
-            console.log(this.userQuiz)
             sessionStorage.setItem(
               `${this.$route.params.quizID}-pre-exam`,
               JSON.stringify(this.userQuiz)
@@ -138,8 +137,6 @@ export default {
           this.examCompleted = this.userQuiz < new Date().toISOString() ? true : false
         }
         this.examMarked = this.userQuiz.released && this.userQuiz.score !== null ? true : false
-        console.log(Object.keys(this.userQuiz))
-        console.log(this.userQuiz.score)
 
         if (this.examCompleted) {
           const hours = Math.floor(this.userQuiz.duration / 60)
