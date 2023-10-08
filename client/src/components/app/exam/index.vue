@@ -170,7 +170,7 @@ export default defineComponent({
   watch: {
     'data.score': function (newVal) {
       // this needs to be changed to an isMarked boolean
-      if (newVal == null) {
+      if (newVal === null) {
         this.redirectToExams()
       }
       if (newVal > 0) {
