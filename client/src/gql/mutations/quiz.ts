@@ -22,3 +22,8 @@ export const DeleteQuizMutation = gql`
     }
   }
 `
+export const ReleaseAllUserQuizResultsForQuiz = gql`
+  mutation ReleaseAllUserQuizResultsForQuiz($quizID: ID!) {
+    releaseAllUserQuizResultsForQuiz(quizID: $quizID)
+  }
+`

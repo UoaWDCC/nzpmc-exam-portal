@@ -16,7 +16,7 @@
       >Back</v-btn
     >
     <v-btn color="secondary" @click="gradeAllQuizzes()">Grade Exam</v-btn>
-    <v-btn color="primary">Release Results</v-btn>
+    <v-btn color="primary" @click="releaseAllQuizzes()">Release Results</v-btn>
     <v-table>
       <thead>
         <tr>
@@ -42,6 +42,7 @@ import { defineComponent } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
 import { UserQuizzesByQuizIDQuery } from '@/gql/queries/userQuiz'
 import { GradeAllUserQuizzesForQuizMutation } from '@/gql/mutations/userQuiz'
+import { ReleaseAllUserQuizResultsForQuiz } from '@/gql/mutations/quiz'
 import type { UserQuiz } from '@nzpmc-exam-portal/common'
 export default defineComponent({
   name: 'AppGrading',
@@ -96,6 +97,14 @@ export default defineComponent({
         }
       })
       this.$apollo.queries.userQuizzesByQuizID.refetch()
+    },
+    async releaseAllQuizzes() {
+      await this.$apollo.mutate({
+        mutation: ReleaseAllUserQuizResultsForQuiz,
+        variables: {
+          quizID: this.quizID
+        }
+      })
     }
   },
   created() {
