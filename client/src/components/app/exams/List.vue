@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     selectExam(exam: any) {
-      localStorage.setItem(`${exam.id}-pre-exam`, JSON.stringify(exam))
+      sessionStorage.setItem(`${exam.id}-pre-exam`, JSON.stringify(exam))
     }
   },
 

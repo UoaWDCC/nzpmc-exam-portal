@@ -103,7 +103,6 @@ export default {
         } else {
           if (data) {
             this.userQuiz = data.userQuiz
-            console.log(this.userQuiz)
           }
         }
       },
@@ -139,12 +138,12 @@ export default {
   methods: {
     updateExamInfo() {
       if (!this.exam) {
-        const cachedExam = localStorage.getItem(`${this.$route.params.quizID}-pre-exam`)
+        const cachedExam = sessionStorage.getItem(`${this.$route.params.quizID}-pre-exam`)
         if (cachedExam) {
           this.exam = JSON.parse(cachedExam)
         }
       }
-      if (this.exam) {
+      if (this.exam && this.userQuiz) {
         this.examName = this.exam.name || ''
         this.examDescription = this.exam.description || ''
         this.examOpenTime = this.convertToNZST(this.exam.openTime) || ''
@@ -161,7 +160,7 @@ export default {
           this.examCompleted = this.exam.closeTime < new Date().toISOString() ? true : false
         }
         // this should be later changed to check if the exam has been marked
-        this.examMarked = this.exam.released && this.exam.score !== null
+        this.examMarked = this.userQuiz.released && this.userQuiz.score !== null
         // this.examMarked = this.exam.score
 
         if (this.examCompleted) {
@@ -169,7 +168,7 @@ export default {
           const minutes = this.exam.duration % 60
           this.examTimeUsed = `${hours} hours, ${minutes} minutes` // this might be using the wrong duration?
           this.numberOfQuestions = this.exam.questions.length || 0
-          this.correctAnswers = this.exam.score || 0
+          this.correctAnswers = this.userQuiz.score || 0
         }
         this.loading = false
       } else {
