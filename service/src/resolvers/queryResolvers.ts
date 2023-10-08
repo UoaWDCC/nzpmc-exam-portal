@@ -7,7 +7,7 @@ import {
     getUserQuizzes,
     getUsersPagination,
 } from '../controllers'
-import { AuthenticationError } from '../utils/errors'
+import { AdminAuthenticationError, AuthenticationError } from '../utils/errors'
 import { bucket, UserContext } from '../utils/firebase'
 import { admin, user } from './helpers/auth'
 import {
@@ -99,7 +99,15 @@ const quizQuery: Resolver<
     UserContext,
     RequireFields<QueryQuizArgs, 'quizID'>
 > = (_parents, { quizID }, _context) => {
-    return getQuiz(quizID)
+    const quiz = getQuiz(quizID).then((quiz) => {
+        if (!quiz.released) {
+            if (!_context.user!.admin) {
+                throw new AdminAuthenticationError()
+            }
+        }
+        return quiz
+    })
+    return quiz
 }
 
 const quizzesQuery: Resolver<

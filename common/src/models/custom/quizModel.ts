@@ -8,6 +8,7 @@ export type QuizModel = {
   id: string;
   modified: Date;
   name: string;
+  released?: boolean;
   questions: QuestionModel[];
   startTime: Date;
 };

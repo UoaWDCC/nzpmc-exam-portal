@@ -15,7 +15,7 @@
       @click="$router.push({ name: 'AppAdmin', query: { quizID: $route.query.quizID } })"
       >Back</v-btn
     >
-    <v-btn color="secondary">Grade Exam</v-btn>
+    <v-btn color="secondary" @click="gradeAllQuizzes()">Grade Exam</v-btn>
     <v-btn color="primary">Release Results</v-btn>
     <v-table>
       <thead>
@@ -41,6 +41,7 @@
 import { defineComponent } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
 import { UserQuizzesByQuizIDQuery } from '@/gql/queries/userQuiz'
+import { GradeAllUserQuizzesForQuizMutation } from '@/gql/mutations/userQuiz'
 import type { UserQuiz } from '@nzpmc-exam-portal/common'
 export default defineComponent({
   name: 'AppGrading',
@@ -61,9 +62,9 @@ export default defineComponent({
     }
   },
   apollo: {
-    UserQuizzes: {
+    userQuizzesByQuizID: {
       skip() {
-        return !this.quizID || this.userQuizzes.length !== 0
+        return !this.quizID
       },
       query: UserQuizzesByQuizIDQuery,
       variables() {
@@ -74,13 +75,27 @@ export default defineComponent({
       result({ data, error }) {
         if (error) {
           console.error(error)
+          this.$router.push({ name: 'AppAdmin' })
         } else {
           if (data) {
             this.userQuizzes = data.userQuizzesByQuizID
             sessionStorage.setItem(this.cacheKey, JSON.stringify(this.userQuizzes))
           }
         }
-      }
+      },
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true
+    }
+  },
+  methods: {
+    async gradeAllQuizzes() {
+      await this.$apollo.mutate({
+        mutation: GradeAllUserQuizzesForQuizMutation,
+        variables: {
+          quizID: this.quizID
+        }
+      })
+      this.$apollo.queries.userQuizzesByQuizID.refetch()
     }
   },
   created() {

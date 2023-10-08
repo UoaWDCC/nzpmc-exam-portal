@@ -39,6 +39,7 @@ type Quiz {
     question(id: ID!): Question
     questions: [Question]
     openTime: DateTime
+    released: Boolean
     closeTime: DateTime
     created: DateTime
     modified: DateTime

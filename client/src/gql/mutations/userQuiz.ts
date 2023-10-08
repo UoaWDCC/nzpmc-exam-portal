@@ -50,7 +50,7 @@ export const UnenrolUsersFromQuizMutation = gql`
   }
 `
 export const GradeAllUserQuizzesForQuizMutation = gql`
-  mutation GradeAllUserQuizzesForQuiz($quizId: ID!) {
-    gradeAllUserQuizzesForQuiz(quizID: $quizId)
+  mutation GradeAllUserQuizzesForQuiz($quizID: ID!) {
+    gradeAllUserQuizzesForQuiz(quizID: $quizID)
   }
 `
