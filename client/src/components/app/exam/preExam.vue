@@ -141,6 +141,7 @@ export default {
         const cachedExam = sessionStorage.getItem(`${this.$route.params.quizID}-pre-exam`)
         if (cachedExam) {
           this.exam = JSON.parse(cachedExam)
+          this.userQuiz = JSON.parse(cachedExam)
         }
       }
       if (this.exam && this.userQuiz) {
