@@ -45,6 +45,14 @@ import type { UserQuiz, UserQuizModel } from '@nzpmc-exam-portal/common'
 export default defineComponent({
   name: 'AppGrading',
   mixins: [quizEditingMixin],
+  computed: {
+    quizID() {
+      return this.route.query.quizID
+    },
+    cacheKey() {
+      return `${this.quizID}-user-quizzes`
+    }
+  },
   data(): {
     userQuizzes: UserQuiz[]
   } {
@@ -55,7 +63,7 @@ export default defineComponent({
   apollo: {
     UserQuizzes: {
       skip() {
-        return !this.$route.query.quizID
+        return !this.quizID || this.userQuizzes.length !== 0
       },
       query: UserQuizzesByQuizIDQuery,
       variables() {
@@ -69,9 +77,16 @@ export default defineComponent({
         } else {
           if (data) {
             this.userQuizzes = data.userQuizzesByQuizID
+            sessionStorage.setItem(this.cacheKey, JSON.stringify(this.userQuizzes))
           }
         }
       }
+    }
+  },
+  created() {
+    const cachedUserQuizzes = sessionStorage.getItem(this.cacheKey)
+    if (cachedUserQuizzes) {
+      this.userQuizzes = JSON.parse(cachedUserQuizzes)
     }
   },
   mounted() {
