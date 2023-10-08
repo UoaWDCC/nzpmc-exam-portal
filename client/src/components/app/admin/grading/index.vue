@@ -3,7 +3,7 @@ body {
   background-color: blue;
 }
 .app-admin-grading {
-  background-color: #DCDCDC;
+  background-color: #dcdcdc;
   padding: 45px 5vw;
 }
 
@@ -58,36 +58,49 @@ body {
 #table {
   margin-top: -22px;
 }
-
 </style>
 
 <template>
   <v-container class="app-admin-grading" fluid v-if="isAdmin">
-
     <v-btn
-      icon="mdi-arrow-left" variant="tonal" id="back-btn"
+      icon="mdi-arrow-left"
+      variant="tonal"
+      id="back-btn"
       @click="$router.push({ name: 'AppAdmin', query: { quizID: $route.query.quizID } })"
-      ></v-btn>
+    ></v-btn>
 
-    <h1 style="letter-spacing: 0.15rem;">
-      EXAM: <span class="font-weight-bold" style="font-size: 24px">{{ quiz ? quiz.name : '' }}</span>
+    <h1 style="letter-spacing: 0.15rem">
+      EXAM:
+      <span class="font-weight-bold" style="font-size: 24px">{{ quiz ? quiz.name : '' }}</span>
     </h1>
-    <h4  style="letter-spacing: 0.15rem;" class="font-weight-regular">
-      Release Status: <span class="font-weight-bold text-decoration-underline" :class="{'text-success': quiz && quiz.released, 'text-error': !quiz || !quiz.released}">{{ this.quiz && this.quiz.released ? 'Released' : 'Unreleased' }}</span>
+    <h4 style="letter-spacing: 0.15rem" class="font-weight-regular">
+      Release Status:
+      <span
+        class="font-weight-bold text-decoration-underline"
+        :class="{ 'text-success': quiz && quiz.released, 'text-error': !quiz || !quiz.released }"
+        >{{ this.quiz && this.quiz.released ? 'Released' : 'Unreleased' }}</span
+      >
     </h4>
 
     <div id="metrics-section">
       <div id="left-metrics-section">
-        <v-card class="card" style="height: 100%"><v-card-item class="d-flex">
-          <h4>Average Grade:</h4>
-          <h1>{{ averageQuizScore }}</h1></v-card-item>
+        <v-card class="card" style="height: 100%"
+          ><v-card-item class="d-flex">
+            <h4>Average Grade:</h4>
+            <h1>{{ averageQuizScore }}</h1></v-card-item
+          >
         </v-card>
         <div id="metric-section-buttons">
           <v-btn size="x-large" color="secondary" @click="gradeAllQuizzes()">Grade Exam</v-btn>
           <v-btn size="x-large" color="primary" @click="releaseAllQuizzes()">Release Results</v-btn>
         </div>
       </div>
-      <v-card class="card"><v-card-item>Some metrics: idk what to put here so empty for now lol. ig we can decide lata</v-card-item></v-card>
+      <v-card class="card"
+        ><v-card-item
+          >Some metrics: idk what to put here so empty for now lol. ig we can decide
+          lata</v-card-item
+        ></v-card
+      >
     </div>
 
     <div>
@@ -138,24 +151,25 @@ export default defineComponent({
     },
     filteredUserQuizzes() {
       if (!this.searchQuery) {
-        return this.userQuizzes;
+        return this.userQuizzes
       }
 
-      const query = this.searchQuery.toLowerCase();
+      const query = this.searchQuery.toLowerCase()
 
-      return this.userQuizzes.filter(userQuiz => 
-        userQuiz.user?.displayName?.toLowerCase().includes(query) ||
-        userQuiz.user?.email?.toLowerCase().includes(query) ||
-        (userQuiz.score?.toString() ?? '').includes(query)
-      );
+      return this.userQuizzes.filter(
+        (userQuiz) =>
+          userQuiz.user?.displayName?.toLowerCase().includes(query) ||
+          userQuiz.user?.email?.toLowerCase().includes(query) ||
+          (userQuiz.score?.toString() ?? '').includes(query)
+      )
     },
     averageQuizScore() {
       console.log(this.quiz?.questions?.length)
       if (!this.userQuizzes) {
         return 0
       }
-      
-      const scores = this.userQuizzes.map(userQuiz => userQuiz.score)
+
+      const scores = this.userQuizzes.map((userQuiz) => userQuiz.score)
       const total = scores.reduce((a, b) => a + b, 0)
       const averageScore = total / scores.length
       const averagePercentage = (averageScore / this.quiz?.questions?.length) * 100
