@@ -512,7 +512,7 @@ const gradeAllUserQuizzesForQuiz: Resolver<
     RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
 > = async (_parent, { quizID }, _context) => {
     await gradeUserQuizzes({ quizID })
-    return ''
+    return quizID
 }
 const enrolUsersInQuizMutation: Resolver<
     Array<ResolverTypeWrapper<UserQuizModel>>,

@@ -41,7 +41,7 @@
 import { defineComponent } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
 import { UserQuizzesByQuizIDQuery } from '@/gql/queries/userQuiz'
-import type { UserQuiz, UserQuizModel } from '@nzpmc-exam-portal/common'
+import type { UserQuiz } from '@nzpmc-exam-portal/common'
 export default defineComponent({
   name: 'AppGrading',
   mixins: [quizEditingMixin],
