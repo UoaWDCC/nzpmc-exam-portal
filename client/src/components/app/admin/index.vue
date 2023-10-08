@@ -20,9 +20,7 @@
         </v-tabs>
       </v-container>
 
-      <v-container>
-        <component :is="currentTabComponent" />
-      </v-container>
+      <v-container> <component :is="currentTabComponent" /> </v-container>
     </v-container>
     <v-container v-else>Not Admin</v-container>
   </v-container>

@@ -175,9 +175,16 @@
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn block size="large" :disabled="loading" color="secondary">GRADE EXAM</v-btn>
-        <v-btn block size="large" :disabled="loading" color="secondary" class="mt-3"
-          >RELEASE RESULTS</v-btn
+        <v-btn
+          block
+          size="large"
+          :disabled="loading"
+          @click="
+            quizIdInput !== '' &&
+              $router.push({ name: 'AppGrading', query: { quizID: quizIdInput } })
+          "
+          color="secondary"
+          >Manage Grades</v-btn
         >
       </v-container>
     </v-container>
