@@ -508,8 +508,8 @@ const editOrderQuestionMutation: Resolver<
 
 const gradeAllUserQuizzesForQuiz: Resolver<
     ResolverTypeWrapper<string>,
-    {},
     unknown,
+    UserContext,
     RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
 > = async (_parent, { quizID }, _context) => {
     await gradeUserQuizzes({ quizID })
@@ -517,8 +517,8 @@ const gradeAllUserQuizzesForQuiz: Resolver<
 }
 const releaseAllUserQuizResultsForQuiz: Resolver<
     ResolverTypeWrapper<string>,
-    {},
     unknown,
+    UserContext,
     RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
 > = async (_parent, { quizID }, _context) => {
     await releaseQuiz({ quizID })

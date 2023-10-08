@@ -101,7 +101,7 @@ const quizQuery: Resolver<
 > = (_parents, { quizID }, _context) => {
     const quiz = getQuiz(quizID).then((quiz) => {
         if (!quiz.released) {
-            if (!_context.user!.admin) {
+            if (!_context.user?.admin) {
                 throw new AdminAuthenticationError()
             }
         }
