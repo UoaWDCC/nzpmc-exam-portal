@@ -22,9 +22,32 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
+import { UserQuizzesByQuizIDQuery } from '@/gql/queries/userQuiz'
 export default defineComponent({
   name: 'AppGrading',
   mixins: [quizEditingMixin],
+  apollo: {
+    UserQuizzes: {
+      skip() {
+        return !this.$route.query.quizID
+      },
+      query: UserQuizzesByQuizIDQuery,
+      variables() {
+        return {
+          quizID: this.$route.query.quizID
+        }
+      },
+      result({ data, error }) {
+        if (error) {
+          console.error(error)
+        } else {
+          if (data) {
+            console.log(data)
+          }
+        }
+      }
+    }
+  },
   mounted() {
     if (!this.isAdmin) {
       this.$router.push({

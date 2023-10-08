@@ -60,8 +60,8 @@ export const UserQuizFullQuestionQuery = gql`
 `
 
 export const UserQuizzesByQuizIDQuery = gql`
-  query UserQuizzesByQuizID($userQuizzesByQuizIdQuizId2: ID!) {
-    userQuizzesByQuizID(quizID: $userQuizzesByQuizIdQuizId2) {
+  query UserQuizzesByQuizID($quizID: ID!) {
+    userQuizzesByQuizID(quizID: $quizID) {
       id
       user {
         displayName
