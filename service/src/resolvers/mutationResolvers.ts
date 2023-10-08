@@ -35,7 +35,6 @@ import {
     Maybe,
     MutationAddOptionArgs,
     MutationGradeAllUserQuizzesForQuizArgs,
-    MutationReleaseAllUserQuizResultsForQuizArgs,
     MutationAddQuestionArgs,
     MutationAddQuizArgs,
     MutationAddUserArgs,
