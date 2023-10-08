@@ -58,3 +58,21 @@ export const UserQuizFullQuestionQuery = gql`
   ${UserQuizFullQuestionFragment}
   ${UserQuizOptionFragment}
 `
+
+export const UserQuizzesByQuizIDQuery = gql`
+  query UserQuizzesByQuizID($userQuizzesByQuizIdQuizId2: ID!) {
+    userQuizzesByQuizID(quizID: $userQuizzesByQuizIdQuizId2) {
+      id
+      user {
+        displayName
+        email
+        firstName
+        lastName
+        id
+        yearLevel
+      }
+      submitted
+      score
+    }
+  }
+`
