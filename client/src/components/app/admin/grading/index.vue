@@ -10,6 +10,10 @@
 </style>
 <template>
   <v-container class="app-admin-grading" fluid v-if="isAdmin">
+    <h1>
+      {{ this.quiz ? this.quiz.name : '' }} -
+      {{ this.quiz && this.quiz.released ? 'Released' : 'Unreleased' }}
+    </h1>
     <v-btn
       color="secondary"
       @click="$router.push({ name: 'AppAdmin', query: { quizID: $route.query.quizID } })"
@@ -43,7 +47,8 @@ import quizEditingMixin from '@/utils/quizEditingMixin'
 import { UserQuizzesByQuizIDQuery } from '@/gql/queries/userQuiz'
 import { GradeAllUserQuizzesForQuizMutation } from '@/gql/mutations/userQuiz'
 import { ReleaseAllUserQuizResultsForQuiz } from '@/gql/mutations/quiz'
-import type { UserQuiz } from '@nzpmc-exam-portal/common'
+import type { Quiz, UserQuiz } from '@nzpmc-exam-portal/common'
+import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 export default defineComponent({
   name: 'AppGrading',
   mixins: [quizEditingMixin],
@@ -56,13 +61,35 @@ export default defineComponent({
     }
   },
   data(): {
+    quiz: Quiz | undefined
     userQuizzes: UserQuiz[]
   } {
     return {
+      quiz: undefined,
       userQuizzes: []
     }
   },
   apollo: {
+    quiz: {
+      query: GetQuizInfoQuery,
+      variables() {
+        return {
+          quizId: this.quizID
+        }
+      },
+      result({ data, error }) {
+        if (error) {
+          console.error(error)
+          this.$router.push({ name: 'AppAdmin' })
+        } else {
+          if (data) {
+            this.quiz = data.quiz
+            localStorage.setItem(`${this.quizID}`, JSON.stringify(this.quiz))
+          }
+        }
+      },
+      fetchPolicy: 'network-only'
+    },
     userQuizzesByQuizID: {
       skip() {
         return !this.quizID
@@ -70,7 +97,7 @@ export default defineComponent({
       query: UserQuizzesByQuizIDQuery,
       variables() {
         return {
-          quizID: this.$route.query.quizID
+          quizID: this.quizID
         }
       },
       result({ data, error }) {
@@ -105,6 +132,7 @@ export default defineComponent({
           quizID: this.quizID
         }
       })
+      this.$apollo.queries.quiz.refetch()
     }
   },
   created() {
@@ -118,6 +146,10 @@ export default defineComponent({
       this.$router.push({
         name: 'AppExams'
       })
+    }
+    const cachedQuizInfo = localStorage.getItem(`${this.quizID}`)
+    if (cachedQuizInfo) {
+      this.quiz = JSON.parse(cachedQuizInfo)
     }
   }
 })

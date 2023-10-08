@@ -555,6 +555,10 @@ export default defineComponent({
         this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput
         this.popUpDialog = true
       }
+    },
+    goToGradingScreen() {
+      localStorage.setItem(`${this.quizIdInput}`, JSON.stringify(this.selectedQuiz))
+      this.$router.push({ name: 'AppGrading', query: { quizID: this.quizIdInput } })
     }
   },
   mounted() {
