@@ -161,7 +161,7 @@ export default {
           this.examCompleted = this.exam.closeTime < new Date().toISOString() ? true : false
         }
         // this should be later changed to check if the exam has been marked
-        this.examMarked = this.exam.score > 0 ? true : false
+        this.examMarked = this.exam.released && this.exam.score !== null
         // this.examMarked = this.exam.score
 
         if (this.examCompleted) {
@@ -170,9 +170,6 @@ export default {
           this.examTimeUsed = `${hours} hours, ${minutes} minutes` // this might be using the wrong duration?
           this.numberOfQuestions = this.exam.questions.length || 0
           this.correctAnswers = this.exam.score || 0
-          if (this.exam.score != null) {
-            this.examMarked = true
-          }
         }
         this.loading = false
       } else {

@@ -24,6 +24,7 @@ export const UserQuizQuery = gql`
   query UserQuizQuery($quizID: ID!) {
     userQuiz(quizID: $quizID) {
       ...UserQuizFragment
+      released
       questions {
         ...UserQuizFullQuestionFragment
         options {
