@@ -9,6 +9,7 @@ import {
 export const UserQuizzesQuery = gql`
   query UserQuizzesQuery {
     userQuizzes {
+      released
       submitted
       ...UserQuizFragment
       questions {

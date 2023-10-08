@@ -48,7 +48,6 @@
   </div>
 </template>
 <script lang="ts">
-import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 import { UserQuizQuery } from '@/gql/queries/userQuiz'
 import AppExamQuestionLoader from './Question/Loader.vue'
 
@@ -60,7 +59,7 @@ export default {
   data(): any {
     return {
       // TODO: get this information from the exam
-      exam: null,
+      userQuiz: null,
       examName: '',
       examDescription: '',
       examOpenTime: '',
@@ -73,7 +72,6 @@ export default {
       numberOfQuestions: 0,
       correctAnswers: 0,
       refetchNeeded: false,
-      userQuiz: null,
       loading: true
     }
   },
@@ -103,32 +101,14 @@ export default {
         } else {
           if (data) {
             this.userQuiz = data.userQuiz
+            console.log(this.userQuiz)
+            sessionStorage.setItem(
+              `${this.$route.params.quizID}-pre-exam`,
+              JSON.stringify(this.userQuiz)
+            )
           }
         }
-      },
-      notifyOnNetworkStatusChange: true
-    },
-
-    quiz: {
-      query: GetQuizInfoQuery,
-      skip() {
-        return !this.userQuiz
-      },
-      variables() {
-        return {
-          quizId: this.userQuiz.quizID // Pass the quizID parameter
-        }
-      },
-      result({ data, error }) {
-        if (error) {
-          this.error = error.message
-        }
-        if (data) {
-          this.exam = data.quiz
-          this.updateExamInfo()
-        }
-      },
-      notifyOnNetworkStatusChange: true
+      }
     }
   },
   mounted() {
@@ -137,38 +117,35 @@ export default {
 
   methods: {
     updateExamInfo() {
-      if (!this.exam) {
+      if (!this.userQuiz) {
         const cachedExam = sessionStorage.getItem(`${this.$route.params.quizID}-pre-exam`)
         if (cachedExam) {
-          this.exam = JSON.parse(cachedExam)
           this.userQuiz = JSON.parse(cachedExam)
         }
       }
-      if (this.exam && this.userQuiz) {
-        this.examName = this.exam.name || ''
-        this.examDescription = this.exam.description || ''
-        this.examOpenTime = this.convertToNZST(this.exam.openTime) || ''
-        this.examCloseTime = this.convertToNZST(this.exam.closeTime) || ''
-        this.examDuration = `${this.exam.duration} minutes` || ''
+      if (this.userQuiz) {
+        this.examName = this.userQuiz.name || ''
+        this.examDescription = this.userQuiz.description || ''
+        this.examOpenTime = this.convertToNZST(this.userQuiz.openTime) || ''
+        this.examCloseTime = this.convertToNZST(this.userQuiz.closeTime) || ''
+        this.examDuration = `${this.userQuiz.duration} minutes` || ''
         try {
           this.examCompleted =
-            this.exam.submitted ||
-            this.userQuiz.submitted ||
-            this.exam.closeTime < new Date().toISOString()
+            this.userQuiz.submitted || this.userQuiz.closeTime < new Date().toISOString()
               ? true
               : false
         } catch {
-          this.examCompleted = this.exam.closeTime < new Date().toISOString() ? true : false
+          this.examCompleted = this.userQuiz < new Date().toISOString() ? true : false
         }
-        // this should be later changed to check if the exam has been marked
-        this.examMarked = this.userQuiz.released && this.userQuiz.score !== null
-        // this.examMarked = this.exam.score
+        this.examMarked = this.userQuiz.released && this.userQuiz.score !== null ? true : false
+        console.log(Object.keys(this.userQuiz))
+        console.log(this.userQuiz.score)
 
         if (this.examCompleted) {
-          const hours = Math.floor(this.exam.duration / 60)
-          const minutes = this.exam.duration % 60
+          const hours = Math.floor(this.userQuiz.duration / 60)
+          const minutes = this.userQuiz.duration % 60
           this.examTimeUsed = `${hours} hours, ${minutes} minutes` // this might be using the wrong duration?
-          this.numberOfQuestions = this.exam.questions.length || 0
+          this.numberOfQuestions = this.userQuiz.questions.length || 0
           this.correctAnswers = this.userQuiz.score || 0
         }
         this.loading = false
