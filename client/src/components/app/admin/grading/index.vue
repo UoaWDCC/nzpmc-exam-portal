@@ -10,7 +10,11 @@
 </style>
 <template>
   <v-container class="app-admin-grading" fluid v-if="isAdmin">
-    <v-btn color="secondary">Back</v-btn>
+    <v-btn
+      color="secondary"
+      @click="$router.push({ name: 'AppAdmin', query: { quizID: $route.query.quizID } })"
+      >Back</v-btn
+    >
   </v-container>
 </template>
 <script lang="ts">
