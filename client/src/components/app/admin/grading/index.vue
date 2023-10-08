@@ -17,15 +17,41 @@
     >
     <v-btn color="secondary">Grade Exam</v-btn>
     <v-btn color="primary">Release Results</v-btn>
+    <v-table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Score</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="userQuiz in userQuizzes" :key="userQuiz.id">
+          <td>{{ userQuiz.user?.displayName }}</td>
+          <td>{{ userQuiz.user?.email }}</td>
+          <td>{{ userQuiz.score ?? 'n/a' }}</td>
+          <td>{{ userQuiz.submitted }}</td>
+        </tr>
+      </tbody>
+    </v-table>
   </v-container>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
 import quizEditingMixin from '@/utils/quizEditingMixin'
 import { UserQuizzesByQuizIDQuery } from '@/gql/queries/userQuiz'
+import type { UserQuiz, UserQuizModel } from '@nzpmc-exam-portal/common'
 export default defineComponent({
   name: 'AppGrading',
   mixins: [quizEditingMixin],
+  data(): {
+    userQuizzes: UserQuiz[]
+  } {
+    return {
+      userQuizzes: []
+    }
+  },
   apollo: {
     UserQuizzes: {
       skip() {
@@ -42,7 +68,7 @@ export default defineComponent({
           console.error(error)
         } else {
           if (data) {
-            console.log(data)
+            this.userQuizzes = data.userQuizzesByQuizID
           }
         }
       }
