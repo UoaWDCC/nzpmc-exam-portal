@@ -7,26 +7,64 @@
 }
 </style>
 <template>
-  <AppExamTopbarTimer v-if="!review && !isAdminAndEditing" :quizDuration="quizDuration" :quizStart="quizStart"
-    :userQuizId="userQuizId" />
+  <AppExamTopbarTimer
+    v-if="!review && !isAdminAndEditing"
+    :quizDuration="quizDuration"
+    :quizStart="quizStart"
+    :userQuizId="userQuizId"
+  />
   <v-list dense nav class="app-exam-sidebar" style="overflow: auto">
-    <v-divider v-if="!isAdminAndEditing" color="white" thickness="3" class="border-opacity-100 mb-5" />
+    <v-divider
+      v-if="!isAdminAndEditing"
+      color="white"
+      thickness="3"
+      class="border-opacity-100 mb-5"
+    />
     <v-list-item-group v-model="selected" color="primary">
-      <AppExamSidebarLink v-for="(question, index) in questions" :id="question.id" :key="index" :number="index + 1"
-        :answered="question.userAnswer !== null" :flagged="question.flag" />
+      <AppExamSidebarLink
+        v-for="(question, index) in questions"
+        :id="question.id"
+        :key="index"
+        :number="index + 1"
+        :answered="question.userAnswer !== null"
+        :flagged="question.flag"
+      />
     </v-list-item-group>
   </v-list>
-  <v-btn v-if="!review" color="secondary" :disabled="examStore.submitting || review" v-on:click="submitQuiz()"
-    variant="flat" id="submit-button">Submit</v-btn>
-  <v-btn color="secondary" :disabled="examStore.submitting" class="white--text" v-if="isAdminAndEditing"
-    v-on:click="addNewQuestion()" variant="flat" append-icon="mdi-plus-box" id="submit-button">
+  <v-btn
+    v-if="!review"
+    color="secondary"
+    :disabled="examStore.submitting || review"
+    v-on:click="submitQuiz()"
+    variant="flat"
+    id="submit-button"
+    >Submit</v-btn
+  >
+  <v-btn
+    color="secondary"
+    :disabled="examStore.submitting"
+    class="white--text"
+    v-if="isAdminAndEditing"
+    v-on:click="addNewQuestion()"
+    variant="flat"
+    append-icon="mdi-plus-box"
+    id="submit-button"
+  >
     <template v-slot:append>
       <v-icon color="white"></v-icon>
     </template>
-    <span class="text-white">Add New Question</span></v-btn>
-  <v-btn color="secondary" :disabled="examStore.submitting" v-if="isAdminAndEditing" v-on:click="exitEditor()"
-    variant="flat" id="submit-button">
-    <span class="text-white">Exit Editor</span></v-btn>
+    <span class="text-white">Add New Question</span></v-btn
+  >
+  <v-btn
+    color="secondary"
+    :disabled="examStore.submitting"
+    v-if="isAdminAndEditing"
+    v-on:click="exitEditor()"
+    variant="flat"
+    id="submit-button"
+  >
+    <span class="text-white">Exit Editor</span></v-btn
+  >
 </template>
 
 <script lang="ts">

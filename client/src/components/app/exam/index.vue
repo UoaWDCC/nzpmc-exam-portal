@@ -14,8 +14,15 @@
     <v-container v-if="data || loading" class="exam-and-sidebar-container">
       <v-navigation-drawer class="sidebar-container" permanent clipped left mini-variant>
         <v-scroll-y-reverse-transition>
-          <AppExamSidebar v-if="data" :questions="data.questions" :quizStart="data.quizStart" :userQuizId="data.id"
-            @question-added="fetchData" :quizDuration="data.duration" :review="review" />
+          <AppExamSidebar
+            v-if="data"
+            :questions="data.questions"
+            :quizStart="data.quizStart"
+            :userQuizId="data.id"
+            @question-added="fetchData"
+            :quizDuration="data.duration"
+            :review="review"
+          />
         </v-scroll-y-reverse-transition>
       </v-navigation-drawer>
 
@@ -23,8 +30,12 @@
 
       <div v-if="data" class="question-container" style="overflow: hidden">
         <component :is="routeTransition" hide-on-leave>
-          <router-view @question-deleted="fetchData" @local-changes-made="syncLocalChanges"
-            :key="$route.params.questionID" :review="review" />
+          <router-view
+            @question-deleted="fetchData"
+            @local-changes-made="syncLocalChanges"
+            :key="$route.params.questionID"
+            :review="review"
+          />
         </component>
       </div>
     </v-container>
@@ -70,8 +81,8 @@ export default defineComponent({
       from.params.questionID === undefined
         ? 'Transition'
         : to.params.questionID > from.params.questionID
-          ? VSlideXReverseTransition
-          : VSlideXTransition
+        ? VSlideXReverseTransition
+        : VSlideXTransition
     next()
   },
 
