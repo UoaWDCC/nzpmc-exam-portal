@@ -2,6 +2,7 @@
   <v-list-item
     :to="{
       name: 'AppExamQuestion',
+      query: uriQueryType,
       params: { quizID: $route.params.quizID, questionID: id }
     }"
     link
@@ -21,8 +22,12 @@
 </template>
 
 <script lang="ts">
+import quizEditingMixin from '@/utils/quizEditingMixin'
+
 export default {
   name: 'AppExamSidebarLink',
+
+  mixins: [quizEditingMixin],
 
   props: {
     id: { type: String, required: true },

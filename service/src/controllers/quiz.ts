@@ -50,7 +50,6 @@ const editQuiz = async (
         if (!quiz) {
             throw new NotFoundError()
         }
-
         quiz.name = name ? name : quiz.name
         quiz.description = description ? description : quiz.description
         quiz.duration = duration ? duration : quiz.duration

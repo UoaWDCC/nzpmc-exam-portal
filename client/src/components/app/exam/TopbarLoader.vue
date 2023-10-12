@@ -12,11 +12,10 @@
 </template>
 
 <script lang="ts">
-import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
-
 export default {
   name: 'AppExamTopbarLoader',
 
+  /* what is this doing????
   apollo: {
     userQuizzes: {
       query: UserQuizzesQuery,
@@ -33,6 +32,7 @@ export default {
       fetchPolicy: 'cache-and-network'
     }
   },
+  */
   data() {
     return {
       userQuiz: undefined

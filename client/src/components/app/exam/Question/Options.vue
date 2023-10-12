@@ -7,26 +7,64 @@
 }
 </style>
 <template>
-  <v-item-group v-if="options && quizData" v-model="selected" class="options-container">
-    <AppExamQuestionLoader v-if="loading" />
-
-    <v-item v-for="option in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
+  <v-item-group v-model="selected" class="options-container">
+    <v-item v-for="(option, index) in sortedOptions" :key="option.id" v-slot="{ active, toggle }">
       <v-card
         elevation="1"
         :dark="active"
         :color="getCardColor(option)"
-        :disabled="review"
+        :ripple="!isAdminAndEditing"
+        :disabled="updating || review"
         class="align-center d-flex mb-3"
-        @click="toggle"
-        @keyup.enter="toggle"
+        @click="!isAdminAndEditing && setSelected(option.id)"
+        @keyup.enter="!isAdminAndEditing && toggle"
       >
-        <v-icon class="ml-4 my-4">
+        <h3 v-if="isAdminAndEditing" class="ml-4 my-4">{{ index + 1 }}.</h3>
+        <v-icon v-else class="ml-4 my-4">
           {{ isSelected(option.id) ? 'mdi-check-circle' : 'mdi-checkbox-blank-circle-outline' }}
         </v-icon>
 
         <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">
-          {{ option.option }}
+          <v-text-field
+            :hint="'Modified: ' + option.modified"
+            persistent-hint
+            variant="underlined"
+            @change="handleOptionDescriptionChange(option.id, $event)"
+            :model-value="option.option"
+            v-if="isAdminAndEditing"
+          ></v-text-field>
+          <span v-else>{{ option.option }}</span>
         </span>
+        <v-btn
+          elevation="0"
+          v-if="isAdminAndEditing"
+          v-on:click="deleteOption(option.id)"
+          color="red"
+          icon="mdi-close"
+          class="mr-4 my-4"
+        />
+        <v-btn
+          elevation="0"
+          v-if="isAdminAndEditing"
+          v-on:click="handleCorrectAnswerChange(option.id)"
+          :color="isCorrectAnswer(option.id) ? 'accent' : 'secondary'"
+          :icon="isCorrectAnswer(option.id) ? 'mdi-check-circle' : 'mdi-cancel'"
+          class="mr-4 my-4"
+        />
+      </v-card>
+    </v-item>
+    <v-item v-if="isAdminAndEditing">
+      <v-card
+        elevation="1"
+        :ripple="!isAdminAndEditing"
+        class="align-center d-flex mb-3"
+        @click="addNewOption"
+        :disabled="updating"
+      >
+        <v-icon class="ml-4 my-4">
+          {{ 'mdi-plus-circle' }}
+        </v-icon>
+        <span class="d-block pa-4" style="width: calc(100% - 3.5rem)">Add New Answer</span>
       </v-card>
     </v-item>
   </v-item-group>
@@ -39,10 +77,19 @@ import { useMainStore } from '@/stores/main'
 import { UserQuizUpdateAnswerMutation } from '@/gql/mutations/userQuiz'
 import type { Option } from '@nzpmc-exam-portal/common'
 import type { PropType } from 'vue'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
+import {
+  AddOptionMutation,
+  DeleteOptionMutation,
+  EditAnswerMutation
+} from '@/gql/mutations/quizQuestion'
+import { debounce } from '@/utils/quizManagement'
 
 export default {
   name: 'AppExamQuestionOptions',
+  emits: ['correct-answer-changed', 'user-question-changed', 'option-changed', 'ready-to-fetch'],
+  mixins: [quizEditingMixin],
   components: {
     AppExamQuestionLoader: () => import('./Loader.vue')
   },
@@ -62,6 +109,9 @@ export default {
         )
       }
     },
+    correctAnswerID: {
+      required: false
+    },
 
     // ID of the user's current answer
     answer: {
@@ -79,6 +129,7 @@ export default {
   data() {
     return {
       selected: null as any,
+      updating: false,
       quizData: true as any
     }
   },
@@ -128,15 +179,22 @@ export default {
 
     // Update server with new selected value
     selected(v) {
-      // Cancel if answer has not been changed or user is in review mode
-      if (this.sortedOptions[v].id === this.answer || this.review) return
+      if (this.isAdminNotSittingExam) {
+        return
+      }
+      if (!this.sortedOptions[v]) return
+      const selectedID = this.sortedOptions[v].id
+      // Cancel if answer has not been changed
+      if (selectedID === this.answer || this.review) return
+
+      this.$emit('user-question-changed', { questionID: this.questionID, userAnswerID: selectedID })
       const mutation = this.$apollo.mutate({
         mutation: UserQuizUpdateAnswerMutation,
         variables: {
           input: {
             userQuizID: this.$route.params.quizID,
             questionID: this.$route.params.questionID,
-            answerID: v >= 0 ? this.sortedOptions[v].id : ''
+            answerID: v >= 0 ? selectedID : ''
           }
         }
       })
@@ -153,13 +211,79 @@ export default {
         .finally(() => {
           // Ensure selected state is synced with server
           console.log('Success')
-          console.log(this.answer)
-          this.setSelected(this.answer)
+          this.$emit('ready-to-fetch')
         })
     }
   },
 
   methods: {
+    isCorrectAnswer(optionID: string) {
+      return optionID === this.correctAnswerID
+    },
+    async handleOptionDescriptionChange(optionID: string, event: Event) {
+      const currentDescription: string = event.target.value
+      const debouncedEdit = debounce(this.editQuestionOptionInfo)
+
+      this.$emit('option-changed', { optionID: optionID, optionDescription: currentDescription })
+      const res = await debouncedEdit(this.$apollo.getClient(), {
+        id: optionID,
+        questionID: this.questionID,
+        quizID: this.quizID,
+        optionDescription: currentDescription
+      })
+      if (res) {
+        this.$emit('ready-to-fetch')
+      }
+    },
+    async deleteOption(optionID: string) {
+      this.updating = true
+      await this.$apollo.mutate({
+        mutation: DeleteOptionMutation,
+        variables: {
+          quizID: this.quizID,
+          questionID: this.questionID,
+          optionID
+        }
+      })
+      this.$emit('ready-to-fetch')
+      this.updating = false
+    },
+    async handleCorrectAnswerChange(optionID: string) {
+      let newCorrectAnswerOptionID = optionID
+      if (this.isCorrectAnswer(optionID)) {
+        newCorrectAnswerOptionID = 'none-selected'
+      }
+      this.$emit('correct-answer-changed', {
+        questionID: this.questionID,
+        correctAnswerID: newCorrectAnswerOptionID
+      })
+      await this.$apollo.mutate({
+        mutation: EditAnswerMutation,
+        variables: {
+          input: {
+            newAnswerOptionID: newCorrectAnswerOptionID,
+            questionID: this.questionID,
+            quizID: this.quizID
+          }
+        }
+      })
+      //this.$emit('ready-to-fetch')
+    },
+    async addNewOption() {
+      this.updating = true
+      await this.$apollo.mutate({
+        mutation: AddOptionMutation,
+        variables: {
+          input: {
+            option: 'New Option',
+            questionID: this.questionID,
+            quizID: this.quizID
+          }
+        }
+      })
+      this.$emit('ready-to-fetch')
+      this.updating = false
+    },
     // Ensure the selected state is synced with the server
     setSelected(answerID: any) {
       this.selected = this.sortedOptions.findIndex((option) => option.id === answerID)

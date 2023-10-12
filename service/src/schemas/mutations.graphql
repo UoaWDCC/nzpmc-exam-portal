@@ -19,14 +19,14 @@ type Mutation {
 
     addOption(input: AddOptionInput!): Option
     editOption(input: EditOptionInput!): Option
-    deleteOption(quizID: ID!, id:ID!, optionID:ID!): Option
+    deleteOption(quizID: ID!, questionID: ID!, optionID: ID!): Option
 
     editAnswer(input: EditAnswerInput!): Option
 
     addUserQuiz(input: AddUserQuizInput!): UserQuiz
 
-	enrolUsersInQuiz(users:[UsersInput!]!, quizID:ID!): [UserQuiz!]!
-	unenrolUsersFromQuiz(users:[UsersInput!]!, quizID:ID!): [ID!]!
+    enrolUsersInQuiz(users: [UsersInput!]!, quizID: ID!): [UserQuiz!]!
+    unenrolUsersFromQuiz(users: [UsersInput!]!, quizID: ID!): [ID!]!
     """
     User
     """

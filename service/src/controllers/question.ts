@@ -4,6 +4,7 @@ import { Question, Quiz } from '../models'
 import Option from '../models/option'
 import { QuestionModel } from '@nzpmc-exam-portal/common'
 import { NotFoundError } from '../utils/errors'
+import { editQuiz } from './quiz'
 
 const QuizRepository = getRepository(Quiz)
 
@@ -25,6 +26,22 @@ const getQuestions = async (quizID: string): Promise<QuestionModel[]> => {
             questions.map((question) => ({ quizID, question })),
         )
     })
+}
+
+const setQuestionAnswer = async (input: {
+    quizID: string
+    questionID: string
+    newAnswerOptionID: string
+}) => {
+    const { quizID, questionID, newAnswerOptionID } = input
+
+    return await editQuestion(
+        quizID,
+        questionID,
+        undefined,
+        undefined,
+        newAnswerOptionID,
+    )
 }
 
 const getQuestion = async (
@@ -58,7 +75,6 @@ const addQuestion = async (
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
-
         const question = new Question()
 
         question.question = q
@@ -78,7 +94,20 @@ const addQuestion = async (
 
         newQuestion.answerID = newAnswer.id
 
+        const questionOrder = quiz.questionIDsOrder
+        questionOrder.push(newQuestion.id)
+
         await quiz.questions.update(newQuestion)
+
+        editQuiz(
+            quizID,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            questionOrder,
+        )
 
         return packQuestion({ quizID, question: newQuestion })
     })
@@ -89,7 +118,7 @@ const editQuestion = async (
     id: string,
     q?: string,
     imageURI?: string,
-    answer?: string,
+    answerID?: string,
     topics?: string,
 ): Promise<QuestionModel> => {
     return runTransaction(async (tran) => {
@@ -109,16 +138,7 @@ const editQuestion = async (
         question.topics = topics ? topics : question.topics
         question.modified = new Date()
 
-        if (answer !== undefined && question.options) {
-            const answerObj = await question.options.findById(question.answerID)
-
-            if (answerObj === null) {
-                throw new NotFoundError()
-            }
-
-            answerObj.option = answer
-            await question.options.update(answerObj)
-        }
+        question.answerID = answerID ? answerID : ``
 
         quiz.questions.update(question)
 
@@ -194,9 +214,24 @@ const deleteQuestion = async (quizID: string, questionID: string) => {
     return runTransaction(async (tran) => {
         const QuizTranRepository = tran.getRepository(Quiz)
         const quiz = await QuizTranRepository.findById(quizID)
+        const questionOrderArray = quiz.questionIDsOrder
+        // delete question to be deleted
+        const updatedQuestionOrderArray = questionOrderArray.filter(
+            (id) => id !== questionID,
+        )
+
         if (!quiz || !quiz.questions) {
             throw new NotFoundError()
         }
+        editQuiz(
+            quizID,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            updatedQuestionOrderArray,
+        )
         return quiz.questions.delete(questionID)
     })
 }
@@ -207,5 +242,6 @@ export {
     addQuestion,
     editQuestion,
     swapQuestion,
+    setQuestionAnswer,
     deleteQuestion,
 }

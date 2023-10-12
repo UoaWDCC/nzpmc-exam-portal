@@ -31,6 +31,7 @@ import { useMainStore } from '@/stores/main'
 
 export default {
   name: 'AppExamTopbarTimer',
+  mixins: [quizEditingMixin],
 
   data() {
     return {
@@ -62,14 +63,17 @@ export default {
       const minutes = Math.floor((this.secondsRemaining - 60 * 60 * hours) / 60)
       const seconds = this.secondsRemaining % 60
 
-      return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${
-        (seconds < 10 ? '0' : '') + seconds
-      }`
+      return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${(seconds < 10 ? '0' : '') + seconds
+        }`
     },
     ...mapWritableState(useMainStore, ['snackbarQueue'])
   },
 
   mounted() {
+    if (this.isAdminAndEditing) {
+      //dont care if we are editing
+      return
+    }
     if (!this.startEpoch) {
       //persist start time
       const currentTimeSeconds = Math.floor(Date.now() / 1000)
