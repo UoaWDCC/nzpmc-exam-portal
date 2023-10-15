@@ -372,7 +372,7 @@ export default defineComponent({
     },
     showEditQuestionPopUp() {
       // TODO: Implement this
-      
+
       if (this.selectedQuiz === undefined) {
         this.popUpMessage = 'No quiz selected'
         this.popUpDialog = true
