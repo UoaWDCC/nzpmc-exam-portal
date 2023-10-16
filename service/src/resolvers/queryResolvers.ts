@@ -168,7 +168,7 @@ const queryResolvers: QueryResolvers = {
     quiz: admin(quizQuery),
     quizzes: admin(quizzesQuery),
     user: admin(userQuery),
-    userQuiz: admin(userQuizQuery),
+    userQuiz: user(userQuizQuery),
     userQuizzes: user(userQuizzesQuery),
     userQuizzesByQuizID: admin(userQuizzesByQuizIDQuerry),
     users: admin(usersQuery),
