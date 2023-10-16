@@ -165,7 +165,7 @@ const queryResolvers: QueryResolvers = {
     currentTime: user(currentTimeQuery),
     image: user(imageQuery),
     me: user(meQuery),
-    quiz: admin(quizQuery),
+    quiz: user(quizQuery),
     quizzes: admin(quizzesQuery),
     user: admin(userQuery),
     userQuiz: user(userQuizQuery),
