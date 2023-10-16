@@ -25,6 +25,18 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
 
         const expired =
             (userQuiz.closeTime && userQuiz.closeTime < new Date()) ?? true
+
+        // Submit quiz if already started
+        if (userQuiz.quizStart) {
+            const currentTimeSeconds = Math.floor(Date.now() / 1000)
+            const elapsedSeconds = currentTimeSeconds - userQuiz.quizStart
+            const secondsRemaining = quiz.duration.valueOf() * 60 - elapsedSeconds
+
+            if (secondsRemaining <= 0) {
+                userQuiz.submitted = true
+                await UserQuizTranRepository.update(userQuiz)
+            }
+        }
         return packUserQuiz({
             userID: userQuiz.userID,
             quiz,
@@ -211,7 +223,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ;(await questions.find()).map((question) => {
+        ; (await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
