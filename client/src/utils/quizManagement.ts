@@ -6,6 +6,7 @@ import { CreateExamMutation, DeleteQuizMutation, EditQuizMutation } from '@/gql/
 import { parseCSVPapaparse } from './csv_parser'
 import { EnrolUsersInQuizMutation } from '@/gql/mutations/userQuiz'
 import { UnenrolUsersFromQuizMutation } from '@/gql/mutations/userQuiz'
+import { generateTimestamp, generateDownloadLink } from './time_stamp'
 
 export type editQuizInput = {
   description?: string
@@ -225,31 +226,12 @@ export const downloadUserQuizzesCsvQuery = async (
     // Create a temporary link element
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    const currentDate = new Date()
-    const year = currentDate.getFullYear().toString().padStart(4, '0')
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
-    const day = currentDate.getDate().toString().padStart(2, '0')
-    const hour = currentDate.getHours().toString().padStart(2, '0')
-    const minute = currentDate.getMinutes().toString().padStart(2, '0')
-    const second = currentDate.getSeconds().toString().padStart(2, '0')
 
+    // Specify name of downloaded csv
     const quizInfo = await getQuizInfoQuery(apollo, quizId)
     const examName = quizInfo.name
-    link.download =
-      examName +
-      '_' +
-      year +
-      '-' +
-      month +
-      '-' +
-      day +
-      '-' +
-      hour +
-      '-' +
-      minute +
-      '-' +
-      second +
-      '.csv'
+    const timestamp = generateTimestamp()
+    link.download = generateDownloadLink(examName, timestamp, 'csv')
 
     // Programmatically click the link to trigger the download (ty Aaron <3)
     link.click()
