@@ -30,7 +30,8 @@ const getUserQuiz = async (userQuizID: string): Promise<UserQuizModel> => {
         if (userQuiz.quizStart) {
             const currentTimeSeconds = Math.floor(Date.now() / 1000)
             const elapsedSeconds = currentTimeSeconds - userQuiz.quizStart
-            const secondsRemaining = quiz.duration.valueOf() * 60 - elapsedSeconds
+            const secondsRemaining =
+                quiz.duration.valueOf() * 60 - elapsedSeconds
 
             if (secondsRemaining <= 0) {
                 userQuiz.submitted = true
@@ -223,7 +224,7 @@ const addUserQuiz = async (
             throw new NotFoundError()
         }
 
-        ; (await questions.find()).map((question) => {
+        ;(await questions.find()).map((question) => {
             addUserQuizQuestion(userQuiz.id, question.id)
         })
     })
