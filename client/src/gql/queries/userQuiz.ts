@@ -9,6 +9,7 @@ import {
 export const UserQuizzesQuery = gql`
   query UserQuizzesQuery {
     userQuizzes {
+      released
       submitted
       ...UserQuizFragment
       questions {
@@ -24,6 +25,7 @@ export const UserQuizQuery = gql`
   query UserQuizQuery($quizID: ID!) {
     userQuiz(quizID: $quizID) {
       ...UserQuizFragment
+      released
       questions {
         ...UserQuizFullQuestionFragment
         options {
@@ -57,4 +59,22 @@ export const UserQuizFullQuestionQuery = gql`
   }
   ${UserQuizFullQuestionFragment}
   ${UserQuizOptionFragment}
+`
+
+export const UserQuizzesByQuizIDQuery = gql`
+  query UserQuizzesByQuizID($quizID: ID!) {
+    userQuizzesByQuizID(quizID: $quizID) {
+      id
+      user {
+        displayName
+        email
+        firstName
+        lastName
+        id
+        yearLevel
+      }
+      submitted
+      score
+    }
+  }
 `

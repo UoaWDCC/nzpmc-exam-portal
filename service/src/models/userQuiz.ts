@@ -9,7 +9,8 @@ class UserQuiz {
 
     score: number | null = null
     quizStart: number | null = null
-    submitted: boolean | undefined
+    submitted = false
+    released = false
     openTime?: Date
     closeTime?: Date
 

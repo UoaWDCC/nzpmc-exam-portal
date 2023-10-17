@@ -10,6 +10,7 @@ const packQuiz = (quiz: Quiz): SchemaQuiz => {
         openTime: quiz.openTime,
         closeTime: quiz.closeTime,
         created: quiz.created,
+        released: quiz.released,
         modified: quiz.modified,
     }
 }

@@ -16,6 +16,7 @@ export const GetQuizInfoQuery = gql`
       name
       description
       duration
+      released
       questions {
         id
         question

@@ -4,9 +4,10 @@ import {
     packUserQuiz,
     packUserQuizzes,
 } from '../mappers/userQuizMapper'
-import { Quiz, UserQuiz } from '../models'
+import { Quiz, UserQuiz, UserQuizQuestion } from '../models'
 import { NotFoundError } from '../utils/errors'
 import { UserQuizModel } from '@nzpmc-exam-portal/common'
+import { Question } from '../models'
 import { addUserQuizQuestion } from './userQuizQuestion'
 import { getUser } from './user'
 import { firestore } from '../utils/firebase'
@@ -167,6 +168,50 @@ const getAllUserQuizzes = async (): Promise<UserQuizModel[]> => {
     })
 }
 
+const gradeUserQuizzes = async (input: { quizID: string }) => {
+    const { quizID } = input
+    try {
+        await runTransaction(async (tran) => {
+            const UserQuizTranRepository = tran.getRepository(UserQuiz)
+            const QuizTranRepository = tran.getRepository(Quiz)
+            const quiz = await QuizTranRepository.findById(quizID)
+            const questions = await quiz.questions?.find()
+
+            const userQuizzes = await UserQuizTranRepository.whereEqualTo(
+                (q) => q.quizID,
+                quizID,
+            ).find()
+
+            const gradingPromises = userQuizzes.map(async (userQuiz) => {
+                const userQuestions = await userQuiz.questions?.find()
+                userQuiz.score = gradeUserQuiz(userQuestions, questions)
+                await UserQuizTranRepository.update(userQuiz)
+            })
+
+            await Promise.all(gradingPromises)
+        })
+    } catch (error) {
+        console.error('Failed to grade user quizzes:', error)
+    }
+}
+
+const gradeUserQuiz = (
+    userQuestions?: UserQuizQuestion[],
+    quizQuestions?: Question[],
+): number | null => {
+    if (!userQuestions || !quizQuestions) {
+        return null
+    }
+    let correctAnswerCount = 0
+    quizQuestions.forEach((question) => {
+        if (userQuestions.find((q) => q.answerID === question.answerID)) {
+            correctAnswerCount++
+        }
+    })
+    console.log(correctAnswerCount)
+    return correctAnswerCount
+}
+
 const addUserQuiz = async (
     userID: string,
     quizID: string,
@@ -199,7 +244,6 @@ const addUserQuiz = async (
     userQuiz.created = new Date()
     userQuiz.modified = new Date()
     userQuiz.quizStart = null
-    userQuiz.submitted = false
 
     UserQuizRepository.create(userQuiz)
 
@@ -226,6 +270,7 @@ const editUserQuiz = async (
     openTime?: Date,
     closeTime?: Date,
     submitted?: boolean,
+    released?: boolean,
 ): Promise<UserQuizModel> => {
     await UserQuizRepository.runTransaction(async (tran) => {
         const userQuiz = await tran.findById(userQuizID)
@@ -237,8 +282,9 @@ const editUserQuiz = async (
         userQuiz.openTime = openTime ? openTime : userQuiz.openTime
         userQuiz.closeTime = closeTime ? closeTime : userQuiz.closeTime
         userQuiz.quizStart = quizStart ? quizStart : userQuiz.quizStart
-        // default value false if document doesn't have a submitted flag
+        // default value false if document doesn't have the flags
         userQuiz.submitted = submitted ? submitted : userQuiz.submitted ?? false
+        userQuiz.released = released ? released : userQuiz.released
         userQuiz.modified = new Date()
 
         tran.update(userQuiz)
@@ -312,6 +358,7 @@ export {
     getUserQuizbyQuizID,
     getUserQuizzesByQuizID,
     getAllUserQuizzes,
+    gradeUserQuizzes,
     deleteUserQuiz,
     editUserQuiz,
     setUserQuizScore,

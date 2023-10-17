@@ -86,6 +86,7 @@ export default {
 
   methods: {
     signOut() {
+      localStorage.clear()
       signOut(auth).catch(() => {
         // An error happened.
         this.snackbarQueue.push('An error occurred when signing out.')

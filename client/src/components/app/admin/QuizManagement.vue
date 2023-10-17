@@ -175,9 +175,16 @@
       </v-container>
 
       <v-container fluid class="px-0 mt-5">
-        <v-btn block size="large" :disabled="loading" color="secondary">GRADE EXAM</v-btn>
-        <v-btn block size="large" :disabled="loading" color="secondary" class="mt-3"
-          >RELEASE RESULTS</v-btn
+        <v-btn
+          block
+          size="large"
+          :disabled="loading"
+          @click="
+            quizIdInput !== '' &&
+              $router.push({ name: 'AppGrading', query: { quizID: quizIdInput } })
+          "
+          color="secondary"
+          >Manage Grades</v-btn
         >
       </v-container>
     </v-container>
@@ -202,6 +209,7 @@ import {
   deleteExam
 } from '@/utils/quizManagement'
 import type { QuizModel } from '@nzpmc-exam-portal/common'
+import { onMounted } from 'vue'
 
 export type UserQuiz = {
   user: User
@@ -253,6 +261,7 @@ export default defineComponent({
         } else {
           if (data) {
             this.quizzes = data.quizzes
+            onMounted(async () => {})
           }
         }
       },
@@ -312,6 +321,7 @@ export default defineComponent({
       this.loading = true
       this.$refs.csvUploadZone.reset()
       this.quizIdInput = id
+      this.$router.push({ query: { quizID: id } })
       await this.fetchQuizInfo()
       this.loading = false
     },
@@ -542,6 +552,16 @@ export default defineComponent({
         this.popUpMessage = 'Failed to download user quizzes for quiz id: ' + this.quizIdInput
         this.popUpDialog = true
       }
+    },
+    goToGradingScreen() {
+      localStorage.setItem(`${this.quizIdInput}`, JSON.stringify(this.selectedQuiz))
+      this.$router.push({ name: 'AppGrading', query: { quizID: this.quizIdInput } })
+    }
+  },
+  mounted() {
+    const presetQuizID = this.$route.query.quizID
+    if (presetQuizID && typeof presetQuizID === 'string') {
+      this.updateQuizID(presetQuizID)
     }
   }
 })

@@ -49,3 +49,8 @@ export const UnenrolUsersFromQuizMutation = gql`
     unenrolUsersFromQuiz(users: $users, quizID: $quizId)
   }
 `
+export const GradeAllUserQuizzesForQuizMutation = gql`
+  mutation GradeAllUserQuizzesForQuiz($quizID: ID!) {
+    gradeAllUserQuizzesForQuiz(quizID: $quizID)
+  }
+`

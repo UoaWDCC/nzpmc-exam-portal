@@ -9,6 +9,7 @@ class Quiz {
     duration!: number
     openTime!: Date
     closeTime!: Date
+    released: boolean | null = false
 
     @SubCollection(Question, 'Question')
     questions?: ISubCollection<Question>

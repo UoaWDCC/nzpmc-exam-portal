@@ -103,6 +103,8 @@ input EditUserQuizInput {
     quizStart: Int
     openTime: DateTime
     closeTime: DateTime
+    submitted: Boolean
+    released: Boolean
 }
 
 input ImageUploadInput {

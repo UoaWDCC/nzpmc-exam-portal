@@ -14,6 +14,7 @@ import {
     editUser,
     editUserQuiz,
     editUserQuizQuestion,
+    releaseQuiz,
     getUserQuiz,
     submitUserQuizQuestions,
     getUserAnswers,
@@ -33,6 +34,7 @@ import {
     Image,
     Maybe,
     MutationAddOptionArgs,
+    MutationGradeAllUserQuizzesForQuizArgs,
     MutationAddQuestionArgs,
     MutationAddQuizArgs,
     MutationAddUserArgs,
@@ -67,7 +69,7 @@ import {
     MutationUnenrolUsersFromQuizArgs,
 } from '@nzpmc-exam-portal/common'
 import { admin, user } from './helpers/auth'
-import { deleteUserQuiz } from '../controllers/userQuiz'
+import { deleteUserQuiz, gradeUserQuizzes } from '../controllers/userQuiz'
 import { setQuestionAnswer } from '../controllers/question'
 
 const addOptionMutation: Resolver<
@@ -343,7 +345,15 @@ const editUserQuizMutation: Resolver<
     }
 
     // is Admin
-    const { userQuizID, quizStart, score, openTime, closeTime } = input
+    const {
+        userQuizID,
+        quizStart,
+        score,
+        openTime,
+        closeTime,
+        submitted,
+        released,
+    } = input
 
     const userQuiz = await editUserQuiz(
         userQuizID,
@@ -351,6 +361,8 @@ const editUserQuizMutation: Resolver<
         score || undefined,
         openTime,
         closeTime,
+        submitted || undefined,
+        released || undefined,
     )
 
     return userQuiz
@@ -494,6 +506,24 @@ const editOrderQuestionMutation: Resolver<
     return quiz
 }
 
+const gradeAllUserQuizzesForQuiz: Resolver<
+    ResolverTypeWrapper<string>,
+    unknown,
+    UserContext,
+    RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
+> = async (_parent, { quizID }, _context) => {
+    await gradeUserQuizzes({ quizID })
+    return quizID
+}
+const releaseAllUserQuizResultsForQuiz: Resolver<
+    ResolverTypeWrapper<string>,
+    unknown,
+    UserContext,
+    RequireFields<MutationGradeAllUserQuizzesForQuizArgs, 'quizID'>
+> = async (_parent, { quizID }, _context) => {
+    await releaseQuiz({ quizID })
+    return quizID
+}
 const enrolUsersInQuizMutation: Resolver<
     Array<ResolverTypeWrapper<UserQuizModel>>,
     unknown,
@@ -612,6 +642,8 @@ const mutationResolvers: MutationResolvers = {
     editUserQuizQuestion: admin(editUserQuizQuestionMutation),
     enrolUsersInQuiz: admin(enrolUsersInQuizMutation),
     unenrolUsersFromQuiz: admin(unenrolUsersFromQuizMutation),
+    gradeAllUserQuizzesForQuiz: admin(gradeAllUserQuizzesForQuiz),
+    releaseAllUserQuizResultsForQuiz: admin(releaseAllUserQuizResultsForQuiz),
     image: admin(imageMutation),
     submitUserQuizQuestions: user(submitUserQuizQuestionsMutation),
     swapQuestion: admin(swapQuestionMutation),

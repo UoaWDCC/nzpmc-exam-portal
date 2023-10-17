@@ -48,6 +48,14 @@ const routes = [
         name: 'AppAdmin',
         component: () =>
           import(/* webpackChunkName: "AppAdminChunk" */ '@/components/app/admin/index.vue')
+      },
+      {
+        path: 'admin/grading',
+        name: 'AppGrading',
+        component: () =>
+          import(
+            /* webpackChunkName: "AppGradingChunk" */ '@/components/app/admin/grading/index.vue'
+          )
       }
     ]
   },

@@ -156,7 +156,8 @@ export default {
     },
     exitEditor() {
       this.$router.push({
-        name: 'AppAdmin'
+        name: 'AppAdmin',
+        query: { quizID: this.quizID }
       })
     }
   },
