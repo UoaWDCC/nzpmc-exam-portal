@@ -382,6 +382,7 @@ export default defineComponent({
     },
     showEditQuestionPopUp() {
       // TODO: Implement this
+
       if (this.selectedQuiz === undefined) {
         this.popUpMessage = 'No quiz selected'
         this.popUpDialog = true
@@ -392,8 +393,6 @@ export default defineComponent({
           params: { quizID: this.selectedQuiz.id },
           query: { edit: 'true' }
         })
-        this.popUpMessage = 'This feature is not yet implemented'
-        this.popUpDialog = true
       }
     },
     async showEnrolUsersConfirmation() {

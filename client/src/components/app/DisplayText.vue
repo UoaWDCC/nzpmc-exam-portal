@@ -4,7 +4,7 @@
     @change="handleDescriptionChange"
     v-if="isAdminAndEditing"
   ></v-textarea>
-  <div v-else v-html="htmlContent" class="question-form"></div>
+  <div v-show="!isAdminAndEditing" v-html="htmlContent" class="question-form"></div>
 </template>
 
 <script lang="ts">
@@ -82,7 +82,9 @@ export default {
       })
 
       this.htmlContent = this.converter.makeHtml(html)
-
+      this.renderLatex()
+    },
+    renderLatex() {
       this.$nextTick(() => {
         document.querySelectorAll('.latex').forEach((node) => {
           let latex = node.textContent
