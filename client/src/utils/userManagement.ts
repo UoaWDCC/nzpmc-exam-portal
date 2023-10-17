@@ -3,6 +3,7 @@ import { AddUserMutation } from '../gql/mutations/addUsers'
 import { GetUserListQuery } from '../gql/queries/userList'
 import { DeleteUserMutation } from '../gql/mutations/deleteUsers'
 import { UnenrolUsersFromQuizMutation } from '../gql/mutations/userQuiz'
+import { generateTimestamp, generateDownloadLink } from './time_stamp'
 
 export const addUserMutation = async (
   apollo: ApolloClient<NormalizedCacheObject>,
@@ -111,7 +112,10 @@ export const downloadUsersCsvQuery = async (
     // Create a temporary link element
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.download = 'users.csv'
+
+    // Specify name of downloaded csv
+    const timestamp = generateTimestamp()
+    link.download = generateDownloadLink('all-students', timestamp, 'csv')
 
     // Programmatically click the link to trigger the download
     link.click()

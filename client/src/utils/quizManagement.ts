@@ -1,12 +1,12 @@
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { GetUserQuizzesListQuery } from '../gql/queries/userQuizList'
-import type { UserQuiz } from '@/components/app/admin/QuizManagement.vue'
 import type { QuizModel } from '@nzpmc-exam-portal/common'
 import { GetQuizInfoQuery } from '@/gql/queries/quiz'
 import { CreateExamMutation, DeleteQuizMutation, EditQuizMutation } from '@/gql/mutations/quiz'
 import { parseCSVPapaparse } from './csv_parser'
 import { EnrolUsersInQuizMutation } from '@/gql/mutations/userQuiz'
 import { UnenrolUsersFromQuizMutation } from '@/gql/mutations/userQuiz'
+import { generateTimestamp, generateDownloadLink } from './time_stamp'
 
 export type editQuizInput = {
   description?: string
@@ -226,7 +226,12 @@ export const downloadUserQuizzesCsvQuery = async (
     // Create a temporary link element
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.download = 'userQuizzes.csv'
+
+    // Specify name of downloaded csv
+    const quizInfo = await getQuizInfoQuery(apollo, quizId)
+    const examName = quizInfo.name
+    const timestamp = generateTimestamp()
+    link.download = generateDownloadLink(examName, timestamp, 'csv')
 
     // Programmatically click the link to trigger the download (ty Aaron <3)
     link.click()
