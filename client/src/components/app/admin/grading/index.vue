@@ -172,7 +172,10 @@ export default defineComponent({
       const scores = this.userQuizzes.map((userQuiz) => userQuiz.score)
       const total = scores.reduce((a, b) => a + b, 0)
       const averageScore = total / scores.length
-      const averagePercentage = ((averageScore.toFixed(0) / this.quiz?.questions?.length) * 100).toFixed(2)
+      const averagePercentage = (
+        (averageScore.toFixed(0) / this.quiz?.questions?.length) *
+        100
+      ).toFixed(2)
 
       return `${averagePercentage}% (${averageScore.toFixed(0)} / ${this.quiz?.questions?.length})`
     }
