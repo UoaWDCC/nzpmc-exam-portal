@@ -207,11 +207,11 @@ export default {
           this.snackbarQueue.push(
             `An error occured when saving your answer for Question ${this.questionNumber}. Please check your connection and try again.`
           )
+          this.$emit('ready-to-fetch')
         })
         .finally(() => {
           // Ensure selected state is synced with server
           console.log('Success')
-          this.$emit('ready-to-fetch')
         })
     }
   },

@@ -478,13 +478,11 @@ export default defineComponent({
     },
     async editAndUpdateSelectedQuiz(id: string, input: editQuizInput) {
       const debouncedEdit = debounce(editQuizMutation)
-      this.loading = true
       const res = await debouncedEdit(this.$apollo, id, input)
       this.selectedQuiz = { ...this.selectedQuiz, modified: res.modified }
       if (input.name !== undefined) {
         await this.$apollo.queries.userQuizzes.refetch()
       }
-      this.loading = false
     },
     async enrollUserIntoQuiz() {
       try {
@@ -587,14 +585,17 @@ export default defineComponent({
   width: 600px;
   max-width: 100%;
 }
+
 .popup-headline {
   text-align: center;
 }
+
 .popup-text {
   font-size: 1.5rem;
   text-align: center;
   white-space: pre-line;
 }
+
 .popup-button {
   margin: 0 auto;
   display: block;
