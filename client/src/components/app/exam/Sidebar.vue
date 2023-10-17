@@ -8,8 +8,8 @@
 </style>
 <template>
   <AppExamTopbarTimer
-    v-if="!isAdminAndEditing && !review"
-    :duration="duration"
+    v-if="!review && !isAdminAndEditing"
+    :quizDuration="quizDuration"
     :quizStart="quizStart"
     :userQuizId="userQuizId"
   />
@@ -32,7 +32,7 @@
     </v-list-item-group>
   </v-list>
   <v-btn
-    v-if="!review && !isAdminAndEditing"
+    v-if="!review"
     color="secondary"
     :disabled="examStore.submitting || review"
     v-on:click="submitQuiz()"
@@ -100,7 +100,7 @@ export default {
         )
       }
     },
-    duration: {
+    quizDuration: {
       type: Number,
       required: true
     },
