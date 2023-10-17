@@ -76,15 +76,14 @@ export default {
       this.unresolvedQuestionPromises.push(mutation)
 
       mutation
-        .then(() => {
-          this.$emit('ready-to-fetch')
-        })
+        .then(() => {})
         .catch(() => {
           this.snackbarQueue.push(
             `An error occured when ${this.flagged ? 'unflagging' : 'flagging'} Question ${
               this.questionNumber
             }. Please check your connection and try again.`
           )
+          this.$emit('ready-to-fetch')
         })
     }
   }
