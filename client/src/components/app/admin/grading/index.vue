@@ -101,8 +101,7 @@ body {
           <h3>Amount of people submitted: {{ amountSubmitted }}</h3>
           <h3>Median score: {{ medianScore }}</h3>
           <h3>Most failed question: {{ mostFailedQuestion }}</h3>
-          </v-card-item
-        ></v-card
+        </v-card-item></v-card
       >
     </div>
 
@@ -170,26 +169,33 @@ export default defineComponent({
       if (!this.userQuizzes) {
         return 0
       }
-      
-      const scores = this.userQuizzes.map((userQuiz) => { return userQuiz.score ?? 0 })
+
+      const scores = this.userQuizzes.map((userQuiz) => {
+        return userQuiz.score ?? 0
+      })
       const total = scores.reduce((a, b) => a + b, 0)
       const averageScore = total / scores.length
-      const averagePercentage = ((averageScore.toFixed(0) / this.quiz?.questions?.length) * 100).toFixed(2)
+      const averagePercentage = (
+        (averageScore.toFixed(0) / this.quiz?.questions?.length) *
+        100
+      ).toFixed(2)
       if (isNaN(averagePercentage)) {
-        return "-"
+        return '-'
       }
-      return `${averagePercentage}% (${averageScore.toFixed(0)} / ${this.quiz?.questions?.length})` 
+      return `${averagePercentage}% (${averageScore.toFixed(0)} / ${this.quiz?.questions?.length})`
     },
     averageTimeTaken() {
       if (!this.userQuizzes) {
         return 0
       }
 
-      const times = this.userQuizzes.map((userQuiz) => { return userQuiz.duration ?? 0 })
+      const times = this.userQuizzes.map((userQuiz) => {
+        return userQuiz.duration ?? 0
+      })
       const total = times.reduce((a, b) => a + b, 0)
       const averageTime = total / times.length
       if (isNaN(averageTime)) {
-        return "-"
+        return '-'
       }
       return `${averageTime.toFixed(0)} seconds`
     },
@@ -199,7 +205,7 @@ export default defineComponent({
       }
       const totalSubmitted = this.userQuizzes.filter((userQuiz) => userQuiz.submitted).length
       if (isNaN(totalSubmitted)) {
-        return "- / -"
+        return '- / -'
       }
       return `${totalSubmitted} / ${this.userQuizzes.length}`
     },
@@ -207,14 +213,18 @@ export default defineComponent({
       if (!this.userQuizzes) {
         return 0
       }
-      const scores = this.userQuizzes.map((userQuiz) => { return userQuiz.score ?? 0 })
+      const scores = this.userQuizzes.map((userQuiz) => {
+        return userQuiz.score ?? 0
+      })
       const sortedScores = scores.sort((a, b) => a - b)
       const middle = Math.floor(sortedScores.length / 2)
       const isEven = sortedScores.length % 2 === 0
-      const median = isEven ? (sortedScores[middle] + sortedScores[middle - 1]) / 2 : sortedScores[middle]
+      const median = isEven
+        ? (sortedScores[middle] + sortedScores[middle - 1]) / 2
+        : sortedScores[middle]
       const medianPercentage = ((median.toFixed(0) / this.quiz?.questions?.length) * 100).toFixed(2)
       if (isNaN(medianPercentage)) {
-        return "-"
+        return '-'
       }
       return `${medianPercentage}% (${median.toFixed(0)} / ${this.quiz?.questions?.length})`
     },
@@ -223,7 +233,9 @@ export default defineComponent({
         return 0
       }
       const questions = this.quiz?.questions ?? []
-      const questionIDs = questions.map((question) => { return question.id })
+      const questionIDs = questions.map((question) => {
+        return question.id
+      })
       const questionIDsAndScores = questionIDs.map((questionID) => {
         const scores = this.userQuizzes.map((userQuiz) => {
           const question = userQuiz.questions?.find((question) => question.id === questionID)
@@ -236,9 +248,8 @@ export default defineComponent({
       let mostFailedQuestionID: string
       try {
         mostFailedQuestionID = sortedQuestionIDsAndScores[0].questionID
-      }
-      catch {
-        return "-"
+      } catch {
+        return '-'
       }
       const mostFailedQuestion = questions.find((question) => question.id === mostFailedQuestionID)
       const questionNumber = questions.indexOf(mostFailedQuestion ?? questions[0]) + 1
