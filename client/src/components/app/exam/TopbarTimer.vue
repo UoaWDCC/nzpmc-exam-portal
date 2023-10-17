@@ -27,6 +27,7 @@
 import { EditUserQuiz, SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
 import { useExamStore } from './examStore'
 import { mapWritableState } from 'pinia'
+import quizEditingMixin from '@/utils/quizEditingMixin'
 import { useMainStore } from '@/stores/main'
 
 export default {
@@ -70,7 +71,7 @@ export default {
     ...mapWritableState(useMainStore, ['snackbarQueue'])
   },
 
-  mounted() {
+  async mounted() {
     if (this.isAdminAndEditing) {
       //dont care if we are editing
       return
@@ -79,24 +80,21 @@ export default {
       //persist start time
       const currentTimeSeconds = Math.floor(Date.now() / 1000)
 
-      const handleMutation = async () => {
-        try {
-          await this.$apollo.mutate({
-            mutation: EditUserQuiz,
-            variables: {
-              input: {
-                quizStart: currentTimeSeconds,
-                userQuizID: this.userQuizId
-              }
+      try {
+        await this.$apollo.mutate({
+          mutation: EditUserQuiz,
+          variables: {
+            input: {
+              quizStart: currentTimeSeconds,
+              userQuizID: this.userQuizId
             }
-          })
-          this.startEpoch = currentTimeSeconds
-          this.startTimer()
-        } catch (e) {
-          console.error(e)
-        }
+          }
+        })
+        this.startEpoch = currentTimeSeconds
+        this.startTimer()
+      } catch (e) {
+        console.error(e)
       }
-      handleMutation()
     } else {
       this.startTimer()
     }
@@ -115,8 +113,7 @@ export default {
     updateTimer() {
       const currentTimeSeconds = Math.floor(Date.now() / 1000)
       const elapsedSeconds = currentTimeSeconds - this.startEpoch!
-      this.secondsRemaining = this.quizDuration.valueOf() * 60 - elapsedSeconds
-
+      this.secondsRemaining = this.quizDuration * 60 - elapsedSeconds
       if (this.secondsRemaining <= 0) {
         this.secondsRemaining = 0
         this.stopTimer()
