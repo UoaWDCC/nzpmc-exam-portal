@@ -443,14 +443,8 @@ const submitUserQuizQuestionsMutation: Resolver<
     // flag quiz as submitted
     editUserQuiz(userQuizID, undefined, undefined, undefined, undefined, true)
 
-    const { userAnswerIDs, correctAnswerIDs } = await getUserAnswers(userQuizID)
-
     // update UserQuiz
-    return await submitUserQuizQuestions(
-        userQuizID,
-        userAnswerIDs,
-        correctAnswerIDs,
-    )
+    return userQuiz
 }
 
 const deleteQuestionMutation: Resolver<
