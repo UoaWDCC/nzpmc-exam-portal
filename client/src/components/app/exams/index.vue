@@ -45,6 +45,7 @@ import AppExamsList from './List.vue'
 import { UserQuizzesQuery } from '@/gql/queries/userQuiz'
 import { useMainStore } from '@/stores/main'
 import formattingMixin from '@/utils/formattingMixin'
+import { useExamStore } from '../exam/examStore'
 
 export default {
   name: 'AppExams',
@@ -55,6 +56,10 @@ export default {
   },
 
   components: { AppExamsList },
+  mounted() {
+    localStorage.clear()
+    useExamStore().submitting = false
+  },
 
   data() {
     return {
