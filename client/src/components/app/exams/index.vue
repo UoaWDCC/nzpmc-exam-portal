@@ -76,8 +76,8 @@ export default {
         } else {
           if (data) this.userQuizzes = data.userQuizzes
         }
-      },
-      fetchPolicy: 'network-only' // this is kinda annoying (it makes loading the slow and realistically we wont be needing this)
+      }
+      // fetchPolicy: 'network-only' // this is kinda annoying (it makes loading the slow and realistically we wont be needing this)
     }
   }
 }

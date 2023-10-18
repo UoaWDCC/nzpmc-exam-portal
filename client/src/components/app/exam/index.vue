@@ -20,7 +20,6 @@
             :quizStart="data.quizStart"
             :userQuizId="data.id"
             @question-added="fetchData"
-            :quizDuration="data.duration"
             :review="review"
           />
         </v-scroll-y-reverse-transition>
