@@ -4,14 +4,18 @@
   color: white;
   padding: 5px 16px;
 }
+
 #timer-heading {
   font-weight: 500;
 }
+
 #time-text {
-  font-size: 3rem;
+  font-family: $mono;
+  font-size: 2.5rem;
   font-weight: 900;
 }
 </style>
+
 <template>
   <v-container class="container">
     <p id="timer-heading">TIME LEFT</p>
@@ -20,8 +24,11 @@
 </template>
 
 <script lang="ts">
-import { EditUserQuiz } from '@/gql/mutations/userQuiz'
+import { EditUserQuiz, SubmitUserQuizQuestionsMutation } from '@/gql/mutations/userQuiz'
+import { useExamStore } from './examStore'
+import { mapWritableState } from 'pinia'
 import quizEditingMixin from '@/utils/quizEditingMixin'
+import { useMainStore } from '@/stores/main'
 
 export default {
   name: 'AppExamTopbarTimer',
@@ -29,14 +36,15 @@ export default {
 
   data() {
     return {
-      secondsRemaining: null,
+      examStore: useExamStore(),
+      secondsRemaining: this.quizDuration * 60,
       startEpoch: this.quizStart as number | null,
       timer: null as unknown as ReturnType<typeof setInterval>
     }
   },
 
   props: {
-    duration: {
+    quizDuration: {
       type: Number,
       required: true
     },
@@ -59,10 +67,11 @@ export default {
       return `${(hours < 10 ? '0' : '') + hours}:${(minutes < 10 ? '0' : '') + minutes}:${
         (seconds < 10 ? '0' : '') + seconds
       }`
-    }
+    },
+    ...mapWritableState(useMainStore, ['snackbarQueue'])
   },
 
-  mounted() {
+  async mounted() {
     if (this.isAdminAndEditing) {
       //dont care if we are editing
       return
@@ -71,24 +80,21 @@ export default {
       //persist start time
       const currentTimeSeconds = Math.floor(Date.now() / 1000)
 
-      const handleMutation = async () => {
-        try {
-          await this.$apollo.mutate({
-            mutation: EditUserQuiz,
-            variables: {
-              input: {
-                quizStart: currentTimeSeconds,
-                userQuizID: this.userQuizId
-              }
+      try {
+        await this.$apollo.mutate({
+          mutation: EditUserQuiz,
+          variables: {
+            input: {
+              quizStart: currentTimeSeconds,
+              userQuizID: this.userQuizId
             }
-          })
-          this.startEpoch = currentTimeSeconds
-          this.startTimer()
-        } catch (e) {
-          console.error(e)
-        }
+          }
+        })
+        this.startEpoch = currentTimeSeconds
+        this.startTimer()
+      } catch (e) {
+        console.error(e)
       }
-      handleMutation()
     } else {
       this.startTimer()
     }
@@ -100,17 +106,37 @@ export default {
 
   methods: {
     startTimer() {
-      this.timer = setInterval(this.updateTimer, 1000)
+      this.updateTimer()
+      this.timer = setInterval(this.updateTimer, 50) // 50 ms is minimum guarenteed browser refresh rate
     },
 
     updateTimer() {
       const currentTimeSeconds = Math.floor(Date.now() / 1000)
       const elapsedSeconds = currentTimeSeconds - this.startEpoch!
-      this.secondsRemaining = this.duration.valueOf() * 60 - elapsedSeconds
-
+      this.secondsRemaining = this.quizDuration * 60 - elapsedSeconds
       if (this.secondsRemaining <= 0) {
         this.secondsRemaining = 0
         this.stopTimer()
+
+        // submit on timeout
+        const mutation = this.$apollo.mutate({
+          mutation: SubmitUserQuizQuestionsMutation,
+          variables: {
+            input: {
+              userQuizID: this.$route.params.quizID
+            }
+          }
+        })
+        this.examStore.submitting = true
+        mutation
+          .then(() => {
+            this.$router.push({
+              name: 'AppExams'
+            })
+          })
+          .catch(() => {
+            this.snackbarQueue.push(`Unable to submit exam. Please try again later.`)
+          })
       }
     },
 
