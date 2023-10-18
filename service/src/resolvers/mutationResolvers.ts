@@ -16,8 +16,6 @@ import {
     editUserQuizQuestion,
     releaseQuiz,
     getUserQuiz,
-    submitUserQuizQuestions,
-    getUserAnswers,
     deleteQuestion,
     deleteQuiz,
     swapQuestion,
