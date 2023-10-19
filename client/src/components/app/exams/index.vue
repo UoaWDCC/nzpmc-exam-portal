@@ -57,7 +57,6 @@ export default {
 
   components: { AppExamsList },
   mounted() {
-    localStorage.clear()
     useExamStore().submitting = false
   },
 
