@@ -5,8 +5,8 @@
       <div class="my-6">
         <h1 class="heading mb-6 text-uppercase font-weight-bold">My Exams</h1>
         <p class="intro">
-          Kia Ora <strong>{{ nameCase(store.user!.displayName) }}</strong
-          >, welcome to the <strong>New Zealand Physics and Mathematics Competition!</strong><br />
+          Kia Ora <strong>{{ nameCase(store.user!.displayName) }}</strong>, welcome to the <strong>New Zealand Physics and
+            Mathematics Competition!</strong><br />
 
           This is your chance to prove your skills and knowledge in <strong>Physics</strong> and
           <strong>Mathematics</strong>.<br /><br />
@@ -16,9 +16,7 @@
           <strong>upcoming exams</strong>.<br />
 
           If you can't see an exam that you think you should be enrolled in, contact us at
-          <strong
-            ><a :href="'mailto:' + contactEmail">{{ contactEmail }}</a></strong
-          >.
+          <strong><a :href="'mailto:' + contactEmail">{{ contactEmail }}</a></strong>.
         </p>
       </div>
 
@@ -30,12 +28,7 @@
 
       <AppExamsList v-if="!loading && userQuizzes" :user-quizzes="userQuizzes" />
       <v-container v-if="loading" class="pa-0">
-        <v-skeleton-loader
-          v-for="i in 3"
-          :key="i"
-          class="mb-3 mx-auto"
-          type="list-item-two-line"
-        ></v-skeleton-loader>
+        <v-skeleton-loader v-for="i in 3" :key="i" class="mb-3 mx-auto" type="list-item-two-line"></v-skeleton-loader>
       </v-container>
     </v-container>
   </div>
@@ -57,7 +50,6 @@ export default {
 
   components: { AppExamsList },
   mounted() {
-    localStorage.clear()
     useExamStore().submitting = false
   },
 
