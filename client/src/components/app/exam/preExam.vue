@@ -124,7 +124,7 @@ export default {
         this.examDescription = this.userQuiz.description || ''
         this.examOpenTime = this.convertToNZST(this.userQuiz.openTime) || ''
         this.examCloseTime = this.convertToNZST(this.userQuiz.closeTime) || ''
-        this.examDuration = `${this.userQuiz.duration} minutes` || ''
+        this.examDuration = `${this.userQuiz.duration / 60} minutes` || ''
         try {
           this.examCompleted =
             this.userQuiz.submitted || this.userQuiz.closeTime < new Date().toISOString()
