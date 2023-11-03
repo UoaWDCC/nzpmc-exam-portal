@@ -26,7 +26,7 @@ jobs:
       - name: Create firebaseConfig.json file
         run: echo ${{ secrets.FRONTEND_FIREBASE_CONFIG }} | base64 --decode > firebaseConfig.json
 
-      - run: CI=false npm run build-only
+      - run: CI=false yarn run build-only
 
       - uses: 'google-github-actions/auth@v0'
         with:
@@ -35,40 +35,37 @@ jobs:
 
       - uses: 'google-github-actions/upload-cloud-storage@v0'
         with:
-        
-          # Build path (path is excluded due to parent: false flag)
-          path: 'client/dist'
+          path: 'client/dist' # Build path (path is excluded due to parent: false flag)
           parent: false
-          
-          # Bucket to add contents into
-          destination: 'nzpmc-dev.wdcc.co.nz'
+          destination: 'nzpmc-dev.wdcc.co.nz' # Bucket to add contents into
 
   DeployBackend:
     runs-on: ubuntu-latest
     environment: DEV
     defaults:
       run:
-        working-directory: ./exam-portal-backend
+        working-directory: ./service
 
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      # Take a secret in base 64 format from github secrets, decode it and outputs toa file in private keys 
+
+      - run: yarn
+
+      # Take a secret in base 64 format from github secrets, decode it and output to a file in private keys 
       - name: Create serviceAccount.json file
         run: echo ${{ secrets.BACKEND_FIREBASE_SA_CREDENTIALS }} | base64 --decode > serviceAccount.json
   
       - name: Create env file
         run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > gae_env.yaml
-      
-      - run: npm install
 
-      - run: npm run build
+      - run: yarn run build
 
       - uses: 'google-github-actions/auth@v0'
         with:
-          
           # Credentials stored inside WDCC organisation secrets
           credentials_json: '${{ secrets.NZPMC_GCP_DEPLOYMENT_SA_CREDENTIALS }}'
 
@@ -76,5 +73,5 @@ jobs:
         uses: 'google-github-actions/deploy-appengine@v0'
         with:
           project_id: wdcc-nzpmc-dev
-          working_directory: ./exam-portal-backend
+          working_directory: ./service
       
