@@ -26,7 +26,7 @@ jobs:
       - name: Create firebaseConfig.json file
         run: echo ${{ secrets.FRONTEND_FIREBASE_CONFIG }} | base64 --decode > firebaseConfig.json
 
-      - run: CI=false npm run build-only
+      - run: CI=false yarn run build-only
 
       - uses: 'google-github-actions/auth@v0'
         with:
