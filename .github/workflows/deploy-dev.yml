@@ -69,7 +69,7 @@ jobs:
       - name: Create env file
         run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > gae_env.yaml
 
-      - run: yarn run build
+      - run: yarn run start
 
       - uses: 'google-github-actions/auth@v0'
         with:
