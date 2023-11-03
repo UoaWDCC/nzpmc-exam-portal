@@ -60,7 +60,7 @@ jobs:
         run: cd common && yarn
 
       - name: Run yarn in service
-        run: cd common && yarn
+        run: cd ../service && yarn
 
       # Take a secret in base 64 format from github secrets, decode it and output to a file in private keys 
       - name: Create serviceAccount.json file
