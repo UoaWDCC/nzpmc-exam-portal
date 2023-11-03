@@ -130,3 +130,5 @@ dist
 # Firebase Admin SDK
 nzpmc-backend-firebase-adminsdk-*
 serviceAccount.json
+
+env.yaml
