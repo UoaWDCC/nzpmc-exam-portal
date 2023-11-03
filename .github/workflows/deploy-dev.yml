@@ -9,7 +9,7 @@ jobs:
     environment: DEV
     defaults:
       run:
-        working-directory: ./exam-portal-frontend
+        working-directory: ./client
     
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 16
       
-      - run: npm install
+      - run: yarn
 
       - name: Create env file
         run: echo ${{ secrets.FRONTEND_ENVFILE }} | base64 --decode > .env
@@ -26,7 +26,7 @@ jobs:
       - name: Create firebaseConfig.json file
         run: echo ${{ secrets.FRONTEND_FIREBASE_CONFIG }} | base64 --decode > firebaseConfig.json
 
-      - run: CI=false npm run build
+      - run: CI=false npm run build-only
 
       - uses: 'google-github-actions/auth@v0'
         with:
@@ -37,7 +37,7 @@ jobs:
         with:
         
           # Build path (path is excluded due to parent: false flag)
-          path: 'exam-portal-frontend/dist'
+          path: 'client/dist'
           parent: false
           
           # Bucket to add contents into
