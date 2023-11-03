@@ -44,7 +44,7 @@ jobs:
     environment: DEV
     defaults:
       run:
-        working-directory: .
+        working-directory: ./service
 
     steps:
       - uses: actions/checkout@v3
@@ -54,13 +54,13 @@ jobs:
           node-version: 16
 
       - name: Run yarn in root
-        run: yarn
+        run: cd .. && yarn
 
       - name: Run yarn in common
-        run: cd common && yarn
+        run: cd ../common && yarn
 
       - name: Run yarn in service
-        run: cd service && yarn
+        run: yarn
 
       # Take a secret in base 64 format from github secrets, decode it and output to a file in private keys 
       - name: Create serviceAccount.json file
