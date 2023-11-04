@@ -56,8 +56,8 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Build all files
-        run: yarn workspace @nzpmc-exam-portal/common build && yarn workspace @nzpmc-exam-portal/service build
+      - name: Build files
+        run: yarn workspace @nzpmc-exam-portal/service build
 
       # Take a secret in base 64 format from github secrets, decode it and output to a file in private keys 
       - name: Create serviceAccount.json file
