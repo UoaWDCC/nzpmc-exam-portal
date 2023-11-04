@@ -61,7 +61,7 @@ jobs:
         run: echo ${{ secrets.BACKEND_FIREBASE_SA_CREDENTIALS }} | base64 --decode > serviceAccount.json
   
       - name: Create env file
-        run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > ./service/gae_env.yaml
+        run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > gae_env.yaml
 
       - name: Create resolver types
         run: yarn workspace @nzpmc-exam-portal/service generate
@@ -76,4 +76,4 @@ jobs:
         with:
           project_id: wdcc-nzpmc-dev
           working_directory: .
-          deliverables: ./service/app.yaml
+          deliverables: app.yaml
