@@ -58,7 +58,7 @@ jobs:
 
       # Take a secret in base 64 format from github secrets, decode it and output to a file in private keys 
       - name: Create serviceAccount.json file
-        run: echo ${{ secrets.BACKEND_FIREBASE_SA_CREDENTIALS }} | base64 --decode > serviceAccount.json
+        run: echo ${{ secrets.BACKEND_FIREBASE_SA_CREDENTIALS }} | base64 --decode > ./service/serviceAccount.json
   
       - name: Create env file
         run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > gae_env.yaml
