@@ -44,7 +44,7 @@ jobs:
     environment: DEV
     defaults:
       run:
-        working-directory: ./service
+        working-directory: .
 
     steps:
       - uses: actions/checkout@v3
@@ -53,19 +53,22 @@ jobs:
         with:
           node-version: 16
 
-      - run: yarn
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build all files
+        run: yarn workspace @nzpmc-exam-portal/common build && yarn workspace @nzpmc-exam-portal/service build
 
       # Take a secret in base 64 format from github secrets, decode it and output to a file in private keys 
       - name: Create serviceAccount.json file
         run: echo ${{ secrets.BACKEND_FIREBASE_SA_CREDENTIALS }} | base64 --decode > serviceAccount.json
   
       - name: Create env file
-        run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > gae_env.yaml
+        run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > ./service/gae_env.yaml
 
       - name: Create resolver types
-        run: yarn run generate
+        run: yarn workspace @nzpmc-exam-portal/service generate
 
-      - run: yarn run build
 
       - uses: 'google-github-actions/auth@v0'
         with:
