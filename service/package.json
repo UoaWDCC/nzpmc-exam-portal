@@ -12,7 +12,6 @@
         "build": "tsc",
         "docker": "docker build . -t nzpmc-backend:latest",
         "test": "jest",
-        "prestart": "npm run generate",
         "predev": "npm run generate",
         "generate": "graphql-codegen",
         "emulator": "firebase emulators:start"
