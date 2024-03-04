@@ -13,17 +13,22 @@ This repository is split into three sub repositories: client, service and common
 
 To install all node modules run `yarn` at root.
 
-Run service
+### Run service
 
 ```sh
 yarn run service
 ```
 
-Run client
+### Run client
 
 ```sh
 yarn run client
 ```
+
+### Test Credentials
+
+Email: contact@nzpmc.com  
+Password: contact  
 
 ## Team Members
 
