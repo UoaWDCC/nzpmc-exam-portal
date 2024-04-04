@@ -25,8 +25,11 @@ yarn run service
 yarn run client
 ```
 
-### Test Credentials
+### Deployment
 
+https://nzpmc-dev.wdcc.co.nz/
+
+**Demo Credentials**
 Email: contact@nzpmc.com  
 Password: contact  
 
