@@ -29,7 +29,7 @@ yarn run client
 
 https://nzpmc-dev.wdcc.co.nz/
 
-**Demo Credentials**
+**Demo Credentials:**  
 Email: contact@nzpmc.com  
 Password: contact  
 
