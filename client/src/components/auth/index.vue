@@ -6,7 +6,11 @@ import logoSvg from '@/assets/logo-auth.svg'
   <div id="background">
     <MobilePlaceHolder />
     <div class="hide-for-mobile">
-      <div class="align-center auth background--blue d-flex justify-center primary">
+      <v-sheet class="not-maintained" elevation="2" max-width="100%" width="40rem">
+        <p><strong>This app is not being maintained.</strong></p>
+        <p>If you are here for NZPMC Round 1, please head to Education Perfect.</p>
+      </v-sheet>
+      <div class="align-center auth background--blue d-flex flex-column justify-center primary">
         <v-sheet class="auth-container" elevation="2" max-width="100%" width="28rem">
           <div class="d-flex pa-4">
             <v-img :src="logoSvg" height="96" contain />
@@ -117,5 +121,20 @@ export default defineComponent({
 .auth-container {
   border-radius: 30px;
   padding: 50px;
+}
+
+.not-maintained {
+  border-radius: 30px;
+  padding: 20px 50px;
+  background-color: hsl(7, 98%, 48%);
+  color: white;
+  margin-bottom: 50px;
+  word-break: break-word;
+}
+.not-maintained p {
+  margin: 5px;
+}
+.not-maintained a {
+  color: white;
 }
 </style>
