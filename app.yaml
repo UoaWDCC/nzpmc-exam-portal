@@ -1,0 +1,10 @@
+runtime: nodejs16
+
+# NB: Default instance class F1 causes app to exceed memory limit
+instance_class: F4
+
+# By default, GAE uses npm
+entrypoint: "PORT=8080 npm run service-start"
+
+includes:
+  - gae_env.yaml

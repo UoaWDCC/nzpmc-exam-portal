@@ -44,7 +44,7 @@ jobs:
     environment: DEV
     defaults:
       run:
-        working-directory: ./service
+        working-directory: .
 
     steps:
       - uses: actions/checkout@v3
@@ -53,16 +53,18 @@ jobs:
         with:
           node-version: 16
 
-      - run: yarn
+      - name: Install dependencies
+        run: yarn
 
       # Take a secret in base 64 format from github secrets, decode it and output to a file in private keys 
       - name: Create serviceAccount.json file
-        run: echo ${{ secrets.BACKEND_FIREBASE_SA_CREDENTIALS }} | base64 --decode > serviceAccount.json
+        run: echo ${{ secrets.BACKEND_FIREBASE_SA_CREDENTIALS }} | base64 --decode > ./service/serviceAccount.json
   
       - name: Create env file
         run: echo ${{ secrets.BACKEND_ENVFILE }} | base64 --decode > gae_env.yaml
 
-      - run: yarn run build
+      - name: Create resolver types
+        run: yarn workspace @nzpmc-exam-portal/service generate
 
       - uses: 'google-github-actions/auth@v0'
         with:
@@ -70,8 +72,9 @@ jobs:
           credentials_json: '${{ secrets.NZPMC_GCP_DEPLOYMENT_SA_CREDENTIALS }}'
 
       - id: 'app-engine-deploy'
-        uses: 'google-github-actions/deploy-appengine@v0'
+        uses: 'google-github-actions/deploy-appengine@v2'
         with:
           project_id: wdcc-nzpmc-dev
-          working_directory: ./service
-      
+          working_directory: .
+          deliverables: app.yaml
+          flags: --no-cache

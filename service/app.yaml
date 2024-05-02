@@ -1,7 +1,0 @@
-runtime: nodejs16
-
-# By default, GAE uses npm
-entrypoint: 'PORT=8080 node dist/src/index.js'
-
-includes:
-    - gae_env.yaml

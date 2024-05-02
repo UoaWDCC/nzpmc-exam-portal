@@ -6,6 +6,7 @@
     "common"
   ],
   "scripts": {
+    "service-start": "cd service && yarn run start",
     "service": "cd service && yarn run dev",
     "client": "cd client && yarn run dev",
     "add-user": "cd service && yarn run add-user",
